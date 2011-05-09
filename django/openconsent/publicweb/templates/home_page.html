@@ -1,5 +1,23 @@
+{% autoescape on %}
 <html>
 <body>
-Hello world
+<h1>Aptivate Decisions</h1>
+<p><a href="{% url publicweb.views.decision_add_page %}">Add decision</a></p>
+<table>
+	<tr>
+		<th>Decision</th>
+		<th>Concerns (yes/no)</th>
+		<th>Decided date</th>
+		<th>Review date</th>
+	</tr>
+	{% for decision in decisions %}
+	<tr>
+		<td><a href="{% url publicweb.views.decision_view_page %}">{{decision.short_name}}</a></td>
+		<td>{{decision.concerns|yesno}}</td>
+		<td>{{decision.decided_date}}</td>
+		<td>{{decision.review_date}}</td>
+	</tr>
+	{% endfor %}
 </body>
 </html>
+{% endautoescape %}

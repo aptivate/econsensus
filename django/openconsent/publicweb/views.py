@@ -12,3 +12,10 @@ def home_page(request):
     return render_to_response('home_page.html',
         RequestContext(request,
             dict(decisions=list(Decision.objects.all()))))
+            
+def decision_add_page(request):
+    pass
+    
+def decision_view_page(request):
+    pass
+    

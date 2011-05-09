@@ -8,7 +8,7 @@ import openconsent.publicweb.views
 
 urlpatterns = patterns('',
     url(r'^$', openconsent.publicweb.views.home_page, name='home'),
-    url(r'^openconsent/', include('openconsent.publicweb.urls')),
+    url(r'^public/', include('openconsent.publicweb.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
