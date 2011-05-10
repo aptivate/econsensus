@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 import openconsent.publicweb
 import openconsent.publicweb.views
 from openconsent.publicweb.models import Decision
+from openconsent.publicweb.forms import DecisionForm
 
 class PublicWebsiteTest(TestCase):
     # fixtures = ['submission_test_data.json', 'foobar', 'indicator_tests.yaml']
@@ -28,4 +29,31 @@ class PublicWebsiteTest(TestCase):
     
     def test_get_homepage(self):
         response = self.get(openconsent.publicweb.views.home_page)
-        self.assertEqual(list(Decision.objects.all()), response.context['decisions'])
+        self.assertEqual(list(Decision.objects.all()),
+            list(response.context['decisions']))
+    
+    def test_decision_add_page(self):
+        """
+        Test error conditions for the add decision page. 
+        """
+        path = reverse(openconsent.publicweb.views.decision_add_page)
+    
+        # Test that the decision add view returns an empty form
+        response = self.client.get(path)
+        form = DecisionForm()
+        self.assertEqual(form.as_p(),
+            response.context['decision_form'].as_p())
+    
+        # Test that the decision add view validates and rejects and empty post
+        response = self.client.post(path, dict())
+        self.assertFalse(form.is_valid())   # validates the form and adds error messages
+        self.assertEqual(form.as_p(),
+            response.context['decision_form'].as_p())
+        
+        # Test that providing a short name is enough to complete the form,
+        # save the object and send us back to the home page
+        response = self.client.post(path, {'short_name': 'Feed the dog'},
+            follow=True)
+        self.assertRedirects(response,
+            reverse(openconsent.publicweb.views.home_page),
+            msg_prefix=response.content)

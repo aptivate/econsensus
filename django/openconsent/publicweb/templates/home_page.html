@@ -15,7 +15,7 @@ Aptivate Decisions
 	</tr>
 	{% for decision in decisions %}
 	<tr>
-		<td><a href="{% url publicweb.views.decision_view_page %}">{{decision.short_name}}</a></td>
+		<td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
 		<td>{{decision.concerns|yesno}}</td>
 		<td>{{decision.decided_date}}</td>
 		<td>{{decision.review_date}}</td>

@@ -10,5 +10,6 @@ Aptivate: New Decision
 {{ decision_form.as_table }}
 </table>
 <input type="submit" value="Save">
+{% csrf_token %}
 </form>
 {% endblock %}
