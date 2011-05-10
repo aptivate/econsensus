@@ -1,9 +1,25 @@
 {% autoescape on %}
 <html>
-<body>
-<h1>{% block heading %}Lorem Ipsum{% endblock %}</h1>
+	<head>
+		<title>{% block title %}Lorem Ipsum{% endblock %} | Aptivate Decisions</title>
+		<style>
+			ul.errorlist
+			{
+				border: 2px solid #fdd;
+				background: #fee;
+				list-style-type: none;
+				padding: 0.2em;
+				float: left;
+				margin: 0 1em 0 0;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>{% block heading %}Lorem Ipsum{% endblock %}</h1>
+
 {% block content %}
 {% endblock %}
-</body>
+
+	</body>
 </html>
 {% endautoescape %}
