@@ -1,4 +1,6 @@
 from django.db import models
+import tinymce.models
+import tinymce.widgets
 
 # Create your models here.
 class Decision(models.Model):
@@ -9,5 +11,5 @@ class Decision(models.Model):
     expiry_date = models.DateField(null=True, blank=True)
     budget = models.TextField(blank=True)
     people = models.TextField(blank=True)
-    description = models.TextField(blank=True)
+    description = tinymce.models.HTMLField(blank=True)
     concerns = models.TextField(blank=True)

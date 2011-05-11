@@ -16,6 +16,8 @@ import openconsent.publicweb.views
 from openconsent.publicweb.models import Decision
 from openconsent.publicweb.forms import DecisionForm
 
+import tinymce.widgets
+
 class PublicWebsiteTest(TestCase):
     # fixtures = ['submission_test_data.json', 'foobar', 'indicator_tests.yaml']
     
@@ -57,3 +59,18 @@ class PublicWebsiteTest(TestCase):
         self.assertRedirects(response,
             reverse(openconsent.publicweb.views.home_page),
             msg_prefix=response.content)
+        
+    def test_decision_form_description_field_uses_tinymce_widget(self):
+        form = DecisionForm()
+        
+        self.assertEquals(tinymce.widgets.TinyMCE,
+            type(form.fields['description'].widget))
+    
+        mce_attrs = form._meta.widgets['description'].mce_attrs
+        # check the MCE widget is set to advanced theme with our prefered buttons
+        self.assertEquals({'theme': 'advanced',
+            'theme_advanced_buttons1': 'bold,italic,underline,link,unlink,' + 
+                'bullist,blockquote,undo',
+            'theme_advanced_buttons3': '',
+            'theme_advanced_buttons2': ''}, mce_attrs)
+        
