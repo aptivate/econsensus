@@ -61,20 +61,26 @@ class PublicWebsiteTest(TestCase):
         self.assertRedirects(response,
             reverse(openconsent.publicweb.views.home_page),
             msg_prefix=response.content)
-        
-    def test_decision_form_description_field_uses_tinymce_widget(self):
+
+    def assert_decision_form_field_uses_tinymce_widget(self, field):
         form = DecisionForm()
         
         self.assertEquals(tinymce.widgets.TinyMCE,
-            type(form.fields['description'].widget))
+            type(form.fields[field].widget))
     
-        mce_attrs = form._meta.widgets['description'].mce_attrs
+        mce_attrs = form._meta.widgets[field].mce_attrs
         # check the MCE widget is set to advanced theme with our preferred buttons
         self.assertEquals({'theme': 'advanced',
             'theme_advanced_buttons1': 'bold,italic,underline,link,unlink,' + 
                 'bullist,blockquote,undo',
             'theme_advanced_buttons3': '',
             'theme_advanced_buttons2': ''}, mce_attrs)
+    
+    def test_decision_form_concerns_field_uses_tinymce_widget(self):
+        self.assert_decision_form_field_uses_tinymce_widget('concerns')
+
+    def test_decision_form_description_field_uses_tinymce_widget(self):
+        self.assert_decision_form_field_uses_tinymce_widget('description')
     
     def test_decisions_table_is_an_instance_of_model_table(self):
         """
