@@ -84,18 +84,25 @@ class PublicWebsiteTest(TestCase):
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
-    def test_decisions_table_rows_can_be_sorted_by_review_date(self):
+    def assert_decisions_table_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order. 
         for i in range(5, 0, -1):
             decision = Decision(short_name='Decision %d' % i)
-            decision.review_date = datetime.date(2001, 3, i)
+            setattr(decision, column, datetime.date(2001, 3, i))
             decision.save()
             
         response = self.client.get(reverse(openconsent.publicweb.views.home_page),
-            data=dict(sort='review_date'))
+            data=dict(sort=column))
         decisions_table = response.context['decisions']    
         
         # Check that decision rows are returned in normal order
-        for i, row in zip(range(1, 6), list(decisions_table.rows)):
-            self.assertEquals('Decision %d' % i, row.data.short_name)
+        rows = list(decisions_table.rows)
+        for i in range(1, 6):
+            self.assertEquals(datetime.date(2001, 3, i), getattr(rows[i-1].data, column))
+    
+    def test_decisions_table_rows_can_be_sorted_by_review_date(self):
+        self.assert_decisions_table_sorted_by_date_column('review_date')
+        
+    def test_descisions_table_rows_can_be_sorted_by_decided_date(self):
+        self.assert_decisions_table_sorted_by_date_column('decided_date')
         
