@@ -1,0 +1,11 @@
+*.pyc
+.*.swp
+*~
+django/openconsent/local_settings.py
+django/openconsent/.ve
+django/openconsent/distribute-*.tar.gz
+reports/*
+.settings/*
+.pydevproject
+.DS_Store
+
