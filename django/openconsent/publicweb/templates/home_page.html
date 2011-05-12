@@ -10,20 +10,20 @@ Aptivate Decisions
 
 {% block content %}
 <p><a href="{% url publicweb.views.decision_add_page %}">Add decision</a></p>
+
 <table>
-	<tr>
-		<th>Decision</th>
-		<th>Concerns (yes/no)</th>
-		<th>Decided date</th>
-		<th>Review date</th>
-	</tr>
-	{% for decision in decisions %}
-	<tr>
+<tr>
+    {% for column in decisions.columns %}
+    <th><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
+    {% endfor %}
+</tr>
+{% for decision in decisions.rows %}
+    <tr>
 		<td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
 		<td>{{decision.concerns|yesno}}</td>
 		<td>{{decision.decided_date}}</td>
 		<td>{{decision.review_date}}</td>
-	</tr>
-	{% endfor %}
+    </tr>
+{% endfor %}
 </table>
 {% endblock %}
