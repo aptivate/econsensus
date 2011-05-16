@@ -42,6 +42,10 @@ class PublicWebsiteTest(TestCase):
         self.assertEqual(list(DecisionList.objects.all()),
         list(response.context['decision_lists']))
     
+    def test_get_decision_list_page_with_invalid_decisionlist_id_returns_404(self):
+        response = self.client.get(reverse('decision_list', args = [100]))
+        self.assertTemplateUsed(response, '404.html')
+        
     def test_check_decision_title(self):
         """
         Check the decision title matches its parent list

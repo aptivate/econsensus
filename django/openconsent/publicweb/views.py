@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
 
 from models import Decision, DecisionList
 from forms import DecisionForm
@@ -22,7 +23,7 @@ class DecisionTable(django_tables.ModelTable):
         
 def decision_list(request, decisionlist_id):
     
-    decisionlist = DecisionList.objects.get(id = decisionlist_id)
+    decisionlist = get_object_or_404(DecisionList, pk=decisionlist_id)
     
     decisions = DecisionTable(Decision.objects.all(),
         order_by=request.GET.get('sort'))
