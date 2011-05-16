@@ -9,4 +9,8 @@ urlpatterns = patterns('openconsent.publicweb.views',
         openconsent.publicweb.views.decision_add_page),
     url(r'^decision/(?P<decision_id>[\d]+)/$',
         openconsent.publicweb.views.decision_view_page),
+    url(r'^decision_list/(?P<decisionlist_id>[\d]+)/$',
+        openconsent.publicweb.views.decision_list, name='decision_list'),
+    url(r'^decision_lists/$',
+        openconsent.publicweb.views.decision_lists),
 )

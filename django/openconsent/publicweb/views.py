@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
-from models import Decision
+from models import Decision, DecisionList
 from forms import DecisionForm
 
 import django_tables
@@ -20,18 +20,22 @@ class DecisionTable(django_tables.ModelTable):
     review_date = django_tables.Column()
     expiry_date = django_tables.Column()
         
-def home_page(request):
+def decision_list(request, decisionlist_id):
+    
+    decisionlist = DecisionList.objects.get(id = decisionlist_id)
+    
     decisions = DecisionTable(Decision.objects.all(),
         order_by=request.GET.get('sort'))
-    return render_to_response('home_page.html',
-        RequestContext(request, dict(decisions=decisions)))
-            
+    return render_to_response('decision_list.html',
+        RequestContext(request, dict(decisions=decisions,decisionlist=decisionlist)))
+
 def decision_add_page(request):
     if request.POST:
         decision_form = DecisionForm(request.POST)
         if decision_form.is_valid():
-            decision_form.save()
-            return HttpResponseRedirect(reverse(home_page))
+            decision = decision_form.save()
+            return HttpResponseRedirect(reverse(decision_list,
+                                                args=[decision.decision_list.id]))
     else:
         decision_form = DecisionForm()
         
@@ -48,7 +52,14 @@ def decision_view_page(request, decision_id):
         decision_form = DecisionForm(request.POST, instance=decision)
         if decision_form.is_valid():
             decision_form.save()
-            return HttpResponseRedirect(reverse(home_page))
+            return HttpResponseRedirect(reverse(decision_list,
+                                                args=[decision.decision_list.id]))
         
     return render_to_response('decision_add.html',
         RequestContext(request, dict(decision_form=decision_form)))
+
+def decision_lists(request):
+    decision_lists = DecisionList.objects.all()
+     
+    return render_to_response('decision_lists.html',
+        RequestContext(request, dict(decision_lists=decision_lists)))

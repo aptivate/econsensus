@@ -7,7 +7,7 @@ import openconsent.publicweb.views
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', openconsent.publicweb.views.home_page, name='home'),
+    url(r'^$', openconsent.publicweb.views.decision_lists, name='decision_lists'),
     url(r'^public/', include('openconsent.publicweb.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

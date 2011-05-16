@@ -2,7 +2,9 @@ from django.db import models
 import tinymce.models
 import tinymce.widgets
 
-# Create your models here.
+class DecisionList(models.Model):
+    short_name = models.CharField(max_length=255, verbose_name='List Name')
+    
 class Decision(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Decision')
     decided_date = models.DateField(null=True, blank=True,
@@ -21,6 +23,7 @@ class Decision(models.Model):
         verbose_name='Description')
     concerns = models.TextField(blank=True,
         verbose_name='Concerns')
+    decision_list = models.ForeignKey('DecisionList')
     
     def concerns_yesno(self):
         if self.concerns:

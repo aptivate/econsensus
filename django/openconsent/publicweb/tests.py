@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 import openconsent.publicweb
 import openconsent.publicweb.views
 from openconsent.publicweb.models import Decision
+from openconsent.publicweb.models import DecisionList
 from openconsent.publicweb.forms import DecisionForm
 
 import tinymce.widgets
@@ -32,11 +33,25 @@ class PublicWebsiteTest(TestCase):
 
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
+   
+    def test_get_decision_lists(self):
+        """
+        The decision lists page should return the list of all decision lists.
+        """
+        response = self.get(openconsent.publicweb.views.decision_lists)
+        self.assertEqual(list(DecisionList.objects.all()),
+        list(response.context['decision_lists']))
     
-    def test_get_homepage(self):
-        response = self.get(openconsent.publicweb.views.home_page)
-        self.assertEqual(list(Decision.objects.all()),
-            list(response.context['decisions']))
+    def test_check_decision_title(self):
+        """
+        Check the decision title matches its parent list
+        """
+        decisionlist = DecisionList(short_name='First List')
+        decisionlist.save()        
+        
+        response = self.client.get(reverse('decision_list', args = [decisionlist.id]))
+        self.assertEqual(decisionlist.short_name,
+                         response.context['decisionlist'].short_name)
     
     def test_decision_add_page(self):
         """
@@ -58,10 +73,16 @@ class PublicWebsiteTest(TestCase):
         
         # Test that providing a short name is enough to complete the form,
         # save the object and send us back to the home page
-        response = self.client.post(path, {'short_name': 'Feed the dog'},
+        decisionlist = DecisionList(short_name='First List')
+        decisionlist.save()
+        
+        response = self.client.post(path, {'short_name': 'Feed the dog',
+                                           'decision_list': decisionlist.id },
             follow=True)
+        
+        
         self.assertRedirects(response,
-            reverse(openconsent.publicweb.views.home_page),
+            reverse('decision_list', args=[decisionlist.id]),
             msg_prefix=response.content)
 
     def assert_decision_form_field_uses_tinymce_widget(self, field):
@@ -88,18 +109,25 @@ class PublicWebsiteTest(TestCase):
         """
         The decisions table is represented using django_tables.ModelTable.
         """
-        response = self.get(openconsent.publicweb.views.home_page)
+        decision = self.get_example_decision()
+        response = self.client.get(reverse('decision_list',
+                                    args=[decision.decision_list.id]))
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
     def assert_decisions_table_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order. 
+        decisionlist = DecisionList(short_name='First List')
+        decisionlist.save()
+        
         for i in range(5, 0, -1):
             decision = Decision(short_name='Decision %d' % i)
+            decision.decision_list = decisionlist
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save()
             
-        response = self.client.get(reverse(openconsent.publicweb.views.home_page),
+        response = self.client.get(reverse('decision_list',
+                                           args=[decisionlist.id]),
             data=dict(sort=column))
         decisions_table = response.context['decisions']    
         
@@ -118,8 +146,14 @@ class PublicWebsiteTest(TestCase):
         self.assert_decisions_table_sorted_by_date_column('expiry_date')
 
     def get_example_decision(self):
+        
+        decisionlist = DecisionList(short_name='First List')
+        decisionlist.save()
+        
         decision = Decision(short_name='Decision Time' )
+        decision.decision_list = decisionlist
         decision.save()
+        
         return decision
 
     def get_diff(self, s1, s2):
@@ -142,20 +176,23 @@ class PublicWebsiteTest(TestCase):
         self.assertEqual(test_form_str, decision_form_str,
                          self.get_diff(test_form_str, decision_form_str))
 
+    def get_edit_decision_response(self, decision):
+        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
+        response = self.client.post(path, {'short_name': 'Feed the cat',
+                                           'decision_list': decision.decision_list.id})
+        return response
+    
     def test_save_edit_decision_page(self):
         decision = self.get_example_decision()
+        # we are only interested in the side effect of saving a decision
+        self.get_edit_decision_response(decision)
         
-        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
-        response = self.client.post(path, {'short_name': 'Feed the cat'})
-        
-        decision = Decision.objects.get(id=decision.id)
-        self.assertEquals('Feed the cat', decision.short_name)
+        decision_db = Decision.objects.get(id=decision.id)
+        self.assertEquals('Feed the cat', decision_db.short_name)
     
-    def test_redirect_after_edit_decision_page(self):
+    def test_redirect_after_edit_decision_page(self):       
         decision = self.get_example_decision()
-        
-        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
-        response = self.client.post(path, {'short_name': 'Feed the cat'})
-        self.assertRedirects(response,
-            reverse(openconsent.publicweb.views.home_page),
+        response = self.get_edit_decision_response(decision)
+        self.assertRedirects(response, reverse('decision_list',
+                                               args=[decision.decision_list.id]),
             msg_prefix=response.content)
