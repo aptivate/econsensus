@@ -18,6 +18,7 @@ class DecisionTable(django_tables.ModelTable):
     concerns_yesno = django_tables.Column(verbose_name='Any concerns')
     decided_date = django_tables.Column()
     review_date = django_tables.Column()
+    expiry_date = django_tables.Column()
         
 def home_page(request):
     decisions = DecisionTable(Decision.objects.all(),

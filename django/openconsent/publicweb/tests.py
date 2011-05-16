@@ -114,6 +114,9 @@ class PublicWebsiteTest(TestCase):
     def test_descisions_table_rows_can_be_sorted_by_decided_date(self):
         self.assert_decisions_table_sorted_by_date_column('decided_date')
 
+    def test_descisions_table_rows_can_be_sorted_by_expiry_date(self):
+        self.assert_decisions_table_sorted_by_date_column('expiry_date')
+
     def get_example_decision(self):
         decision = Decision(short_name='Decision Time' )
         decision.save()
