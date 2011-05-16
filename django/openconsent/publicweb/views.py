@@ -38,6 +38,16 @@ def decision_add_page(request):
         RequestContext(request,
             dict(decision_form=decision_form)))
     
-def decision_view_page(request):
-    pass
+
+def decision_view_page(request, decision_id):
+    decision = Decision.objects.get(id = decision_id)
+    decision_form = DecisionForm(instance=decision)
     
+    if request.method == 'POST':
+        decision_form = DecisionForm(request.POST, instance=decision)
+        if decision_form.is_valid():
+            decision_form.save()
+            return HttpResponseRedirect(reverse(home_page))
+        
+    return render_to_response('decision_add.html',
+        RequestContext(request, dict(decision_form=decision_form)))

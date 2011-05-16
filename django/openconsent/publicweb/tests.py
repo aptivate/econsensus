@@ -20,6 +20,8 @@ from openconsent.publicweb.forms import DecisionForm
 import tinymce.widgets
 import django_tables
 
+import difflib
+
 class PublicWebsiteTest(TestCase):
     # fixtures = ['submission_test_data.json', 'foobar', 'indicator_tests.yaml']
     
@@ -111,4 +113,46 @@ class PublicWebsiteTest(TestCase):
         
     def test_descisions_table_rows_can_be_sorted_by_decided_date(self):
         self.assert_decisions_table_sorted_by_date_column('decided_date')
+
+    def get_example_decision(self):
+        decision = Decision(short_name='Decision Time' )
+        decision.save()
+        return decision
+
+    def get_diff(self, s1, s2):
+        diff = difflib.context_diff(s1, s2)
+        str = ''
+        for line in diff:
+            str += line
+            
+        return str
         
+    def test_view_edit_decision_page(self):
+        decision = self.get_example_decision()
+        
+        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
+        response = self.client.get(path)
+        
+        test_form_str = str(DecisionForm(instance=decision))
+        decision_form_str = str(response.context['decision_form'])
+        
+        self.assertEqual(test_form_str, decision_form_str,
+                         self.get_diff(test_form_str, decision_form_str))
+
+    def test_save_edit_decision_page(self):
+        decision = self.get_example_decision()
+        
+        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
+        response = self.client.post(path, {'short_name': 'Feed the cat'})
+        
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEquals('Feed the cat', decision.short_name)
+    
+    def test_redirect_after_edit_decision_page(self):
+        decision = self.get_example_decision()
+        
+        path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
+        response = self.client.post(path, {'short_name': 'Feed the cat'})
+        self.assertRedirects(response,
+            reverse(openconsent.publicweb.views.home_page),
+            msg_prefix=response.content)
