@@ -10,8 +10,8 @@ Aptivate Decisions
 
 {% block content %}
 <ul>
-	{% for list in decision_lists %}
-	<li><a href="{% url decision_list list.id %}">{{ list.short_name }}</a></li>
+	{% for group in groups %}
+	<li><a href="{% url decision_list group.id %}">{{ group.short_name }}</a></li>
 	{% endfor %}
 </ul>
 {% endblock %}

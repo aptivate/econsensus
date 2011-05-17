@@ -2,7 +2,7 @@ from django.db import models
 import tinymce.models
 import tinymce.widgets
 
-class DecisionList(models.Model):
+class Group(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='List Name')
     
 class Decision(models.Model):
@@ -23,7 +23,7 @@ class Decision(models.Model):
         verbose_name='Description')
     concerns = models.TextField(blank=True,
         verbose_name='Concerns')
-    decision_list = models.ForeignKey('DecisionList')
+    group = models.ForeignKey('Group')
     
     def concerns_yesno(self):
         if self.concerns:

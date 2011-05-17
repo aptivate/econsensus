@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-from models import Decision, DecisionList
+from models import Decision, Group
 from forms import DecisionForm
 
 import django_tables
@@ -21,14 +21,15 @@ class DecisionTable(django_tables.ModelTable):
     review_date = django_tables.Column()
     expiry_date = django_tables.Column()
         
-def decision_list(request, decisionlist_id):
+def decision_list(request, group_id):
     
-    decisionlist = get_object_or_404(DecisionList, pk=decisionlist_id)
+    group = get_object_or_404(Group, pk=group_id)
     
-    decisions = DecisionTable(decisionlist.decision_set.all(),
+    decisions = DecisionTable(group.decision_set.all(),
         order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions,decisionlist=decisionlist)))
+        RequestContext(request, dict(decisions=decisions,
+                                     group=group)))
 
 def decision_add_page(request):
     if request.POST:
@@ -36,7 +37,7 @@ def decision_add_page(request):
         if decision_form.is_valid():
             decision = decision_form.save()
             return HttpResponseRedirect(reverse(decision_list,
-                                                args=[decision.decision_list.id]))
+                                                args=[decision.group.id]))
     else:
         decision_form = DecisionForm()
         
@@ -54,13 +55,13 @@ def decision_view_page(request, decision_id):
         if decision_form.is_valid():
             decision_form.save()
             return HttpResponseRedirect(reverse(decision_list,
-                                                args=[decision.decision_list.id]))
+                                                args=[decision.group.id]))
         
     return render_to_response('decision_add.html',
         RequestContext(request, dict(decision_form=decision_form)))
 
-def decision_lists(request):
-    decision_lists = DecisionList.objects.all()
-     
-    return render_to_response('decision_lists.html',
-        RequestContext(request, dict(decision_lists=decision_lists)))
+def groups(request):
+    groups = Group.objects.all()
+    
+    return render_to_response('groups.html',
+        RequestContext(request, dict(groups=groups)))

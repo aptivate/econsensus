@@ -14,8 +14,7 @@ from django.core.urlresolvers import reverse
 
 import openconsent.publicweb
 import openconsent.publicweb.views
-from openconsent.publicweb.models import Decision
-from openconsent.publicweb.models import DecisionList
+from openconsent.publicweb.models import Decision, Group
 from openconsent.publicweb.forms import DecisionForm
 
 import tinymce.widgets
@@ -25,7 +24,7 @@ from operator import attrgetter
 
 import difflib
 
-class PublicWebsiteTest(TestCase):
+class DecisionsTest(TestCase):
     # fixtures = ['submission_test_data.json', 'foobar', 'indicator_tests.yaml']
     
     def setUp(self):
@@ -36,14 +35,7 @@ class PublicWebsiteTest(TestCase):
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
    
-    def test_get_decision_lists(self):
-        """
-        The decision lists page should return the list of all decision lists.
-        """
-        response = self.get(openconsent.publicweb.views.decision_lists)
-        self.assertEqual(list(DecisionList.objects.all()),
-        list(response.context['decision_lists']))
-    
+
     def test_get_decision_list_page_with_invalid_decisionlist_id_returns_404(self):
         response = self.client.get(reverse('decision_list', args = [100]))
         self.assertTemplateUsed(response, '404.html')
@@ -52,12 +44,12 @@ class PublicWebsiteTest(TestCase):
         """
         Check the decision title matches its parent list
         """
-        decisionlist = DecisionList(short_name='First List')
-        decisionlist.save()        
+        group = Group(short_name='First List')
+        group.save()        
         
-        response = self.client.get(reverse('decision_list', args = [decisionlist.id]))
-        self.assertEqual(decisionlist.short_name,
-                         response.context['decisionlist'].short_name)
+        response = self.client.get(reverse('decision_list', args = [group.id]))
+        self.assertEqual(group.short_name,
+                         response.context['group'].short_name)
     
     def test_decision_add_page(self):
         """
@@ -79,16 +71,16 @@ class PublicWebsiteTest(TestCase):
         
         # Test that providing a short name is enough to complete the form,
         # save the object and send us back to the home page
-        decisionlist = DecisionList(short_name='First List')
-        decisionlist.save()
+        group = Group(short_name='First List')
+        group.save()
         
         response = self.client.post(path, {'short_name': 'Feed the dog',
-                                           'decision_list': decisionlist.id },
+                                           'group': group.id },
             follow=True)
         
         
         self.assertRedirects(response,
-            reverse('decision_list', args=[decisionlist.id]),
+            reverse('decision_list', args=[group.id]),
             msg_prefix=response.content)
 
     def assert_decision_form_field_uses_tinymce_widget(self, field):
@@ -117,23 +109,23 @@ class PublicWebsiteTest(TestCase):
         """
         decision = self.get_example_decision()
         response = self.client.get(reverse('decision_list',
-                                    args=[decision.decision_list.id]))
+                                    args=[decision.group.id]))
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
     def assert_decisions_table_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order. 
-        decisionlist = DecisionList(short_name='First List')
-        decisionlist.save()
+        group = Group(short_name='First List')
+        group.save()
         
         for i in range(5, 0, -1):
             decision = Decision(short_name='Decision %d' % i)
-            decision.decision_list = decisionlist
+            decision.group = group
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save()
             
         response = self.client.get(reverse('decision_list',
-                                           args=[decisionlist.id]),
+                                           args=[group.id]),
             data=dict(sort=column))
         decisions_table = response.context['decisions']    
         
@@ -153,11 +145,11 @@ class PublicWebsiteTest(TestCase):
 
     def get_example_decision(self):
         
-        decisionlist = DecisionList(short_name='First List')
-        decisionlist.save()
+        group = Group(short_name='First List')
+        group.save()
         
         decision = Decision(short_name='Decision Time' )
-        decision.decision_list = decisionlist
+        decision.group = group
         decision.save()
         
         return decision
@@ -185,7 +177,7 @@ class PublicWebsiteTest(TestCase):
     def get_edit_decision_response(self, decision):
         path = reverse(openconsent.publicweb.views.decision_view_page, args=[decision.id])
         response = self.client.post(path, {'short_name': 'Feed the cat',
-                                           'decision_list': decision.decision_list.id})
+                                           'group': decision.group.id})
         return response
     
     def test_save_edit_decision_page(self):
@@ -200,20 +192,20 @@ class PublicWebsiteTest(TestCase):
         decision = self.get_example_decision()
         response = self.get_edit_decision_response(decision)
         self.assertRedirects(response, reverse('decision_list',
-                                               args=[decision.decision_list.id]),
+                                               args=[decision.group.id]),
             msg_prefix=response.content)
         
     def test_decision_list_only_shows_decisions_from_a_single_group(self):
-        breakfast_decisions = DecisionList(short_name='Breakfast decisions')
+        breakfast_decisions = Group(short_name='Breakfast decisions')
         breakfast_decisions.save()
-        lunch_decisions = DecisionList(short_name='Lunch decisions')
+        lunch_decisions = Group(short_name='Lunch decisions')
         lunch_decisions.save()
         
-        eggs = Decision(short_name='Make Eggs', decision_list=breakfast_decisions)
+        eggs = Decision(short_name='Make Eggs', group=breakfast_decisions)
         eggs.save()
-        toast = Decision(short_name='Make Toast', decision_list=breakfast_decisions)
+        toast = Decision(short_name='Make Toast', group=breakfast_decisions)
         toast.save()
-        Decision(short_name='Make salad', decision_list=lunch_decisions).save()
+        Decision(short_name='Make salad', group=lunch_decisions).save()
         
          
         expected_decisions = sorted([eggs,toast],key=attrgetter('id'))
@@ -232,3 +224,4 @@ class PublicWebsiteTest(TestCase):
         
         self.assertEqual(expected_decisions, actual_decisions)
     
+ 
