@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Group
+{% endblock %}
+
+{% block head %}
+{{ group.media }}
+{% endblock %}
+
+{% block heading %}
+Aptivate: New Group
+{% endblock %}
+
+{% block content %}
+<form method="post">
+<table>
+{{ group_form.as_table }}
+</table>
+<input type="submit" value="Save">
+{% csrf_token %}
+</form>
+{% endblock %}

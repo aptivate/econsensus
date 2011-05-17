@@ -12,5 +12,6 @@ urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^decision_list/(?P<group_id>[\d]+)/$',
         openconsent.publicweb.views.decision_list, name='decision_list'),
     url(r'^groups/$',
-        openconsent.publicweb.views.groups),
+        openconsent.publicweb.views.groups, name='groups'),
+    url(r'^group_add/$', 'group_add', name='group_add'),
 )

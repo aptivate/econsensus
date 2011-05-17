@@ -4,6 +4,7 @@ import logging
 
 from django import forms
 from models import Decision
+from models import Group
 import tinymce.widgets
 
 class DecisionForm(forms.ModelForm):
@@ -20,3 +21,7 @@ class DecisionForm(forms.ModelForm):
         
         widgets = {'description': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting)}
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group

@@ -5,6 +5,9 @@ import tinymce.widgets
 class Group(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='List Name')
     
+    def __str__(self):
+        return self.short_name
+    
 class Decision(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Decision')
     decided_date = models.DateField(null=True, blank=True,

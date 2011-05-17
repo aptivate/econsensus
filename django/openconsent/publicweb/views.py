@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from models import Decision, Group
-from forms import DecisionForm
+from forms import DecisionForm, GroupForm
 
 import django_tables
   
@@ -65,3 +65,17 @@ def groups(request):
     
     return render_to_response('groups.html',
         RequestContext(request, dict(groups=groups)))
+
+def group_add(request):
+    
+    group_form = GroupForm()
+    
+    if request.method == 'POST':
+        group_form = GroupForm(request.POST)
+        if group_form.is_valid():
+            group_form.save()
+            return HttpResponseRedirect(reverse('groups'))
+    
+    return render_to_response('group_add.html',
+        RequestContext(request, dict(group_form=group_form)))
+    

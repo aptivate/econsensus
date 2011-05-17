@@ -9,6 +9,9 @@ Aptivate Decisions
 {% endblock %}
 
 {% block content %}
+
+<a href="{% url group_add %}">Add Group</a> 
+
 <ul>
 	{% for group in groups %}
 	<li><a href="{% url decision_list group.id %}">{{ group.short_name }}</a></li>
