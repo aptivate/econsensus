@@ -25,7 +25,7 @@ def decision_list(request, decisionlist_id):
     
     decisionlist = get_object_or_404(DecisionList, pk=decisionlist_id)
     
-    decisions = DecisionTable(Decision.objects.all(),
+    decisions = DecisionTable(decisionlist.decision_set.all(),
         order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
         RequestContext(request, dict(decisions=decisions,decisionlist=decisionlist)))

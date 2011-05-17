@@ -21,6 +21,8 @@ from openconsent.publicweb.forms import DecisionForm
 import tinymce.widgets
 import django_tables
 
+from operator import attrgetter
+
 import difflib
 
 class PublicWebsiteTest(TestCase):
@@ -200,3 +202,33 @@ class PublicWebsiteTest(TestCase):
         self.assertRedirects(response, reverse('decision_list',
                                                args=[decision.decision_list.id]),
             msg_prefix=response.content)
+        
+    def test_decision_list_only_shows_decisions_from_a_single_group(self):
+        breakfast_decisions = DecisionList(short_name='Breakfast decisions')
+        breakfast_decisions.save()
+        lunch_decisions = DecisionList(short_name='Lunch decisions')
+        lunch_decisions.save()
+        
+        eggs = Decision(short_name='Make Eggs', decision_list=breakfast_decisions)
+        eggs.save()
+        toast = Decision(short_name='Make Toast', decision_list=breakfast_decisions)
+        toast.save()
+        Decision(short_name='Make salad', decision_list=lunch_decisions).save()
+        
+         
+        expected_decisions = sorted([eggs,toast],key=attrgetter('id'))
+        
+        response = self.client.get(reverse('decision_list',
+                                            args=[breakfast_decisions.id]))
+        
+        actual_data = response.context['decisions']
+              
+        actual_decisions = []
+        
+        for row in actual_data.rows:
+            actual_decisions.append(row.data)
+                
+        actual_decisions = sorted(actual_decisions,key=attrgetter('id'))
+        
+        self.assertEqual(expected_decisions, actual_decisions)
+    
