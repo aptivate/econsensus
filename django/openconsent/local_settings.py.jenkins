@@ -1,0 +1,25 @@
+from settings import INSTALLED_APPS, MIDDLEWARE_CLASSES
+# local settings for the jenkins (CI) server
+
+# turn on debug stuff on jenkins (CI) server
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+# Database settings
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'openconsent_jenkins',                      # Or path to database file if using sqlite3.
+        'USER': 'openconsent',                      # Not used with sqlite3.
+        'PASSWORD': 'aptivate',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+# add the jenkins app here
+INSTALLED_APPS = (
+      'django_jenkins',
+    )  + INSTALLED_APPS
+
