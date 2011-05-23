@@ -24,8 +24,6 @@ class Decision(models.Model):
         verbose_name='People')
     description = tinymce.models.HTMLField(blank=True,
         verbose_name='Description')
-    concerns = models.TextField(blank=True,
-        verbose_name='Concerns')
     group = models.ForeignKey('Group')
     
     def concerns_yesno(self):
@@ -36,3 +34,8 @@ class Decision(models.Model):
         
     def __str__(self):
         return self.short_name
+    
+class Concern(models.Model):
+    short_name = models.CharField(max_length=255, verbose_name='Concern')
+    decision = models.ForeignKey('Decision')
+    description = models.TextField(blank=True, verbose_name='Concern Description')

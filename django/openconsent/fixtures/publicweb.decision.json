@@ -3,9 +3,17 @@
         "pk": 1, 
         "model": "publicweb.group", 
         "fields": {
-            "short_name": "Item Number One"
+            "short_name": "Breakfast"
         }
     },
+    {
+        "pk": 2, 
+        "model": "publicweb.group", 
+        "fields": {
+            "short_name": "Lunch"
+        }
+    },
+    
     {
         "pk": 1, 
         "model": "publicweb.decision", 
@@ -18,7 +26,6 @@
             "expiry_date": "2001-04-03", 
             "effective_date": null, 
             "decided_date": "1999-12-24", 
-            "concerns": "",
         	"group":1
         }
     }, 
@@ -34,7 +41,6 @@
             "expiry_date": "2001-08-07", 
             "effective_date": null, 
             "decided_date": "2000-01-17", 
-            "concerns": "",
         	"group":1
         }
     }, 
@@ -50,7 +56,6 @@
             "expiry_date": "2007-02-06", 
             "effective_date": null, 
             "decided_date": "2000-03-01", 
-            "concerns": "",
         	"group":1
         } 
     }, 
@@ -66,8 +71,26 @@
             "expiry_date": "2004-02-01", 
             "effective_date": null, 
             "decided_date": "2000-02-12", 
-            "concerns": "",
         	"group":1
+        }
+    },
+    
+   {
+        "pk": 1, 
+        "model": "publicweb.concern", 
+        "fields": {
+            "short_name": "I hate eggs",
+  			"decision": 1,
+            "description": "they do not agree with me"
+        }
+    },
+   {
+        "pk": 2, 
+        "model": "publicweb.concern", 
+        "fields": {
+            "short_name": "Toast is burnt",
+  			"decision": 1,
+            "description": "it really is"
         }
     }
 ]

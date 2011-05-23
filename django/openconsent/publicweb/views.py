@@ -8,8 +8,8 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-from models import Decision, Group
-from forms import DecisionForm, GroupForm
+from models import Decision, Group, Concern
+from forms import DecisionForm, GroupForm, ConcernForm
 
 import django_tables
   
@@ -32,23 +32,29 @@ def decision_list(request, group_id):
                                      group=group)))
 
 def decision_add_page(request):
+    
     if request.POST:
         decision_form = DecisionForm(request.POST)
         if decision_form.is_valid():
-            decision = decision_form.save()
+            decision = decision_form.save(commit=False)
+            concern_form = ConcernForm(request.POST, instance=decision)
+            if concern_form.is_valid():
+                decision_form.save()
+                concern_form.save()
             return HttpResponseRedirect(reverse(decision_list,
                                                 args=[decision.group.id]))
     else:
+        concern_form = ConcernForm()
         decision_form = DecisionForm()
         
     return render_to_response('decision_add.html',
         RequestContext(request,
-            dict(decision_form=decision_form)))
+            dict(decision_form=decision_form, concern_form=concern_form)))
     
-
 def decision_view_page(request, decision_id):
     decision = Decision.objects.get(id = decision_id)
     decision_form = DecisionForm(instance=decision)
+    concern_form = ConcernForm(instance=decision)
     
     if request.method == 'POST':
         decision_form = DecisionForm(request.POST, instance=decision)
@@ -58,7 +64,9 @@ def decision_view_page(request, decision_id):
                                                 args=[decision.group.id]))
         
     return render_to_response('decision_add.html',
-        RequestContext(request, dict(decision_form=decision_form)))
+        RequestContext(request, 
+                       dict(decision_form=decision_form,
+                            concern_form=concern_form)))
 
 def groups(request):
     groups = Group.objects.all()

@@ -3,9 +3,12 @@
 import logging
 
 from django import forms
-from models import Decision
-from models import Group
+from models import Decision, Group, Concern
 import tinymce.widgets
+
+from django.forms.models import inlineformset_factory
+
+ConcernForm = inlineformset_factory(Decision, Concern, fields=('short_name',))
 
 class DecisionForm(forms.ModelForm):
     class Meta:
