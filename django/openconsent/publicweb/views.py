@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from models import Decision, Group, Concern
-from forms import DecisionForm, GroupForm, ConcernForm
+from forms import DecisionForm, GroupForm, ConcernFormSet
 
 import django_tables
   
@@ -37,14 +37,14 @@ def decision_add_page(request):
         decision_form = DecisionForm(request.POST)
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            concern_form = ConcernForm(request.POST, instance=decision)
+            concern_form = ConcernFormSet(request.POST, instance=decision)
             if concern_form.is_valid():
                 decision_form.save()
                 concern_form.save()
             return HttpResponseRedirect(reverse(decision_list,
                                                 args=[decision.group.id]))
     else:
-        concern_form = ConcernForm()
+        concern_form = ConcernFormSet()
         decision_form = DecisionForm()
         
     return render_to_response('decision_add.html',
@@ -54,14 +54,14 @@ def decision_add_page(request):
 def decision_view_page(request, decision_id):
     decision = Decision.objects.get(id = decision_id)
     decision_form = DecisionForm(instance=decision)
-    concern_form = ConcernForm(instance=decision)
+    concern_form = ConcernFormSet(instance=decision)
     
     if request.method == 'POST':
         decision_form = DecisionForm(request.POST, instance=decision)
                 
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            concern_form = ConcernForm(request.POST,instance=decision)
+            concern_form = ConcernFormSet(request.POST,instance=decision)
             if concern_form.is_valid():
                 decision_form.save()
                 concern_form.save()

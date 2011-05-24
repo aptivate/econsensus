@@ -1,11 +1,13 @@
 from django.db import models
+from django.core.urlresolvers import reverse
+
 import tinymce.models
 import tinymce.widgets
 
 class Group(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='List Name')
     
-    def __str__(self):
+    def __unicode__(self):
         return self.short_name
     
 class Decision(models.Model):
@@ -32,10 +34,19 @@ class Decision(models.Model):
         else:
             return "No"
         
-    def __str__(self):
+    def __unicode__(self):
         return self.short_name
+    
+    def get_absolute_url(self):
+        x = reverse('decision_edit', args=[self.id])
+        print x
+        return x
     
 class Concern(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Concern')
     decision = models.ForeignKey('Decision')
     description = models.TextField(blank=True, verbose_name='Concern Description')
+    
+    def __unicode__(self):
+        return self.short_name
+    

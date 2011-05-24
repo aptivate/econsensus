@@ -16,7 +16,7 @@ from django.forms.models import modelformset_factory
 import openconsent.publicweb
 import openconsent.publicweb.views
 from openconsent.publicweb.models import Decision, Group, Concern
-from openconsent.publicweb.forms import DecisionForm, ConcernForm
+from openconsent.publicweb.forms import DecisionForm, ConcernFormSet
 
 import tinymce.widgets
 import django_tables
@@ -202,7 +202,7 @@ class DecisionsTest(TestCase):
         
     def test_edit_decision_page_update_concern(self):
         
-        #concern_formset = ConcernForm(instance=self.decision)
+        #concern_formset = ConcernFormSet(instance=self.decision)
         path = reverse('decision_edit', args=[self.decision.id])
         
         page = self.client.get(path)
