@@ -2,7 +2,7 @@ import os, sys
 
 project_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath(os.path.join(project_dir, '../django')))
-sys.path.append(os.path.abspath(os.path.join(project_dir, '/django/openconsent/')))
+sys.path.append(os.path.abspath(os.path.join(project_dir, '../django/openconsent/')))
 
 #print >> sys.stderr, sys.path
 
