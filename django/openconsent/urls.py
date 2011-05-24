@@ -7,7 +7,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', openconsent.publicweb.views.groups, name='groups'),
+    # url(r'^$', openconsent.publicweb.views.groups, name='groups'),
     url(r'^public/', include('openconsent.publicweb.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
