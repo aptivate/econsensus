@@ -25,6 +25,8 @@ from operator import attrgetter
 
 import difflib
 
+from mechanize import ParseString
+
 class DecisionsTest(TestCase):
     def setUp(self):
         self.decision = self.get_example_decision()
@@ -182,25 +184,52 @@ class DecisionsTest(TestCase):
         concern_formset = response.context['concern_form']
         concerns = decision.concern_set.all()
         self.assertEquals(list(concerns), list(concern_formset.queryset))
+
+    def get_edit_concern_response(self, decision):
+        path = reverse(openconsent.publicweb.views.decision_view_page,
+                       args=[decision.id])
+        response = self.client.post(path, {'short_name': 'Modified',
+                                    'group': decision.group.id,
+                                    'concern_set-TOTAL_FORMS': '3',
+                                    'concern_set-INITIAL_FORMS': '0',
+                                    'concern_set-MAX_NUM_FORMS': '',
+                                    'concern_set-1-short_name': 'This concern is modified',
+                                    'concern_set-2-short_name': 'No one wants them',
+                                    })
+        return response
+    
+
         
     def test_edit_decision_page_update_concern(self):
-        concern_formset = ConcernForm(instance=self.decision)
-        path = reverse('decision_edit', args=[self.decision.id])
-       
-        post_data = {'short_name': 'Modified',
-                     'group': self.decision.group.id,
-                     'concern_set-1-short_name': 'Modified'} 
-        post_data.update(concern_formset.management_form.initial)
         
+        #concern_formset = ConcernForm(instance=self.decision)
+        path = reverse('decision_edit', args=[self.decision.id])
+        
+        page = self.client.get(path)
+        
+        post_data = self.mechanize_page(page.content)
+               
+        post_data['concern_set-0-short_name'] = 'Modified'
+        post_data['group'] = self.decision.group.id
+                
+        #post_data.update(concern_formset.management_form.initial)
+                
         self.client.post(path, post_data)
+        
+        
         decision = Decision.objects.get(id=self.decision.id)
+                
         self.assertEquals('Modified', decision.concern_set.all()[0].short_name)
         
     def get_edit_decision_response(self, decision):
         path = reverse(openconsent.publicweb.views.decision_view_page,
                        args=[decision.id])
         response = self.client.post(path, {'short_name': 'Feed the cat',
-                                           'group': decision.group.id})
+                                           'group': decision.group.id,
+                                           'concern_set-TOTAL_FORMS': '3',
+                                           'concern_set-INITIAL_FORMS': '0',
+                                           'concern_set-MAX_NUM_FORMS': '',
+                                           })
         return response
     
     def test_save_edit_decision_page(self):
@@ -237,7 +266,7 @@ class DecisionsTest(TestCase):
                                             args=[breakfast_decisions.id]))
         
         actual_data = response.context['decisions']
-              
+        
         actual_decisions = []
         
         for row in actual_data.rows:
@@ -271,3 +300,29 @@ class DecisionsTest(TestCase):
         self.assertEquals('The eggs are bad', concerns[0].short_name)
         self.assertEquals('No one wants them', concerns[1].short_name)
     
+    #TODO: Needs to work for select elements
+    def mechanize_page(self,content):
+        forms = ParseString(content, '')
+        
+        length = len(forms[1].controls)
+        form_data = {}
+        for control in range(length):
+            try:
+                 name = forms[1].controls[control].attrs.get("name")
+                 if name:
+                     if forms[1].controls[control].attrs.get("value") != None:
+                         form_data[name]=forms[1].controls[control].attrs.get("value")
+                     else:
+                         form_data[name]=''
+
+            except AttributeError:
+                pass
+        
+        return form_data
+                    
+ #   def test_mechanize_page(self):
+ #       #Basic test to see if the mechanize package works.
+ #       path = reverse('decision_edit', args=[self.decision.id])
+ #       form_data = self.mechanize_page(path)
+        
+            

@@ -58,8 +58,14 @@ def decision_view_page(request, decision_id):
     
     if request.method == 'POST':
         decision_form = DecisionForm(request.POST, instance=decision)
+                
         if decision_form.is_valid():
-            decision_form.save()
+            decision = decision_form.save(commit=False)
+            concern_form = ConcernForm(request.POST,instance=decision)
+            if concern_form.is_valid():
+                decision_form.save()
+                concern_form.save()
+                
             return HttpResponseRedirect(reverse(decision_list,
                                                 args=[decision.group.id]))
         
