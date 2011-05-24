@@ -18,7 +18,7 @@ env.project_dir = env.project
 env.repo_type = "git"
 env.repository = 'git://github.com/aptivate/openconsent.git'
 
-env.django_dir = env.project
+env.django_dir = os.path.join('django', env.project)
 env.django_apps = ['publicweb', ]
 env.test_cmd = ' manage.py test -v0 ' + ' '.join(env.django_apps)
 

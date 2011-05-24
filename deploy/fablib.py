@@ -181,8 +181,9 @@ def link_local_settings():
 def rm_pyc_files():
     """Remove all the old pyc files to prevent stale files being used"""
     require('django_root', provided_by=env.valid_envs)
-    with cd(env.django_root):
-        sudo('find . -name *.pyc | xargs rm')
+    with settings(warn_only=True):
+        with cd(env.django_root):
+            sudo('find . -name \*.pyc | xargs rm')
 
 def link_apache_conf():
     """link the apache.conf file"""
