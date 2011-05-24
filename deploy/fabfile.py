@@ -84,7 +84,7 @@ def staging():
 def production():
     """ use production environment on remote host"""
     env.environment = 'production'
-    env.hosts = ['lin-project_name.aptivate.org:48001']
+    env.hosts = ['lin-openconsent.aptivate.org:48001']
     _local_setup()
 
 
