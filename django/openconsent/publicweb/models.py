@@ -20,9 +20,9 @@ class Decision(models.Model):
         verbose_name='Review date')
     expiry_date = models.DateField(null=True, blank=True,
         verbose_name='Expiry date')
-    budget = models.TextField(blank=True,
+    budget = models.CharField(blank=True, max_length=255,
         verbose_name='Budget')
-    people = models.TextField(blank=True,
+    people = models.CharField(blank=True, max_length=255,
         verbose_name='People')
     description = tinymce.models.HTMLField(blank=True,
         verbose_name='Description')
@@ -46,6 +46,7 @@ class Concern(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Concern')
     decision = models.ForeignKey('Decision')
     description = models.TextField(blank=True, verbose_name='Concern Description')
+    resolved = models.BooleanField()
     
     def __unicode__(self):
         return self.short_name

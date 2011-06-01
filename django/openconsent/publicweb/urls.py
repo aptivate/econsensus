@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list_detail import object_list
+from django.conf import settings
 
 import openconsent.publicweb.views
 

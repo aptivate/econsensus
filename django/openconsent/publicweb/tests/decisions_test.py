@@ -182,6 +182,8 @@ class DecisionsTest(TestCase):
         response = self.client.get(path)
         
         concern_formset = response.context['concern_form']
+        print "***Concern Formset: ", concern_formset
+        print "***dir(concern_formset): ", dir(concern_formset)
         concerns = decision.concern_set.all()
         self.assertEquals(list(concerns), list(concern_formset.queryset))
 
