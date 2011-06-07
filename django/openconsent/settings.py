@@ -6,6 +6,8 @@ PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+LOGIN_REDIRECT_URL = '/admin/publicweb/decision/'
+
 ADMINS = (
     ('Open Consent Project', 'openconsent-info@aptivate.org'),
 )

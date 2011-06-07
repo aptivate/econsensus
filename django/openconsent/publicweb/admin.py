@@ -21,8 +21,6 @@ class GroupAdmin(admin.ModelAdmin):
         
         decisions = group.decision_set.all()
         
-        print "***Here's the decisions:", dict(decisions = decisions)
-
         extra_context = {
             'decisions': decisions,
         }
@@ -44,17 +42,19 @@ class ConcernInline(admin.TabularInline):
 class DecisionAdmin(admin.ModelAdmin):
 #    can't get nested fields to work...
 #    fields = ['short_name',('effective_date','decided_date','review_date')]
+
+    change_list_template = 'admin/decision_change_list.html'
         
     fieldsets = [
         (None, {'fields': ('short_name','description', 
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
-                           'budget','people','group')}),
+                           'budget','people')}),
     ]
 
-    list_display = ('short_name','decided_date','effective_date','review_date','expiry_date','budget','people','group')
+    list_display = ('short_name','decided_date','effective_date','review_date','expiry_date','budget','people')
     search_fields = ('short_name',)
-    list_filter = ('group','decided_date','effective_date','review_date',)
+    list_filter = ('decided_date','effective_date','review_date',)
     inlines = (ConcernInline,)
     formfield_overrides = {
         models.CharField: {'widget': forms.TextInput(attrs={'size':'86'})},
@@ -63,6 +63,5 @@ class DecisionAdmin(admin.ModelAdmin):
 class ConcernAdmin(admin.ModelAdmin):
     list_display = ('short_name','description','resolved')
         
-admin.site.register(Group, GroupAdmin)
 admin.site.register(Concern,ConcernAdmin)
 admin.site.register(Decision,DecisionAdmin)

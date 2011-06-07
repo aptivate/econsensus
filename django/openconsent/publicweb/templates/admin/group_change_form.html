@@ -2,11 +2,11 @@
 
 {% block after_related_objects %}
 
-<h2>Decisions attached to this group:</h2> 
+<h2>Decisions in this group:</h2> 
 
 <ul>
 {% for decision in decisions %}
 <li><a href="{{ decision.get_absolute_url }}">{{ decision.short_name }}</a></li>
 {% endfor %}
 </ul>
-Some words here.{% endblock %}
+{% endblock %}

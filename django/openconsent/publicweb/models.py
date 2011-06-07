@@ -5,7 +5,10 @@ import tinymce.models
 import tinymce.widgets
 
 class Group(models.Model):
-    short_name = models.CharField(max_length=255, verbose_name='List Name')
+    short_name = models.CharField(max_length=255, verbose_name='Name')
+    
+    class Meta():
+        verbose_name = "Decision Group"
     
     def __unicode__(self):
         return self.short_name

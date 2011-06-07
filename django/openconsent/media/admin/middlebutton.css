@@ -1,0 +1,6 @@
+/*This css data is used by the decision lists page in the admin interface.
+It moves the "Add decision button in towards the centre */
+
+.object-tools {
+	padding-right: 80em;
+}
