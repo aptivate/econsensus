@@ -29,14 +29,19 @@ class Decision(models.Model):
         verbose_name='People')
     description = tinymce.models.HTMLField(blank=True,
         verbose_name='Description')
-    group = models.ForeignKey('Group')
+    group = models.ForeignKey('Group', null=True, blank=True)
+    activeconcerns = models.BooleanField()
     
-    def concerns_yesno(self):
-        if self.concerns:
-            return "Yes"
-        else:
-            return "No"
-        
+    def save(self):
+        self.activeconcerns = False
+        linked_concerns = self.concern_set.all()
+        for thisconcern in linked_concerns:
+            if not thisconcern.resolved:
+                self.activeconcerns = True
+                #quit loop?
+        super(Decision, self).save()
+            
+    
     def __unicode__(self):
         return self.short_name
     

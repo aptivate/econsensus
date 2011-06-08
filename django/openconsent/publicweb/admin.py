@@ -52,7 +52,7 @@ class DecisionAdmin(admin.ModelAdmin):
                            'budget','people')}),
     ]
 
-    list_display = ('short_name','decided_date','effective_date','review_date','expiry_date','budget','people')
+    list_display = ('short_name','activeconcerns', 'decided_date','effective_date','review_date','expiry_date','budget','people')
     search_fields = ('short_name',)
     list_filter = ('decided_date','effective_date','review_date',)
     inlines = (ConcernInline,)
