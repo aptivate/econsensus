@@ -3,3 +3,4 @@ mysql-python==1.2.3
 django-tinymce==1.5.1a2
 django-tables==0.2
 mechanize
+django-floppyforms==0.4.5

@@ -3,10 +3,11 @@
 import logging
 
 from django import forms
-from models import Decision, Group, Concern
+from models import Decision, Concern
 import tinymce.widgets
 
 from django.forms.models import inlineformset_factory
+from publicweb.widgets import JQueryUIDateWidget
 
 mce_attrs_setting = {
             "theme" : "advanced",
@@ -15,15 +16,16 @@ mce_attrs_setting = {
             "theme_advanced_buttons2" : "",
             "theme_advanced_buttons3" : "",
             }
-        
-ConcernFormSet = inlineformset_factory(Decision, Concern, fields=('short_name',))
+
+ConcernFormSet = inlineformset_factory(Decision, Concern, fields=('short_name','description','resolved',))
 
 class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
         widgets = {'description': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
-                   'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting)}
-
-class GroupForm(forms.ModelForm):
-    class Meta:
-        model = Group
+                   'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
+                   'decided_date': JQueryUIDateWidget,
+                   'effective_date': JQueryUIDateWidget,
+                   'review_date': JQueryUIDateWidget,
+                   'expiry_date': JQueryUIDateWidget,
+ }

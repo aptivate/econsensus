@@ -20,10 +20,10 @@ Home
 {% for decision in decisions.rows %}
     <tr>
 		<td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
-		<td>{{decision.concerns|yesno}}</td>
-		<td>{{decision.decided_date}}</td>
-		<td>{{decision.review_date}}</td>
-		<td>{{decision.expiry_date}}</td>
+		<td>{{ decision.unresolvedconcerns }}</td>
+		<td>{{ decision.decided_date }}</td>
+		<td>{{ decision.review_date }}</td>
+		<td>{{ decision.expiry_date }}</td>
     </tr>
 {% endfor %}
 </table>

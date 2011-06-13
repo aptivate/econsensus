@@ -8,28 +8,24 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-from models import Decision, Group, Concern
-from forms import DecisionForm, GroupForm, ConcernFormSet
+from models import Decision, Concern
+from forms import DecisionForm, ConcernFormSet
 
 import django_tables
   
 class DecisionTable(django_tables.ModelTable):
     id = django_tables.Column(sortable=False, visible=False)
     short_name = django_tables.Column(verbose_name='Decision')
-    concerns_yesno = django_tables.Column(verbose_name='Any concerns')
+    unresolvedconcerns = django_tables.Column(verbose_name='Unresolved Concerns')
     decided_date = django_tables.Column()
     review_date = django_tables.Column()
     expiry_date = django_tables.Column()
         
-def decision_list(request, group_id):
-    
-    group = get_object_or_404(Group, pk=group_id)
-    
-    decisions = DecisionTable(group.decision_set.all(),
+def decision_list(request):
+    decisions = DecisionTable(Decision.objects.all(),
         order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions,
-                                     group=group)))
+        RequestContext(request, dict(decisions=decisions,)))
 
 def decision_add_page(request):
     
@@ -41,8 +37,9 @@ def decision_add_page(request):
             if concern_form.is_valid():
                 decision_form.save()
                 concern_form.save()
-            return HttpResponseRedirect(reverse(decision_list,
-                                                args=[decision.group.id]))
+            return HttpResponseRedirect(reverse(decision_list))
+        else:
+            return HttpResponseRedirect(reverse(decision_add_page))
     else:
         concern_form = ConcernFormSet()
         decision_form = DecisionForm()
@@ -66,30 +63,11 @@ def decision_view_page(request, decision_id):
                 decision_form.save()
                 concern_form.save()
                 
-            return HttpResponseRedirect(reverse(decision_list,
-                                                args=[decision.group.id]))
+            return HttpResponseRedirect(reverse(decision_list))
         
     return render_to_response('decision_add.html',
         RequestContext(request, 
                        dict(decision_form=decision_form,
                             concern_form=concern_form)))
 
-def groups(request):
-    groups = Group.objects.all()
-    
-    return render_to_response('groups.html',
-        RequestContext(request, dict(groups=groups)))
-
-def group_add(request):
-    
-    group_form = GroupForm()
-    
-    if request.method == 'POST':
-        group_form = GroupForm(request.POST)
-        if group_form.is_valid():
-            group_form.save()
-            return HttpResponseRedirect(reverse('groups'))
-    
-    return render_to_response('group_add.html',
-        RequestContext(request, dict(group_form=group_form)))
     
