@@ -10,5 +10,10 @@ urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^decision/(?P<decision_id>[\d]+)/$', 'decision_view_page',
         name='decision_edit'),
     url(r'^decision_list/$',
-        openconsent.publicweb.views.decision_list, name='decision_list'),
+        'decision_list', name='decision_list')
+    )
+
+urlpatterns += patterns('django.contrib.auth.views',
+    url(r'^login/',
+        'login', name='login'),
 )

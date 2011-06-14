@@ -2,7 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 import tinymce.models
-#import tinymce.widgets
+import tinymce.widgets
 import datetime
     
 class Decision(models.Model):
@@ -44,7 +44,8 @@ class Decision(models.Model):
 class Concern(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Concern')
     decision = models.ForeignKey('Decision')
-    description = models.TextField(blank=True, verbose_name='Concern Description')
+    description = tinymce.models.HTMLField(blank=True, 
+                                           verbose_name='Concern Description')
     resolved = models.BooleanField()
     
     def __unicode__(self):

@@ -1,15 +1,22 @@
 {% extends "base.html" %}
 
 {% block title %}
-New Decision
-{% endblock %}
+{% if decision.short_name %}
+	{{ decision.short_name }}
+{% else %}
+	New Decision
+{% endif %}{% endblock %}
 
 {% block head %}
 {{ decision_form.media }}
 {% endblock %}
 
 {% block heading %}
-Aptivate: New Decision
+{% if decision.short_name %}
+	{{ decision.short_name }}
+{% else %}
+	New Decision
+{% endif %}
 {% endblock %}
 
 {% block content %}

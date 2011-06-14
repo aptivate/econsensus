@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/$', redirect_to, {'url': '/admin/publicweb/decision/'}),
     url(r'^admin/', include(admin.site.urls)),
-)
+    )
 
 if settings.DEBUG == True:
     urlpatterns += patterns('',

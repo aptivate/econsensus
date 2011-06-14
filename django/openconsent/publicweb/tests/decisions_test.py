@@ -12,11 +12,14 @@ import datetime
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
+from django.contrib.auth.models import User
 
 import openconsent.publicweb
 import openconsent.publicweb.views
 from openconsent.publicweb.models import Decision, Concern
 from openconsent.publicweb.forms import DecisionForm, ConcernFormSet
+
+from publicweb.tests.open_consent_test_case import OpenConsentTestCase
 
 import tinymce.widgets
 import django_tables
@@ -29,10 +32,9 @@ from mechanize import ParseString
 
 from publicweb.widgets import JQueryUIDateWidget
 
-class DecisionsTest(TestCase):
+class DecisionsTest(OpenConsentTestCase):
     def setUp(self):
-        pass
-        #self.decision = self.get_example_decision()
+        self.login()
 
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
@@ -182,8 +184,6 @@ class DecisionsTest(TestCase):
                                     })
         return response
     
-
-        
     def test_edit_decision_page_update_concern(self):
         self.decision = self.get_example_decision()
         

@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from models import Decision, Concern
 from forms import DecisionForm, ConcernFormSet
@@ -27,6 +28,7 @@ def decision_list(request):
     return render_to_response('decision_list.html',
         RequestContext(request, dict(decisions=decisions,)))
 
+@login_required
 def decision_add_page(request):
     
     if request.POST:
@@ -37,9 +39,10 @@ def decision_add_page(request):
             if concern_form.is_valid():
                 decision_form.save()
                 concern_form.save()
-            return HttpResponseRedirect(reverse(decision_list))
-        else:
-            return HttpResponseRedirect(reverse(decision_add_page))
+                return HttpResponseRedirect(reverse(decision_list))
+        
+        return HttpResponseRedirect(reverse(decision_add_page))
+
     else:
         concern_form = ConcernFormSet()
         decision_form = DecisionForm()
@@ -62,12 +65,14 @@ def decision_view_page(request, decision_id):
             if concern_form.is_valid():
                 decision_form.save()
                 concern_form.save()
-                
-            return HttpResponseRedirect(reverse(decision_list))
+                return HttpResponseRedirect(reverse(decision_list))
+
+        return HttpResponseRedirect(reverse(decision_add_page))
         
     return render_to_response('decision_add.html',
-        RequestContext(request, 
-                       dict(decision_form=decision_form,
+        RequestContext(request,
+                       dict(decision = decision,
+                            decision_form=decision_form,
                             concern_form=concern_form)))
 
     

@@ -6,7 +6,7 @@ PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-LOGIN_REDIRECT_URL = '/admin/publicweb/decision/'
+LOGIN_URL = '/public/login/'
 
 ADMINS = (
     ('Open Consent Project', 'openconsent-info@aptivate.org'),
@@ -36,7 +36,7 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 SITE_ID = 1
 
@@ -153,5 +153,13 @@ LOGGING = {
         },
     }
 }
+
+TINYMCE_DEFAULT_CONFIG = {
+            "theme" : "advanced",
+            "theme_advanced_buttons1" : "bold,italic,underline,link,unlink," +
+                "bullist,blockquote,undo",
+            "theme_advanced_buttons2" : "",
+            "theme_advanced_buttons3" : ""
+            }
 
 from local_settings import *

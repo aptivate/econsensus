@@ -17,15 +17,26 @@ mce_attrs_setting = {
             "theme_advanced_buttons3" : "",
             }
 
-ConcernFormSet = inlineformset_factory(Decision, Concern, fields=('short_name','description','resolved',))
+class ConcernForm(forms.ModelForm):
+    class Meta:
+        model = Concern
+        widgets = {'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})}
+
+ConcernFormSet = inlineformset_factory(Decision, Concern, 
+                                       fields=('short_name','description','resolved',),
+                                       form=ConcernForm)
 
 class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
-        widgets = {'description': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
+        widgets = {'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20},
+                                                          mce_attrs=mce_attrs_setting),
                    'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget,
+                   'budget': forms.TextInput(attrs={'size':'70'}),
+                   'people': forms.TextInput(attrs={'size':'70'})
+
  }
