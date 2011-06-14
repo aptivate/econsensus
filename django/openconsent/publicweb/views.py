@@ -21,7 +21,8 @@ class DecisionTable(django_tables.ModelTable):
     decided_date = django_tables.Column()
     review_date = django_tables.Column()
     expiry_date = django_tables.Column()
-        
+
+@login_required        
 def decision_list(request):
     decisions = DecisionTable(Decision.objects.all(),
         order_by=request.GET.get('sort'))
@@ -50,7 +51,8 @@ def decision_add_page(request):
     return render_to_response('decision_add.html',
         RequestContext(request,
             dict(decision_form=decision_form, concern_form=concern_form)))
-    
+
+@login_required    
 def decision_view_page(request, decision_id):
     decision = Decision.objects.get(id = decision_id)
     decision_form = DecisionForm(instance=decision)

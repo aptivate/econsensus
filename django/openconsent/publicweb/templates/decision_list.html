@@ -4,9 +4,7 @@
 Home
 {% endblock %}
 
-{% block heading %}
-{{ decisionlist.short_name }}
-{% endblock %}
+{% block heading %}Decision List{% endblock %}
 
 {% block content %}
 <p><a href="{% url publicweb.views.decision_add_page %}">Add decision</a></p>

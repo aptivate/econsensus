@@ -7,6 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 LOGIN_URL = '/public/login/'
+LOGIN_REDIRECT_URL = '/public/decision_list/'
 
 ADMINS = (
     ('Open Consent Project', 'openconsent-info@aptivate.org'),

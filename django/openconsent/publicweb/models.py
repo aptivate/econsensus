@@ -38,8 +38,8 @@ class Decision(models.Model):
         return self.short_name
     
     def get_absolute_url(self):
-        x = reverse('decision_edit', args=[self.id])
-        return x
+        return ('decision_edit', (), {'decision_id':self.id})
+    get_absolute_url = models.permalink(get_absolute_url)
     
 class Concern(models.Model):
     short_name = models.CharField(max_length=255, verbose_name='Concern')

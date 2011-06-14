@@ -28,7 +28,6 @@ from operator import attrgetter
 
 import difflib
 
-from mechanize import ParseString
 
 from publicweb.widgets import JQueryUIDateWidget
 
@@ -269,26 +268,6 @@ class DecisionsTest(OpenConsentTestCase):
     def test_expiry_datepickers(self):
         self.assert_decision_datepickers('expiry_date')
     
-    #TODO: Needs to work for select elements
-    def mechanize_page(self,content):
-        forms = ParseString(content, '')
-        
-        length = len(forms[1].controls)
-        form_data = {}
-        for control in range(length):
-            try:
-                 name = forms[1].controls[control].attrs.get("name")
-                 if name:
-                     if forms[1].controls[control].attrs.get("value") != None:
-                         form_data[name]=forms[1].controls[control].attrs.get("value")
-                     else:
-                         form_data[name]=''
-
-            except AttributeError:
-                pass
-        
-        return form_data
-                    
  #   def test_mechanize_page(self):
  #       #Basic test to see if the mechanize package works.
  #       path = reverse('decision_edit', args=[self.decision.id])
