@@ -187,7 +187,7 @@ def link_local_settings(environment):
             cwd=env['django_dir'])
 
 
-def update_db():
+def update_db(no_input=True):
     # first work out the database username and password
     db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
     # then see if the database exists
@@ -214,9 +214,12 @@ def update_db():
     for app in project_settings.django_apps:
         if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
             use_migrations = True
-    _manage_py(['syncdb', '--noinput'])
+    extra_args = []
+    if no_input:
+        extra_args = '--noinput'
+    _manage_py(['syncdb'] + extra_args)
     if use_migrations:
-        _manage_py(['migrate', '--noinput'])
+        _manage_py(['migrate'] + extra_args)
 
 def setup_db_dumps(dump_dir):
     """ set up mysql database dumps in root crontab """
@@ -336,5 +339,8 @@ def deploy(environment=None):
 
     create_ve()
     link_local_settings(environment)
-    update_db()
+    if environment == "dev":
+        update_db(no_input=False)
+    else:
+        update_db()
 
