@@ -21,9 +21,9 @@
 		{% block topbar %}
 			<TABLE WIDTH=50%>
 				<TR>
-					<TH><a href='{% url admin:index %}'>Admin</a>/<a href="/public/">Decision List</a></TH>
-					<TH>{{ user.username }}</TH>
-					<TH><a href={% url django.contrib.auth.views.logout %}>Logout</a></TH>
+					<TH ALIGN='left'><a href='{% url admin:index %}'>Admin</a></TH>
+					<TH><a href="/public/">Decision List</a></TH>
+					<TH ALIGN='right'>{{ user.username }}<a href={% url django.contrib.auth.views.logout %}>[Logout]</a></TH>
 				</TR>
 			</TABLE>
 		{% endblock %}
