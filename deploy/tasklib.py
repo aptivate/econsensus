@@ -216,7 +216,7 @@ def update_db():
             use_migrations = True
     _manage_py(['syncdb', '--noinput'])
     if use_migrations:
-        _manage_py(['migrate', '--noinput'])
+        _manage_py(['syncdb', '--noinput'])
 
 def setup_db_dumps(dump_dir):
     """ set up mysql database dumps in root crontab """
