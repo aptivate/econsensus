@@ -5,6 +5,9 @@ from settings import INSTALLED_APPS, MIDDLEWARE_CLASSES
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+LOGIN_URL = '/public/login/'
+LOGIN_REDIRECT_URL = '/public/decision_list/'
+
 # Database settings
 
 DATABASES = {

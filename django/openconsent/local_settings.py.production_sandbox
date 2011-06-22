@@ -1,6 +1,9 @@
 DEBUG = False
 TEMPLATE_DEBUG = False
 
+LOGIN_URL = '/sandbox/public/login/'
+LOGIN_REDIRECT_URL = '/sandbox/public/decision_list/'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

@@ -1,6 +1,9 @@
 DEBUG = True
 TEMPLATE_DEBUG = True
 
+LOGIN_URL = '/public/login/'
+LOGIN_REDIRECT_URL = '/public/decision_list/'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
