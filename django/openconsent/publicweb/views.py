@@ -34,6 +34,7 @@ def decision_add_page(request):
     
     if request.POST:
         decision_form = DecisionForm(request.POST)
+        concern_form = ConcernFormSet()
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
             concern_form = ConcernFormSet(request.POST, instance=decision)
@@ -42,8 +43,6 @@ def decision_add_page(request):
                 concern_form.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
-        return HttpResponseRedirect(reverse(decision_add_page))
-
     else:
         concern_form = ConcernFormSet()
         decision_form = DecisionForm()
@@ -68,8 +67,6 @@ def decision_view_page(request, decision_id):
                 decision_form.save()
                 concern_form.save()
                 return HttpResponseRedirect(reverse(decision_list))
-
-        return HttpResponseRedirect(reverse(decision_add_page))
         
     return render_to_response('decision_add.html',
         RequestContext(request,

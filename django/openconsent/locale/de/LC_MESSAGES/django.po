@@ -1,0 +1,5288 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-20 17:33+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:44
+msgid "Arabic"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:45
+msgid "Azerbaijani"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:46
+msgid "Bulgarian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:47
+msgid "Bengali"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:48
+msgid "Bosnian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:49
+msgid "Catalan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:50
+msgid "Czech"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:51
+msgid "Welsh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:52
+msgid "Danish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:53
+msgid "German"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:54
+msgid "Greek"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:55
+msgid "English"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:56
+msgid "British English"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:57
+msgid "Spanish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:58
+msgid "Argentinian Spanish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:59
+msgid "Mexican Spanish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:60
+msgid "Nicaraguan Spanish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:61
+msgid "Estonian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:62
+msgid "Basque"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:63
+msgid "Persian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:64
+msgid "Finnish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:65
+msgid "French"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:66
+msgid "Frisian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:67
+msgid "Irish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:68
+msgid "Galician"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:69
+msgid "Hebrew"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:70
+msgid "Hindi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:71
+msgid "Croatian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:72
+msgid "Hungarian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:73
+msgid "Indonesian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:74
+msgid "Icelandic"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:75
+msgid "Italian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:76
+msgid "Japanese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:77
+msgid "Georgian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:78
+msgid "Khmer"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:79
+msgid "Kannada"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:80
+msgid "Korean"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:81
+msgid "Lithuanian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:82
+msgid "Latvian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:83
+msgid "Macedonian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:84
+msgid "Malayalam"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:85
+msgid "Mongolian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:86
+msgid "Dutch"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:87
+msgid "Norwegian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:88
+msgid "Norwegian Bokmal"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:89
+msgid "Norwegian Nynorsk"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:90
+msgid "Punjabi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:91
+msgid "Polish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:92
+msgid "Portuguese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:93
+msgid "Brazilian Portuguese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:94
+msgid "Romanian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:95
+msgid "Russian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:96
+msgid "Slovak"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:97
+msgid "Slovenian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:98
+msgid "Albanian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:99
+msgid "Serbian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:100
+msgid "Serbian Latin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:101
+msgid "Swedish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:102
+msgid "Tamil"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:103
+msgid "Telugu"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:104
+msgid "Thai"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:105
+msgid "Turkish"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:106
+msgid "Ukrainian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:107
+msgid "Urdu"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:108
+msgid "Vietnamese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:109
+msgid "Simplified Chinese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/conf/global_settings.py:110
+msgid "Traditional Chinese"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/actions.py:49
+#, python-format
+msgid "Successfully deleted %(count)d %(items)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/actions.py:61
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1219
+#, python-format
+msgid "Cannot delete %(name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/actions.py:63
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1221
+msgid "Are you sure?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/actions.py:85
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:54
+#, python-format
+msgid ""
+"<h3>By %s:</h3>\n"
+"<ul>\n"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:104
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:139
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:168
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:258
+msgid "All"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:139
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:548
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:236
+msgid "Yes"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:139
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:548
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:237
+msgid "No"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:150
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:548
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:235
+msgid "Unknown"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:196
+msgid "Any date"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:197
+msgid "Today"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:200
+msgid "Past 7 days"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:203
+msgid "This month"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/filterspecs.py:205
+msgid "This year"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/forms.py:9
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:87
+msgid ""
+"Please enter a correct username and password. Note that both fields are case-"
+"sensitive."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/forms.py:18
+msgid "Please log in again, because your session has expired."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/forms.py:37
+#, python-format
+msgid "Your e-mail address is not your username. Try '%s' instead."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/helpers.py:19
+msgid "Action:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:19
+msgid "action time"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:22
+msgid "object id"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:23
+msgid "object repr"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:24
+msgid "action flag"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:25
+msgid "change message"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:28
+msgid "log entry"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/models.py:29
+msgid "log entries"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:147
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:162
+msgid "None"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:627
+#, python-format
+msgid "Changed %s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:627
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:637
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:16
+#: .ve/lib/python2.6/site-packages/django/db/models/base.py:791
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:562
+msgid "and"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:632
+#, python-format
+msgid "Added %(name)s \"%(object)s\"."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:636
+#, python-format
+msgid "Changed %(list)s for %(name)s \"%(object)s\"."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:641
+#, python-format
+msgid "Deleted %(name)s \"%(object)s\"."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:645
+msgid "No fields changed."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:717
+#, python-format
+msgid "The %(name)s \"%(obj)s\" was added successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:721
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:761
+msgid "You may edit it again below."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:731
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:771
+#, python-format
+msgid "You may add another %s below."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:759
+#, python-format
+msgid "The %(name)s \"%(obj)s\" was changed successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:767
+#, python-format
+msgid ""
+"The %(name)s \"%(obj)s\" was added successfully. You may edit it again below."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:827
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1085
+msgid ""
+"Items must be selected in order to perform actions on them. No items have "
+"been changed."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:846
+msgid "No action selected."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:927
+#, python-format
+msgid "Add %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:953
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1194
+#, python-format
+msgid "%(name)s object with primary key %(key)r does not exist."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1018
+#, python-format
+msgid "Change %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1065
+msgid "Database error"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1127
+#, python-format
+msgid "%(count)s %(name)s was changed successfully."
+msgid_plural "%(count)s %(name)s were changed successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1154
+#, python-format
+msgid "%(total_count)s selected"
+msgid_plural "All %(total_count)s selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1159
+#, python-format
+msgid "0 of %(cnt)s selected"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1210
+#, python-format
+msgid "The %(name)s \"%(obj)s\" was deleted successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/options.py:1255
+#, python-format
+msgid "Change history: %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/sites.py:319
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/login.html:42
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:14
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/views/decorators.py:26
+msgid "Log in"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/sites.py:375
+msgid "Site administration"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/sites.py:419
+#, python-format
+msgid "%s administration"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/widgets.py:75
+msgid "Date:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/widgets.py:75
+msgid "Time:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/widgets.py:140
+msgid "Lookup"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/widgets.py:246
+msgid "Add Another"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/404.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/404.html:8
+msgid "Page not found"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/404.html:10
+msgid "We're sorry, but the requested page could not be found."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/500.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/app_index.html:8
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base.html:55
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_form.html:19
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_list.html:42
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/invalid_setup.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:12
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/logged_out.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:5
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_done.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:3
+msgid "Home"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/500.html:4
+msgid "Server error"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/500.html:6
+msgid "Server error (500)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/500.html:9
+msgid "Server Error <em>(500)</em>"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/500.html:10
+msgid ""
+"There's been an error. It's been reported to the site administrators via e-"
+"mail and should be fixed shortly. Thanks for your patience."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/actions.html:4
+msgid "Run the selected action"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/actions.html:4
+msgid "Go"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/actions.html:11
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/actions.html:11
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/actions.html:13
+msgid "Clear selection"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/app_index.html:10
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:19
+#, python-format
+msgid "%(name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base.html:28
+msgid "Welcome,"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base.html:33
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:5
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:3
+msgid "Documentation"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base.html:41
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:16
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:49
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:5
+msgid "Change password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base.html:48
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:5
+msgid "Log out"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/base_site.html:7
+msgid "Django administration"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_form.html:22
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:29
+msgid "Add"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_form.html:31
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:10
+msgid "History"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_form.html:32
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/stacked.html:9
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/tabular.html:28
+msgid "View on site"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_form.html:43
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_list.html:73
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/login.html:17
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:25
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:16
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_list.html:64
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/change_list.html:84
+msgid "Filter"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:10
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/submit_line.html:4
+#: .ve/lib/python2.6/site-packages/django/forms/formsets.py:309
+msgid "Delete"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:17
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:25
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:33
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_confirmation.html:38
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:43
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:9
+msgid "Delete multiple objects"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:16
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:24
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/delete_selected_confirmation.html:32
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/filter.html:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:18
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:35
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:300
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:130
+msgid "Change"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:45
+msgid "You don't have permission to edit anything."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:53
+msgid "Recent Actions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:54
+msgid "My Actions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:58
+msgid "None available"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/index.html:72
+msgid "Unknown content"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/invalid_setup.html:7
+msgid ""
+"Something's wrong with your database installation. Make sure the appropriate "
+"database tables have been created, and make sure the database is readable by "
+"the appropriate user."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/login.html:33
+msgid "Username:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/login.html:37
+msgid "Password:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:22
+msgid "Date/time"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:23
+msgid "User"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:24
+msgid "Action"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/object_history.html:38
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/pagination.html:10
+msgid "Show all"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/pagination.html:11
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/submit_line.html:3
+msgid "Save"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/search_form.html:8
+msgid "Search"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/search_form.html:10
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/search_form.html:10
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/submit_line.html:5
+msgid "Save as new"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/submit_line.html:6
+msgid "Save and add another"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/submit_line.html:7
+msgid "Save and continue editing"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/add_form.html:6
+msgid ""
+"First, enter a username and password. Then, you'll be able to edit more user "
+"options."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/add_form.html:8
+msgid "Enter a username and password."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:29
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:36
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:17
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:67
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:196
+msgid "Password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:42
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:38
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:197
+msgid "Password (again)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/auth/user/change_password.html:43
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:19
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/stacked.html:67
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/tabular.html:113
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/stacked.html:70
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/tabular.html:116
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/delete.html:12
+msgid "Remove"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/admin/edit_inline/tabular.html:15
+msgid "Delete?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/logged_out.html:8
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/logged_out.html:10
+msgid "Log in again"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:5
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:8
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:20
+msgid "Password change"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:7
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:11
+msgid "Password change successful"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_done.html:13
+msgid "Your password was changed."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:22
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:28
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:180
+msgid "Old password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:33
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:154
+msgid "New password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_change_form.html:44
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:21
+msgid "Change my password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_done.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:10
+msgid "Password reset"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:10
+msgid "Password reset complete"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_complete.html:12
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:4
+msgid "Password reset confirmation"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:12
+msgid "Enter new password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:14
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:18
+msgid "New password:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:20
+msgid "Confirm password:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:26
+msgid "Password reset unsuccessful"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_confirm.html:28
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_done.html:6
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_done.html:10
+msgid "Password reset successful"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_done.html:12
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:12
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:16
+msgid "E-mail address:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templates/registration/password_reset_form.html:16
+msgid "Reset my password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/templatetags/admin_list.py:290
+msgid "All dates"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/views/main.py:27
+msgid "(None)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/views/main.py:66
+#, python-format
+msgid "Select %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admin/views/main.py:66
+#, python-format
+msgid "Select %s to change"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:63
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:65
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:67
+msgid "tag:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:98
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:100
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:102
+msgid "filter:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:162
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:164
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:166
+msgid "view:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:194
+#, python-format
+msgid "App %r not found"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:201
+#, python-format
+msgid "Model %(model_name)r not found in app %(app_label)r"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:213
+#, python-format
+msgid "the related `%(app_label)s.%(data_type)s` object"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:213
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:232
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:237
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:251
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:265
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:270
+msgid "model:"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:228
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:260
+#, python-format
+msgid "related `%(app_label)s.%(object_name)s` objects"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:232
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:265
+#, python-format
+msgid "all %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:237
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:270
+#, python-format
+msgid "number of %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:275
+#, python-format
+msgid "Fields on %s objects"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/views.py:365
+#, python-format
+msgid "%s does not appear to be a urlpattern object"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:3
+msgid "Bookmarklets"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:4
+msgid "Documentation bookmarklets"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:8
+msgid ""
+"\n"
+"<p class=\"help\">To install bookmarklets, drag the link to your bookmarks\n"
+"toolbar, or right-click the link and add it to your bookmarks. Now you can\n"
+"select the bookmarklet from any page in the site.  Note that some of these\n"
+"bookmarklets require you to be viewing the site from a computer designated\n"
+"as \"internal\" (talk to your system administrator if you aren't sure if\n"
+"your computer is \"internal\").</p>\n"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:18
+msgid "Documentation for this page"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:19
+msgid ""
+"Jumps you from any page to the documentation for the view that generates "
+"that page."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:21
+msgid "Show object ID"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:22
+msgid ""
+"Shows the content-type and unique ID for pages that represent a single "
+"object."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:24
+msgid "Edit this object (current window)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:25
+msgid "Jumps to the admin page for pages that represent a single object."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:27
+msgid "Edit this object (new window)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/admindocs/templates/admin_doc/bookmarklets.html:28
+msgid "As above, but opens the admin page in a new window."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:28
+msgid "Personal info"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:29
+msgid "Permissions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:30
+msgid "Important dates"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:31
+msgid "Groups"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:113
+msgid "Password changed successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/admin.py:123
+#, python-format
+msgid "Change password: %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:14
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:48
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:66
+msgid "Username"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:15
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:49
+msgid "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:16
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:50
+msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:18
+msgid "Password confirmation"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:31
+msgid "A user with that username already exists."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:37
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:166
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:208
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:89
+msgid "This account is inactive."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:96
+msgid ""
+"Your Web browser doesn't appear to have cookies enabled. Cookies are "
+"required for logging in."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:108
+msgid "E-mail"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:120
+msgid ""
+"That e-mail address doesn't have an associated user account. Are you sure "
+"you've registered?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:146
+#, python-format
+msgid "Password reset on %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:155
+msgid "New password confirmation"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/forms.py:188
+msgid "Your old password was entered incorrectly. Please enter it again."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:77
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:105
+msgid "name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:79
+msgid "codename"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:83
+msgid "permission"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:84
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:106
+msgid "permissions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:109
+msgid "group"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:110
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:217
+msgid "groups"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:207
+msgid "username"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:207
+msgid ""
+"Required. 30 characters or fewer. Letters, numbers and @/./+/-/_ characters"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:208
+msgid "first name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:209
+msgid "last name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:210
+msgid "e-mail address"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:211
+msgid "password"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:211
+msgid ""
+"Use '[algo]$[salt]$[hexdigest]' or use the <a href=\"password/\">change "
+"password form</a>."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:212
+msgid "staff status"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:212
+msgid "Designates whether the user can log into this admin site."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:213
+msgid "active"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:213
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:214
+msgid "superuser status"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:214
+msgid ""
+"Designates that this user has all permissions without explicitly assigning "
+"them."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:215
+msgid "last login"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:216
+msgid "date joined"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:218
+msgid ""
+"In addition to the permissions manually assigned, this user will also get "
+"all permissions granted to each group he/she is in."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:219
+msgid "user permissions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:223
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:50
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:168
+msgid "user"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:224
+msgid "users"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/models.py:407
+msgid "message"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/views.py:91
+msgid "Logged out"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/auth/management/commands/createsuperuser.py:23
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:138
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:449
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:12
+msgid "Content"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:15
+msgid "Metadata"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:42
+msgid "flagged"
+msgid_plural "flagged"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:43
+msgid "Flag selected comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:47
+msgid "approved"
+msgid_plural "approved"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:48
+msgid "Approve selected comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:52
+msgid "removed"
+msgid_plural "removed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:53
+msgid "Remove selected comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/admin.py:65
+#, python-format
+msgid "1 comment was successfully %(action)s."
+msgid_plural "%(count)s comments were successfully %(action)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/feeds.py:13
+#, python-format
+msgid "%(site_name)s comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/feeds.py:23
+#, python-format
+msgid "Latest comments on %(site_name)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:109
+#: publicweb/models.py:9
+msgid "Name"
+msgstr "Namen"
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:110
+msgid "Email address"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:111
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/admin.py:8
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:7
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1120
+msgid "URL"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:112
+msgid "Comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:191
+#, python-format
+msgid "Watch your mouth! The word %s is not allowed here."
+msgid_plural "Watch your mouth! The words %s are not allowed here."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/forms.py:198
+msgid ""
+"If you enter anything in this field your comment will be treated as spam"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:22
+#: .ve/lib/python2.6/site-packages/django/contrib/contenttypes/models.py:81
+msgid "content type"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:24
+msgid "object ID"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:52
+msgid "user's name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:53
+msgid "user's email address"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:54
+msgid "user's URL"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:56
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:76
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:169
+msgid "comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:59
+msgid "date/time submitted"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:60
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:915
+msgid "IP address"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:61
+msgid "is public"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:62
+msgid ""
+"Uncheck this box to make the comment effectively disappear from the site."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:64
+msgid "is removed"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:65
+msgid ""
+"Check this box if the comment is inappropriate. A \"This comment has been "
+"removed\" message will be displayed instead."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:77
+msgid "comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:119
+msgid ""
+"This comment was posted by an authenticated user and thus the name is read-"
+"only."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:128
+msgid ""
+"This comment was posted by an authenticated user and thus the email is read-"
+"only."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:153
+#, python-format
+msgid ""
+"Posted by %(user)s at %(date)s\n"
+"\n"
+"%(comment)s\n"
+"\n"
+"http://%(domain)s%(url)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:170
+msgid "flag"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:171
+msgid "date"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:181
+msgid "comment flag"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/models.py:182
+msgid "comment flags"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/approve.html:4
+msgid "Approve a comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/approve.html:7
+msgid "Really make this comment public?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/approve.html:12
+msgid "Approve"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/approved.html:4
+msgid "Thanks for approving"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/approved.html:7
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/deleted.html:7
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/flagged.html:7
+msgid ""
+"Thanks for taking the time to improve the quality of discussion on our site"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/delete.html:4
+msgid "Remove a comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/delete.html:7
+msgid "Really remove this comment?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/flag.html:4
+msgid "Flag this comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/flag.html:7
+msgid "Really flag this comment?"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/flag.html:12
+msgid "Flag"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/form.html:17
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:32
+msgid "Post"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/form.html:18
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:33
+msgid "Preview"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/posted.html:4
+msgid "Thanks for commenting"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/posted.html:7
+msgid "Thank you for your comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:4
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:13
+msgid "Preview your comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:11
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:16
+msgid "Post your comment"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/comments/templates/comments/preview.html:16
+msgid "or make changes"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/contenttypes/models.py:77
+msgid "python model class name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/contenttypes/models.py:82
+msgid "content types"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/admin.py:9
+msgid ""
+"Example: '/about/contact/'. Make sure to have leading and trailing slashes."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/admin.py:11
+msgid ""
+"This value must contain only letters, numbers, dots, underscores, dashes, "
+"slashes or tildes."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/admin.py:22
+msgid "Advanced options"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:8
+msgid "title"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:9
+msgid "content"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:10
+msgid "enable comments"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:11
+msgid "template name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:12
+msgid ""
+"Example: 'flatpages/contact_page.html'. If this isn't provided, the system "
+"will use 'flatpages/default.html'."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:13
+msgid "registration required"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:13
+msgid "If this is checked, only logged-in users will be able to view the page."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:18
+msgid "flat page"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/flatpages/models.py:19
+msgid "flat pages"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/formtools/wizard.py:176
+msgid ""
+"We apologize, but your form has expired. Please continue filling out the "
+"form from this page."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:50
+msgid "The base GIS field -- maps to the OpenGIS Specification Geometry type."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:270
+msgid "Point"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:274
+msgid "Line string"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:278
+msgid "Polygon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:282
+msgid "Multi-point"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:286
+msgid "Multi-line string"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:290
+msgid "Multi polygon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/db/models/fields.py:294
+msgid "Geometry collection"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/forms/fields.py:17
+msgid "No geometry value provided."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/forms/fields.py:18
+msgid "Invalid geometry value."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/forms/fields.py:19
+msgid "Invalid geometry type."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/gis/forms/fields.py:20
+msgid ""
+"An error occurred when transforming the geometry to the SRID of the geometry "
+"form field."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:19
+msgid "th"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:19
+msgid "st"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:19
+msgid "nd"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:19
+msgid "rd"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:54
+#, python-format
+msgid "%(value).1f million"
+msgid_plural "%(value).1f million"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:57
+#, python-format
+msgid "%(value).1f billion"
+msgid_plural "%(value).1f billion"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:60
+#, python-format
+msgid "%(value).1f trillion"
+msgid_plural "%(value).1f trillion"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "one"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "two"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "three"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "four"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "five"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "six"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "seven"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "eight"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:76
+msgid "nine"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:96
+msgid "today"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:98
+msgid "tomorrow"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/humanize/templatetags/humanize.py:100
+msgid "yesterday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ar/forms.py:28
+msgid "Enter a postal code in the format NNNN or ANNNNAAA."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ar/forms.py:50
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:92
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:131
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pe/forms.py:24
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pe/forms.py:52
+msgid "This field requires only numbers."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ar/forms.py:51
+msgid "This field requires 7 or 8 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ar/forms.py:80
+msgid "Enter a valid CUIT in XX-XXXXXXXX-X or XXXXXXXXXXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ar/forms.py:81
+msgid "Invalid CUIT."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:5
+msgid "Burgenland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:6
+msgid "Carinthia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:7
+msgid "Lower Austria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:8
+msgid "Upper Austria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:9
+msgid "Salzburg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:10
+msgid "Styria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:11
+msgid "Tyrol"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:12
+msgid "Vorarlberg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/at_states.py:13
+msgid "Vienna"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/forms.py:22
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/forms.py:17
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/no/forms.py:13
+msgid "Enter a zip code in the format XXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/at/forms.py:50
+msgid "Enter a valid Austrian Social Security Number in XXXX XXXXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/au/forms.py:17
+msgid "Enter a 4 digit post code."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:5
+msgid "Antwerp"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:6
+msgid "Brussels"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:7
+msgid "East Flanders"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:8
+msgid "Flemish Brabant"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:9
+msgid "Hainaut"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:10
+msgid "Liege"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:11
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:9
+msgid "Limburg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:12
+msgid "Luxembourg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:13
+msgid "Namur"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:14
+msgid "Walloon Brabant"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_provinces.py:15
+msgid "West Flanders"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_regions.py:5
+msgid "Brussels Capital Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_regions.py:6
+msgid "Flemish Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/be_regions.py:7
+msgid "Wallonia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/forms.py:23
+msgid "Enter a valid postal code in the range and format 1XXX - 9XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/be/forms.py:46
+msgid ""
+"Enter a valid phone number in one of the formats 0x xxx xx xx, 0xx xx xx xx, "
+"04xx xx xx xx, 0x/xxx.xx.xx, 0xx/xx.xx.xx, 04xx/xx.xx.xx, 0x.xxx.xx.xx, 0xx."
+"xx.xx.xx, 04xx.xx.xx.xx, 0xxxxxxxx or 04xxxxxxxx."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:17
+msgid "Enter a zip code in the format XXXXX-XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:26
+msgid "Phone numbers must be in XX-XXXX-XXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:54
+msgid ""
+"Select a valid brazilian state. That state is not one of the available "
+"states."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:90
+msgid "Invalid CPF number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:91
+msgid "This field requires at most 11 digits or 14 characters."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:130
+msgid "Invalid CNPJ number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/br/forms.py:132
+msgid "This field requires at least 14 digits"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ca/forms.py:25
+msgid "Enter a postal code in the format XXX XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ca/forms.py:96
+msgid "Enter a valid Canadian Social Insurance number in XXX-XXX-XXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:5
+msgid "Aargau"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:6
+msgid "Appenzell Innerrhoden"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:7
+msgid "Appenzell Ausserrhoden"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:8
+msgid "Basel-Stadt"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:9
+msgid "Basel-Land"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:10
+msgid "Berne"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:11
+msgid "Fribourg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:12
+msgid "Geneva"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:13
+msgid "Glarus"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:14
+msgid "Graubuenden"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:15
+msgid "Jura"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:16
+msgid "Lucerne"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:17
+msgid "Neuchatel"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:18
+msgid "Nidwalden"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:19
+msgid "Obwalden"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:20
+msgid "Schaffhausen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:21
+msgid "Schwyz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:22
+msgid "Solothurn"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:23
+msgid "St. Gallen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:24
+msgid "Thurgau"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:25
+msgid "Ticino"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:26
+msgid "Uri"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:27
+msgid "Valais"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:28
+msgid "Vaud"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:29
+msgid "Zug"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/ch_states.py:30
+msgid "Zurich"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ch/forms.py:65
+msgid ""
+"Enter a valid Swiss identity or passport card number in X1234567<0 or "
+"1234567890 format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cl/forms.py:30
+msgid "Enter a valid Chilean RUT."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cl/forms.py:31
+msgid "Enter a valid Chilean RUT. The format is XX.XXX.XXX-X."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cl/forms.py:32
+msgid "The Chilean RUT is not valid."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:8
+msgid "Prague"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:9
+msgid "Central Bohemian Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:10
+msgid "South Bohemian Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:11
+msgid "Pilsen Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:12
+msgid "Carlsbad Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:13
+msgid "Usti Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:14
+msgid "Liberec Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:15
+msgid "Hradec Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:16
+msgid "Pardubice Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:17
+msgid "Vysocina Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:18
+msgid "South Moravian Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:19
+msgid "Olomouc Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:20
+msgid "Zlin Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/cz_regions.py:21
+msgid "Moravian-Silesian Region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/forms.py:28
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/forms.py:30
+msgid "Enter a postal code in the format XXXXX or XXX XX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/forms.py:48
+msgid "Enter a birth number in the format XXXXXX/XXXX or XXXXXXXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/forms.py:49
+msgid "Invalid optional parameter Gender, valid values are 'f' and 'm'"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/forms.py:50
+msgid "Enter a valid birth number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/cz/forms.py:111
+msgid "Enter a valid IC number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:5
+msgid "Baden-Wuerttemberg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:6
+msgid "Bavaria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:7
+msgid "Berlin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:8
+msgid "Brandenburg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:9
+msgid "Bremen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:10
+msgid "Hamburg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:11
+msgid "Hessen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:12
+msgid "Mecklenburg-Western Pomerania"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:13
+msgid "Lower Saxony"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:14
+msgid "North Rhine-Westphalia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:15
+msgid "Rhineland-Palatinate"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:16
+msgid "Saarland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:17
+msgid "Saxony"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:18
+msgid "Saxony-Anhalt"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:19
+msgid "Schleswig-Holstein"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/de_states.py:20
+msgid "Thuringia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/forms.py:15
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/fi/forms.py:13
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/fr/forms.py:16
+msgid "Enter a zip code in the format XXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/de/forms.py:42
+msgid ""
+"Enter a valid German identity card number in XXXXXXXXXXX-XXXXXXX-XXXXXXX-X "
+"format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:5
+msgid "Arava"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:6
+msgid "Albacete"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:7
+msgid "Alacant"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:8
+msgid "Almeria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:9
+msgid "Avila"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:10
+msgid "Badajoz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:11
+msgid "Illes Balears"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:12
+msgid "Barcelona"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:13
+msgid "Burgos"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:14
+msgid "Caceres"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:15
+msgid "Cadiz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:16
+msgid "Castello"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:17
+msgid "Ciudad Real"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:18
+msgid "Cordoba"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:19
+msgid "A Coruna"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:20
+msgid "Cuenca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:21
+msgid "Girona"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:22
+msgid "Granada"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:23
+msgid "Guadalajara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:24
+msgid "Guipuzkoa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:25
+msgid "Huelva"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:26
+msgid "Huesca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:27
+msgid "Jaen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:28
+msgid "Leon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:29
+msgid "Lleida"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:30
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:17
+msgid "La Rioja"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:31
+msgid "Lugo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:32
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:18
+msgid "Madrid"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:33
+msgid "Malaga"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:34
+msgid "Murcia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:35
+msgid "Navarre"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:36
+msgid "Ourense"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:37
+msgid "Asturias"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:38
+msgid "Palencia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:39
+msgid "Las Palmas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:40
+msgid "Pontevedra"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:41
+msgid "Salamanca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:42
+msgid "Santa Cruz de Tenerife"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:43
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:11
+msgid "Cantabria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:44
+msgid "Segovia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:45
+msgid "Seville"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:46
+msgid "Soria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:47
+msgid "Tarragona"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:48
+msgid "Teruel"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:49
+msgid "Toledo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:50
+msgid "Valencia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:51
+msgid "Valladolid"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:52
+msgid "Bizkaia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:53
+msgid "Zamora"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:54
+msgid "Zaragoza"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:55
+msgid "Ceuta"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_provinces.py:56
+msgid "Melilla"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:5
+msgid "Andalusia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:6
+msgid "Aragon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:7
+msgid "Principality of Asturias"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:8
+msgid "Balearic Islands"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:9
+msgid "Basque Country"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:10
+msgid "Canary Islands"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:12
+msgid "Castile-La Mancha"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:13
+msgid "Castile and Leon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:14
+msgid "Catalonia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:15
+msgid "Extremadura"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:16
+msgid "Galicia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:19
+msgid "Region of Murcia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:20
+msgid "Foral Community of Navarre"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/es_regions.py:21
+msgid "Valencian Community"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:20
+msgid "Enter a valid postal code in the range and format 01XXX - 52XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:40
+msgid ""
+"Enter a valid phone number in one of the formats 6XXXXXXXX, 8XXXXXXXX or "
+"9XXXXXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:67
+msgid "Please enter a valid NIF, NIE, or CIF."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:68
+msgid "Please enter a valid NIF or NIE."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:69
+msgid "Invalid checksum for NIF."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:70
+msgid "Invalid checksum for NIE."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:71
+msgid "Invalid checksum for CIF."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:143
+msgid ""
+"Please enter a valid bank account number in format XXXX-XXXX-XX-XXXXXXXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/es/forms.py:144
+msgid "Invalid checksum for bank account number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/fi/forms.py:29
+msgid "Enter a valid Finnish social security number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/fr/forms.py:31
+msgid "Phone numbers must be in 0X XX XX XX XX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/forms.py:28
+msgid "Enter a valid post code"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/forms.py:68
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/forms.py:53
+msgid "Enter a valid phone number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/forms.py:107
+msgid "Enter a valid vehicle license plate number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/forms.py:170
+msgid "Enter a valid NIK/KTP number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:15
+msgid "Aceh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:16
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:79
+msgid "Bali"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:17
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:51
+msgid "Banten"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:18
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:60
+msgid "Bengkulu"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:19
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:53
+msgid "Yogyakarta"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:20
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:57
+msgid "Jakarta"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:21
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:81
+msgid "Gorontalo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:22
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:63
+msgid "Jambi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:23
+msgid "Jawa Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:24
+msgid "Jawa Tengah"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:25
+msgid "Jawa Timur"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:26
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:94
+msgid "Kalimantan Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:27
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:72
+msgid "Kalimantan Selatan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:28
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:95
+msgid "Kalimantan Tengah"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:29
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:96
+msgid "Kalimantan Timur"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:30
+msgid "Kepulauan Bangka-Belitung"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:31
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:68
+msgid "Kepulauan Riau"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:32
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:61
+msgid "Lampung"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:33
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:76
+msgid "Maluku"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:34
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:77
+msgid "Maluku Utara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:35
+msgid "Nusa Tenggara Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:36
+msgid "Nusa Tenggara Timur"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:37
+msgid "Papua"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:38
+msgid "Papua Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:39
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:66
+msgid "Riau"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:40
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:74
+msgid "Sulawesi Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:41
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:75
+msgid "Sulawesi Selatan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:42
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:82
+msgid "Sulawesi Tengah"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:43
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:85
+msgid "Sulawesi Tenggara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:44
+msgid "Sulawesi Utara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:45
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:58
+msgid "Sumatera Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:46
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:62
+msgid "Sumatera Selatan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:47
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:64
+msgid "Sumatera Utara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:52
+msgid "Magelang"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:54
+msgid "Surakarta - Solo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:55
+msgid "Madiun"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:56
+msgid "Kediri"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:59
+msgid "Tapanuli"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:65
+msgid "Nanggroe Aceh Darussalam"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:67
+msgid "Kepulauan Bangka Belitung"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:69
+msgid "Corps Consulate"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:70
+msgid "Corps Diplomatic"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:71
+msgid "Bandung"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:73
+msgid "Sulawesi Utara Daratan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:78
+msgid "NTT - Timor"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:80
+msgid "Sulawesi Utara Kepulauan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:83
+msgid "NTB - Lombok"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:84
+msgid "Papua dan Papua Barat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:86
+msgid "Cirebon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:87
+msgid "NTB - Sumbawa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:88
+msgid "NTT - Flores"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:89
+msgid "NTT - Sumba"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:90
+msgid "Bogor"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:91
+msgid "Pekalongan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:92
+msgid "Semarang"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:93
+msgid "Pati"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:97
+msgid "Surabaya"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:98
+msgid "Madura"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:99
+msgid "Malang"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:100
+msgid "Jember"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:101
+msgid "Banyumas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:102
+msgid "Federal Government"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:103
+msgid "Bojonegoro"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:104
+msgid "Purwakarta"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:105
+msgid "Sidoarjo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/id/id_choices.py:106
+msgid "Garut"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:8
+msgid "Antrim"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:9
+msgid "Armagh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:10
+msgid "Carlow"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:11
+msgid "Cavan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:12
+msgid "Clare"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:13
+msgid "Cork"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:14
+msgid "Derry"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:15
+msgid "Donegal"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:16
+msgid "Down"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:17
+msgid "Dublin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:18
+msgid "Fermanagh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:19
+msgid "Galway"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:20
+msgid "Kerry"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:21
+msgid "Kildare"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:22
+msgid "Kilkenny"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:23
+msgid "Laois"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:24
+msgid "Leitrim"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:25
+msgid "Limerick"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:26
+msgid "Longford"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:27
+msgid "Louth"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:28
+msgid "Mayo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:29
+msgid "Meath"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:30
+msgid "Monaghan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:31
+msgid "Offaly"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:32
+msgid "Roscommon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:33
+msgid "Sligo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:34
+msgid "Tipperary"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:35
+msgid "Tyrone"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:36
+msgid "Waterford"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:37
+msgid "Westmeath"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:38
+msgid "Wexford"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ie/ie_counties.py:39
+msgid "Wicklow"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/il/forms.py:31
+msgid "Enter a postal code in the format XXXXX"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/il/forms.py:50
+msgid "Enter a valid ID number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/in_/forms.py:15
+msgid "Enter a zip code in the format XXXXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/is_/forms.py:18
+msgid ""
+"Enter a valid Icelandic identification number. The format is XXXXXX-XXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/is_/forms.py:19
+msgid "The Icelandic identification number is not valid."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/it/forms.py:15
+msgid "Enter a valid zip code."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/it/forms.py:44
+msgid "Enter a valid Social Security number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/it/forms.py:69
+msgid "Enter a valid VAT number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/forms.py:16
+msgid "Enter a postal code in the format XXXXXXX or XXX-XXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:4
+msgid "Hokkaido"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:5
+msgid "Aomori"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:6
+msgid "Iwate"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:7
+msgid "Miyagi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:8
+msgid "Akita"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:9
+msgid "Yamagata"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:10
+msgid "Fukushima"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:11
+msgid "Ibaraki"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:12
+msgid "Tochigi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:13
+msgid "Gunma"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:14
+msgid "Saitama"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:15
+msgid "Chiba"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:16
+msgid "Tokyo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:17
+msgid "Kanagawa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:18
+msgid "Yamanashi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:19
+msgid "Nagano"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:20
+msgid "Niigata"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:21
+msgid "Toyama"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:22
+msgid "Ishikawa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:23
+msgid "Fukui"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:24
+msgid "Gifu"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:25
+msgid "Shizuoka"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:26
+msgid "Aichi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:27
+msgid "Mie"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:28
+msgid "Shiga"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:29
+msgid "Kyoto"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:30
+msgid "Osaka"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:31
+msgid "Hyogo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:32
+msgid "Nara"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:33
+msgid "Wakayama"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:34
+msgid "Tottori"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:35
+msgid "Shimane"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:36
+msgid "Okayama"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:37
+msgid "Hiroshima"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:38
+msgid "Yamaguchi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:39
+msgid "Tokushima"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:40
+msgid "Kagawa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:41
+msgid "Ehime"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:42
+msgid "Kochi"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:43
+msgid "Fukuoka"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:44
+msgid "Saga"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:45
+msgid "Nagasaki"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:46
+msgid "Kumamoto"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:47
+msgid "Oita"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:48
+msgid "Miyazaki"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:49
+msgid "Kagoshima"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/jp/jp_prefectures.py:50
+msgid "Okinawa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/kw/forms.py:25
+msgid "Enter a valid Kuwaiti Civil ID number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:12
+msgid "Aguascalientes"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:13
+msgid "Baja California"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:14
+msgid "Baja California Sur"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:15
+msgid "Campeche"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:16
+msgid "Chihuahua"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:17
+msgid "Chiapas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:18
+msgid "Coahuila"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:19
+msgid "Colima"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:20
+msgid "Distrito Federal"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:21
+msgid "Durango"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:22
+msgid "Guerrero"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:23
+msgid "Guanajuato"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:24
+msgid "Hidalgo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:25
+msgid "Jalisco"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:26
+msgid "Estado de México"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:27
+msgid "Michoacán"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:28
+msgid "Morelos"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:29
+msgid "Nayarit"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:30
+msgid "Nuevo León"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:31
+msgid "Oaxaca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:32
+msgid "Puebla"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:33
+msgid "Querétaro"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:34
+msgid "Quintana Roo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:35
+msgid "Sinaloa"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:36
+msgid "San Luis Potosí"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:37
+msgid "Sonora"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:38
+msgid "Tabasco"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:39
+msgid "Tamaulipas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:40
+msgid "Tlaxcala"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:41
+msgid "Veracruz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:42
+msgid "Yucatán"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/mx/mx_states.py:43
+msgid "Zacatecas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/forms.py:22
+msgid "Enter a valid postal code"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/forms.py:79
+msgid "Enter a valid SoFi number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:4
+msgid "Drenthe"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:5
+msgid "Flevoland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:6
+msgid "Friesland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:7
+msgid "Gelderland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:8
+msgid "Groningen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:10
+msgid "Noord-Brabant"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:11
+msgid "Noord-Holland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:12
+msgid "Overijssel"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:13
+msgid "Utrecht"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:14
+msgid "Zeeland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/nl/nl_provinces.py:15
+msgid "Zuid-Holland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/no/forms.py:34
+msgid "Enter a valid Norwegian social security number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pe/forms.py:25
+msgid "This field requires 8 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pe/forms.py:53
+msgid "This field requires 11 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:39
+msgid "National Identification Number consists of 11 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:40
+msgid "Wrong checksum for the National Identification Number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:74
+msgid ""
+"Enter a tax number field (NIP) in the format XXX-XXX-XX-XX or XX-XX-XXX-XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:75
+msgid "Wrong checksum for the Tax Number (NIP)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:114
+msgid "National Business Register Number (REGON) consists of 9 or 14 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:115
+msgid "Wrong checksum for the National Business Register Number (REGON)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/forms.py:155
+msgid "Enter a postal code in the format XX-XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:8
+msgid "Lower Silesia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:9
+msgid "Kuyavia-Pomerania"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:10
+msgid "Lublin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:11
+msgid "Lubusz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:12
+msgid "Lodz"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:13
+msgid "Lesser Poland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:14
+msgid "Masovia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:15
+msgid "Opole"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:16
+msgid "Subcarpatia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:17
+msgid "Podlasie"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:18
+msgid "Pomerania"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:19
+msgid "Silesia"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:20
+msgid "Swietokrzyskie"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:21
+msgid "Warmia-Masuria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:22
+msgid "Greater Poland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pl/pl_voivodeships.py:23
+msgid "West Pomerania"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pt/forms.py:17
+msgid "Enter a zip code in the format XXXX-XXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/pt/forms.py:37
+msgid "Phone numbers must have 9 digits, or start by + or 00."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ro/forms.py:19
+msgid "Enter a valid CIF."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ro/forms.py:56
+msgid "Enter a valid CNP."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ro/forms.py:143
+msgid "Enter a valid IBAN in ROXX-XXXX-XXXX-XXXX-XXXX-XXXX format"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ro/forms.py:175
+msgid "Phone numbers must be in XXXX-XXXXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/ro/forms.py:200
+msgid "Enter a valid postal code in the format XXXXXX"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/forms.py:50
+msgid "Enter a valid Swedish organisation number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/forms.py:107
+msgid "Enter a valid Swedish personal identity number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/forms.py:108
+msgid "Co-ordination numbers are not allowed."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/forms.py:150
+msgid "Enter a Swedish postal code in the format XXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:15
+msgid "Stockholm"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:16
+msgid "Västerbotten"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:17
+msgid "Norrbotten"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:18
+msgid "Uppsala"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:19
+msgid "Södermanland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:20
+msgid "Östergötland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:21
+msgid "Jönköping"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:22
+msgid "Kronoberg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:23
+msgid "Kalmar"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:24
+msgid "Gotland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:25
+msgid "Blekinge"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:26
+msgid "Skåne"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:27
+msgid "Halland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:28
+msgid "Västra Götaland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:29
+msgid "Värmland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:30
+msgid "Örebro"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:31
+msgid "Västmanland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:32
+msgid "Dalarna"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:33
+msgid "Gävleborg"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:34
+msgid "Västernorrland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/se/se_counties.py:35
+msgid "Jämtland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:8
+msgid "Banska Bystrica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:9
+msgid "Banska Stiavnica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:10
+msgid "Bardejov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:11
+msgid "Banovce nad Bebravou"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:12
+msgid "Brezno"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:13
+msgid "Bratislava I"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:14
+msgid "Bratislava II"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:15
+msgid "Bratislava III"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:16
+msgid "Bratislava IV"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:17
+msgid "Bratislava V"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:18
+msgid "Bytca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:19
+msgid "Cadca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:20
+msgid "Detva"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:21
+msgid "Dolny Kubin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:22
+msgid "Dunajska Streda"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:23
+msgid "Galanta"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:24
+msgid "Gelnica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:25
+msgid "Hlohovec"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:26
+msgid "Humenne"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:27
+msgid "Ilava"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:28
+msgid "Kezmarok"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:29
+msgid "Komarno"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:30
+msgid "Kosice I"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:31
+msgid "Kosice II"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:32
+msgid "Kosice III"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:33
+msgid "Kosice IV"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:34
+msgid "Kosice - okolie"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:35
+msgid "Krupina"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:36
+msgid "Kysucke Nove Mesto"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:37
+msgid "Levice"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:38
+msgid "Levoca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:39
+msgid "Liptovsky Mikulas"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:40
+msgid "Lucenec"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:41
+msgid "Malacky"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:42
+msgid "Martin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:43
+msgid "Medzilaborce"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:44
+msgid "Michalovce"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:45
+msgid "Myjava"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:46
+msgid "Namestovo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:47
+msgid "Nitra"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:48
+msgid "Nove Mesto nad Vahom"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:49
+msgid "Nove Zamky"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:50
+msgid "Partizanske"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:51
+msgid "Pezinok"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:52
+msgid "Piestany"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:53
+msgid "Poltar"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:54
+msgid "Poprad"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:55
+msgid "Povazska Bystrica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:56
+msgid "Presov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:57
+msgid "Prievidza"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:58
+msgid "Puchov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:59
+msgid "Revuca"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:60
+msgid "Rimavska Sobota"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:61
+msgid "Roznava"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:62
+msgid "Ruzomberok"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:63
+msgid "Sabinov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:64
+msgid "Senec"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:65
+msgid "Senica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:66
+msgid "Skalica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:67
+msgid "Snina"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:68
+msgid "Sobrance"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:69
+msgid "Spisska Nova Ves"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:70
+msgid "Stara Lubovna"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:71
+msgid "Stropkov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:72
+msgid "Svidnik"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:73
+msgid "Sala"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:74
+msgid "Topolcany"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:75
+msgid "Trebisov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:76
+msgid "Trencin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:77
+msgid "Trnava"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:78
+msgid "Turcianske Teplice"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:79
+msgid "Tvrdosin"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:80
+msgid "Velky Krtis"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:81
+msgid "Vranov nad Toplou"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:82
+msgid "Zlate Moravce"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:83
+msgid "Zvolen"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:84
+msgid "Zarnovica"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:85
+msgid "Ziar nad Hronom"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_districts.py:86
+msgid "Zilina"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:8
+msgid "Banska Bystrica region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:9
+msgid "Bratislava region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:10
+msgid "Kosice region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:11
+msgid "Nitra region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:12
+msgid "Presov region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:13
+msgid "Trencin region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:14
+msgid "Trnava region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/sk/sk_regions.py:15
+msgid "Zilina region"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/tr/forms.py:16
+msgid "Enter a postal code in the format XXXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/tr/forms.py:37
+msgid "Phone numbers must be in 0XXX XXX XXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/tr/forms.py:64
+msgid "Enter a valid Turkish Identification number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/tr/forms.py:65
+msgid "Turkish Identification number must be 11 digits."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/forms.py:21
+msgid "Enter a valid postcode."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:11
+msgid "Bedfordshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:12
+msgid "Buckinghamshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:14
+msgid "Cheshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:15
+msgid "Cornwall and Isles of Scilly"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:16
+msgid "Cumbria"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:17
+msgid "Derbyshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:18
+msgid "Devon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:19
+msgid "Dorset"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:20
+msgid "Durham"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:21
+msgid "East Sussex"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:22
+msgid "Essex"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:23
+msgid "Gloucestershire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:24
+msgid "Greater London"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:25
+msgid "Greater Manchester"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:26
+msgid "Hampshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:27
+msgid "Hertfordshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:28
+msgid "Kent"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:29
+msgid "Lancashire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:30
+msgid "Leicestershire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:31
+msgid "Lincolnshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:32
+msgid "Merseyside"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:33
+msgid "Norfolk"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:34
+msgid "North Yorkshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:35
+msgid "Northamptonshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:36
+msgid "Northumberland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:37
+msgid "Nottinghamshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:38
+msgid "Oxfordshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:39
+msgid "Shropshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:40
+msgid "Somerset"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:41
+msgid "South Yorkshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:42
+msgid "Staffordshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:43
+msgid "Suffolk"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:44
+msgid "Surrey"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:45
+msgid "Tyne and Wear"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:46
+msgid "Warwickshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:47
+msgid "West Midlands"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:48
+msgid "West Sussex"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:49
+msgid "West Yorkshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:50
+msgid "Wiltshire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:51
+msgid "Worcestershire"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:55
+msgid "County Antrim"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:56
+msgid "County Armagh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:57
+msgid "County Down"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:58
+msgid "County Fermanagh"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:59
+msgid "County Londonderry"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:60
+msgid "County Tyrone"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:64
+msgid "Clwyd"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:65
+msgid "Dyfed"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:66
+msgid "Gwent"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:67
+msgid "Gwynedd"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:68
+msgid "Mid Glamorgan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:69
+msgid "Powys"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:70
+msgid "South Glamorgan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:71
+msgid "West Glamorgan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:75
+msgid "Borders"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:76
+msgid "Central Scotland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:77
+msgid "Dumfries and Galloway"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:78
+msgid "Fife"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:79
+msgid "Grampian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:80
+msgid "Highland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:81
+msgid "Lothian"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:82
+msgid "Orkney Islands"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:83
+msgid "Shetland Islands"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:84
+msgid "Strathclyde"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:85
+msgid "Tayside"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:86
+msgid "Western Isles"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:90
+msgid "England"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:91
+msgid "Northern Ireland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:92
+msgid "Scotland"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uk/uk_regions.py:93
+msgid "Wales"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/forms.py:17
+msgid "Enter a zip code in the format XXXXX or XXXXX-XXXX."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/forms.py:26
+msgid "Phone numbers must be in XXX-XXX-XXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/forms.py:55
+msgid "Enter a valid U.S. Social Security number in XXX-XX-XXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/forms.py:88
+msgid "Enter a U.S. state or territory."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/models.py:9
+msgid "U.S. state (two uppercase letters)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/models.py:18
+msgid "U.S. postal code (two uppercase letters)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/us/models.py:27
+msgid "Phone number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uy/forms.py:28
+msgid "Enter a valid CI number in X.XXX.XXX-X,XXXXXXX-X or XXXXXXXX format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/uy/forms.py:30
+msgid "Enter a valid CI number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/forms.py:21
+msgid "Enter a valid South African ID number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/forms.py:55
+msgid "Enter a valid South African postal code"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:4
+msgid "Eastern Cape"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:5
+msgid "Free State"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:6
+msgid "Gauteng"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:7
+msgid "KwaZulu-Natal"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:8
+msgid "Limpopo"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:9
+msgid "Mpumalanga"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:10
+msgid "Northern Cape"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:11
+msgid "North West"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/localflavor/za/za_provinces.py:12
+msgid "Western Cape"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/messages/tests/base.py:117
+msgid "lazy message"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:7
+msgid "redirect from"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:8
+msgid ""
+"This should be an absolute path, excluding the domain name. Example: '/"
+"events/search/'."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:9
+msgid "redirect to"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:10
+msgid ""
+"This can be either an absolute path (as above) or a full URL starting with "
+"'http://'."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:13
+msgid "redirect"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/redirects/models.py:14
+msgid "redirects"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sessions/models.py:41
+msgid "session key"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sessions/models.py:43
+msgid "session data"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sessions/models.py:44
+msgid "expire date"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sessions/models.py:49
+msgid "session"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sessions/models.py:50
+msgid "sessions"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sites/models.py:37
+msgid "domain name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sites/models.py:38
+msgid "display name"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sites/models.py:43
+msgid "site"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/contrib/sites/models.py:44
+msgid "sites"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:21
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:67
+msgid "Enter a valid value."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:89
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:575
+msgid "This URL appears to be a broken link."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:94
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:574
+msgid "Enter a valid URL."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:141
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:958
+msgid ""
+"Enter a valid 'slug' consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:144
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:951
+msgid "Enter a valid IPv4 address."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:147
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:575
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:153
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:171
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:222
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:275
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:176
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:223
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:276
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:182
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d characters (it has %"
+"(show_value)d)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/core/validators.py:188
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d characters (it has %"
+"(show_value)d)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/base.py:769
+#, python-format
+msgid "%(field_name)s must be unique for %(date_field)s %(lookup)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/base.py:784
+#: .ve/lib/python2.6/site-packages/django/db/models/base.py:792
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:63
+#, python-format
+msgid "Value %r is not a valid choice."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:64
+msgid "This field cannot be null."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:65
+msgid "This field cannot be blank."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:70
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:451
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:871
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:980
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:991
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1018
+msgid "Integer"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:455
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:869
+msgid "This value must be an integer."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:493
+msgid "This value must be either True or False."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:495
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:542
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1001
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:570
+msgid "Comma-separated integers"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:584
+msgid "Date (without time)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:588
+msgid "Enter a valid date in YYYY-MM-DD format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:589
+#, python-format
+msgid "Invalid date: %s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:670
+msgid "Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:672
+msgid "Date (with time)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:746
+msgid "This value must be a decimal number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:748
+msgid "Decimal number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:803
+msgid "E-mail address"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:818
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/files.py:220
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/files.py:326
+msgid "File path"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:841
+msgid "This value must be a float."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:843
+msgid "Floating point number"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:902
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:931
+msgid "This value must be either None, True or False."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:933
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1024
+msgid "Text"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1040
+msgid "Time"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1044
+msgid "Enter a valid time in HH:MM[:ss[.uuuuuu]] format."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/__init__.py:1136
+msgid "XML text"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/related.py:815
+#, python-format
+msgid "Model %(model)s with pk %(pk)r does not exist."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/related.py:817
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/related.py:941
+msgid "One-to-one relationship"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/related.py:1003
+msgid "Many-to-many relationship"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/db/models/fields/related.py:1023
+msgid ""
+"Hold down \"Control\", or \"Command\" on a Mac, to select more than one."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:66
+msgid "This field is required."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:221
+msgid "Enter a whole number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:253
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:274
+msgid "Enter a number."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:277
+#, python-format
+msgid "Ensure that there are no more than %s digits in total."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:278
+#, python-format
+msgid "Ensure that there are no more than %s decimal places."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:279
+#, python-format
+msgid "Ensure that there are no more than %s digits before the decimal point."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:342
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:918
+msgid "Enter a valid date."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:370
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:919
+msgid "Enter a valid time."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:396
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:460
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:461
+msgid "No file was submitted."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:462
+msgid "The submitted file is empty."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:463
+#, python-format
+msgid ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:464
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:518
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:650
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:725
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:726
+#: .ve/lib/python2.6/site-packages/django/forms/fields.py:814
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:985
+msgid "Enter a list of values."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/formsets.py:305
+#: .ve/lib/python2.6/site-packages/django/forms/formsets.py:307
+msgid "Order"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:556
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:560
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:566
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:574
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:835
+msgid "The inline foreign key did not match the parent instance primary key."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:896
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:986
+#, python-format
+msgid "Select a valid choice. %s is not one of the available choices."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/models.py:988
+#, python-format
+msgid "\"%s\" is not a valid value for a primary key."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:299
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:129
+msgid "Currently"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/forms/widgets.py:301
+#: .ve/lib/python2.6/site-packages/floppyforms/widgets.py:131
+msgid "Clear"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:777
+msgid "yes,no,maybe"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:805
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:810
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:812
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:814
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:816
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:818
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/template/defaultfilters.py:819
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:42
+msgid "p.m."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:43
+msgid "a.m."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:48
+msgid "PM"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:49
+msgid "AM"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:98
+msgid "midnight"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dateformat.py:100
+msgid "noon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:6
+msgid "Monday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:6
+msgid "Tuesday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:6
+msgid "Wednesday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:6
+msgid "Thursday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:6
+msgid "Friday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:7
+msgid "Saturday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:7
+msgid "Sunday"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:10
+msgid "Mon"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:10
+msgid "Tue"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:10
+msgid "Wed"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:10
+msgid "Thu"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:10
+msgid "Fri"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:11
+msgid "Sat"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:11
+msgid "Sun"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "January"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "February"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "March"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "April"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "May"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:18
+msgid "June"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:19
+msgid "July"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:19
+msgid "August"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:19
+msgid "September"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:19
+msgid "October"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:19
+msgid "November"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:20
+msgid "December"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "jan"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "feb"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "mar"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "apr"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "may"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:23
+msgid "jun"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "jul"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "aug"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "sep"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "oct"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "nov"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/dates.py:24
+msgid "dec"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/text.py:136
+msgid "or"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/text.py:153
+msgid ", "
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:21
+msgid "year"
+msgid_plural "years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:22
+msgid "month"
+msgid_plural "months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:23
+msgid "week"
+msgid_plural "weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:24
+msgid "day"
+msgid_plural "days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:25
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:26
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:45
+msgid "minutes"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:50
+#, python-format
+msgid "%(number)d %(type)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/timesince.py:56
+#, python-format
+msgid ", %(number)d %(type)s"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/translation/trans_real.py:578
+msgid "DATE_FORMAT"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/translation/trans_real.py:579
+msgid "DATETIME_FORMAT"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/translation/trans_real.py:580
+msgid "TIME_FORMAT"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/translation/trans_real.py:601
+msgid "YEAR_MONTH_FORMAT"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/utils/translation/trans_real.py:602
+msgid "MONTH_DAY_FORMAT"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/create_update.py:121
+#, python-format
+msgid "The %(verbose_name)s was created successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/create_update.py:164
+#, python-format
+msgid "The %(verbose_name)s was updated successfully."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/create_update.py:207
+#, python-format
+msgid "The %(verbose_name)s was deleted."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:33
+msgid "No year specified"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:58
+msgid "No month specified"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:99
+msgid "No day specified"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:138
+msgid "No week specified"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:198
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:214
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:466
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/dates.py:500
+#, python-format
+msgid "Invalid date string '%(datestr)s' given format '%(format)s'"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/detail.py:51
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/list.py:47
+msgid "Page is not 'last', nor can it be converted to an int."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/list.py:52
+#, python-format
+msgid "Invalid page (%(page_number)s)"
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/django/views/generic/list.py:119
+#, python-format
+msgid "Empty list and '%(class_name)s.allow_empty' is False."
+msgstr ""
+
+#: .ve/lib/python2.6/site-packages/tinymce/views.py:68
+msgid "Error running spellchecker"
+msgstr ""
+
+#: publicweb/models.py:11
+msgid "Decided date"
+msgstr "Entschiedenes Datum"
+
+#: publicweb/models.py:13
+msgid "Effective date"
+msgstr "Tatsächliches Datum"
+
+#: publicweb/models.py:15
+msgid "Review date"
+msgstr "Berichtdatum"
+
+#: publicweb/models.py:17
+msgid "Expiry date"
+msgstr "Verfallsdatum"
+
+#: publicweb/models.py:19
+msgid "Budget"
+msgstr "Etat"
+
+#: publicweb/models.py:21
+msgid "People"
+msgstr "Leute"
+
+#: publicweb/models.py:23
+msgid "Description"
+msgstr "Beschreibung"
+
+#: publicweb/templates/admin/base_site.html:4
+#: publicweb/templates/admin/base_site.html:7
+msgid "Open Consent"
+msgstr ""

@@ -20,7 +20,8 @@ mce_attrs_setting = {
 class ConcernForm(forms.ModelForm):
     class Meta:
         model = Concern
-        widgets = {'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})}
+        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
+                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})}
 
 ConcernFormSet = inlineformset_factory(Decision, Concern, 
                                        fields=('short_name','description','resolved',),
@@ -29,7 +30,8 @@ ConcernFormSet = inlineformset_factory(Decision, Concern,
 class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
-        widgets = {'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20},
+        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
+                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20},
                                                           mce_attrs=mce_attrs_setting),
                    'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
@@ -38,5 +40,4 @@ class DecisionForm(forms.ModelForm):
                    'expiry_date': JQueryUIDateWidget,
                    'budget': forms.TextInput(attrs={'size':'70'}),
                    'people': forms.TextInput(attrs={'size':'70'})
-
- }
+                   }

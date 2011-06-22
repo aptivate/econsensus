@@ -22,9 +22,21 @@
 {% block content %}
 <form method="post">
 <table>
-{{ decision_form.as_table }}
+{% for error in decision_form.non_field_errors %}
+    <tr><td>{{ error }}</td></tr>
+{% endfor %}
+
+{% for field in decision_form %}
+    <tr><th>{{ field.label_tag }}:</th><td>{{ field }}</td></td>
+	{% for error in field.errors %}
+	
+    <tr><th></th><td><p style="color: red;">{{ error }}</p></td></tr>
+    {% endfor %}
+{% endfor %}
+
 {{ concern_form.as_table }}
 </table>
+
 <input type="submit" value="Save">
 {% csrf_token %}
 </form>
