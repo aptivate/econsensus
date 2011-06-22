@@ -1,6 +1,6 @@
 import os, sys, site
 
-project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
+project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # ensure the virtualenv for this instance is added
 site.addsitedir(os.path.join(project_dir, 'django', 'openconsent', '.ve', 
