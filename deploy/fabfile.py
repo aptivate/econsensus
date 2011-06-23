@@ -81,10 +81,45 @@ def staging():
     _local_setup()
 
 
+def production_sandbox():
+    """ use staging environment on remote host to run tests"""
+    # this is on the same server as the customer facing stage site
+    # so we need project_root to be different ...
+    env.project_dir = env.project + '_sandbox'
+    env.environment = 'production_sandbox'
+    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    _local_setup()
+
+
 def production():
     """ use production environment on remote host"""
     env.environment = 'production'
     env.hosts = ['lin-openconsent.aptivate.org:48001']
     _local_setup()
 
-
+def deploy(revision=None):
+    """ update remote host environment (virtualenv, deploy, update) """
+    require('project_root', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        apache_cmd('stop')
+    if not files.exists(env.project_root):
+        sudo('mkdir -p %(project_root)s' % env)
+    checkout_or_update(revision)
+    update_requirements()
+    link_local_settings()
+    rm_pyc_files()
+    update_db()
+    if env.environment == 'production':
+        setup_db_dumps()
+    # only link the apache conf once on the production server, not for all the sub-sites
+    if not env.environment.startswith('production_'):
+        link_apache_conf()
+    load_fixtures()
+    
+    apache_cmd('start')
+    
+def load_fixtures():
+    """load fixtures for this environment"""
+    require('tasks_bin', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        sudo(env.tasks_bin + ' load_fixtures')

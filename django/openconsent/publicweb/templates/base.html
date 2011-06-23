@@ -22,7 +22,7 @@
 			<TABLE WIDTH=50%>
 				<TR>
 					<TH ALIGN='left'><a href='{% url admin:index %}'>Admin</a></TH>
-					<TH><a href="/public/">Decision List</a></TH>
+					<TH><a href="{% url decision_list %}">Decision List</a></TH>
 					<TH ALIGN='right'>{{ user.username }}<a href={% url django.contrib.auth.views.logout %}>[Logout]</a></TH>
 				</TR>
 			</TABLE>
