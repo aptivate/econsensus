@@ -8,6 +8,7 @@ LOGIN_REDIRECT_URL = '/sandbox/public/decision_list/'
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/sandbox/media/'
+ADMIN_MEDIA_PREFIX = '/sandbox/media/'
 
 DATABASES = {
     'default': {

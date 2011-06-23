@@ -8,6 +8,7 @@ LOGIN_REDIRECT_URL = '/aptivate/public/decision_list/'
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/aptivate/media/'
+ADMIN_MEDIA_PREFIX = '/aptivate/media/'
 
 DATABASES = {
     'default': {
