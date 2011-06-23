@@ -96,6 +96,20 @@ def production():
     env.environment = 'production'
     env.hosts = ['lin-openconsent.aptivate.org:48001']
     _local_setup()
+    
+def production_test1():
+    """ use production environment on remote host"""
+    env.project_dir = env.project + '_test1'
+    env.environment = 'production_test1'
+    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    _local_setup()
+
+def production_test2():
+    """ use production environment on remote host"""
+    env.project_dir = env.project + '_test2'
+    env.environment = 'production_test2'
+    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    _local_setup()
 
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
