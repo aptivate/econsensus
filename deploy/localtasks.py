@@ -6,12 +6,12 @@ import sys
 import tasklib
 
 fixtures_to_load = [
-                    'publicweb.decision.json',
-                    'user.json'
+                    'fixtures/publicweb.decision.json',
+                    'fixtures/user.json'
                   ]
 
 fixtures_to_deploy = [
-                    'user.json'
+                    'fixtures/user.json'
                      ]
     
 def deploy(environment=None, svnuser=None, svnpass=None):
