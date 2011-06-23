@@ -8,6 +8,11 @@ TEMPLATE_DEBUG = DEBUG
 LOGIN_URL = '/public/login/'
 LOGIN_REDIRECT_URL = '/public/decision_list/'
 
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+MEDIA_URL = '/aptivate/media/'
+
 # Database settings
 
 DATABASES = {
