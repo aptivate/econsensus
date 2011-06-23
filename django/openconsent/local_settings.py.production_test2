@@ -13,9 +13,9 @@ ADMIN_MEDIA_PREFIX = '/test2/media/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'openconsent_tes1',                      # Or path to database file if using sqlite3.
-        'USER': 'openconsent_tes1',                      # Not used with sqlite3.
-        'PASSWORD': 'aLKR32fd4bjnjh',                  # Not used with sqlite3.
+        'NAME': 'openconsent_tes2',                      # Or path to database file if using sqlite3.
+        'USER': 'openconsent_tes2',                      # Not used with sqlite3.
+        'PASSWORD': 'Aasd3FG544dadaf',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
