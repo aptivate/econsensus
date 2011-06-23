@@ -10,7 +10,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^(?P<path>\w+)/$', redirect_to, {'url': '/%(path)s/public/decision_list/'}),
+    url(r'^(?P<path>\w+)/$', 'openconsent.publicweb.views.homepage_redirect'),
 
     url(r'^public/', include('openconsent.publicweb.urls')),
 

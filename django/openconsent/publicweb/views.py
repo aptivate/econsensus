@@ -74,4 +74,8 @@ def decision_view_page(request, decision_id):
                             decision_form=decision_form,
                             concern_form=concern_form)))
 
+def homepage_redirect(request, path):
+     end_url = "/" + path + reverse(decision_list) 
+     return HttpResponseRedirect(end_url)
+
     
