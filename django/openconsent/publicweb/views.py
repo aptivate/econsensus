@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
 
 from models import Decision, Concern
 from forms import DecisionForm, ConcernFormSet
@@ -16,11 +17,11 @@ import django_tables
   
 class DecisionTable(django_tables.ModelTable):
     id = django_tables.Column(sortable=False, visible=False)
-    short_name = django_tables.Column(verbose_name='Decision')
-    unresolvedconcerns = django_tables.Column(verbose_name='Unresolved Concerns')
-    decided_date = django_tables.Column()
-    review_date = django_tables.Column()
-    expiry_date = django_tables.Column()
+    short_name = django_tables.Column(verbose_name=_('Decision'))
+    unresolvedconcerns = django_tables.Column(verbose_name=_('Unresolved Concerns'))
+    decided_date = django_tables.Column(verbose_name=_('Decided Date'))
+    review_date = django_tables.Column(verbose_name=_('Review date'))
+    expiry_date = django_tables.Column(verbose_name=_('Expiry Date'))
 
 @login_required        
 def decision_list(request):

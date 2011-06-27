@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Home
+{% trans "Home" %}
 {% endblock %}
 
-{% block heading %}Decision List{% endblock %}
+{% block heading %}{% trans "Decision List" %}{% endblock %}
 
 {% block content %}
-<p><a href="{% url publicweb.views.decision_add_page %}">Add decision</a></p>
+<p><a href="{% url publicweb.views.decision_add_page %}">{% trans "Add decision" %}</a></p>
 
 <table>
 <tr>

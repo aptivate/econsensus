@@ -1,7 +1,9 @@
 {% autoescape on %}
+{% load i18n %}
+
 <html>
 	<head>
-		<title>{% block title %}Lorem Ipsum{% endblock %} | Aptivate Decisions</title>
+		<title>{% block title %}{% trans "Lorem Ipsum" %}{% endblock %} | {% trans "Aptivate Decisions" %}</title>
 		<style>
 			ul.errorlist
 			{
@@ -21,9 +23,9 @@
 		{% block topbar %}
 			<TABLE WIDTH=50%>
 				<TR>
-					<TH ALIGN='left'><a href='{% url admin:index %}'>Admin</a></TH>
-					<TH><a href="{% url decision_list %}">Decision List</a></TH>
-					<TH ALIGN='right'>{{ user.username }}<a href={% url django.contrib.auth.views.logout %}>[Logout]</a></TH>
+					<TH ALIGN='left'><a href='{% url admin:index %}'>{% trans "Admin" %}</a></TH>
+					<TH><a href="{% url decision_list %}">{% trans "Decision List" %}</a></TH>
+					<TH ALIGN='right'>{{ user.username }}<a href={% url django.contrib.auth.views.logout %}>[{%trans "Logout" %}]</a></TH>
 				</TR>
 			</TABLE>
 		{% endblock %}

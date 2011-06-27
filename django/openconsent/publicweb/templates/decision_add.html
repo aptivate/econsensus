@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
 {% if decision.short_name %}
 	{{ decision.short_name }}
 {% else %}
-	New Decision
+	{% trans "New Decision" %}
 {% endif %}{% endblock %}
 
 {% block head %}
@@ -15,7 +16,7 @@
 {% if decision.short_name %}
 	{{ decision.short_name }}
 {% else %}
-	New Decision
+	{% trans "New Decision" %}
 {% endif %}
 {% endblock %}
 
@@ -37,7 +38,7 @@
 {{ concern_form.as_table }}
 </table>
 
-<input type="submit" value="Save">
+<input type="submit" value={% trans "Save" %}>
 {% csrf_token %}
 </form>
 {% endblock %}
