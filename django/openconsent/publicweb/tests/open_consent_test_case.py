@@ -20,12 +20,12 @@ class OpenConsentTestCase(TestCase):
         form_data = {}
         for control in range(length):
             try:
-                 name = forms[1].controls[control].attrs.get("name")
-                 if name:
-                     if forms[1].controls[control].attrs.get("value") != None:
-                         form_data[name]=forms[1].controls[control].attrs.get("value")
-                     else:
-                         form_data[name]=''
+                name = forms[1].controls[control].attrs.get("name")
+                if name:
+                    if forms[1].controls[control].attrs.get("value") != None:
+                        form_data[name]=forms[1].controls[control].attrs.get("value")
+                    else:
+                        form_data[name]=''
 
             except AttributeError:
                 pass

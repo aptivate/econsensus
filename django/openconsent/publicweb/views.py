@@ -1,16 +1,13 @@
 # Create your views here.
 
-import logging
-
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext_lazy as _
 
-from models import Decision, Concern
+from models import Decision
 from forms import DecisionForm, ConcernFormSet
 
 import django_tables

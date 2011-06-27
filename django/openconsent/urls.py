@@ -3,8 +3,6 @@ from django.views.generic.simple import redirect_to
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
-import openconsent.publicweb.views
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()

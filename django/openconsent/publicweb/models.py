@@ -1,9 +1,6 @@
 from django.db import models
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 import tinymce.models
-import tinymce.widgets
-import datetime
     
 class Decision(models.Model):
     short_name = models.CharField(max_length=255, verbose_name=_('Name'))

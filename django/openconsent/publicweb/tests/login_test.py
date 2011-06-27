@@ -1,6 +1,5 @@
 from publicweb.tests.open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 
 class LoginTest(OpenConsentTestCase):       
     def test_non_login_is_redirected(self):
@@ -30,7 +29,7 @@ class LoginTest(OpenConsentTestCase):
         post_data['password'] = 'aptivate'
                 
         #post_data.update(concern_formset.management_form.initial)
-        response = self.client.post(path, post_data, follow=True)
+        self.client.post(path, post_data, follow=True)
 
         path = reverse('decision_add')
         response = self.client.get(path, follow=True)

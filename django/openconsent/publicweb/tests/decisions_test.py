@@ -6,25 +6,18 @@ Tests for the public website part of the OpenConsent project
 
 from __future__ import absolute_import
 
-import logging
 import datetime
 
-from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.forms.models import modelformset_factory
-from django.contrib.auth.models import User
 
-import openconsent.publicweb
-import openconsent.publicweb.views
+from openconsent.publicweb.views import decision_view_page
 from openconsent.publicweb.models import Decision, Concern
-from openconsent.publicweb.forms import DecisionForm, ConcernFormSet
+from openconsent.publicweb.forms import DecisionForm
 
 from publicweb.tests.open_consent_test_case import OpenConsentTestCase
 
 import tinymce.widgets
 import django_tables
-
-from operator import attrgetter
 
 import difflib
 
@@ -90,7 +83,7 @@ class DecisionsTest(OpenConsentTestCase):
         """
         The decisions table is represented using django_tables.ModelTable.
         """
-        decision = self.get_example_decision()
+        self.get_example_decision()
         response = self.client.get(reverse('decision_list'))
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
@@ -151,7 +144,7 @@ class DecisionsTest(OpenConsentTestCase):
     def test_view_edit_decision_page(self):
         decision = self.get_example_decision()
         
-        path = reverse(openconsent.publicweb.views.decision_view_page, 
+        path = reverse(decision_view_page, 
                        args=[decision.id])
         response = self.client.get(path)
         
@@ -172,7 +165,7 @@ class DecisionsTest(OpenConsentTestCase):
         self.assertEquals(list(concerns), list(concern_formset.queryset))
 
     def get_edit_concern_response(self, decision):
-        path = reverse(openconsent.publicweb.views.decision_view_page,
+        path = reverse(decision_view_page,
                        args=[decision.id])
         response = self.client.post(path, {'short_name': 'Modified',
                                     'concern_set-TOTAL_FORMS': '3',
@@ -204,7 +197,7 @@ class DecisionsTest(OpenConsentTestCase):
         self.assertEquals('Modified', decision.concern_set.all()[0].short_name)
         
     def get_edit_decision_response(self, decision):
-        path = reverse(openconsent.publicweb.views.decision_view_page,
+        path = reverse(decision_view_page,
                        args=[decision.id])
         response = self.client.post(path, {'short_name': 'Feed the cat',
                                            'concern_set-TOTAL_FORMS': '3',
@@ -234,14 +227,14 @@ class DecisionsTest(OpenConsentTestCase):
                         "\"concern_form\" not in this context")
     
     def test_add_decision_with_concerns(self):
-        response = self.client.post(reverse('decision_add'), 
-                                    {'short_name': 'Make Eggs',
-                                    'concern_set-TOTAL_FORMS': '3',
-                                    'concern_set-INITIAL_FORMS': '0',
-                                    'concern_set-MAX_NUM_FORMS': '',
-                                    'concern_set-0-short_name': 'The eggs are bad',
-                                    'concern_set-1-short_name': 'No one wants them',
-                                    })
+        self.client.post(reverse('decision_add'), 
+                                {'short_name': 'Make Eggs',
+                                'concern_set-TOTAL_FORMS': '3',
+                                'concern_set-INITIAL_FORMS': '0',
+                                'concern_set-MAX_NUM_FORMS': '',
+                                'concern_set-0-short_name': 'The eggs are bad',
+                                'concern_set-1-short_name': 'No one wants them',
+                                })
 
         decision = Decision.objects.all()[0]
                 
@@ -267,10 +260,5 @@ class DecisionsTest(OpenConsentTestCase):
 
     def test_expiry_datepickers(self):
         self.assert_decision_datepickers('expiry_date')
-    
- #   def test_mechanize_page(self):
- #       #Basic test to see if the mechanize package works.
- #       path = reverse('decision_edit', args=[self.decision.id])
- #       form_data = self.mechanize_page(path)
         
             

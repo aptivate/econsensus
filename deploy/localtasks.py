@@ -19,10 +19,8 @@ def deploy(environment=None, svnuser=None, svnpass=None):
         environment = tasklib._infer_environment()
 
     tasklib.create_ve()
-    patch_whoosh()
     tasklib.link_local_settings(environment)
     tasklib.update_db()
-    link_yaml(environment)
     load_fixtures()
 
 def load_fixtures():

@@ -1,13 +1,8 @@
 from django.contrib import admin
 from django.db import models
 from django import forms
-from django.shortcuts import get_object_or_404
-from django.forms import MediaDefiningClass
-
-from functools import partial
 
 from models import Decision, Concern
-from views import DecisionTable
 
 class ConcernInline(admin.TabularInline):
     model = Concern
