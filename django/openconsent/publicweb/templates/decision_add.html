@@ -31,7 +31,7 @@
     <tr><th>{{ field.label_tag }}:</th><td>{{ field }}</td></td>
 	{% for error in field.errors %}
 	
-    <tr><th></th><td><p style="color: red;">{{ error }}</p></td></tr>
+    <tr><th></th><td><p class="error">{{ error }}</p></td></tr>
     {% endfor %}
 {% endfor %}
 

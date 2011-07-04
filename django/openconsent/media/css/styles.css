@@ -1,0 +1,14 @@
+ul.errorlist
+{
+	border: 2px solid #fdd;
+	background: #fee;
+	list-style-type: none;
+	padding: 0.2em;
+	float: left;
+	margin: 0 1em 0 0;
+}
+
+p.error
+{
+	color: red;
+}

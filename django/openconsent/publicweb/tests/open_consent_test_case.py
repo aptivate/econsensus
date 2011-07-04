@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from mechanize import ParseString
 
-
 class OpenConsentTestCase(TestCase):
     def login(self):
         username = 'admin'
