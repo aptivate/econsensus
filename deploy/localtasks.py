@@ -11,7 +11,7 @@ fixtures_to_load = [
                   ]
 
 fixtures_to_deploy = [
-                    'fixtures/user.json'
+                    'fixtures/productionuser.json'
                      ]
     
 def deploy(environment=None, svnuser=None, svnpass=None):
