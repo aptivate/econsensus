@@ -87,7 +87,7 @@ def production_sandbox():
     # so we need project_root to be different ...
     env.project_dir = env.project + '_sandbox'
     env.environment = 'production_sandbox'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
 

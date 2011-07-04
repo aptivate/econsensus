@@ -162,6 +162,22 @@ def remote_test():
     with cd(env.django_root):
         sudo(env.python_bin + env.test_cmd)
 
+def version():
+    """ return the deployed VCS revision and commit comments"""
+    require('project_root', 'repo_type', 'vcs_root', 'repository',
+        provided_by=env.valid_envs)
+    if env.repo_type == "git":
+        with cd(env.vcs_root):
+            sudo('git log | head -5')
+    elif env.repo_type == "svn":
+        _get_svn_user_and_pass()
+        with cd(env.vcs_root):
+            with hide('running'):
+                cmd = 'svn log --non-interactive --username %s --password %s | head -4' % (env.svnuser, env.svnpass)
+                sudo(cmd)
+    else:
+        utils.abort('Unsupported repo type: %s' % (env.repo_type))
+
 
 def checkout_or_update(revision=None):
     """ checkout or update the project from version control.
