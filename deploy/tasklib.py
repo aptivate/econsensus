@@ -341,6 +341,7 @@ def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     update_ve()
     _install_django_jenkins()
+    create_private_settings()    
     link_local_settings('jenkins')
     clean_db()
     update_db()
