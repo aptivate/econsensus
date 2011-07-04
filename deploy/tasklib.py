@@ -360,7 +360,8 @@ def deploy(environment=None):
     """Do all the required steps in order"""
     if environment == None:
         environment = _infer_environment()
-
+    
+    create_private_settings()
     link_local_settings(environment)
     create_ve()
     update_db()

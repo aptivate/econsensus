@@ -7,7 +7,7 @@ from fabric.decorators import hosts
 # provides as fabric commands
 from fablib import *
 import fablib
-
+import project_settings
 
 env.home = '/var/django/'
 env.project = project_settings.project_name
@@ -120,6 +120,7 @@ def deploy(revision=None):
         sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
     update_requirements()
+    create_private_settings()
     link_local_settings()
     rm_pyc_files()
     update_db()

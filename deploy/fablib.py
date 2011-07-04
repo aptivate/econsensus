@@ -74,6 +74,7 @@ def deploy(revision=None):
     if env.use_virtualenv:
         update_requirements()
     if env.project_type == "django":
+        create_private_settings()
         link_local_settings()
         rm_pyc_files()
         update_db()
@@ -232,6 +233,9 @@ def touch():
     wsgi_dir = os.path.join(env.vcs_root, 'wsgi')
     sudo('touch ' + os.path.join(wsgi_dir, 'wsgi_handler.py'))
 
+def create_private_settings():
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' create_private_settings')
 
 def link_local_settings():
     """link the local_settings.py file for this environment"""
