@@ -1,6 +1,7 @@
 # Django settings for openconsent project.
 
 import os
+import private_settings #@UnresolvedImport
 
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 DEBUG = True
@@ -82,7 +83,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'tf6_5wd#k^w-eliz58zy#_*!%oc#on&@7mi1ve@(c#kg1a-gh$'
+SECRET_KEY = private_settings.SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

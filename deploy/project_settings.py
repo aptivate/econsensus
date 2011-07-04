@@ -2,6 +2,8 @@
 
 # This is the directory inside the project dev dir that contains the django
 # application
-django_dir = "django/openconsent"
+project_name = 'openconsent'
+
+django_dir = "django/" + project_name
 
 django_apps = ['publicweb', ]

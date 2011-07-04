@@ -24,6 +24,7 @@ import os, sys
 import getopt
 import getpass
 import subprocess 
+import random
 
 # import per-project settings
 import project_settings
@@ -172,7 +173,19 @@ def update_ve():
     """ Update the virtualenv """
     create_ve()
 
+def create_private_settings():
 
+    private_settings_file = os.path.join(env['django_dir'], 
+                                    'private_settings.py')
+    if not os.path.exists(private_settings_file):
+    
+        with open(private_settings_file, 'w') as f:
+            secret_key = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])
+            db_password = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789") for i in range(12)])
+            
+            f.write("SECRET_KEY = '%s'\n" % secret_key)
+            f.write("DB_PASSWORD = '%s'\n" % db_password)
+    
 def link_local_settings(environment):
     """ link local_settings.py.environment as local_settings.py """
     # die if the correct local settings does not exist
@@ -216,7 +229,21 @@ def update_db():
             use_migrations = True
     _manage_py(['syncdb', '--noinput'])
     if use_migrations:
-        _manage_py(['syncdb', '--noinput'])
+        _manage_py(['migrate', '--noinput'])
+
+def dump_db():
+    """Dump the database in the current working directory"""
+    project_name = project_settings.django_dir.split('/')[-1]
+    db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
+    if not db_engine.endswith('mysql'):
+        print 'dump_db only knows how to dump mysql so far'
+        sys.exit(1)
+    dump_cmd = '/usr/bin/mysqldump --user=%s --password=%s --host=127.0.0.1 ' %\
+            (db_user, db_pw)
+    if db_port != None:
+        dump_cmd += '--port=%s ' % db_port
+    dump_cmd += '%s > db_dump.sql' % db_name
+
 
 def setup_db_dumps(dump_dir):
     """ set up mysql database dumps in root crontab """
@@ -334,7 +361,7 @@ def deploy(environment=None):
     if environment == None:
         environment = _infer_environment()
 
-    create_ve()
     link_local_settings(environment)
+    create_ve()
     update_db()
 

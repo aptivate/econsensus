@@ -10,7 +10,7 @@ import fablib
 
 
 env.home = '/var/django/'
-env.project = 'openconsent'
+env.project = project_settings.project_name
 # the top level directory on the server
 env.project_dir = env.project
 
@@ -59,7 +59,7 @@ def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
     utils.abort('remove this line when dev server setup')
     env.environment = 'dev_server'
-    env.hosts = ['fen-vz-project_name-dev']
+    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev']
     _local_setup()
 
 
@@ -70,14 +70,14 @@ def staging_test():
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
     env.use_apache = False
-    env.hosts = ['fen-vz-project_name']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-    env.hosts = ['fen-vz-project_name']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
 
@@ -94,21 +94,21 @@ def production_sandbox():
 def production():
     """ use production environment on remote host"""
     env.environment = 'production'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
     
 def production_test1():
     """ use production environment on remote host"""
     env.project_dir = env.project + '_test1'
     env.environment = 'production_test1'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
 def production_test2():
     """ use production environment on remote host"""
     env.project_dir = env.project + '_test2'
     env.environment = 'production_test2'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
 def deploy(revision=None):

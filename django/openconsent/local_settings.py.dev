@@ -1,3 +1,5 @@
+import private_settings
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 
@@ -12,7 +14,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'openconsent',                      # Or path to database file if using sqlite3.
         'USER': 'openconsent',                      # Not used with sqlite3.
-        'PASSWORD': 'l5e7yg9f6g2ade',                  # Not used with sqlite3.
+        'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
