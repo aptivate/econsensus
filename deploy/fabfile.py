@@ -126,8 +126,7 @@ def deploy(revision=None):
     update_db()
     if env.environment == 'production':
         setup_db_dumps()
-    # only link the apache conf once on the production server, not for all the sub-sites
-    if not env.environment.startswith('production_'):
+    if env.environment.startswith('production'):
         link_apache_conf()
     load_fixtures()
     
