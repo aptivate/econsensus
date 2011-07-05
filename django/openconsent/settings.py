@@ -60,7 +60,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -116,7 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+#    'django.contrib.staticfiles',
     'publicweb',
     'tinymce',
     # Uncomment the next line to enable the admin:
@@ -155,5 +155,9 @@ TINYMCE_DEFAULT_CONFIG = {
             "theme_advanced_buttons2" : "",
             "theme_advanced_buttons3" : ""
             }
+
+TINYMCE_JS_URL = '/tiny_mce/tiny_mce.js'
+settings_dir = os.path.abspath(os.path.dirname(__file__))
+TINYMCE_JS_ROOT = os.path.join(settings_dir, 'media', 'js', 'tiny_mce')
 
 from local_settings import *
