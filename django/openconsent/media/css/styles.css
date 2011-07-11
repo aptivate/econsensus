@@ -1,6 +1,6 @@
 body {
     border: 0 none;
-    font-size: 90%;
+    font-size: 85%;
     margin: 0;
     min-width: 600px;
     padding: 0;
@@ -83,12 +83,11 @@ img {
 #branding p {
     color: #666666;
     float: left;
-    font-size: 1.3em;
-    margin-left: 20px;
-    margin-top: 4em;
+    font-size: 1.1em;
+    margin: 0;
+    padding: 35px 15px;
     width: 25%;
 }
-
 /* Navigation */
 
 #nav {
@@ -145,17 +144,21 @@ img {
 	color:#fff
 }
 
-#contacts {
+#user-access {
     background-color:#efefef;
-	border-radius:20px;
+	border-radius:10px;
 	-moz-border-radius:20px;
 	-webkit-border-radius:20px;
     display: block;
-    float: left;
-    margin-top: 60px;
-    padding: 20px;
-    position: absolute;
+    float: right;
+    margin-top: 20px;
+    padding: 5px 10px;
+    position: relative;
     right: 0;
+}
+
+#user-access a {
+	text-decoration:none;
 }
 
 #contacts p {
