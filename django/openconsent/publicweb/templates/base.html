@@ -5,7 +5,7 @@
 	<head>
 		<title>{% block title %}{% trans "Lorem Ipsum" %}{% endblock %} | {% trans "Aptivate Decisions" %}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" href="/{{ MEDIA_URL }}css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/styles.css" />
 		{% block head_content%}{% endblock %}
 	</head>
   <body>
@@ -14,7 +14,7 @@
 			<div id="header-wrap">
 				<div id="branding">
 				  	{% block header_content%}
-					  	<h1><a href="/"><img alt="Econsenses" src="" /></a></h1>
+					  	<h1><a href="/"><img alt="Econsensus" src="" /></a></h1>
 						<p>Consensus Decision-making for Badgers</p>
 					{% endblock %}
 				</div>

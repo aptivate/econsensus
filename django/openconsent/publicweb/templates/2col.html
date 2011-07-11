@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load cms_tags %}
 {% block head_content %}
 <link media="screen" href="/media/css/2col-left.css" type="text/css" rel="stylesheet" />
 {% endblock %}
@@ -9,16 +8,14 @@
 	        <div class="col1wrap">
 	            <div class="col1">
 					<!-- Column 2 start -->
-					<h2>{% page_attribute "page_title" %}</h2>
-					{% placeholder page_content %}
-					{% block page_content%}{% endblock %}
+					<h2>{% block page_title%}{{ flatpage.title }}{% endblock page_title %}</h2>
+					{% block content%}{% endblock content %}
 
 					<!-- Column 2 end -->
 	            </div>
 	        </div>
 	        <div class="col2">
 				<!-- Column 1 start -->
-					{% placeholder left_sidebar %}
 					{% block sidebar_2_content%}{% endblock %}
 				<!-- Column 1 end -->
 	        </div>
