@@ -3,20 +3,20 @@ import private_settings
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-LOGIN_URL = '/sandbox/public/login/'
-LOGIN_REDIRECT_URL = '/sandbox/public/decision_list/'
+LOGIN_URL = '/test1/public/login/'
+LOGIN_REDIRECT_URL = '/test1/public/decision_list/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/sandbox/site_media/'
-ADMIN_MEDIA_PREFIX = '/sandbox/media/'
+MEDIA_URL = '/test1/media/'
+ADMIN_MEDIA_PREFIX = '/test1/media/'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'openconsent_sand',                      # Or path to database file if using sqlite3.
-        'USER': 'openconsent_sand',                      # Not used with sqlite3.
+        'NAME': 'openconsent_tes1',                      # Or path to database file if using sqlite3.
+        'USER': 'openconsent_tes1',                      # Not used with sqlite3.
         'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.

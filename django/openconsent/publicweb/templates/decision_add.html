@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
 {% if decision.short_name %}
 	{{ decision.short_name }}
 {% else %}
-	New Decision
+	{% trans "New Decision" %}
 {% endif %}{% endblock %}
 
 {% block head %}
@@ -15,7 +16,7 @@
 {% if decision.short_name %}
 	{{ decision.short_name }}
 {% else %}
-	New Decision
+	{% trans "New Decision" %}
 {% endif %}
 {% endblock %}
 
@@ -30,14 +31,14 @@
     <tr><th>{{ field.label_tag }}:</th><td>{{ field }}</td></td>
 	{% for error in field.errors %}
 	
-    <tr><th></th><td><p style="color: red;">{{ error }}</p></td></tr>
+    <tr><th></th><td><p class="error">{{ error }}</p></td></tr>
     {% endfor %}
 {% endfor %}
 
 {{ concern_form.as_table }}
 </table>
 
-<input type="submit" value="Save">
+<input type="submit" value={% trans "Save" %}>
 {% csrf_token %}
 </form>
 {% endblock %}

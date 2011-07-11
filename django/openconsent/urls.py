@@ -3,14 +3,12 @@ from django.views.generic.simple import redirect_to
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
-import openconsent.publicweb.views
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^(?P<path>\w*)$', redirect_to, {'url': '%(path)s/public/decision_list/'}),
+    url(r'^$', redirect_to, {'url': 'public/decision_list/'}),
 
     url(r'^public/', include('openconsent.publicweb.urls')),
 

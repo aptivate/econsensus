@@ -1,4 +1,5 @@
 import floppyforms as forms
+from django.conf import settings
 
 class JQueryUIDateWidget(forms.DateInput):
     template_name = 'datepicker.html'
@@ -10,7 +11,7 @@ class JQueryUIDateWidget(forms.DateInput):
 
         css = {
             'all': (
-                '/media/jquery/jquery-ui.css',
+                settings.MEDIA_URL + '/jquery/jquery-ui.css',
             )
         }
 

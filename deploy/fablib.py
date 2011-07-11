@@ -1,5 +1,6 @@
 import os, sys
 import getpass
+import time
 
 from fabric.api import *
 from fabric.contrib import files, console
@@ -17,6 +18,8 @@ def _setup_path():
         env.project_root    = os.path.join(env.home, env.project_dir)
     if not env.has_key('vcs_root'):
         env.vcs_root        = os.path.join(env.project_root, 'dev')
+    if not env.has_key('prev_root'):
+        env.prev_root        = os.path.join(env.project_root, 'previous')
     if not env.has_key('dump_dir'):
         env.dump_dir        = os.path.join(env.project_root, 'dbdumps')
     if not env.has_key('deploy_root'):
@@ -63,12 +66,15 @@ def deploy(revision=None):
     require('project_root', provided_by=env.valid_envs)
     with settings(warn_only=True):
         apache_cmd('stop')
-    if not files.exists(env.project_root):
+    if files.exists(env.project_root):
+        create_copy_for_rollback()
+    else:
         sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
     if env.use_virtualenv:
         update_requirements()
     if env.project_type == "django":
+        create_private_settings()
         link_local_settings()
         rm_pyc_files()
         update_db()
@@ -76,6 +82,71 @@ def deploy(revision=None):
             setup_db_dumps()
     link_apache_conf()
     apache_cmd('start')
+
+
+def create_copy_for_rollback():
+    """Copy the current version out of the way so we can rollback to it if required."""
+    require('prev_root', 'vcs_root', 'tasks_bin', provided_by=env.valid_envs)
+    # create directory for it
+    prev_dir = os.path.join(env.prev_root, time.strftime("%Y-%m-%d_%H-%M-%S"))
+    sudo('mkdir -p %s' % prev_dir)
+    # cp -a
+    sudo('cp -a %s %s' % (env.vcs_root, prev_dir))
+    # dump database
+    with cd(prev_dir):
+        sudo(env.tasks_bin + ' dump_db')
+
+
+def rollback(version='last', migrate=False, restore_db=False):
+    """Redeploy one of the old versions.
+
+    Arguments are 'version', 'migrate' and 'restore_db':
+
+    * if version is 'last' (the default) then the most recent version will be
+      restored. Otherwise specify by timestamp - use list_previous to get a list
+      of available versions.
+    * if restore_db is True, then the database will be restored as well as the
+      code. The default is False.
+    * if migrate is True, then fabric will attempt to work out the new and old
+      migration status and run the migrations to match the database versions. 
+      The default is False
+
+    Note that migrate and restore_db cannot both be True."""
+    utils.abort('rollback has not been implemented yet')
+    if migrate and restore_db:
+        utils.abort('rollback cannot do both migrate and restore_db')
+    if migrate:
+        utils.abort("rollback: haven't worked out how to do migrate yet ...")
+
+    if version == 'last':
+        # get the latest directory from prev_dir
+        pass
+        # list directories in env.prev_root, use last one
+    else:
+        # check version specified exists
+        rollback_dir = os.path.join(env.prev_root, version)
+        if not files.exists(rollback_dir):
+            utils.abort("Cannot rollback to version %s, it does not exist, use list_previous to see versions available" % version)
+        
+    # first copy this version out of the way
+    create_copy_for_rollback()
+    # delete everything - don't want stray files left over
+    # cp -a from rollback_dir to vcs_root
+    if restore_db:
+        # feed the dump file into mysql command
+        pass
+
+
+def list_previous():
+    """List the previous versions available to rollback to."""
+    utils.abort('list_previous has not been implemented yet')
+    # list the previous directory, convert to format.
+    # could also determine the VCS revision number
+
+
+def delete_old_versions(keep=5):
+    """Delete old rollback directories, keeping the last "keep" (default 5)"."""
+    utils.abort('delete_old_versions has not been implemented yet')
 
 
 def local_test():
@@ -90,6 +161,22 @@ def remote_test():
     require('django_root', 'python_bin', 'test_cmd', provided_by=env.valid_non_prod_envs)
     with cd(env.django_root):
         sudo(env.python_bin + env.test_cmd)
+
+def version():
+    """ return the deployed VCS revision and commit comments"""
+    require('project_root', 'repo_type', 'vcs_root', 'repository',
+        provided_by=env.valid_envs)
+    if env.repo_type == "git":
+        with cd(env.vcs_root):
+            sudo('git log | head -5')
+    elif env.repo_type == "svn":
+        _get_svn_user_and_pass()
+        with cd(env.vcs_root):
+            with hide('running'):
+                cmd = 'svn log --non-interactive --username %s --password %s | head -4' % (env.svnuser, env.svnpass)
+                sudo(cmd)
+    else:
+        utils.abort('Unsupported repo type: %s' % (env.repo_type))
 
 
 def checkout_or_update(revision=None):
@@ -162,6 +249,9 @@ def touch():
     wsgi_dir = os.path.join(env.vcs_root, 'wsgi')
     sudo('touch ' + os.path.join(wsgi_dir, 'wsgi_handler.py'))
 
+def create_private_settings():
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' create_private_settings')
 
 def link_local_settings():
     """link the local_settings.py file for this environment"""

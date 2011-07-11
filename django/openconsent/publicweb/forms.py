@@ -1,7 +1,5 @@
 # Create your forms here.
 
-import logging
-
 from django import forms
 from models import Decision, Concern
 import tinymce.widgets

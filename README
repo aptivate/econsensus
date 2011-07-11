@@ -9,7 +9,7 @@ First install the requirements:
 
     $ sudo apt-get install git-core python-virtualenv python-pip sqlite3 \
           python2.6-dev libxml2-dev libyaml-dev mysql-server mysql-client \
-          libmysqlclient-dev build-essential
+          libmysqlclient-dev build-essential libxslt1-dev
 
 Then check out the code:
 
@@ -30,3 +30,7 @@ development server:
 You should now be able to access the application at:
 
     http://127.0.0.1:8000/
+
+An initial user ID is created with Username : admin Password : admin
+The admin password can be changed through the admin interface at http://127.0.0.1:8000/admin/
+User accounts with different privileges can also be created through the admin interface.

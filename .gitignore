@@ -9,3 +9,6 @@ reports/*
 .pydevproject
 .DS_Store
 
+/.metadata
+/.settings
+/.project

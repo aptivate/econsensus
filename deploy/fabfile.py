@@ -7,10 +7,10 @@ from fabric.decorators import hosts
 # provides as fabric commands
 from fablib import *
 import fablib
-
+import project_settings
 
 env.home = '/var/django/'
-env.project = 'openconsent'
+env.project = project_settings.project_name
 # the top level directory on the server
 env.project_dir = env.project
 
@@ -59,7 +59,7 @@ def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
     utils.abort('remove this line when dev server setup')
     env.environment = 'dev_server'
-    env.hosts = ['fen-vz-project_name-dev']
+    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev']
     _local_setup()
 
 
@@ -70,21 +70,70 @@ def staging_test():
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
     env.use_apache = False
-    env.hosts = ['fen-vz-project_name']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-    env.hosts = ['fen-vz-project_name']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
+    _local_setup()
+
+
+def production_sandbox():
+    """ use staging environment on remote host to run tests"""
+    # this is on the same server as the customer facing stage site
+    # so we need project_root to be different ...
+    env.project_dir = env.project + '_sandbox'
+    env.environment = 'production_sandbox'
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
 
 def production():
     """ use production environment on remote host"""
     env.environment = 'production'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    _local_setup()
+    
+def production_test1():
+    """ use production environment on remote host"""
+    env.project_dir = env.project + '_test1'
+    env.environment = 'production_test1'
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
+def production_test2():
+    """ use production environment on remote host"""
+    env.project_dir = env.project + '_test2'
+    env.environment = 'production_test2'
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    _local_setup()
 
+def deploy(revision=None):
+    """ update remote host environment (virtualenv, deploy, update) """
+    require('project_root', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        apache_cmd('stop')
+    if not files.exists(env.project_root):
+        sudo('mkdir -p %(project_root)s' % env)
+    checkout_or_update(revision)
+    update_requirements()
+    create_private_settings()
+    link_local_settings()
+    rm_pyc_files()
+    update_db()
+    if env.environment == 'production':
+        setup_db_dumps()
+    if env.environment.startswith('production'):
+        link_apache_conf()
+    load_fixtures()
+    
+    apache_cmd('start')
+    
+def load_fixtures():
+    """load fixtures for this environment"""
+    require('tasks_bin', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        sudo(env.tasks_bin + ' load_fixtures')
