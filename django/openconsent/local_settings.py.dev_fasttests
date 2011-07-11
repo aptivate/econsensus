@@ -6,7 +6,7 @@ TEMPLATE_DEBUG = True
 LOGIN_URL = '/public/login/'
 LOGIN_REDIRECT_URL = '/public/decision_list/'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 DATABASES = {
