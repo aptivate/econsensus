@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-
-from openconsent.publicweb.views import decision_add_page, decision_view_page, decision_list
+from publicweb.views import decision_add_page, decision_view_page, decision_list
 
 urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^decision/add$',
