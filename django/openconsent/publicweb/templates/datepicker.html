@@ -1,0 +1,11 @@
+<input type="{{ type }}" name="{{ name }}"{% if value %} value="{{ value }}"{% endif %}{% if required %} required{% endif %}{% for attr in attrs.items %} {{ attr.0 }}{% if attr.1 %}="{{ attr.1 }}"{% endif %}{% endfor %} />
+
+<script type="text/javascript">
+    $(function() {
+        var options = {
+            dateFormat: 'yy-mm-dd'
+        };
+        $( "#{{ attrs.id }}" ).datepicker(options);
+    });
+</script>
+
