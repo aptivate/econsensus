@@ -20,5 +20,3 @@ DATABASES = {
         'PORT': '3307',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-ADMIN_MEDIA_PREFIX = '/static/admin/'

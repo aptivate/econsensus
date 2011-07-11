@@ -156,8 +156,4 @@ TINYMCE_DEFAULT_CONFIG = {
             "theme_advanced_buttons3" : ""
             }
 
-TINYMCE_JS_URL = '/tiny_mce/tiny_mce.js'
-settings_dir = os.path.abspath(os.path.dirname(__file__))
-TINYMCE_JS_ROOT = os.path.join(settings_dir, 'media', 'js', 'tiny_mce')
-
 from local_settings import *
