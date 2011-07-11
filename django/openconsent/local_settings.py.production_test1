@@ -9,7 +9,7 @@ LOGIN_REDIRECT_URL = '/test1/public/decision_list/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/test1/media/'
+MEDIA_URL = '/test1/site_media/'
 ADMIN_MEDIA_PREFIX = '/test1/media/'
 
 DATABASES = {

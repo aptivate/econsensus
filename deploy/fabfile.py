@@ -127,6 +127,8 @@ def deploy(revision=None):
     if env.environment == 'production':
         setup_db_dumps()
     if env.environment.startswith('production'):
+        link_apache_conf('production')
+    else:
         link_apache_conf()
     load_fixtures()
     
@@ -137,3 +139,25 @@ def load_fixtures():
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
         sudo(env.tasks_bin + ' load_fixtures')
+
+def link_apache_conf(apache_conf_name=None):
+    """link the apache.conf file"""
+    require('vcs_root', provided_by=env.valid_envs)
+    if apache_conf_name == None:
+        apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
+        conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
+    else:
+        # this assumes that each server will only have one DNS name, ie there is
+        # only one VirtualHost directive per server. If this changes you might
+        # want to go back to the fablib version of this function
+        # So we only ever have one file in /etc/httpd/conf.d that links to the
+        # apache conf in the last deployed instance
+        apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'.conf')
+        conf_file = os.path.join(env.vcs_root, 'apache', apache_conf_name+'.conf')
+        if files.exists(apache_conf):
+            sudo('rm %s' % apache_conf)
+    if not files.exists(conf_file):
+        utils.abort('No apache conf file found - expected %s' % conf_file)
+    if not files.exists(apache_conf):
+        sudo('ln -s %s %s' % (conf_file, apache_conf))
+    configtest()
