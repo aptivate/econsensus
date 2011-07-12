@@ -11,26 +11,28 @@
   <body>
   	<div id="wrapper">
 		<div id="header">
-			<div id="header-wrap">
+			
 				<div id="branding">
 				  	{% block header_content%}
 					  	<h1><a href="/"><img alt="Econsensus" src="{{MEDIA_URL}}images/econsensus-logo-header.png" /></a></h1>
-						<p>Consensus Decision-making for Badgers</p>
+						<div id="user-access">
+							<span class="user-org">: Aptivate</span>
+							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
+							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span>({{ user.username }})</span></a>
+						</div>
 					{% endblock %}
 				</div>
-				<div id="user-access">
-					<span>{{ user.username }}</span> | <a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} </a>
-				</div>
-			</div>
+			
 			<div id="nav">
-				<ul class="navigation">
-				{% block topbar %}
-					<li><a href='{% url admin:index %}'>{% trans "Admin" %}</a></li>
-					<li><a href="{% url decision_list %}">{% trans "Decision List" %}</a></li>
-				</ul>
-				{% endblock %}
-			</div><!-- Nav end -->
+					{% block topbar %}
+					<ul class="navigation">
+						<li><a class="go nav list" href="{% url decision_list %}">{% trans "Decision list" %}</a></li>
+						<li><a class="go nav add" href="{% url publicweb.views.decision_add_page %}">{% trans "Add decision" %}</a></li>
+					</ul>
+					{% endblock %}
+			</div>
 		</div><!-- Header end -->
+		
 		<div id="content">
 			{% block base_content%}
 				{% block content %}

@@ -20,7 +20,7 @@ a img:hover {
 	background-color:transparent;
 }
 h1, h2, h3 {
-    margin: 0.8em 0 0.2em;
+    margin: 0;
     padding: 0;
 	font-weight:normal;
 	color:#333;
@@ -49,13 +49,13 @@ img {
     width: 100%;
 }
 
-#header-wrap, #nav ul.navigation , #columns, #site-info {
-	max-width:1024px;
+#branding, #nav .navigation , #columns, #site-info {
+	max-width:1000px;
 	margin:0 auto;
 	float:none;
 	position:relative;
 	clear:both;
-	padding:0;
+	padding:0 15px;
 }
 
 /* Header */
@@ -67,8 +67,9 @@ img {
 }
 
 #header {
-    border-bottom: 10px solid #ccc;
 	background-color:#fff;
+	position:fixed;
+	z-index:2;
 }
 
 #header h1 {
@@ -76,34 +77,50 @@ img {
 	display:block;
 }
 
+#header h1 img {
+	margin:0;
+	padding:0;
+}
+
 #header h1 a:hover {
 	background-color:transparent;
 }
 
-#branding p {
-    color: #666666;
-    float: left;
-    font-size: 1.1em;
-    margin: 0;
-    padding: 35px 15px;
-    width: 25%;
+#branding {
+    display: block;
+    height: 3em;
+    padding: 20px 15px;
+    width: 100%;
 }
+
+#user-access {
+	float: left;
+    margin-left: 10px;
+    padding-top: 5px
+}
+
+#user-access .user-org {
+	color: #333333;
+    font-size: 2em
+}
+
+#user-access a {
+    padding: 3px;
+    position: relative;
+    top: -3px;
+}
+
 /* Navigation */
 
 #nav {
-    clear: both;
-    margin: 0;
-    overflow: auto;
-    padding: 0;
+	border-bottom: 10px solid #CCCCCC;
 }
 
 #nav ul {
-    clear: left;
-    float: left;
+    clear: both;
     list-style: none outside none;
-    margin: 10px 0 0;
+    margin: 0;
     padding: 0;
-    width: 100%;
 }
 #nav ul li {
     display: inline;
@@ -113,13 +130,13 @@ img {
 }
 #nav ul li a {
     background: none repeat scroll 0 0 #EEEEEE;
-    border-radius: 5px 5px 0 0;
+    border-radius: 0 0 5px 5px;
     color: #000000;
     display: block;
     float: left;
     left: 0;
     line-height: 1.3em;
-    margin: 0 4px 0 0;
+    margin: 10px 4px 0 0;
     padding: 5px 10px;
     position: relative;
     text-align: center;
@@ -144,22 +161,26 @@ img {
 	color:#fff
 }
 
-#user-access {
-    background-color:#efefef;
-	border-radius:10px;
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-    display: block;
-    float: right;
-    margin-top: 20px;
-    padding: 5px 10px;
-    position: relative;
-    right: 0;
+#nav a.go.nav {
+    background-color: #A9D300;
+    background-image: url("/site_media/images/icon-add-decision.png");
+    background-position: right center;
+    background-repeat: no-repeat;
+    border-radius: 0 0 10px 10px;
+    color: #FFFFFF;
+    font-size: 1.3em;
+    margin: 10px 5px 0 0;
+    padding: 10px 60px 10px 10px;
 }
 
-#user-access a {
-	text-decoration:none;
+#nav a.go.nav:hover {
+	color: #333;
 }
+
+#nav a.go.nav.list {
+	background-image: url("/site_media/images/icon-decision-list.png");
+}
+
 
 #contacts p {
     color: #333333;
@@ -168,59 +189,54 @@ img {
 
 /* Content */
 
+
 #content {
-	background-color:#fff;
-	display:block;
-	clear:both;
+    background-color: #FFFFFF;
+    clear: both;
+    display: block;
+    margin-top: 135px;
+}
+
+#columns.fullpage {
+    background: #fff;
+}
+
+#columns.fullpage .col1 {
+    margin: 0;
+	float:left;
+	width:100%;
 }
 
 #columns .col1 h2:first-child {
-	font-size:2.5em;
+	font-size:2em;
 	border:none;
 	margin-top:15px;
 }
 
 .go {
-    background-color: #336699;
+    background-color: #A9D300;
     -moz-border-radius: 10px 10px 10px 10px;
 	-webkit-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
     color: #FFFFFF;
-    display: block;
+    display: inline;
     font-weight: bold;
     padding: 10px;
     text-decoration: none;
 }
 
 .go:hover {
-	background-color: #A9D300;
+	background-color: #336699;
 }
 
-/* Snippets */
 
-.callout {
-    border: 3px solid #EEEEEE;
-    border-radius: 10px 10px 10px 10px;
-    margin: 20px 0;
-    overflow: auto;
-    padding: 13px;
-}
+/* Decision List table */
 
-.callout h2 {
-	margin:0;
-	font-weight:bold;
-	border:none;
-	color:#336699;
-}
-
-/* 1 column full page settings */
-#columns.fullpage {
-    background: #fff;
-}
-
-#columns.fullpage .col1 {
-    margin: 0 15px;
-	float:left;
+table#decision-list {
+	padding:10px;
+	width:100%;
+	border:5px solid #ddd;
+	border-radius:15px;
 }
 
 
@@ -234,6 +250,7 @@ img {
     padding-top: 10px;
     width: 100%;
 	padding-bottom:20px;
+	margin-top:20px;
 }
 
 #footer p {

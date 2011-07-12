@@ -5,12 +5,11 @@
 {% trans "Home" %}
 {% endblock %}
 
-{% block heading %}{% trans "Decision List" %}{% endblock %}
 
 {% block content %}
-<p><a href="{% url publicweb.views.decision_add_page %}">{% trans "Add decision" %}</a></p>
+{% block heading %}{% trans "Decision List" %}{% endblock %}
 
-<table>
+<table id="decision-list">
 <tr>
     {% for column in decisions.columns %}
     <th><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
