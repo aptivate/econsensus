@@ -94,18 +94,18 @@ img {
     width: 100%;
 }
 
-#user-access {
+#user_access {
 	float: left;
     margin-left: 10px;
     padding-top: 5px
 }
 
-#user-access .user-org {
+#user_access .user-org {
 	color: #333333;
     font-size: 2em
 }
 
-#user-access a {
+#user_access a {
     padding: 3px;
     position: relative;
     top: -3px;
@@ -228,6 +228,44 @@ img {
 
 .go:hover {
 	background-color: #336699;
+}
+
+/* login form */
+
+#login-form {
+	width:550px;
+}
+
+#login-form p {
+    background-color: #DDDDDD;
+    border-radius: 10px 10px 10px 10px;
+    display: block;
+	overflow:auto;
+    padding: 10px;
+}
+
+#login-form label {
+    display: block;
+    float: left;
+    font-size: 1.3em;
+    line-height: 1.5em;
+    width: 100px;
+}
+
+#login-form input {
+    border: medium none;
+    border-radius: 10px 10px 10px 10px;
+    display: block;
+    float: right;
+    padding: 5px;
+    width: 400px;
+}
+
+form input.button {
+    background-color: #333333;
+    color: #FFFFFF;
+    font-weight: bold;
+    width: 100px!important;
 }
 
 

@@ -8,29 +8,30 @@
 		<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/styles.css" />
 		{% block head_content%}{% endblock %}
 	</head>
-  <body>
+  <body class="{% block body_class%}base{% endblock %}">
   	<div id="wrapper">
 		<div id="header">
 			
 				<div id="branding">
 				  	{% block header_content%}
 					  	<h1><a href="/"><img alt="Econsensus" src="{{MEDIA_URL}}images/econsensus-logo-header.png" /></a></h1>
-						<div id="user-access">
+						{% block user_access %}
+						<div id="user_access">
 							<span class="user-org">: Aptivate</span>
 							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
 							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span>({{ user.username }})</span></a>
 						</div>
+						{% endblock user_access%}
 					{% endblock %}
 				</div>
-			
-			<div id="nav">
-					{% block topbar %}
+				{% block topbar %}
+				<div id="nav">
 					<ul class="navigation">
 						<li><a class="go nav list" href="{% url decision_list %}">{% trans "Decision list" %}</a></li>
 						<li><a class="go nav add" href="{% url publicweb.views.decision_add_page %}">{% trans "Add decision" %}</a></li>
 					</ul>
-					{% endblock %}
-			</div>
+				</div>
+				{% endblock %}
 		</div><!-- Header end -->
 		
 		<div id="content">
