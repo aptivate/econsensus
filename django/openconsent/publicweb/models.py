@@ -1,8 +1,23 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import tinymce.models
-    
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^tinymce\.models.\HTMLField"])
+
 class Decision(models.Model):
+
+    PROPOSAL_STATUS = 1
+    CONSENSUS_STATUS = 2
+    ARCHIVED_STATUS = 3
+
+    STATUS_CHOICES = ( 
+                  (PROPOSAL_STATUS, _('Proposal')),
+                  (CONSENSUS_STATUS, _('Consensus')),
+                  (ARCHIVED_STATUS, _('Archived')),
+                  )
+
+
     short_name = models.CharField(max_length=255, verbose_name=_('Name'))
     decided_date = models.DateField(null=True, blank=True,
         verbose_name=_('Decided date'))
@@ -18,6 +33,9 @@ class Decision(models.Model):
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
         verbose_name=_('Description'))
+    status = models.IntegerField(choices=STATUS_CHOICES,
+                                 default=PROPOSAL_STATUS,
+                                 verbose_name=_('Status'))
     
     def unresolvedconcerns(self):
         answer = _("No")

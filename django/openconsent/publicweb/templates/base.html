@@ -16,9 +16,9 @@
 				  	{% block header_content%}
 					  	<h1><a href="/"><img alt="Econsensus" src="{{MEDIA_URL}}images/econsensus-logo-header.png" /></a></h1>
 						<div id="user-access">
-							<span class="user-org">: Aptivate</span>
+							<span class="user-org not_translated">: Aptivate</span>
 							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
-							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span>({{ user.username }})</span></a>
+							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 						</div>
 					{% endblock %}
 				</div>
@@ -42,7 +42,7 @@
 	<div id="footer">
 		<div id="site-info">
 			{% block footer_content%}
-			<p>footer content here</p>
+			<p>{% trans "footer content here" %}</p>
 			{% endblock %}
 		</div>
 	</div><!-- footer end -->

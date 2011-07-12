@@ -31,16 +31,16 @@ class InternationalisationTest(OpenConsentTestCase):
                
         for element in sel(root):
             if self.has_translatable_text(element):             
-                self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element) + " with text " + element.text)
-    
+                self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element) + " with text '" + element.text + "' from view '" + view + "'")
+     
     def has_translatable_text(self,element):
-        if element.text is not None and element.text.strip() != "" \
-            and element.attrib.get('class') != 'not_translated' \
-            and element.tag != 'script':
-            
-            return True
-        else:
+        if element.text is None or element.text.strip() == "" \
+            or "not_translated" in element.attrib.get('class', '').split(" ") \
+            or element.tag == 'script' \
+            or element.text.isdigit():
             return False
+        else:
+            return True
         
     def contains(self, string_to_search, sub_string):
         return string_to_search.find(sub_string) > -1

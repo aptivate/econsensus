@@ -10,9 +10,9 @@ import datetime
 
 from django.core.urlresolvers import reverse
 
-from openconsent.publicweb.views import decision_view_page
-from openconsent.publicweb.models import Decision, Concern
-from openconsent.publicweb.forms import DecisionForm
+from publicweb.views import decision_view_page
+from publicweb.models import Decision, Concern
+from publicweb.forms import DecisionForm
 
 from publicweb.tests.open_consent_test_case import OpenConsentTestCase
 
@@ -51,16 +51,23 @@ class DecisionsTest(OpenConsentTestCase):
         # Test that providing a short name is enough to complete the form,
         # save the object and send us back to the home page
         
-        response = self.client.post(path, {'short_name': 'Feed the dog',
-                                           'concern_set-TOTAL_FORMS': '3',
-                                           'concern_set-INITIAL_FORMS': '0',
-                                           'concern_set-MAX_NUM_FORMS': ''},
+        post_dict = self.get_default_decision_form_dict()
+        
+        post_dict.update({'short_name': 'Feed the dog',
+                       'concern_set-TOTAL_FORMS': '3',
+                       'concern_set-INITIAL_FORMS': '0',
+                       'concern_set-MAX_NUM_FORMS': ''})
+        
+        response = self.client.post(path, post_dict,
                                     follow=True)
         
         
         self.assertRedirects(response,
             reverse('decision_list'),
             msg_prefix=response.content)
+
+    def get_default_decision_form_dict(self):
+        return {'status': 1}
 
     def assert_decision_form_field_uses_tinymce_widget(self, field):
         form = DecisionForm()
@@ -179,31 +186,26 @@ class DecisionsTest(OpenConsentTestCase):
     def test_edit_decision_page_update_concern(self):
         self.decision = self.get_example_decision()
         
-        #concern_formset = ConcernFormSet(instance=self.decision)
         path = reverse('decision_edit', args=[self.decision.id])
-        
         page = self.client.get(path)
         
         post_data = self.mechanize_page(page.content)
-               
         post_data['concern_set-0-short_name'] = 'Modified'
-                
-        #post_data.update(concern_formset.management_form.initial)
-                
         self.client.post(path, post_data)
         
         decision = Decision.objects.get(id=self.decision.id)
-                
         self.assertEquals('Modified', decision.concern_set.all()[0].short_name)
         
     def get_edit_decision_response(self, decision):
         path = reverse(decision_view_page,
                        args=[decision.id])
-        response = self.client.post(path, {'short_name': 'Feed the cat',
-                                           'concern_set-TOTAL_FORMS': '3',
-                                           'concern_set-INITIAL_FORMS': '0',
-                                           'concern_set-MAX_NUM_FORMS': '',
-                                           })
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({'short_name': 'Feed the cat',
+                           'concern_set-TOTAL_FORMS': '3',
+                           'concern_set-INITIAL_FORMS': '0',
+                           'concern_set-MAX_NUM_FORMS': '',
+                           })
+        response = self.client.post(path, post_dict)
         return response
     
     def test_save_edit_decision_page(self):
@@ -227,17 +229,20 @@ class DecisionsTest(OpenConsentTestCase):
                         "\"concern_form\" not in this context")
     
     def test_add_decision_with_concerns(self):
-        self.client.post(reverse('decision_add'), 
-                                {'short_name': 'Make Eggs',
-                                'concern_set-TOTAL_FORMS': '3',
-                                'concern_set-INITIAL_FORMS': '0',
-                                'concern_set-MAX_NUM_FORMS': '',
-                                'concern_set-0-short_name': 'The eggs are bad',
-                                'concern_set-1-short_name': 'No one wants them',
-                                })
-
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({'short_name': 'Make Eggs',
+                            'concern_set-TOTAL_FORMS': '3',
+                            'concern_set-INITIAL_FORMS': '0',
+                            'concern_set-MAX_NUM_FORMS': '',
+                            'concern_set-0-short_name': 'The eggs are bad',
+                            'concern_set-1-short_name': 'No one wants them'})
+        
+        response = self.client.post(reverse('decision_add'), 
+                                post_dict,
+                                follow=True )
+        self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
         decision = Decision.objects.all()[0]
-                
+               
         concerns = decision.concern_set.all()
         
         self.assertEquals('The eggs are bad', concerns[0].short_name)
@@ -261,4 +266,7 @@ class DecisionsTest(OpenConsentTestCase):
     def test_expiry_datepickers(self):
         self.assert_decision_datepickers('expiry_date')
         
-            
+    def test_decision_has_status(self):
+        decision = self.get_example_decision()
+        
+        self.assertTrue(getattr(decision, "status", False), "Decision does not have a status")
