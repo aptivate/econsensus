@@ -51,6 +51,7 @@ img {
 
 #branding, #nav .navigation , #columns, #site-info {
 	max-width:1000px;
+	min-width:550px;
 	margin:0 auto;
 	float:none;
 	position:relative;
@@ -208,7 +209,7 @@ img {
 }
 
 #columns .col1 h2:first-child {
-	font-size:2em;
+	font-size:1.5em;
 	border:none;
 	margin-top:15px;
 }
@@ -232,11 +233,25 @@ img {
 
 /* Decision List table */
 
-table#decision-list {
+#decision-list {
 	padding:10px;
 	width:100%;
 	border:5px solid #ddd;
 	border-radius:15px;
+}
+
+#decision-list th {
+	text-align:left;
+}
+
+#decision-list th a {
+	font-size:1.4em;
+	text-decoration:none;
+}
+
+#decision-list td {
+	border-bottom:2px solid #A9D300;
+ 	padding: 8px 0;
 }
 
 
@@ -255,7 +270,7 @@ table#decision-list {
 
 #footer p {
     margin: 0;
-	color: #AAD400;
+	color: #ccc;
 	text-align:right;
 }
 
