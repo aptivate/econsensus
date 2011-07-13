@@ -329,6 +329,8 @@ def _install_django_jenkins():
     """ ensure that pip has installed the django-jenkins thing """
     pip_bin = os.path.join(env['ve_dir'], 'bin', 'pip')
     cmd = [pip_bin, 'install', '-E', env['ve_dir'], 'django-jenkins']
+    if env['verbose']:
+        print 'Executing command: %s' % ' '.join(cmd)
     subprocess.call(cmd)
 
 def _manage_py_jenkins():
