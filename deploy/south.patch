@@ -1,0 +1,13 @@
+--- django/openconsent/.ve/lib/python2.6/site-packages/south/db/__init__.py	2011-07-12 15:50:27.000000000 +0100
++++ deploy/__init__.py	2011-06-10 12:10:47.000000000 +0100
+@@ -72,5 +72,9 @@
+     )
+     sys.exit(1)
+     
+-# Finally, to make old migrations work, keep 'db' around as the default database
++# Finally, to make old migrations work, keep 'db' around as the default
++# database. We're setting it explicitly to the generic operations first to
++# avoid pydev errors.
++from south.db import generic
++db = generic.DatabaseOperations(DEFAULT_DB_ALIAS)
+ db = dbs[DEFAULT_DB_ALIAS]

@@ -32,3 +32,12 @@ def load_fixtures():
         fixtures_list = fixtures_to_load
     for fixture in fixtures_list:
         tasklib._manage_py(['loaddata'] + [fixture])
+        
+def create_ve():
+    """Create the virtualenv"""
+    tasklib.create_ve()
+    tasklib.patch_south()
+    
+def update_ve():
+    """ Update the virtualenv """
+    create_ve()

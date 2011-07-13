@@ -39,8 +39,9 @@ env = {}
 
 def _setup_paths():
     """Set up the paths used by other tasks"""
+    env['deploy_dir'] = os.path.dirname(__file__)
     # what is the root of the project - one up from this directory
-    env['project_dir'] = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    env['project_dir'] = os.path.join(env['deploy_dir'], '..')
     env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
     env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
     env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python2.6')
@@ -367,3 +368,10 @@ def deploy(environment=None):
     create_ve()
     update_db()
 
+def patch_south():
+    """ patch south to fix pydev errors """
+    south_db_init = os.path.join(env['ve_dir'],
+                'lib/python2.6/site-packages/south/db/__init__.py')
+    patch_file = os.path.join(env['deploy_dir'], 'south.patch')
+    cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
+    subprocess.call(cmd)

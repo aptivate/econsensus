@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import tinymce.models
 
+# Ideally django-tinymce should be patched
+# http://south.aeracode.org/wiki/MyFieldsDontWork
+# http://code.google.com/p/django-tinymce/issues/detail?id=80
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([], ["^tinymce\.models.\HTMLField"])
 
