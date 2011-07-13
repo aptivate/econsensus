@@ -6,28 +6,20 @@ Tests for the public website part of the OpenConsent project
 
 from __future__ import absolute_import
 
-import datetime
-
 from django.core.urlresolvers import reverse
 
 from publicweb.views import decision_view_page
-from publicweb.models import Decision, Concern
+from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
-
 import tinymce.widgets
-import django_tables
 
 import difflib
 
-
 from publicweb.widgets import JQueryUIDateWidget
+from publicweb.tests.decision_test_case import DecisionTestCase
 
-class DecisionsTest(OpenConsentTestCase):
-    def setUp(self):
-        self.login()
-
+class DecisionsTest(DecisionTestCase):
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
             
@@ -85,60 +77,6 @@ class DecisionsTest(OpenConsentTestCase):
     
     def test_decision_form_description_field_uses_tinymce_widget(self):
         self.assert_decision_form_field_uses_tinymce_widget('description')
-    
-    def test_decisions_table_is_an_instance_of_model_table(self):
-        """
-        The decisions table is represented using django_tables.ModelTable.
-        """
-        self.get_example_decision()
-        response = self.client.get(reverse('decision_list'))
-        decisions_table = response.context['decisions']
-        self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
-    
-    def assert_decisions_table_sorted_by_date_column(self, column):
-        #test fails due to row mismatch...
-        # Create test decisions in reverse date order.         
-        for i in range(5, 0, -1):
-            decision = Decision(short_name='Decision %d' % i)
-            setattr(decision, column, datetime.date(2001, 3, i))
-            decision.save()
-            
-        response = self.client.get(reverse('decision_list'),
-            data=dict(sort=column))
-        decisions_table = response.context['decisions']    
-        
-        #print getattr(list(decisions_table.rows)[0].data,column)
-        
-        # Check that decision rows are returned in normal order
-        rows = list(decisions_table.rows)
-
-        #print "***Rows data:"
-        #for i in range(1, 6):
-        #    print "i: ", i, " data: ", getattr(rows[i-1].data, column)
-
-        for i in range(1, 6):
-            self.assertEquals(datetime.date(2001, 3, i), getattr(rows[i-1].data, column))
-            
-    
-    def test_decisions_table_rows_can_be_sorted_by_review_date(self):
-        self.assert_decisions_table_sorted_by_date_column('review_date')
-        
-    def test_descisions_table_rows_can_be_sorted_by_decided_date(self):
-        self.assert_decisions_table_sorted_by_date_column('decided_date')
-
-    def test_descisions_table_rows_can_be_sorted_by_expiry_date(self):
-        self.assert_decisions_table_sorted_by_date_column('expiry_date')
-
-    def get_example_decision(self):
-        
-        decision = Decision(short_name='Decision Time' )
-        decision.save()
-        
-        concern = Concern(short_name='No time to decide',
-                          decision=decision)
-        concern.save()
-        
-        return decision
 
     def get_diff(self, s1, s2):
         diff = difflib.context_diff(s1, s2)
@@ -268,5 +206,5 @@ class DecisionsTest(OpenConsentTestCase):
         
     def test_decision_has_status(self):
         decision = self.get_example_decision()
-        
-        self.assertTrue(getattr(decision, "status", False), "Decision does not have a status")
+        self.assertEquals(0, getattr(decision, "status"), 
+                          "Decision does not have a status")

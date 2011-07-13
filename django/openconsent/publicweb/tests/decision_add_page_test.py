@@ -1,10 +1,7 @@
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
+from publicweb.tests.decision_test_case import DecisionTestCase
 
-class DecisionAddPageTest(OpenConsentTestCase):
-    def setUp(self):
-        self.login()
-    
+class DecisionAddPageTest(DecisionTestCase):
     def test_jquery_javascript_included_in_page(self):
         response = self.load_decision_add_page_and_return_response()
         
@@ -20,4 +17,4 @@ class DecisionAddPageTest(OpenConsentTestCase):
         self.assertContains(response, "tiny_mce.js")
 
     def load_decision_add_page_and_return_response(self):
-        return self.client.get(reverse('decision_add'), follow=True)
+        return self.client.get(reverse('decision_add'))

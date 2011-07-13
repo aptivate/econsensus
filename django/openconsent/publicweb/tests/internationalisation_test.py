@@ -25,8 +25,7 @@ class InternationalisationTest(OpenConsentTestCase):
         response = self.client.get(reverse(view), follow=True)
         html = response.content
                 
-        root = fromstring(html)
-        
+        root = fromstring(html)        
         sel = CSSSelector('*')
                
         for element in sel(root):

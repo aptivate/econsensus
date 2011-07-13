@@ -2,3 +2,5 @@ from publicweb.tests.decisions_test import DecisionsTest
 from publicweb.tests.login_test import LoginTest
 from publicweb.tests.internationalisation_test import InternationalisationTest
 from openconsent.publicweb.tests.decision_add_page_test import DecisionAddPageTest
+from openconsent.publicweb.tests.decision_list_page_test import DecisionListPageTest
+from openconsent.publicweb.tests.decision_table_test import DecisionTableTest

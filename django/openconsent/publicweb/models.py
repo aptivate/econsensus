@@ -10,9 +10,9 @@ add_introspection_rules([], ["^tinymce\.models.\HTMLField"])
 
 class Decision(models.Model):
 
-    PROPOSAL_STATUS = 1
-    CONSENSUS_STATUS = 2
-    ARCHIVED_STATUS = 3
+    PROPOSAL_STATUS = 0
+    CONSENSUS_STATUS = 1
+    ARCHIVED_STATUS = 2
 
     STATUS_CHOICES = ( 
                   (PROPOSAL_STATUS, _('Proposal')),
@@ -39,6 +39,9 @@ class Decision(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  verbose_name=_('Status'))
+    
+    def status_text(self):
+        return self.STATUS_CHOICES[self.status][1]
     
     def unresolvedconcerns(self):
         answer = _("No")
