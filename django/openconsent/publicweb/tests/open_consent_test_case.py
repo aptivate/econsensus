@@ -11,8 +11,8 @@ class OpenConsentTestCase(TestCase):
         user.save()
         self.client.login(username=username, password=password)
 
-    def mechanize_page(self,content):
-        forms = ParseString(content, '')
+    def get_form_values_from_response(self, response):
+        forms = ParseString(response.content, '')
         
         form_data = {}
         for control in forms[1].controls:
@@ -20,4 +20,3 @@ class OpenConsentTestCase(TestCase):
             form_data[name]=control.value
         
         return form_data
-                    

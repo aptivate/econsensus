@@ -12,8 +12,14 @@ from publicweb.decision_table import DecisionTable
 
 @login_required        
 def decision_list(request):
-    decisions = DecisionTable(Decision.objects.all(),
-        order_by=request.GET.get('sort'))
+    status = Decision.STATUS_CODES.get(request.GET.get('status'), None)
+    
+    if status is not None:
+        objects = Decision.objects.filter(status=status)
+    else:
+        objects = Decision.objects.all()
+        
+    decisions = DecisionTable(objects, order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
         RequestContext(request, dict(decisions=decisions,)))
 

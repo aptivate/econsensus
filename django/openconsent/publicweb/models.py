@@ -20,6 +20,9 @@ class Decision(models.Model):
                   (ARCHIVED_STATUS, _('Archived')),
                   )
 
+    STATUS_CODES = {'proposal' : PROPOSAL_STATUS,
+                    'consensus' : CONSENSUS_STATUS,
+                    'archived' : ARCHIVED_STATUS}
 
     short_name = models.CharField(max_length=255, verbose_name=_('Name'))
     decided_date = models.DateField(null=True, blank=True,

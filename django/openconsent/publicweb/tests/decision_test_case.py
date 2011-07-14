@@ -5,12 +5,27 @@ class DecisionTestCase(OpenConsentTestCase):
     def setUp(self):
         self.login()
 
-    def get_example_decision(self):
-        decision = Decision(short_name='Decision Time' )
-        decision.save()
+    def create_decisions_with_different_statuses(self):
+        self.create_and_return_decision(short_name='Proposal Decision')
+        
+        self.create_and_return_decision(short_name='Consensus Decision',
+                                        status=Decision.CONSENSUS_STATUS)
+        
+        self.create_and_return_decision(short_name='Archived Decision',
+                                        status=Decision.ARCHIVED_STATUS)
+
+    def create_and_return_example_decision_with_concern(self):
+        decision = self.create_and_return_decision()
         
         concern = Concern(short_name='No time to decide',
                           decision=decision)
         concern.save()
+        
+        return decision
+
+    def create_and_return_decision(self, short_name='Decision Time',
+                                   status=Decision.PROPOSAL_STATUS):
+        decision = Decision(short_name=short_name, status=status)
+        decision.save()
         
         return decision

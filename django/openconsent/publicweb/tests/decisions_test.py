@@ -87,7 +87,7 @@ class DecisionsTest(DecisionTestCase):
         return str
         
     def test_view_edit_decision_page(self):
-        decision = self.get_example_decision()
+        decision = self.create_and_return_example_decision_with_concern()
         
         path = reverse(decision_view_page, 
                        args=[decision.id])
@@ -100,7 +100,7 @@ class DecisionsTest(DecisionTestCase):
                          self.get_diff(test_form_str, decision_form_str))
 
     def test_edit_decision_page_has_concern_formset(self):
-        decision = self.get_example_decision()
+        decision = self.create_and_return_example_decision_with_concern()
         
         path = reverse('decision_edit', args=[decision.id])
         response = self.client.get(path)
@@ -122,12 +122,12 @@ class DecisionsTest(DecisionTestCase):
         return response
     
     def test_edit_decision_page_update_concern(self):
-        self.decision = self.get_example_decision()
+        self.decision = self.create_and_return_example_decision_with_concern()
         
         path = reverse('decision_edit', args=[self.decision.id])
         page = self.client.get(path)
         
-        post_data = self.mechanize_page(page.content)
+        post_data = self.get_form_values_from_response(page)
         post_data['concern_set-0-short_name'] = 'Modified'
         self.client.post(path, post_data)
         
@@ -147,7 +147,7 @@ class DecisionsTest(DecisionTestCase):
         return response
     
     def test_save_edit_decision_page(self):
-        decision = self.get_example_decision()
+        decision = self.create_and_return_example_decision_with_concern()
         # we are only interested in the side effect of saving a decision
         self.get_edit_decision_response(decision)
         
@@ -155,7 +155,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals('Feed the cat', decision_db.short_name)
     
     def test_redirect_after_edit_decision_page(self):       
-        decision = self.get_example_decision()
+        decision = self.create_and_return_example_decision_with_concern()
         response = self.get_edit_decision_response(decision)
         self.assertRedirects(response, reverse('decision_list'),
             msg_prefix=response.content)
@@ -205,6 +205,6 @@ class DecisionsTest(DecisionTestCase):
         self.assert_decision_datepickers('expiry_date')
         
     def test_decision_has_status(self):
-        decision = self.get_example_decision()
+        decision = self.create_and_return_example_decision_with_concern()
         self.assertEquals(0, getattr(decision, "status"), 
                           "Decision does not have a status")

@@ -9,3 +9,5 @@ class DecisionTable(django_tables.ModelTable):
     review_date = django_tables.Column(verbose_name=_('Review date'))
     expiry_date = django_tables.Column(verbose_name=_('Expiry Date'))
     status_text = django_tables.Column(verbose_name=_('Status'))
+
+

@@ -38,24 +38,65 @@ class DecisionListPageTest(DecisionTestCase):
         """
         The decisions table is represented using django_tables.ModelTable.
         """
-        self.get_example_decision()
+        self.create_and_return_example_decision_with_concern()
         response = self.load_decision_list_page_and_return_response()
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
     def test_status_appears_in_table(self):
-        self.get_example_decision()
+        self.create_and_return_example_decision_with_concern()
         response = self.load_decision_list_page_and_return_response()
-                
+            
+        self.check_cell_text_appears_in_table(response, "Proposal")
+
+    def test_decision_list_can_be_filtered_by_status_proposal(self):
+        self.create_decisions_with_different_statuses()
+        params = {'status':'proposal'}
+        response = self.load_decision_list_page_and_return_response(data=params)
+        self.check_cell_text_appears_in_table(response, "Proposal Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Archived Decision")
+    
+    def test_decision_list_can_be_filtered_by_status_consensus(self):
+        self.create_decisions_with_different_statuses()
+        params = {'status':'consensus'}
+        response = self.load_decision_list_page_and_return_response(data=params)
+        self.check_cell_text_appears_in_table(response, "Consensus Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Proposal Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Archived Decision")
+    
+    def test_decision_list_can_be_filtered_by_status_archived(self):
+        self.create_decisions_with_different_statuses()
+        params = {'status':'archived'}
+        response = self.load_decision_list_page_and_return_response(data=params)
+        self.check_cell_text_appears_in_table(response, "Archived Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Proposal Decision")
+    
+    
+    def check_cell_text_appears_in_table(self, response, expected_text):
+        row_text = self.get_table_cell_rows(response)
+        failure_message = "%s unexpectedly missing from %s" % (expected_text,
+                                                               row_text)        
+        self.assertTrue(expected_text in row_text, msg=failure_message)
+        
+    def check_cell_text_does_not_appear_in_table(self, response, expected_text):
+        row_text = self.get_table_cell_rows(response)
+        failure_message = "%s unexpectedly found in %s" % (expected_text,
+                                                           row_text)
+        self.assertFalse(expected_text in row_text, msg=failure_message)
+    
+    def get_table_cell_rows(self, response):
         root = fromstring(response.content)        
-        sel = CSSSelector('td')
+        sel = CSSSelector('td, td a')
     
         row_text = []
     
         for element in sel(root):
-            row_text.append(element.text)
-            
-        self.assertTrue("Proposal" in row_text, msg=row_text)
+            if str(element.text) != 'None':
+                row_text.append(element.text)
+
+        return row_text
     
     def load_decision_list_page_and_return_response(self, data=None):
         if data is None:
