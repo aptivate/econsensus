@@ -10,5 +10,3 @@ class DecisionTableTest(DecisionTestCase):
         
         self.assertTrue("status_text" in table.columns.names())
 
-
-        

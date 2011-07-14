@@ -11,17 +11,18 @@
 <table id="decision-list" cellspacing="0">
 <tr>
     {% for column in decisions.columns %}
-    <th><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
+    <th id="{{ column.name }}"{% if column.is_ordered_straight %} class="sorted straight"{% endif %}{% if column.is_ordered_reverse %} class="sorted reverse"{% endif %}><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
     {% endfor %}
 </tr>
 {% for decision in decisions.rows %}
     <tr>
-		<td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
+        <td>{{ decision.id }}</td>
+        <td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
+        <td>{{ decision.status_text }}</td>
 		<td>{{ decision.unresolvedconcerns }}</td>
 		<td>{{ decision.decided_date }}</td>
 		<td>{{ decision.review_date }}</td>
 		<td>{{ decision.expiry_date }}</td>
-		<td>{{ decision.status_text }}</td>
     </tr>
 {% endfor %}
 </table>

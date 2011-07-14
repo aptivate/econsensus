@@ -97,7 +97,51 @@ class DecisionListPageTest(DecisionTestCase):
                 row_text.append(element.text)
 
         return row_text
+
+
+    def test_header_class_is_sorted_straight_when_column_is_ordered(self):
+        params = {'sort' : 'short_name'}
+        response = self.load_decision_list_page_and_return_response(data=params)
     
+        classes = self.get_table_header_classes(response)    
+        self.assertEquals("sorted straight", classes[1])
+    
+    def test_header_class_is_sorted_reverse_when_column_is_reverse_ordered(self):
+        params = {'sort' : '-short_name'}
+        response = self.load_decision_list_page_and_return_response(data=params)
+    
+        classes = self.get_table_header_classes(response)    
+        self.assertEquals("sorted reverse", classes[1])
+
+    def test_header_has_no_class_when_column_is_not_ordered(self):
+        response = self.load_decision_list_page_and_return_response()
+        classes = self.get_table_header_classes(response)
+        self.assertEquals(None, classes[0])
+
+    def test_header_ids_are_internal_column_names(self):
+        response = self.load_decision_list_page_and_return_response()
+        ids = self.get_table_header_ids(response)
+        self.assertEquals(['id', 'short_name', 'status_text', \
+                           'unresolvedconcerns', 'decided_date', \
+                           'review_date', 'expiry_date'], ids)
+        
+    def get_table_header_ids(self, response):
+        return self.get_table_header_properties(response, 'id')
+
+    def get_table_header_classes(self, response):
+        return self.get_table_header_properties(response, 'class')
+    
+    def get_table_header_properties(self, response, name):
+        root = fromstring(response.content)        
+        sel = CSSSelector('th')
+    
+        properties = []
+    
+        for element in sel(root):
+            properties.append(element.attrib.get(name, None))
+
+        return properties
+            
     def load_decision_list_page_and_return_response(self, data=None):
         if data is None:
             data = {}
