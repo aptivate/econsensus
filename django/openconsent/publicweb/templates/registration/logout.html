@@ -1,8 +1,8 @@
 {% extends "fullpage.html" %}
 {% block heading %}
-<p>You are now logged out.</p>
+You are now logged out.
 {% endblock %}
 {% block content %}
 <p>Thanks for using Open Consent</p>
-<a href="{% url django.contrib.auth.views.login %}">Log in again.</a>
+<a class="button" href="{% url django.contrib.auth.views.login %}">Log in again</a>
 {% endblock %}

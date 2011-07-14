@@ -49,6 +49,13 @@ img {
     width: 100%;
 }
 
+#header, #content, #footer {
+	display:block;
+	float:left;
+	width:100%;
+	clear:both;
+}
+
 #branding, #nav .navigation , #columns, #site-info {
 	max-width:1000px;
 	min-width:550px;
@@ -94,16 +101,19 @@ img {
     width: 100%;
 }
 
+#header .user-org {
+    color: #333333;
+    font-size: 2em;
+    line-height: 1.5em;
+    padding-left: 0.2em;
+}
+
 #user_access {
-	float: left;
+	float: right;
     margin-left: 10px;
     padding-top: 5px
 }
 
-#user_access .user-org {
-	color: #333333;
-    font-size: 2em
-}
 
 #user_access a {
     padding: 3px;
@@ -214,7 +224,7 @@ img {
 	margin-top:15px;
 }
 
-.go {
+.go, .button {
     background-color: #A9D300;
     -moz-border-radius: 10px 10px 10px 10px;
 	-webkit-border-radius: 10px 10px 10px 10px;
@@ -230,18 +240,49 @@ img {
 	background-color: #336699;
 }
 
+.button {
+	display:block;
+	float:left;
+	
+}
+
 /* login form */
 
+body.login #header, body.login #content {
+	position:relative;
+	padding-top:0;
+	margin-top:0;
+}
+
+body.login #header {
+    border-bottom: 10px solid #EEEEEE;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+body.login #branding, body.login #columns {
+	width:400px;
+}
+
+body.login #columns .col1 h2:first-child {
+	float:left;
+	padding-right:20px;
+}
+
 #login-form {
-	width:550px;
+    background: none repeat scroll 0 0 #EFEFEF;
+    border-radius: 20px 20px 20px 20px;
+    display: block;
+    float: left;
+    padding: 20px;
+    width: 280px;
 }
 
 #login-form p {
-    background-color: #DDDDDD;
-    border-radius: 10px 10px 10px 10px;
     display: block;
 	overflow:auto;
-    padding: 10px;
+    padding: 5px;
+	margin:0;
 }
 
 #login-form label {
@@ -249,33 +290,35 @@ img {
     float: left;
     font-size: 1.3em;
     line-height: 1.5em;
-    width: 100px;
+	color:#333;
 }
 
 #login-form input {
-    border: medium none;
     border-radius: 10px 10px 10px 10px;
     display: block;
     float: right;
     padding: 5px;
-    width: 400px;
+    width: 150px;
 }
 
 form input.button {
-    background-color: #333333;
+    background-color: #A9D300;
     color: #FFFFFF;
     font-weight: bold;
     width: 100px!important;
+	border:none;
+	margin:5px 5px 0 0;
 }
 
 
 /* Decision List table */
 
 #decision-list {
-	padding:10px;
+	padding:20px;
 	width:100%;
 	border:5px solid #ddd;
 	border-radius:15px;
+
 }
 
 #decision-list th {
@@ -288,10 +331,9 @@ form input.button {
 }
 
 #decision-list td {
-	border-bottom:2px solid #A9D300;
- 	padding: 8px 0;
+    border-bottom: 1px solid #DDDDDD;
+    padding: 8px 0;
 }
-
 
 /* Footer */
 

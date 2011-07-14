@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<table id="decision-list">
+<table id="decision-list" cellspacing="0">
 <tr>
     {% for column in decisions.columns %}
     <th><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
@@ -25,5 +25,4 @@
     </tr>
 {% endfor %}
 </table>
-<p class="view-rows">{% trans "items per page" %} <a>25</a> | <a>50</a> | <a>150</a></p>
 {% endblock %}

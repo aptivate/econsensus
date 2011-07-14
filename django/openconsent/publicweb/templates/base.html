@@ -9,15 +9,14 @@
 		{% block head_content%}{% endblock %}
 	</head>
   <body class="{% block body_class%}base{% endblock %}">
-  	<div id="wrapper">
 		<div id="header">
 			
 				<div id="branding">
 				  	{% block header_content%}
 					  	<h1><a href="/"><img alt="Econsensus" src="{{MEDIA_URL}}images/econsensus-logo-header.png" /></a></h1>
+						<span class="user-org not_translated">: Aptivate</span>
 						{% block user_access %}
 						<div id="user_access">
-							<span class="user-org not_translated">: Aptivate</span>
 							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
 							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 						</div>
@@ -43,11 +42,10 @@
 	<div id="footer">
 		<div id="site-info">
 			{% block footer_content%}
-			<p>{% trans "footer content here" %}</p>
+			<p>{% trans "Econsensus is an open source project developed by " %}<a href="http://www.aptivate.org">{% trans "Aptivate" %}</a></p>
 			{% endblock %}
 		</div>
 	</div><!-- footer end -->
-</div><!-- wrapper end -->
   </body>
 </html>
 {% endautoescape %}
