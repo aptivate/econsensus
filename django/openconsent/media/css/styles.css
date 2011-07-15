@@ -81,8 +81,9 @@ img {
 }
 
 #header h1 {
-	float:left;
-	display:block;
+    display: block;
+    float: left;
+    padding: 0 10px 0 20px;
 }
 
 #header h1 img {
@@ -97,7 +98,7 @@ img {
 #branding {
     display: block;
     height: 3em;
-    padding: 20px 15px;
+    padding: 20px 0px;
     width: 100%;
 }
 
@@ -110,8 +111,8 @@ img {
 
 #user_access {
 	float: right;
-    margin-left: 10px;
-    padding-top: 5px
+    margin-right: 10px;
+    padding-top: 15px
 }
 
 
@@ -174,14 +175,14 @@ img {
 
 #nav a.go.nav {
     background-color: #A9D300;
-    background-image: url("/site_media/images/icon-add-decision.png");
-    background-position: right center;
+	background-image: url("/site_media/images/sprite-decision-icons.png");
+    background-position: right 0px;
     background-repeat: no-repeat;
     border-radius: 0 0 10px 10px;
     color: #FFFFFF;
-    font-size: 1.3em;
+    font-size: 1.2em;
     margin: 10px 5px 0 0;
-    padding: 10px 60px 10px 10px;
+    padding: 6px 60px 7px 10px;
 }
 
 #nav a.go.nav:hover {
@@ -189,7 +190,8 @@ img {
 }
 
 #nav a.go.nav.list {
-	background-image: url("/site_media/images/icon-decision-list.png");
+	background-image: url("/site_media/images/sprite-decision-icons.png");
+    background-position: right bottom;
 }
 
 
@@ -260,6 +262,10 @@ body.login #header {
     margin-top: 30px;
 }
 
+body.login #header h1 {
+	padding-left: 0px;
+}
+
 body.login #branding, body.login #columns {
 	width:400px;
 }
@@ -323,16 +329,64 @@ form input.button {
 
 #decision-list th {
 	text-align:left;
+	padding:0 10px;
 }
 
 #decision-list th a {
-	font-size:1.4em;
+	font-size:1.2em;
 	text-decoration:none;
 }
 
 #decision-list td {
     border-bottom: 1px solid #DDDDDD;
-    padding: 8px 0;
+    padding: 8px 10px;
+}
+
+#decision-list th a {
+	background-position:right -94px;
+	background-image:url(/site_media/images/sprite-sort-arrows.png);
+	background-repeat:no-repeat;
+	padding-right:20px;
+}
+
+/*
+table td:nth-child(odd){
+	background-color:#f6f6f6;
+}
+*/
+
+#decision-list th.sorted.straight a {
+	color:#A9D300;
+	background-position: right -294px;
+}
+
+#decision-list th.sorted.reverse a {
+	background-position: right -194px;
+	color:#A9D300;
+}
+
+#decision-list #id {
+	width:30px;
+}
+
+#decision-list #short_name {
+    width: 300px;
+}
+
+#decision-list td a {
+    background-color: #EFFFAF;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    display: block;
+    font-size: 1.2em;
+    font-weight: normal;
+    padding: 5px 30px 5px 10px;
+    text-decoration: none;
+}
+
+#decision-list td a:hover {
+	background-color:#A9D300;
+	color:white;
 }
 
 /* Footer */
