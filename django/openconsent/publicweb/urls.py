@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from publicweb.views import decision_add_page, decision_view_page, decision_list
+from publicweb.views import decision_add_page, decision_view_page, decision_list, export_csv
 
 urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^decision/add$',
@@ -11,6 +11,9 @@ urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^decision_list/$',
         decision_list,
         name='decision_list'),
+	url(r'^export_csv/$',
+	    export_csv,
+		name='export_csv'),
     url(r'^$',
         decision_list,
         name='decision_list')

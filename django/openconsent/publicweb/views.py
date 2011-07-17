@@ -1,5 +1,6 @@
 # Create your views here.
 
+from django.db import models
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -9,6 +10,28 @@ from django.contrib.auth.decorators import login_required
 from models import Decision
 from forms import DecisionForm, ConcernFormSet
 from publicweb.decision_table import DecisionTable
+
+import csv
+from django.http import HttpResponse
+
+def export_csv(request):
+    ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
+	Expected input: request (not quite sure what this is!)
+	Expected output: http containing MIME info followed by the data itself as CSV.
+	'''
+
+	opts = Decision._meta
+	field_names = set([field.name for field in opts.fields])
+
+	response = HttpResponse(mimetype='text/csv')
+	response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+
+	writer = csv.writer(response)
+    # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+	writer.writerow(list(field_names))
+	for obj in Decision.objects.all():
+		writer.writerow([unicode(getattr(obj, field)).encode("utf-8","replace") for field in field_names])
+	return response
 
 @login_required        
 def decision_list(request):
