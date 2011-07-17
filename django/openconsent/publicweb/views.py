@@ -15,10 +15,17 @@ import csv
 from django.http import HttpResponse
 
 def export_csv(request):
-    ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
+	''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
 	Expected input: request (not quite sure what this is!)
 	Expected output: http containing MIME info followed by the data itself as CSV.
 	'''
+
+	def fieldOutput(obj,field):
+	'''Looks up the status_text() for status, otherwise just returns the getattr for the field'''
+		if field == 'status':
+			return obj.status_text()
+		else:
+			return getattr(obj, field)
 
 	opts = Decision._meta
 	field_names = set([field.name for field in opts.fields])
@@ -30,7 +37,7 @@ def export_csv(request):
     # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
 	writer.writerow(list(field_names))
 	for obj in Decision.objects.all():
-		writer.writerow([unicode(getattr(obj, field)).encode("utf-8","replace") for field in field_names])
+		writer.writerow([unicode(fieldOutput(obj,field)).encode("utf-8","replace") for field in field_names])
 	return response
 
 @login_required        
