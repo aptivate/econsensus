@@ -33,7 +33,9 @@ class InternationalisationTest(OpenConsentTestCase):
                 self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element) + " with text '" + element.text + "' from view '" + view + "'")
      
     def has_translatable_text(self,element):
-        if element.text is None or element.text.strip() == "" \
+        if element.text is None \
+            or element.text.strip() == "" \
+            or element.text.strip('-') == "" \
             or "not_translated" in element.attrib.get('class', '').split(" ") \
             or element.tag == 'script' \
             or element.text.isdigit():

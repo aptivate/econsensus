@@ -4,3 +4,4 @@ from publicweb.tests.internationalisation_test import InternationalisationTest
 from openconsent.publicweb.tests.decision_add_page_test import DecisionAddPageTest
 from openconsent.publicweb.tests.decision_list_page_test import DecisionListPageTest
 from openconsent.publicweb.tests.decision_table_test import DecisionTableTest
+from openconsent.publicweb.tests.feedback_test import FeedbackTest

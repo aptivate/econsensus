@@ -208,3 +208,4 @@ class DecisionsTest(DecisionTestCase):
         decision = self.create_and_return_example_decision_with_feedback()
         self.assertEquals(0, getattr(decision, "status"), 
                           "Decision does not have a status")
+

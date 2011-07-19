@@ -22,10 +22,11 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
-                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})}
+                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})
+                   }
 
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
-                                       fields=('short_name','description','resolved',),
+                                       fields=('short_name','description','resolved','rating'),
                                        form=FeedbackForm)
 
 class DecisionForm(forms.ModelForm):

@@ -66,12 +66,32 @@ class Decision(models.Model):
     get_absolute_url = models.permalink(get_absolute_url)
     
 class Feedback(models.Model):
+
+    QUESTION_STATUS = 0
+    DANGER_STATUS = 1
+    SIGNIFICANT_CONCERNS_STATUS = 2
+    CONSENT_STATUS = 3
+    HAPPY_STATUS = 4
+    DELIGHTED_STATUS = 5
+
+    RATING_CHOICES = ( 
+                  (QUESTION_STATUS, _('Question')),
+                  (DANGER_STATUS, _('Danger')),
+                  (SIGNIFICANT_CONCERNS_STATUS, _('Significant Concerns')),
+                  (CONSENT_STATUS, _('Consent')),
+                  (HAPPY_STATUS, _('Happy')),
+                  (DELIGHTED_STATUS, _('Delighted')),
+                  )
+    
     short_name = models.CharField(max_length=255, verbose_name=_('Feedback'))
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     description = tinymce.models.HTMLField(blank=True, 
                                            verbose_name=_('Feedback Description'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
-    
+    rating = models.IntegerField(choices=RATING_CHOICES,
+                                 verbose_name=_('Rating'),
+                                 null=True, 
+                                 blank=True )
     def __unicode__(self):
         return self.short_name
     
