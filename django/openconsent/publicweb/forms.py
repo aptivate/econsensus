@@ -4,7 +4,10 @@ from django import forms
 from models import Decision, Concern
 import tinymce.widgets
 
+from django.utils.translation import ugettext_lazy as _
 from django.forms.models import inlineformset_factory
+from django.forms.fields import ChoiceField
+
 from publicweb.widgets import JQueryUIDateWidget
 
 mce_attrs_setting = {
@@ -39,3 +42,18 @@ class DecisionForm(forms.ModelForm):
                    'budget': forms.TextInput(attrs={'size':'70'}),
                    'people': forms.TextInput(attrs={'size':'70'})
                    }
+
+EXTRA_CHOICE = (4, _('All'))
+
+class FilterForm(forms.Form):
+    #this seems clunky...
+    list_choices = list(Decision.STATUS_CHOICES)
+    list_choices.append(EXTRA_CHOICE)
+    FILTER_CHOICES = tuple(list_choices)
+    
+    status = ChoiceField(choices=FILTER_CHOICES,
+                         label = _('Status'),
+                         initial=EXTRA_CHOICE[0],
+                         required=False,
+                         widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
+    
