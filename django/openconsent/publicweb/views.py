@@ -7,21 +7,29 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from models import Decision
-from forms import DecisionForm, ConcernFormSet
+from forms import DecisionForm, ConcernFormSet, FilterForm
 from publicweb.decision_table import DecisionTable
 
 @login_required        
 def decision_list(request):
-    status = Decision.STATUS_CODES.get(request.GET.get('status'), None)
     
-    if status is not None:
+    #build status tuple
+    status_code_list = []
+    for this_status in Decision.STATUS_CHOICES:
+        status_code_list.append(this_status[0])
+    status_code_tuple = tuple(status_code_list)
+    
+    status = request.GET.get('status', None)
+    if status is not None and int(status) in status_code_tuple:
+        filter_form = FilterForm(request.GET)
         objects = Decision.objects.filter(status=status)
     else:
+        filter_form = FilterForm()
         objects = Decision.objects.all()
         
     decisions = DecisionTable(objects, order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions,)))
+        RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
 
 @login_required
 def decision_add_page(request):

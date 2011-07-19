@@ -8,6 +8,12 @@
 
 {% block content %}
 
+<form action="{% url publicweb.views.decision_list %}" method="GET">
+{{ filter_form.as_p }}
+<noscript><input type="submit" value="Submit"></noscript>
+</form>
+
+
 <table id="decision-list" cellspacing="0">
 <tr>
     {% for column in decisions.columns %}
