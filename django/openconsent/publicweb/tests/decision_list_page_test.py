@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 import django_tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
-import mechanize
 
 class DecisionListPageTest(DecisionTestCase):
     
@@ -16,9 +15,7 @@ class DecisionListPageTest(DecisionTestCase):
         page = self.client.get(path)
         
         get_data = self.get_form_values_from_response(page)
-        print "***", get_data
         get_data['status'] = Decision.PROPOSAL_STATUS
-        print "***", get_data
         response = self.client.get(path, get_data)
 
         self.check_cell_text_appears_in_table(response, "Proposal Decision")
@@ -56,13 +53,13 @@ class DecisionListPageTest(DecisionTestCase):
         """
         The decisions table is represented using django_tables.ModelTable.
         """
-        self.create_and_return_example_decision_with_concern()
+        self.create_and_return_example_decision_with_feedback()
         response = self.load_decision_list_page_and_return_response()
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
     def test_status_appears_in_table(self):
-        self.create_and_return_example_decision_with_concern()
+        self.create_and_return_example_decision_with_feedback()
         response = self.load_decision_list_page_and_return_response()
             
         self.check_cell_text_appears_in_table(response, "Proposal")
@@ -140,7 +137,7 @@ class DecisionListPageTest(DecisionTestCase):
         response = self.load_decision_list_page_and_return_response()
         ids = self.get_table_header_ids(response)
         self.assertEquals(['id', 'short_name', 'status_text', \
-                           'unresolvedconcerns', 'decided_date', \
+                           'unresolvedfeedback', 'decided_date', \
                            'review_date', 'expiry_date'], ids)
         
     def get_table_header_ids(self, response):

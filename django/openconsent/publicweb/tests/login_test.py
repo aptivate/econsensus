@@ -28,7 +28,7 @@ class LoginTest(OpenConsentTestCase):
         post_data['login'] = 'admin'
         post_data['password'] = 'aptivate'
                 
-        #post_data.update(concern_formset.management_form.initial)
+        #post_data.update(feedback_formset.management_form.initial)
         self.client.post(path, post_data, follow=True)
 
         path = reverse('decision_add')

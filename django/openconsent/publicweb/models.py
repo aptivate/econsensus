@@ -46,17 +46,17 @@ class Decision(models.Model):
     def status_text(self):
         return self.STATUS_CHOICES[self.status][1]
     
-    def unresolvedconcerns(self):
+    def unresolvedfeedback(self):
         answer = _("No")
-        linked_concerns = self.concern_set.all()
-        for thisconcern in linked_concerns:
-            if (not thisconcern.resolved):
+        linked_feedback = self.feedback_set.all()
+        for thisfeedback in linked_feedback:
+            if (not thisfeedback.resolved):
                 answer = _("Yes")
                 break
             
         return answer
     
-    unresolvedconcerns.short_description = _("Unresolved Concerns")
+    unresolvedfeedback.short_description = _("Unresolved Feedback")
                         
     def __unicode__(self):
         return self.short_name
@@ -65,11 +65,11 @@ class Decision(models.Model):
         return ('decision_edit', (), {'decision_id':self.id})
     get_absolute_url = models.permalink(get_absolute_url)
     
-class Concern(models.Model):
-    short_name = models.CharField(max_length=255, verbose_name=_('Concern'))
+class Feedback(models.Model):
+    short_name = models.CharField(max_length=255, verbose_name=_('Feedback'))
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     description = tinymce.models.HTMLField(blank=True, 
-                                           verbose_name=_('Concern Description'))
+                                           verbose_name=_('Feedback Description'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     
     def __unicode__(self):

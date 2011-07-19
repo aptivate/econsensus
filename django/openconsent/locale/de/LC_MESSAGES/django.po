@@ -57,11 +57,11 @@ msgid "Yes"
 msgstr ""
 
 #: publicweb/models.py:35 publicweb/views.py:21
-msgid "Unresolved Concerns"
+msgid "Unresolved Feedback"
 msgstr "Ungelöste Interessen"
 
 #: publicweb/models.py:45
-msgid "Concern"
+msgid "Feedback"
 msgstr "Interesse"
 
 #: publicweb/models.py:46 publicweb/views.py:20
@@ -69,7 +69,7 @@ msgid "Decision"
 msgstr "Beschreibung"
 
 #: publicweb/models.py:48
-msgid "Concern Description"
+msgid "Feedback Description"
 msgstr "Interessen-Beschreibung"
 
 #: publicweb/models.py:49
