@@ -18,8 +18,8 @@ mce_attrs_setting = {
 class ConcernForm(forms.ModelForm):
     class Meta:
         model = Concern
-        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
-                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})}
+        widgets = {'short_name': forms.TextInput(attrs={'size':''}),
+                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 5})}
 
 ConcernFormSet = inlineformset_factory(Decision, Concern, 
                                        fields=('short_name','description','resolved',),
@@ -28,14 +28,15 @@ ConcernFormSet = inlineformset_factory(Decision, Concern,
 class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
-        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
-                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20},
+        widgets = {'short_name': forms.TextInput(attrs={'size':''}),
+                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 5},
                                                           mce_attrs=mce_attrs_setting),
                    'concerns': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget,
-                   'budget': forms.TextInput(attrs={'size':'70'}),
-                   'people': forms.TextInput(attrs={'size':'70'})
+                   'budget': forms.TextInput(attrs={'size':''}),
+                   'people': forms.TextInput(attrs={'size':''})
                    }
+        
