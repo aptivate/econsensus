@@ -14,31 +14,33 @@
 
 {% block heading %}
 {% if decision.short_name %}
-	{{ decision.short_name }}
+	{% trans "View and Edit: " %}{{ decision.short_name }}
 {% else %}
 	{% trans "Add New Decision" %}
 {% endif %}
 {% endblock %}
 
 {% block content %}
-<form method="post">
-<table>
+
+<form id="decision-add" method="post">
 {% for error in decision_form.non_field_errors %}
-    <tr><td>{{ error }}</td></tr>
+    <p class="error" >{{ error }}</p>
 {% endfor %}
-
+<div class="fields"> 
 {% for field in decision_form %}
-    <tr><th>{{ field.label_tag }}:</th><td>{{ field }}</td></td>
+    <p class="{{ field.name }}">{{ field.label_tag }}{{ field }}</p>
 	{% for error in field.errors %}
-	
-    <tr><th></th><td><p class="error">{{ error }}</p></td></tr>
-    {% endfor %}
+    <p class="error">{{ error }}</p>
 {% endfor %}
+{% endfor %}
+</div>
+<div class="fields concerns">
+{{ concern_form.as_p }}
+</div>
 
-{{ concern_form.as_table }}
-</table>
-
-<input type="submit" value={% trans "Save" %}>
+<input class="go button" type="submit" value={% trans "Save" %}>
 {% csrf_token %}
 </form>
+{% for field in decision_form %}
+{% endfor %}
 {% endblock %}
