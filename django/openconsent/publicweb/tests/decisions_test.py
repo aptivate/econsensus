@@ -8,7 +8,7 @@ from __future__ import absolute_import
 
 from django.core.urlresolvers import reverse
 
-from publicweb.views import decision_view_page
+from publicweb.views import edit_decision
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 
@@ -23,11 +23,11 @@ class DecisionsTest(DecisionTestCase):
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
             
-    def test_decision_add_page(self):
+    def test_add_decision(self):
         """
         Test error conditions for the add decision page. 
         """
-        path = reverse('decision_add')
+        path = reverse('add_decision')
         # Test that the decision add view returns an empty form
         response = self.client.get(path)
         form = DecisionForm()
@@ -86,10 +86,10 @@ class DecisionsTest(DecisionTestCase):
             
         return str
         
-    def test_view_edit_decision_page(self):
+    def test_edit_decision(self):
         decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse(decision_view_page, 
+        path = reverse(edit_decision, 
                        args=[decision.id])
         response = self.client.get(path)
         
@@ -99,10 +99,10 @@ class DecisionsTest(DecisionTestCase):
         self.assertEqual(test_form_str, decision_form_str,
                          self.get_diff(test_form_str, decision_form_str))
 
-    def test_edit_decision_page_has_feedback_formset(self):
+    def test_edit_decision_has_feedback_formset(self):
         decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse('decision_edit', args=[decision.id])
+        path = reverse('edit_decision', args=[decision.id])
         response = self.client.get(path)
         
         feedback_formset = response.context['feedback_form']
@@ -110,7 +110,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals(list(feedback), list(feedback_formset.queryset))
 
     def get_edit_feedback_response(self, decision):
-        path = reverse(decision_view_page,
+        path = reverse(edit_decision,
                        args=[decision.id])
         response = self.client.post(path, {'short_name': 'Modified',
                                     'feedback_set-TOTAL_FORMS': '3',
@@ -121,10 +121,10 @@ class DecisionsTest(DecisionTestCase):
                                     })
         return response
     
-    def test_edit_decision_page_update_feedback(self):
+    def test_edit_decision_update_feedback(self):
         self.decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse('decision_edit', args=[self.decision.id])
+        path = reverse('edit_decision', args=[self.decision.id])
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page)
@@ -135,7 +135,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals('Modified', decision.feedback_set.all()[0].short_name)
         
     def get_edit_decision_response(self, decision):
-        path = reverse(decision_view_page,
+        path = reverse(edit_decision,
                        args=[decision.id])
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'short_name': 'Feed the cat',
@@ -146,7 +146,7 @@ class DecisionsTest(DecisionTestCase):
         response = self.client.post(path, post_dict)
         return response
     
-    def test_save_edit_decision_page(self):
+    def test_save_edit_decision(self):
         decision = self.create_and_return_example_decision_with_feedback()
         # we are only interested in the side effect of saving a decision
         self.get_edit_decision_response(decision)
@@ -154,15 +154,15 @@ class DecisionsTest(DecisionTestCase):
         decision_db = Decision.objects.get(id=decision.id)
         self.assertEquals('Feed the cat', decision_db.short_name)
     
-    def test_redirect_after_edit_decision_page(self):       
+    def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
         self.assertRedirects(response, reverse('decision_list'),
             msg_prefix=response.content)
         
    
-    def test_decision_add_page_has_feedback_form(self):
-        response = self.client.get(reverse('decision_add'))        
+    def test_add_decision_has_feedback_form(self):
+        response = self.client.get(reverse('add_decision'))        
         self.assertTrue('feedback_form' in response.context, 
                         "\"feedback_form\" not in this context")
     
@@ -175,7 +175,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-short_name': 'The eggs are bad',
                             'feedback_set-1-short_name': 'No one wants them'})
         
-        response = self.client.post(reverse('decision_add'), 
+        response = self.client.post(reverse('add_decision'), 
                                 post_dict,
                                 follow=True )
         self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)

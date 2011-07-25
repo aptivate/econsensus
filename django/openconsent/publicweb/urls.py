@@ -1,14 +1,14 @@
 from django.conf.urls.defaults import patterns, url
-from publicweb.views import decision_add_page, decision_view_page, decision_list
+from publicweb.views import add_decision, edit_decision, decision_list
 
 urlpatterns = patterns('openconsent.publicweb.views',
-    url(r'^decision/add$',
-        decision_add_page,
-        name='decision_add'),
-    url(r'^decision/(?P<decision_id>[\d]+)/$', 
-        decision_view_page,
-        name='decision_edit'),
-    url(r'^decision_list/$',
+    url(r'^add/$',
+        add_decision,
+        name='add_decision'),
+    url(r'^edit/(?P<decision_id>[\d]+)/$', 
+        edit_decision,
+        name='edit_decision'),
+    url(r'^list/$',
         decision_list,
         name='decision_list'),
     url(r'^$',

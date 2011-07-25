@@ -62,7 +62,7 @@ class Decision(models.Model):
         return self.short_name
     
     def get_absolute_url(self):
-        return ('decision_edit', (), {'decision_id':self.id})
+        return ('edit_decision', (), {'decision_id':self.id})
     get_absolute_url = models.permalink(get_absolute_url)
     
 class Feedback(models.Model):

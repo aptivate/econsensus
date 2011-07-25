@@ -2,22 +2,23 @@
 {% load i18n %}
 
 {% block title %}
-{% if decision.short_name %}
-	{{ decision.short_name }}
-{% else %}
-	{% trans "Add New Decision" %}
-{% endif %}{% endblock %}
+	{% if add %}
+		{% trans "Add A Decision" %}
+	{% else %}
+		{% trans "Edit " %}{{ decision.short_name }}
+	{% endif %}
+{% endblock %}
 
 {% block head_content %}
 {{ decision_form.media }}
 {% endblock %}
 
 {% block heading %}
-{% if decision.short_name %}
-	{% trans "View and Edit: " %}{{ decision.short_name }}
-{% else %}
-	{% trans "Add New Decision" %}
-{% endif %}
+	{% if add %}
+		{% trans "Add A Decision" %}
+	{% else %}
+		{% trans "Edit " %}{{ decision.short_name }}
+	{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -34,17 +35,13 @@
 {% endfor %}
 {% endfor %}
 </div>
-<div class="fields concerns">
-{{ concern_form.as_p }}
-</div>
 
-<table>
-{{ feedback_form.as_table }}
-</table>
+<div class="fields feedback">
+{{ feedback_form.as_p }}
+</div>
 
 <input class="go button" type="submit" value={% trans "Save" %}>
 {% csrf_token %}
 </form>
-{% for field in decision_form %}
-{% endfor %}
+
 {% endblock %}
