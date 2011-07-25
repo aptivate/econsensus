@@ -36,42 +36,42 @@ def decision_add_page(request):
     
     if request.POST:
         decision_form = DecisionForm(request.POST)
-        feedback_form = FeedbackFormSet()
+        feedback_formset = FeedbackFormSet()
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            feedback_form = FeedbackFormSet(request.POST, instance=decision)
-            if feedback_form.is_valid():
+            feedback_formset = FeedbackFormSet(request.POST, instance=decision)
+            if feedback_formset.is_valid():
                 decision_form.save()
-                feedback_form.save()
+                feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
     else:
-        feedback_form = FeedbackFormSet()
+        feedback_formset = FeedbackFormSet()
         decision_form = DecisionForm()
         
     return render_to_response('decision_add.html',
         RequestContext(request,
-            dict(decision_form=decision_form, feedback_form=feedback_form)))
+            dict(decision_form=decision_form, feedback_formset=feedback_formset)))
 
 @login_required    
 def decision_view_page(request, decision_id):
     decision = Decision.objects.get(id = decision_id)
     decision_form = DecisionForm(instance=decision)
-    feedback_form = FeedbackFormSet(instance=decision)
+    feedback_formset = FeedbackFormSet(instance=decision)
     
     if request.method == 'POST':
         decision_form = DecisionForm(request.POST, instance=decision)
                 
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            feedback_form = FeedbackFormSet(request.POST,instance=decision)
-            if feedback_form.is_valid():
+            feedback_formset = FeedbackFormSet(request.POST,instance=decision)
+            if feedback_formset.is_valid():
                 decision_form.save()
-                feedback_form.save()
+                feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
     return render_to_response('decision_add.html',
         RequestContext(request,
                        dict(decision = decision,
                             decision_form=decision_form,
-                            feedback_form=feedback_form)))    
+                            feedback_formset=feedback_formset)))    

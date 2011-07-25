@@ -393,23 +393,23 @@ form input.button {
 
 /* Add Decision Form */
 
-form#decision-add{
+form#decision_add{
 	border:2px solid #ddd;
 	border-radius:20px;
 	padding:20px;
 	position:relative;
-	float:left;
+	overflow:auto;
 }
 
 
 label {
-    display: block;
-    float: left;
-    margin-right: 0.5em;
-    text-align: right;
-    width: 90px;
+    	display: block;
+    	float: left;
+    	margin-right: 0.5em;
 	padding:4px 0px;
 	color:#666;
+	min-width:4em;
+	font-weight:bold;
 }
 
  form input, form textarea {
@@ -417,75 +417,56 @@ label {
 	border:2px solid #ddd;
 	padding:2px 5px;
 	box-shadow: inset 2px 2px 5px #ededed;
-	width:86%;
 }
 
-form#decision-add p.short_name {
-    background-color: #EFFFAF;
-    border-radius: 10px 10px 10px 10px;
-    padding: 10px;
-	width:98%;
-	float:left;
-	margin-right:10px;
-	overflow:visible;
-}
-
-form#decision-add p.short_name label, form#decision-add p.short_name input {
-	font-size:1.5em;
-	padding:10px 10px;
-}
-
-form#decision-add p.short_name label {
-	color:#666;
-	width:60px;
-	float:left;
-}
-
-form#decision-add p.short_name input {
-    margin-right: 200px;
-    width: 565px;
-}
-
-form p.status {
-    font-size: 1.5em;
-    position: absolute;
-    right: 30px;
-    top: 30px;
-}
-
-form p.status select {
-    padding: 5px;
-	font-size:1em;
-}
-
-p.decided_date, p.effective_date, p.review_date, p.expiry_date {
-	float:left;
-	margin-right:10px;
-}
-
-p.decided_date input, p.effective_date input, p.review_date input, p.expiry_date input {
-	width:90px;
-	padding:2px 5px;
-}
-
-p.budget {
+#decision_add .form_row {
 	clear:both;
-	float:left;
-	margin-right:10px;
-}
-
-p.people {
-	float:left;
-}
-
-p.budget input, p.people input {
-	width:350px;
-}
-
-p.description {
+	position:relative;
 	width:100%;
-	clear:both;
+	float:left;
+	margin:10px 0;
 }
+
+#decision_add .form_item {
+	float:left;
+}
+
+#decision_add .form_row.decision_summary .form_item {
+	padding:10px;
+	font-size:1.2em;
+	font-weight:bold;
+}
+
+#decision_add .form_row.dates .form_item {width:25%;}
+#decision_add .form_item.status {width:140px;}
+#decision_add .form_item.status #id_status {width:140px;font-size:1.2em; padding:8px;}
+#decision_add .form_item.short_name {width:65%}
+#decision_add .form_row.decision_summary .short_name input,
+#decision_add .form_row.dates .form_item input {width:90%;}
+#decision_add .form_row.resources .form_item input {width:95%;}
+#decision_add .form_row.resources .form_item {width:50%;}
+#decision_add .form_row.description .form_item {width:100%;}
+#decision_add .form_row.description #id_description {width:98%;}
+
+#decision_add .decision_summary {
+background-color: #EFFFAF;
+    	border-radius: 10px 10px 10px 10px;
+	position:relative;
+}
+
+
+#id_short_name {
+	padding:10px;
+	font-size:1.2em;
+}
+
+
+#decision_add .form_item.status {
+	float:right;
+}
+
+
+
 
 div.fields.concerns {
     background-color: #F2F2F2;
@@ -526,7 +507,7 @@ ul.errorlist
 	margin: 0 1em 0 0;
 }
 
-p.error
+.error
 {
 	color: red;
 }

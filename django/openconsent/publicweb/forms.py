@@ -21,8 +21,8 @@ mce_attrs_setting = {
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
-                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20})
+        widgets = {'short_name': forms.TextInput(),
+                   'description': tinymce.widgets.TinyMCE(attrs={'rows': 20})
                    }
 
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
@@ -32,16 +32,16 @@ FeedbackFormSet = inlineformset_factory(Decision, Feedback,
 class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
-        widgets = {'short_name': forms.TextInput(attrs={'size':'70'}),
-                   'description': tinymce.widgets.TinyMCE(attrs={'cols': 80, 'rows': 20},
+        widgets = {'short_name': forms.TextInput(),
+                   'description': tinymce.widgets.TinyMCE(attrs={'rows': 5},
                                                           mce_attrs=mce_attrs_setting),
                    'feedback': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget,
-                   'budget': forms.TextInput(attrs={'size':'70'}),
-                   'people': forms.TextInput(attrs={'size':'70'})
+                   'budget': forms.TextInput(),
+                   'people': forms.TextInput()
                    }
 
 EXTRA_CHOICE = (4, _('All'))

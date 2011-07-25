@@ -22,29 +22,97 @@
 
 {% block content %}
 
-<form id="decision-add" method="post">
+<form id="decision_add" action="" method="post">
 {% for error in decision_form.non_field_errors %}
     <p class="error" >{{ error }}</p>
 {% endfor %}
-<div class="fields"> 
-{% for field in decision_form %}
-    <p class="{{ field.name }}">{{ field.label_tag }}{{ field }}</p>
-	{% for error in field.errors %}
-    <p class="error">{{ error }}</p>
-{% endfor %}
-{% endfor %}
+<div class="form_row decision_summary">
+	<div class="form_item short_name">
+        {{ decision_form.short_name.errors }}
+        <label for="id_short_name">Name:</label>
+        {{ decision_form.short_name }}
+    </div>
+    <div class="form_item status">
+        {{ decision_form.status.errors }}
+        <label for="id_status">Status:</label>
+        {{ decision_form.status }}
+    </div>
+ </div>
+ <div class="form_row dates">
+     <div class="form_item">
+        {{ decision_form.decided_date.errors }}
+        <label for="id_decided_date">Decided:</label>
+        {{ decision_form.decided_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.effective_date.errors }}
+        <label for="id_effective_date">Effective:</label>
+        {{ decision_form.effective_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.review_date.errors }}
+        <label for="id_review_date">Review:</label>
+        {{ decision_form.review_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.expiry_date.errors }}
+        <label for="id_expiry_date">Expiry:</label>
+        {{ decision_form.expiry_date }}
+    </div>
+ </div>
+ <div class="form_row resources">
+ 	<div class="form_item budget">
+        {{ decision_form.budget.errors }}
+        <label for="id_budget">Budget:</label>
+        {{ decision_form.budget }}
+    </div>
+    	<div class="form_item people">
+        {{ decision_form.people.errors }}
+        <label for="id_people">People:</label>
+        {{ decision_form.people }}
+    </div>
+ </div>
+ <div class="form_row description">
+    <div class="form_item">
+        {{ decision_form.description.errors }}
+        <label for="id_description">Description:</label>
+        {{ decision_form.description }}
+    </div>
 </div>
-<div class="fields concerns">
-{{ concern_form.as_p }}
+<div id="feedback">
+	<h2>Feedback</h2>
+	{% for feedback_form in feedback_formset %}
+	<div class="formset_item">
+		<div class="form_row feedback_summary">
+		    <div class="form_item short_name">
+				{{ feedback_form.short_name.errors }}
+				<label for="id_short_name">Name:</label>
+				{{ feedback_form.short_name }}
+	    	</div>
+			<div class="form_item rating">
+				{{ feedback_form.rating.errors }}
+				<label for="id_rating">Rating:</label>
+				{{ feedback_form.rating }}
+	    	</div>
+	    </div>
+	    <div class="form_row description">
+	    	<div class="form_item description">
+				{{ feedback_form.description.errors }}
+				<label for="id_description">Description:</label>
+				{{ feedback_form.description }}
+	    	</div>
+	    </div>
+	    <div class="form_row action">
+	    	<div class="form_item description"> <<<=== UR HERE
+				{{ feedback_form.description.errors }}
+				<label for="id_description">Description:</label>
+				{{ feedback_form.description }}
+	    	</div>
+	    </div>
+	</div>
+    {% endfor %}		
 </div>
-
-<table>
-{{ feedback_form.as_table }}
-</table>
-
-<input class="go button" type="submit" value={% trans "Save" %}>
-{% csrf_token %}
+    <p><input class="go button" type="submit" value="{% trans "Save" %}" /></p>
+    {% csrf_token %}
 </form>
-{% for field in decision_form %}
-{% endfor %}
 {% endblock %}
