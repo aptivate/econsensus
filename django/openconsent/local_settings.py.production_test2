@@ -4,7 +4,7 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 LOGIN_URL = '/test2/public/login/'
-LOGIN_REDIRECT_URL = '/test2/public/decision_list/'
+LOGIN_REDIRECT_URL = '/test2/public/list/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
