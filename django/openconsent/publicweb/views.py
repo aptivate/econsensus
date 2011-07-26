@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -32,7 +32,7 @@ def decision_list(request):
         RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
 
 @login_required
-def decision_add_page(request):
+def add_decision(request):
     
     if request.POST:
         decision_form = DecisionForm(request.POST)
@@ -49,13 +49,13 @@ def decision_add_page(request):
         feedback_formset = FeedbackFormSet()
         decision_form = DecisionForm()
         
-    return render_to_response('decision_add.html',
+    return render_to_response('decision_form.html',
         RequestContext(request,
             dict(decision_form=decision_form, feedback_formset=feedback_formset)))
 
 @login_required    
-def decision_view_page(request, decision_id):
-    decision = Decision.objects.get(id = decision_id)
+def edit_decision(request, decision_id):
+    decision = get_object_or_404(Decision, id = decision_id)
     decision_form = DecisionForm(instance=decision)
     feedback_formset = FeedbackFormSet(instance=decision)
     
@@ -70,7 +70,7 @@ def decision_view_page(request, decision_id):
                 feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
-    return render_to_response('decision_add.html',
+    return render_to_response('decision_form.html',
         RequestContext(request,
                        dict(decision = decision,
                             decision_form=decision_form,

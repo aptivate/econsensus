@@ -6,7 +6,7 @@ import django_tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
 
-class DecisionListPageTest(DecisionTestCase):
+class DecisionListTest(DecisionTestCase):
     
     def test_status_filter_form(self):
         self.create_decisions_with_different_statuses()
