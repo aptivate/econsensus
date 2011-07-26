@@ -5,7 +5,7 @@ class DecisionTable(django_tables.ModelTable):
     id = django_tables.Column(verbose_name=_('ID'))
     short_name = django_tables.Column(verbose_name=_('Decision'))
     status_text = django_tables.Column(verbose_name=_('Status'))
-    unresolvedconcerns = django_tables.Column(verbose_name=_('Concerns'))
+    unresolvedfeedback = django_tables.Column(verbose_name=_('Feedback'))
     decided_date = django_tables.Column(verbose_name=_('Decided'))
     review_date = django_tables.Column(verbose_name=_('Review'))
     expiry_date = django_tables.Column(verbose_name=_('Expires'))

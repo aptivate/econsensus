@@ -18,7 +18,7 @@
 						{% block user_access %}
 						<div id="user_access">
 							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
-							<a href={% url django.contrib.auth.views.logout %}> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
+							<a href='{% url django.contrib.auth.views.logout %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 						</div>
 						{% endblock user_access%}
 					{% endblock %}
@@ -27,7 +27,7 @@
 				<div id="nav">
 					<ul class="navigation">
 						<li><a class="go nav list" href="{% url decision_list %}">{% trans "Decision list" %}</a></li>
-						<li><a class="go nav add" href="{% url publicweb.views.decision_add_page %}">{% trans "Add decision" %}</a></li>
+						<li><a class="go nav add" href="{% url publicweb.views.add_decision %}">{% trans "Add decision" %}</a></li>
 					</ul>
 				</div>
 				{% endblock %}

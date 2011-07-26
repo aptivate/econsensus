@@ -1,0 +1,33 @@
+{% extends "fullpage.html" %}
+{% load i18n %}
+
+{% comment %}This is a stub template for the time being - PCB {% endcomment %}
+
+{% block title %}
+	{{ decision.short_name }}
+{% endblock %}
+
+{% block head_content %}
+{{ object.media }}
+{% endblock %}
+
+{% block heading %}
+	{{ object.short_name }}
+{% endblock %}
+
+{% block content %}
+
+{% if object.decided_date %}
+	Decided Date: {{ object.decided_date }}
+{% endif %}
+{% if object.effective_date %}
+	Effective Date: {{ object.effective_date }}
+{% endif %}
+{% if object.review_date %}
+	Review Date: {{ object.review_date }}
+{% endif %}
+{% if object.expiry_date %}
+	Expiry Date: {{ object.expiry_date }}
+{% endif %}
+
+{% endblock %}

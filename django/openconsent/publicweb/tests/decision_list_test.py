@@ -6,7 +6,22 @@ import django_tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
 
-class DecisionListPageTest(DecisionTestCase):
+class DecisionListTest(DecisionTestCase):
+    
+    def test_status_filter_form(self):
+        self.create_decisions_with_different_statuses()
+        
+        path = reverse('decision_list')
+        page = self.client.get(path)
+        
+        get_data = self.get_form_values_from_response(page)
+        get_data['status'] = Decision.PROPOSAL_STATUS
+        response = self.client.get(path, get_data)
+
+        self.check_cell_text_appears_in_table(response, "Proposal Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
+        self.check_cell_text_does_not_appear_in_table(response, "Archived Decision")
+
     def test_decisions_table_rows_can_be_sorted_by_review_date(self):
         self.assert_decisions_table_sorted_by_date_column('review_date')
         
@@ -38,20 +53,20 @@ class DecisionListPageTest(DecisionTestCase):
         """
         The decisions table is represented using django_tables.ModelTable.
         """
-        self.create_and_return_example_decision_with_concern()
+        self.create_and_return_example_decision_with_feedback()
         response = self.load_decision_list_page_and_return_response()
         decisions_table = response.context['decisions']
         self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
     
     def test_status_appears_in_table(self):
-        self.create_and_return_example_decision_with_concern()
+        self.create_and_return_example_decision_with_feedback()
         response = self.load_decision_list_page_and_return_response()
             
         self.check_cell_text_appears_in_table(response, "Proposal")
 
     def test_decision_list_can_be_filtered_by_status_proposal(self):
         self.create_decisions_with_different_statuses()
-        params = {'status':'proposal'}
+        params = {'status': Decision.PROPOSAL_STATUS }
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Proposal Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
@@ -59,7 +74,7 @@ class DecisionListPageTest(DecisionTestCase):
     
     def test_decision_list_can_be_filtered_by_status_consensus(self):
         self.create_decisions_with_different_statuses()
-        params = {'status':'consensus'}
+        params = {'status':Decision.CONSENSUS_STATUS}
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Consensus Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Proposal Decision")
@@ -67,7 +82,7 @@ class DecisionListPageTest(DecisionTestCase):
     
     def test_decision_list_can_be_filtered_by_status_archived(self):
         self.create_decisions_with_different_statuses()
-        params = {'status':'archived'}
+        params = {'status':Decision.ARCHIVED_STATUS}
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Archived Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
@@ -122,7 +137,7 @@ class DecisionListPageTest(DecisionTestCase):
         response = self.load_decision_list_page_and_return_response()
         ids = self.get_table_header_ids(response)
         self.assertEquals(['id', 'short_name', 'status_text', \
-                           'unresolvedconcerns', 'decided_date', \
+                           'unresolvedfeedback', 'decided_date', \
                            'review_date', 'expiry_date'], ids)
         
     def get_table_header_ids(self, response):

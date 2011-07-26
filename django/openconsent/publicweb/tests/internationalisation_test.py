@@ -15,7 +15,7 @@ class InternationalisationTest(OpenConsentTestCase):
         self.check_all_text_translated('decision_list')
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('decision_add')
+        self.check_all_text_translated('add_decision')
 
     def check_all_text_translated(self, view):
         self.mock_get_text_functions_for_french()
@@ -33,7 +33,9 @@ class InternationalisationTest(OpenConsentTestCase):
                 self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element) + " with text '" + element.text + "' from view '" + view + "'")
      
     def has_translatable_text(self,element):
-        if element.text is None or element.text.strip() == "" \
+        if element.text is None \
+            or element.text.strip() == "" \
+            or element.text.strip('-') == "" \
             or "not_translated" in element.attrib.get('class', '').split(" ") \
             or element.tag == 'script' \
             or element.text.isdigit():

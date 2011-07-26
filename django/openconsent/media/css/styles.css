@@ -236,6 +236,7 @@ img {
     font-weight: bold;
     padding: 10px;
     text-decoration: none;
+	box-shadow:none;
 }
 
 .go:hover {
@@ -327,6 +328,13 @@ form input.button {
 
 }
 
+#decision-list .fields.concerns {
+    background-color: #EEEEEE;
+    border-radius: 10px 10px 10px 10px;
+    margin-bottom: 10px;
+    padding: 20px 10px;
+}
+
 #decision-list th {
 	text-align:left;
 	padding:0 10px;
@@ -348,12 +356,6 @@ form input.button {
 	background-repeat:no-repeat;
 	padding-right:20px;
 }
-
-/*
-table td:nth-child(odd){
-	background-color:#f6f6f6;
-}
-*/
 
 #decision-list th.sorted.straight a {
 	color:#A9D300;
@@ -389,6 +391,91 @@ table td:nth-child(odd){
 	color:white;
 }
 
+/* Add Decision Form */
+
+form#decision_add{
+	border:2px solid #ddd;
+	border-radius:20px;
+	padding:20px;
+	position:relative;
+	overflow:auto;
+}
+
+
+label {
+    	display: block;
+    	float: left;
+    	margin-right: 0.5em;
+	padding:4px 0px;
+	color:#666;
+	min-width:4em;
+	font-weight:bold;
+}
+
+ form input, form textarea {
+	border-radius:8px;
+	border:2px solid #ddd;
+	padding:2px 5px;
+	box-shadow: inset 2px 2px 5px #ededed;
+}
+
+#decision_add .form_row {
+	clear:both;
+	position:relative;
+	width:100%;
+	float:left;
+	margin:10px 0;
+}
+
+#decision_add .form_item {
+	float:left;
+}
+
+#decision_add .form_row.decision_summary .form_item {
+	padding:10px;
+	font-size:1.2em;
+	font-weight:bold;
+}
+
+#decision_add .form_row.dates .form_item {width:25%;}
+#decision_add .form_item.status {width:140px;}
+#decision_add .form_item.status #id_status {width:140px;font-size:1.2em; padding:8px;}
+#decision_add .form_item.short_name {width:65%}
+#decision_add .form_row.decision_summary .short_name input,
+#decision_add .form_row.dates .form_item input {width:90%;}
+#decision_add .form_row.resources .form_item input {width:95%;}
+#decision_add .form_row.resources .form_item {width:50%;}
+#decision_add .form_row.description .form_item {width:100%;}
+#decision_add .form_row.description #id_description {width:98%;}
+
+#decision_add .decision_summary {
+background-color: #EFFFAF;
+    	border-radius: 10px 10px 10px 10px;
+	position:relative;
+}
+
+
+#id_short_name {
+	padding:10px;
+	font-size:1.2em;
+}
+
+
+#decision_add .form_item.status {
+	float:right;
+}
+
+
+
+
+div.fields.concerns {
+    background-color: #F2F2F2;
+    border-radius: 10px 10px 10px 10px;
+    padding: 20px 0;
+	margin-bottom:10px;
+}
+
+
 /* Footer */
 
 #footer {
@@ -420,7 +507,7 @@ ul.errorlist
 	margin: 0 1em 0 0;
 }
 
-p.error
+.error
 {
 	color: red;
 }

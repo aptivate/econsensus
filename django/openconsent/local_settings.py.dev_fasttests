@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 LOGIN_URL = '/public/login/'
-LOGIN_REDIRECT_URL = '/public/decision_list/'
+LOGIN_REDIRECT_URL = '/public/list/'
 
 MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'

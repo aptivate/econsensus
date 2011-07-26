@@ -8,6 +8,12 @@
 
 {% block content %}
 
+<form action="{% url publicweb.views.decision_list %}" method="GET">
+{{ filter_form.as_p }}
+<noscript><input type="submit" value="Submit"></noscript>
+</form>
+
+
 <table id="decision-list" cellspacing="0">
 <tr>
     {% for column in decisions.columns %}
@@ -17,9 +23,9 @@
 {% for decision in decisions.rows %}
     <tr>
         <td>{{ decision.id }}</td>
-        <td><a href="{% url publicweb.views.decision_view_page decision_id=decision.id %}">{{decision.short_name}}</a></td>
+        <td><a href="{% url publicweb.views.edit_decision decision_id=decision.id %}">{{decision.short_name}}</a></td>
         <td>{{ decision.status_text }}</td>
-		<td>{{ decision.unresolvedconcerns }}</td>
+		<td>{{ decision.unresolvedfeedback }}</td>
 		<td>{{ decision.decided_date }}</td>
 		<td>{{ decision.review_date }}</td>
 		<td>{{ decision.expiry_date }}</td>

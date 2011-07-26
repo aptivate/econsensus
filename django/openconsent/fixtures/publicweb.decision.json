@@ -58,7 +58,7 @@
     
    {
         "pk": 1, 
-        "model": "publicweb.concern", 
+        "model": "publicweb.feedback", 
         "fields": {
             "short_name": "I hate eggs",
   			"decision": 1,
@@ -67,7 +67,7 @@
     },
    {
         "pk": 2, 
-        "model": "publicweb.concern", 
+        "model": "publicweb.feedback", 
         "fields": {
             "short_name": "Toast is burnt",
   			"decision": 1,

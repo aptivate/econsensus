@@ -2,13 +2,13 @@
 
 from django.db import models
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from models import Decision
-from forms import DecisionForm, ConcernFormSet
+from forms import DecisionForm, FeedbackFormSet, FilterForm
 from publicweb.decision_table import DecisionTable
 
 import csv
@@ -42,58 +42,66 @@ def export_csv(request):
 
 @login_required        
 def decision_list(request):
-    status = Decision.STATUS_CODES.get(request.GET.get('status'), None)
     
-    if status is not None:
+    #build status tuple
+    status_code_list = []
+    for this_status in Decision.STATUS_CHOICES:
+        status_code_list.append(this_status[0])
+    status_code_tuple = tuple(status_code_list)
+    
+    status = request.GET.get('status', None)
+    if status is not None and int(status) in status_code_tuple:
+        filter_form = FilterForm(request.GET)
         objects = Decision.objects.filter(status=status)
     else:
+        filter_form = FilterForm()
         objects = Decision.objects.all()
         
     decisions = DecisionTable(objects, order_by=request.GET.get('sort'))
     return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions,)))
+        RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
 
 @login_required
-def decision_add_page(request):
+def add_decision(request):
     
     if request.POST:
         decision_form = DecisionForm(request.POST)
-        concern_form = ConcernFormSet()
+        feedback_formset = FeedbackFormSet()
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            concern_form = ConcernFormSet(request.POST, instance=decision)
-            if concern_form.is_valid():
+            feedback_formset = FeedbackFormSet(request.POST, instance=decision)
+            if feedback_formset.is_valid():
                 decision_form.save()
-                concern_form.save()
+                feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
     else:
-        concern_form = ConcernFormSet()
+        feedback_formset = FeedbackFormSet()
         decision_form = DecisionForm()
         
-    return render_to_response('decision_add.html',
+    return render_to_response('decision_form.html',
         RequestContext(request,
-            dict(decision_form=decision_form, concern_form=concern_form)))
+            dict(decision_form=decision_form, feedback_formset=feedback_formset)))
 
 @login_required    
-def decision_view_page(request, decision_id):
-    decision = Decision.objects.get(id = decision_id)
+def edit_decision(request, decision_id):
+    decision = get_object_or_404(Decision, id = decision_id)
     decision_form = DecisionForm(instance=decision)
-    concern_form = ConcernFormSet(instance=decision)
+    feedback_formset = FeedbackFormSet(instance=decision)
     
     if request.method == 'POST':
         decision_form = DecisionForm(request.POST, instance=decision)
                 
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
-            concern_form = ConcernFormSet(request.POST,instance=decision)
-            if concern_form.is_valid():
+            feedback_formset = FeedbackFormSet(request.POST,instance=decision)
+            if feedback_formset.is_valid():
                 decision_form.save()
-                concern_form.save()
+                feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
-    return render_to_response('decision_add.html',
+    return render_to_response('decision_form.html',
         RequestContext(request,
                        dict(decision = decision,
                             decision_form=decision_form,
-                            concern_form=concern_form)))    
+                            feedback_formset=feedback_formset)))    

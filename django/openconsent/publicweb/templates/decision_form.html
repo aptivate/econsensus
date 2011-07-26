@@ -1,0 +1,113 @@
+{% extends "fullpage.html" %}
+{% load i18n %}
+
+{% block title %}
+{% if decision.short_name %}
+	{{ decision.short_name }}
+{% else %}
+	{% trans "Add New Decision" %}
+{% endif %}{% endblock %}
+
+{% block head_content %}
+{{ decision_form.media }}
+{% endblock %}
+
+{% block heading %}
+{% if decision.short_name %}
+	{% trans "View and Edit: " %}{{ decision.short_name }}
+{% else %}
+	{% trans "Add New Decision" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<form id="decision_add" action="" method="post">
+{% for error in decision_form.non_field_errors %}
+    <p class="error" >{{ error }}</p>
+{% endfor %}
+<div class="form_row decision_summary">
+	<div class="form_item short_name">
+        {{ decision_form.short_name.errors }}
+        <label for="id_short_name">{% trans "Name" %}:</label>
+        {{ decision_form.short_name }}
+    </div>
+    <div class="form_item status">
+        {{ decision_form.status.errors }}
+        <label for="id_status">{% trans "Status" %}:</label>
+        {{ decision_form.status }}
+    </div>
+ </div>
+ <div class="form_row dates">
+     <div class="form_item">
+        {{ decision_form.decided_date.errors }}
+        <label for="id_decided_date">{% trans "Decided" %}:</label>
+        {{ decision_form.decided_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.effective_date.errors }}
+        <label for="id_effective_date">{% trans "Effective" %}:</label>
+        {{ decision_form.effective_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.review_date.errors }}
+        <label for="id_review_date">{% trans "Review" %}:</label>
+        {{ decision_form.review_date }}
+    </div>
+	<div class="form_item">
+        {{ decision_form.expiry_date.errors }}
+        <label for="id_expiry_date">{% trans "Expiry" %}:</label>
+        {{ decision_form.expiry_date }}
+    </div>
+ </div>
+ <div class="form_row resources">
+ 	<div class="form_item budget">
+        {{ decision_form.budget.errors }}
+        <label for="id_budget">{% trans "Budget" %}:</label>
+        {{ decision_form.budget }}
+    </div>
+    	<div class="form_item people">
+        {{ decision_form.people.errors }}
+        <label for="id_people">{% trans "People" %}:</label>
+        {{ decision_form.people }}
+    </div>
+ </div>
+ <div class="form_row description">
+    <div class="form_item">
+        {{ decision_form.description.errors }}
+        <label for="id_description">{% trans "Description" %}:</label>
+        {{ decision_form.description }}
+    </div>
+</div>
+<div id="feedback">
+	<h2>{% trans "Feedback" %}</h2>
+	{{ feedback_formset.management_form }}
+	{% for feedback_form in feedback_formset %}
+	{{ feedback_form.id }}
+	<div class="formset_item">
+		<div class="form_row feedback_summary">
+		    <div class="form_item short_name">
+				{{ feedback_form.short_name.errors }}
+				<label for="id_short_name">{% trans "Name" %}:</label>
+				{{ feedback_form.short_name }}
+	    	</div>
+			<div class="form_item rating">
+				{{ feedback_form.rating.errors }}
+				<label for="id_rating">{% trans "Rating" %}:</label>
+				{{ feedback_form.rating }}
+	    	</div>
+	    </div>
+	    <div class="form_row description">
+	    	<div class="form_item description">
+				{{ feedback_form.description.errors }}
+				<label for="id_description">{% trans "Description" %}:</label>
+				{{ feedback_form.description }}
+	    	</div>
+	    </div>
+	</div>
+    {% endfor %}		
+</div>
+    <p><input class="go button" type="submit" value="{% trans "Save" %}" /></p>
+    {% csrf_token %}
+</form>
+{% endblock %}

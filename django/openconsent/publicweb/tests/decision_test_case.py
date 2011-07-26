@@ -1,5 +1,5 @@
 from publicweb.tests.open_consent_test_case import OpenConsentTestCase
-from publicweb.models import Decision, Concern
+from publicweb.models import Decision, Feedback
 
 class DecisionTestCase(OpenConsentTestCase):
     def setUp(self):
@@ -14,12 +14,12 @@ class DecisionTestCase(OpenConsentTestCase):
         self.create_and_return_decision(short_name='Archived Decision',
                                         status=Decision.ARCHIVED_STATUS)
 
-    def create_and_return_example_decision_with_concern(self):
+    def create_and_return_example_decision_with_feedback(self):
         decision = self.create_and_return_decision()
         
-        concern = Concern(short_name='No time to decide',
+        feedback = Feedback(short_name='No time to decide',
                           decision=decision)
-        concern.save()
+        feedback.save()
         
         return decision
 
