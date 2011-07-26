@@ -105,7 +105,7 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('edit_decision', args=[decision.id])
         response = self.client.get(path)
         
-        feedback_formset = response.context['feedback_form']
+        feedback_formset = response.context['feedback_formset']
         feedback = decision.feedback_set.all()
         self.assertEquals(list(feedback), list(feedback_formset.queryset))
 
@@ -163,8 +163,8 @@ class DecisionsTest(DecisionTestCase):
    
     def test_add_decision_has_feedback_form(self):
         response = self.client.get(reverse('add_decision'))        
-        self.assertTrue('feedback_form' in response.context, 
-                        "\"feedback_form\" not in this context")
+        self.assertTrue('feedback_formset' in response.context, 
+                        "\"feedback_formset\" not in this context")
     
     def test_add_decision_with_feedback(self):
         post_dict = self.get_default_decision_form_dict()
