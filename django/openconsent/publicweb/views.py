@@ -35,13 +35,15 @@ def decision_list(request):
 def add_decision(request):
     
     if request.POST:
-        decision_form = DecisionForm(request.POST)
-        feedback_formset = FeedbackFormSet()
+        decision_form = DecisionForm(data=request.POST)
+        feedback_formset = FeedbackFormSet(data=request.POST)
+
         if decision_form.is_valid():
             decision = decision_form.save(commit=False)
             feedback_formset = FeedbackFormSet(request.POST, instance=decision)
             if feedback_formset.is_valid():
-                decision_form.save()
+                decision.save()
+                decision.add_watcher(request.user)
                 feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         

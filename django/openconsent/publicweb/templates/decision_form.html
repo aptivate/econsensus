@@ -60,13 +60,21 @@
         {{ decision_form.expiry_date }}
     </div>
  </div>
+ 
+  <div class="form_row watchers">
+     <div class="form_item">
+        <label for="id_watchers">{% trans "Watchers" %}:</label>
+        {{decision.watchers.all|join:"," }}
+    </div>
+ </div>
+    
  <div class="form_row resources">
  	<div class="form_item budget">
         {{ decision_form.budget.errors }}
         <label for="id_budget">{% trans "Budget" %}:</label>
         {{ decision_form.budget }}
     </div>
-    	<div class="form_item people">
+    <div class="form_item people">
         {{ decision_form.people.errors }}
         <label for="id_people">{% trans "People" %}:</label>
         {{ decision_form.people }}
@@ -79,6 +87,7 @@
         {{ decision_form.description }}
     </div>
 </div>
+
 <div id="feedback">
 	<h2>{% trans "Feedback" %}</h2>
 	{{ feedback_formset.management_form }}

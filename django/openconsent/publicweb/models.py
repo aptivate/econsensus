@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 import tinymce.models
 
 # Ideally django-tinymce should be patched
@@ -20,10 +21,6 @@ class Decision(models.Model):
                   (ARCHIVED_STATUS, _('Archived')),
                   )
 
-#    STATUS_CODES = {'proposal' : PROPOSAL_STATUS,
-#                    'consensus' : CONSENSUS_STATUS,
-#                    'archived' : ARCHIVED_STATUS}
-
     short_name = models.CharField(max_length=255, verbose_name=_('Name'))
     decided_date = models.DateField(null=True, blank=True,
         verbose_name=_('Decided date'))
@@ -39,9 +36,20 @@ class Decision(models.Model):
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
         verbose_name=_('Description'))
+    watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  verbose_name=_('Status'))
+
+#    def __init__(self, user, *args, **kwargs):
+#        self.user = user
+#        super(Decision, self).__init__(*args, **kwargs)
+
+                        
+    def add_watcher(self, user):
+        if user not in self.watchers.all():
+            self.watchers.add(user)
+ 
     
     def status_text(self):
         return self.STATUS_CHOICES[self.status][1]
@@ -57,14 +65,14 @@ class Decision(models.Model):
         return answer
     
     unresolvedfeedback.short_description = _("Unresolved Feedback")
-                        
+    
     def __unicode__(self):
         return self.short_name
     
     def get_absolute_url(self):
         return ('edit_decision', (), {'decision_id':self.id})
     get_absolute_url = models.permalink(get_absolute_url)
-    
+            
 class Feedback(models.Model):
 
     QUESTION_STATUS = 0

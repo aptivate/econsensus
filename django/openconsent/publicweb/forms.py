@@ -30,6 +30,7 @@ FeedbackFormSet = inlineformset_factory(Decision, Feedback,
                                        form=FeedbackForm)
 
 class DecisionForm(forms.ModelForm):
+       
     class Meta:
         model = Decision
         widgets = {'short_name': forms.TextInput(),

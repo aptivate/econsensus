@@ -4,6 +4,9 @@ from publicweb.models import Decision, Feedback
 class DecisionTestCase(OpenConsentTestCase):
     def setUp(self):
         self.login()
+        
+    def tearDown(self):
+        self.deleteUser()
 
     def create_decisions_with_different_statuses(self):
         self.create_and_return_decision(short_name='Proposal Decision')
@@ -28,4 +31,7 @@ class DecisionTestCase(OpenConsentTestCase):
         decision = Decision(short_name=short_name, status=status)
         decision.save()
         
+        decision.add_watcher(self.user)
+        decision.save()
+
         return decision

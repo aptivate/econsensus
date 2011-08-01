@@ -7,6 +7,7 @@ Tests for the public website part of the OpenConsent project
 from __future__ import absolute_import
 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from publicweb.views import edit_decision
 from publicweb.models import Decision
@@ -62,6 +63,7 @@ class DecisionsTest(DecisionTestCase):
         return {'status': 1}
 
     def assert_decision_form_field_uses_tinymce_widget(self, field):
+
         form = DecisionForm()
         
         self.assertEquals(tinymce.widgets.TinyMCE,
@@ -208,4 +210,17 @@ class DecisionsTest(DecisionTestCase):
         decision = self.create_and_return_example_decision_with_feedback()
         self.assertEquals(0, getattr(decision, "status"), 
                           "Decision does not have a status")
+        
+    def test_decision_has_watchers(self):
+        decision = self.create_and_return_decision()
+        self.assertEquals(True, hasattr(decision, "watchers"), 
+                          "Decision does not have a 'watchers' attribute")
+        
+    def test_decision_watchers_is_updated(self):
+        decision = self.create_and_return_decision()
+        watchers = getattr(decision, "watchers")
+                
+        self.assertTrue(self.user in watchers.all(), 
+                          "Decision watchers not updated")
+        
 

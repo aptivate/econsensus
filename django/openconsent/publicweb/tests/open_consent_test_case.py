@@ -7,9 +7,12 @@ class OpenConsentTestCase(TestCase):
         username = 'admin'
         password = 'aptivate'
         email = 'admin@aptivate.org'
-        user = User.objects.create_user(username, email, password=password)
-        user.save()
+        self.user = User.objects.create_user(username, email, password=password)
+        self.user.save()
         self.client.login(username=username, password=password)
+        
+    def deleteUser(self):
+        self.user.delete()
 
     def get_form_values_from_response(self, response):
         forms = ParseString(response.content, '')
