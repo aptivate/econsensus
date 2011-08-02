@@ -31,7 +31,7 @@ FeedbackFormSet = inlineformset_factory(Decision, Feedback,
 
 class DecisionForm(forms.ModelForm):
     
-    subscribe = forms.BooleanField(required=False)
+    subscribe = forms.BooleanField(required=False, initial=True)
        
     class Meta:
         model = Decision

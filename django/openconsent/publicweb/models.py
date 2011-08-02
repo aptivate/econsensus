@@ -36,7 +36,7 @@ class Decision(models.Model):
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
         verbose_name=_('Description'))
-    watchers = models.ManyToManyField(User, blank=True, editable=False)
+    subscribers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  verbose_name=_('Status'))
@@ -45,11 +45,16 @@ class Decision(models.Model):
 #        self.user = user
 #        super(Decision, self).__init__(*args, **kwargs)
 
+    def is_subscribed(self, user):
+        return user in self.subscribers.all()
                         
-    def add_watcher(self, user):
-        if user not in self.watchers.all():
-            self.watchers.add(user)
+    def add_subscriber(self, user):
+        if user not in self.subscribers.all():
+            self.subscribers.add(user)
  
+    def remove_subscriber(self, user):
+        if user in self.subscribers.all():
+            self.subscribers.remove(user)
     
     def status_text(self):
         return self.STATUS_CHOICES[self.status][1]

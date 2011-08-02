@@ -43,7 +43,10 @@ def add_decision(request):
             feedback_formset = FeedbackFormSet(request.POST, instance=decision)
             if feedback_formset.is_valid():
                 decision.save()
-                decision.add_watcher(request.user)
+                if decision_form.cleaned_data['subscribe']:
+                    decision.add_subscriber(request.user)
+                else:
+                    decision.remove_subscriber(request.user)
                 feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
@@ -69,7 +72,10 @@ def edit_decision(request, decision_id):
             feedback_formset = FeedbackFormSet(request.POST,instance=decision)
             if feedback_formset.is_valid():
                 decision.save()
-                decision.add_watcher(request.user)
+                if decision_form.cleaned_data['subscribe']:
+                    decision.add_subscriber(request.user)
+                else:
+                    decision.remove_subscriber(request.user)
                 feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         

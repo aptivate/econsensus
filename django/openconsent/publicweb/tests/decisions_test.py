@@ -218,19 +218,20 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals(True, hasattr(decision, "status"), 
                           "Decision does not have a status")
         
-    def test_decision_model_has_watchers(self):
+    def test_decision_model_has_subscribers(self):
         decision_model = self.create_and_return_decision()
-        self.assertTrue(hasattr(decision_model, "watchers"), 
-                          "Decision does not have watchers")
+        self.assertTrue(hasattr(decision_model, "subscribers"), 
+                          "Decision does not have subscribers")
                 
-    def test_decision_form_omits_watchers(self):
+    def test_decision_form_omits_subscribers(self):
         decision_form = DecisionForm()
-        self.assertTrue("watcher" not in decision_form.fields,
-                          "Decision form should not contain watchers")
+        self.assertTrue("subscriber" not in decision_form.fields,
+                          "Decision form should not contain subscribers")
 
-    def test_add_decision_web_post_updates_watcher(self):
+    def test_add_decision_web_post_updates_subscribers(self):
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'short_name': 'Make Eggs',
+                            'subscribe': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -240,15 +241,17 @@ class DecisionsTest(DecisionTestCase):
         response = self.client.post(reverse('add_decision'), 
                                 post_dict,
                                 follow=True )
-        self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
+
         decision = Decision.objects.all()[0]
-        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watch list during add")
+        self.assertEqual(1, len(decision.subscribers.all()), "Expected one subscriber only.")        
+        self.assertEqual(self.user, decision.subscribers.all()[0], "User not added to subscriber list during add")
         
-    def test_edit_decision_web_post_updates_watcher(self):
+    def test_edit_decision_web_post_updates_subscribers(self):
         decision = self.create_and_return_decision()
         
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'short_name': 'Make Eggs',
+                            'subscribe': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -260,9 +263,9 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )
 
         decision = Decision.objects.all()[0]
-        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")
+        self.assertEqual(1, len(decision.subscribers.all()), "Expected one subscriber only.")
         
-        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watch list during edit")
+        self.assertEqual(self.user, decision.subscribers.all()[0], "User not added to subscriber list during edit")
 
     def test_form_has_subscribe(self):
         decision_form = DecisionForm()
@@ -277,4 +280,22 @@ class DecisionsTest(DecisionTestCase):
                           type(decision_form.fields["subscribe"].widget),
                           "Decision form subscribe is not a CheckboxInput widget")
 
+
+    def test_unsubscribe(self):
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({  'short_name': 'Make Eggs',
+                            'subscribe': False,
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})
         
+        response = self.client.post(reverse('add_decision'), 
+                                post_dict,
+                                follow=True )
+        self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
+        decision = Decision.objects.all()[0]
+        self.assertEqual(0, len(decision.subscribers.all()), "Subscribe was deselected!")
+        
+         
