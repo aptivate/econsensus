@@ -22,7 +22,7 @@
 
 {% block content %}
 
-<form id="decision_add" action="" method="post">
+<form id="decision_add" action="" method="post">{% csrf_token %}
 {% for error in decision_form.non_field_errors %}
     <p class="error" >{{ error }}</p>
 {% endfor %}
@@ -116,7 +116,16 @@
 	</div>
     {% endfor %}		
 </div>
+
+<div class="form_row decision_submit">
     <p><input class="go button" type="submit" value="{% trans "Save" %}" /></p>
-    {% csrf_token %}
+    
+	<div class="form_item subscribe">
+        {{ decision_form.subscribe.errors }}
+        <label for="id_subscribe">{% trans "Subscribe" %}?:</label>
+        {{ decision_form.subscribe }}
+    </div>
+</div>
+    
 </form>
 {% endblock %}

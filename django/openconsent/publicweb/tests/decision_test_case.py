@@ -31,7 +31,7 @@ class DecisionTestCase(OpenConsentTestCase):
         decision = Decision(short_name=short_name, status=status)
         decision.save()
         
-        decision.add_watcher(self.user)
-        decision.save()
+        #decision.add_watcher(self.user)
+        #decision.save()
 
         return decision

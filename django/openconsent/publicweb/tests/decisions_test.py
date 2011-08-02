@@ -7,7 +7,8 @@ Tests for the public website part of the OpenConsent project
 from __future__ import absolute_import
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.forms.fields import BooleanField
+from django.forms.widgets import CheckboxInput
 
 from publicweb.views import edit_decision
 from publicweb.models import Decision
@@ -19,6 +20,12 @@ import difflib
 
 from publicweb.widgets import JQueryUIDateWidget
 from publicweb.tests.decision_test_case import DecisionTestCase
+
+### As a general note, I can see our tests are evolving into...
+### 1 - model tests (does the model have x property?)
+### 2 - form tests (does the form have x field?)
+### 3 - browser tests (does page respond correct? does submission work OK?)
+
 
 class DecisionsTest(DecisionTestCase):
     def get(self, view_function, **view_args):
@@ -208,19 +215,66 @@ class DecisionsTest(DecisionTestCase):
         
     def test_decision_has_status(self):
         decision = self.create_and_return_example_decision_with_feedback()
-        self.assertEquals(0, getattr(decision, "status"), 
+        self.assertEquals(True, hasattr(decision, "status"), 
                           "Decision does not have a status")
         
-    def test_decision_has_watchers(self):
-        decision = self.create_and_return_decision()
-        self.assertEquals(True, hasattr(decision, "watchers"), 
-                          "Decision does not have a 'watchers' attribute")
-        
-    def test_decision_watchers_is_updated(self):
-        decision = self.create_and_return_decision()
-        watchers = getattr(decision, "watchers")
+    def test_decision_model_has_watchers(self):
+        decision_model = self.create_and_return_decision()
+        self.assertTrue(hasattr(decision_model, "watchers"), 
+                          "Decision does not have watchers")
                 
-        self.assertTrue(self.user in watchers.all(), 
-                          "Decision watchers not updated")
-        
+    def test_decision_form_omits_watchers(self):
+        decision_form = DecisionForm()
+        self.assertTrue("watcher" not in decision_form.fields,
+                          "Decision form should not contain watchers")
 
+    def test_add_decision_web_post_updates_watcher(self):
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({'short_name': 'Make Eggs',
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})
+        
+        response = self.client.post(reverse('add_decision'), 
+                                post_dict,
+                                follow=True )
+        self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
+        decision = Decision.objects.all()[0]
+        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watch list during add")
+        
+    def test_edit_decision_web_post_updates_watcher(self):
+        decision = self.create_and_return_decision()
+        
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({'short_name': 'Make Eggs',
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})
+        
+        self.client.post(reverse('edit_decision', args=[decision.id]), 
+                                post_dict,
+                                follow=True )
+
+        decision = Decision.objects.all()[0]
+        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")
+        
+        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watch list during edit")
+
+    def test_form_has_subscribe(self):
+        decision_form = DecisionForm()
+        self.assertTrue("subscribe" in decision_form.fields,
+                          "Decision form does not contain subscribe checkbox")
+
+        self.assertEquals(BooleanField,
+                          type(decision_form.fields["subscribe"]),
+                          "Decision form subscribe is not a BooleanField")
+        
+        self.assertEquals(CheckboxInput,
+                          type(decision_form.fields["subscribe"].widget),
+                          "Decision form subscribe is not a CheckboxInput widget")
+
+        

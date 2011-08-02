@@ -68,7 +68,8 @@ def edit_decision(request, decision_id):
             decision = decision_form.save(commit=False)
             feedback_formset = FeedbackFormSet(request.POST,instance=decision)
             if feedback_formset.is_valid():
-                decision_form.save()
+                decision.save()
+                decision.add_watcher(request.user)
                 feedback_formset.save()
                 return HttpResponseRedirect(reverse(decision_list))
         
