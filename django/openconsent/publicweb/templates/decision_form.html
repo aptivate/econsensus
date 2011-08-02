@@ -118,13 +118,15 @@
 </div>
 
 <div class="form_row decision_submit">
-    <p><input class="go button" type="submit" value="{% trans "Save" %}" /></p>
+    <input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" />
+    <input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" />
     
 	<div class="form_item subscribe">
         {{ decision_form.subscribe.errors }}
         <label for="id_subscribe">{% trans "Subscribe" %}?</label>
         {{ decision_form.subscribe }}
     </div>
+    
 </div>
     
 </form>

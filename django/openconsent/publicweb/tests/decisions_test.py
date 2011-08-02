@@ -238,7 +238,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-short_name': 'The eggs are bad',
                             'feedback_set-1-short_name': 'No one wants them'})
         
-        response = self.client.post(reverse('add_decision'), 
+        self.client.post(reverse('add_decision'), 
                                 post_dict,
                                 follow=True )
 
@@ -298,4 +298,32 @@ class DecisionsTest(DecisionTestCase):
         decision = Decision.objects.all()[0]
         self.assertEqual(0, len(decision.subscribers.all()), "Subscribe was deselected!")
         
-         
+    def test_add_page_contains_cancel(self):
+        path = reverse('add_decision')
+        response = self.client.get(path)
+                
+        self.assertContains(response, "submit", count=5)
+
+    def test_edit_page_contains_cancel(self):
+        decision = self.create_and_return_decision()
+        path = reverse('edit_decision', args=[decision.id])
+        response = self.client.get(path)
+                
+        self.assertContains(response, "submit", count=5)
+
+    def test_cancel_does_not_impliment_changes(self):
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({  'short_name': 'Make Eggs',
+                            'subscribe': False,
+                            'submit': "Cancel",
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})        
+        
+        path = reverse('add_decision')
+        response = self.client.post(path, post_dict)
+
+        #probably doesn't exist...
+        self.assertEqual(0, len(Decision.objects.all()), "Hitting 'Cancel' created an object!")
