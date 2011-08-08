@@ -403,9 +403,9 @@ form#decision_add{
 
 
 label {
-    	display: block;
-    	float: left;
-    	margin-right: 0.5em;
+	display: block;
+	float: left;
+	margin-right: 0.5em;
 	padding:4px 0px;
 	color:#666;
 	min-width:4em;
@@ -454,25 +454,52 @@ background-color: #EFFFAF;
 	position:relative;
 }
 
-
 #id_short_name {
 	padding:10px;
 	font-size:1.2em;
 }
 
-
 #decision_add .form_item.status {
 	float:right;
 }
 
-
-
-
-div.fields.concerns {
-    background-color: #F2F2F2;
+div.formset_item {
     border-radius: 10px 10px 10px 10px;
-    padding: 20px 0;
-	margin-bottom:10px;
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+#decision_add .feedback_summary {
+    background-color: #FFB32F;
+    border-radius: 10px 10px 10px 10px;
+    display: block;
+    font-size: 1.2em;
+    position: relative;
+}
+
+#decision_add .feedback_summary label {
+	color:#333;
+}
+
+#decision_add .feedback_summary .form_item {
+	padding:10px;
+}
+
+#decision_add .feedback_summary .form_item.rating {
+	float:right;
+}
+
+#decision_add .form_row.description {
+	margin:0;
+}
+
+#decision_add .form_row.description textarea {
+	width:85%;
+	float:right;
+	position:relative;
+	display:block;
+	height:100px;
 }
 
 
