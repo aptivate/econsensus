@@ -315,8 +315,14 @@ form input.button {
 	margin:5px 5px 0 0;
 }
 
+h2.page_title {
+	display:none;
+}
+
 
 /* Decision List table */
+
+#decision_list_filter {float:right;}
 
 #decision-list {
 	padding:20px;
@@ -438,7 +444,7 @@ label {
 }
 
 .form_row.decision_summary .form_item.status {width:175px; float:right; padding: 10px 10px 10px 0;}
-.form_row.decision_summary .form_item.short_name {width:62%; padding: 0 0 10px 10px !important;}
+.form_row.decision_summary .form_item.short_name {width:62%; padding: 10px 0 10px 10px !important;}
 .form_row.dates .form_item {width:25%;}
 #.form_item.status {width:140px;}
 .form_item.status #id_status {width:175px}
@@ -480,8 +486,9 @@ label {
 }
 
 #feedback h2 {
-	color:#FFB32F;
 	margin-bottom:0;
+	color: #A7B4BF;
+    font-size: 2em;
 }
 
 div.formset_item {
@@ -508,7 +515,7 @@ div.formset_item {
 .feedback_summary .form_item {
 	margin-right: 0;
     overflow: hidden;
-    padding: 0 0 10px 10px !important;
+    padding: 10px 0 10px 10px !important;
     position: relative;
     width: 62%;
 }

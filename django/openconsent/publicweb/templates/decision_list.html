@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<form action="{% url publicweb.views.decision_list %}" method="GET">
+<form id="decision_list_filter" action="{% url publicweb.views.decision_list %}" method="GET">
 {{ filter_form.as_p }}
 <noscript><input type="submit" value="Submit"></noscript>
 </form>
