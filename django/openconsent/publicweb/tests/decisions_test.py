@@ -43,21 +43,32 @@ class DecisionsTest(DecisionTestCase):
             response.context['decision_form'].as_p())
     
         # Test that the decision add view validates and rejects and empty post
-        response = self.client.post(path, dict())
-        self.assertFalse(form.is_valid())   # validates the form and adds error messages
-        self.assertEqual(form.as_p(),
-            response.context['decision_form'].as_p())
+
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({  
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': ''
+                            })        
+
+        response = self.client.post(path, post_dict)
+
+        self.assertFalse(response.context['decision_form'].is_valid())
         
         # Test that providing a short name is enough to complete the form,
         # save the object and send us back to the home page
         
         post_dict = self.get_default_decision_form_dict()
-        
-        post_dict.update({'short_name': 'Feed the dog',
-                       'feedback_set-TOTAL_FORMS': '3',
-                       'feedback_set-INITIAL_FORMS': '0',
-                       'feedback_set-MAX_NUM_FORMS': ''})
-        
+
+        post_dict.update({  'short_name': 'Make Eggs',
+                            'subscribe': False,
+                            'submit': "Cancel",
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})        
+       
         response = self.client.post(path, post_dict,
                                     follow=True)
         
@@ -138,6 +149,8 @@ class DecisionsTest(DecisionTestCase):
         
         post_data = self.get_form_values_from_response(page)
         post_data['feedback_set-0-short_name'] = 'Modified'
+        post_data['submit'] = 'Submit'
+                
         self.client.post(path, post_data)
         
         decision = Decision.objects.get(id=self.decision.id)
@@ -311,7 +324,7 @@ class DecisionsTest(DecisionTestCase):
                 
         self.assertContains(response, "submit", count=5)
 
-    def test_cancel_does_not_impliment_changes(self):
+    def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({  'short_name': 'Make Eggs',
                             'subscribe': False,
@@ -325,5 +338,26 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('add_decision')
         response = self.client.post(path, post_dict)
 
-        #probably doesn't exist...
         self.assertEqual(0, len(Decision.objects.all()), "Hitting 'Cancel' created an object!")
+
+    def test_cancel_does_not_edit_changes(self):
+        decision = self.create_and_return_decision()
+        
+        post_dict = self.get_default_decision_form_dict()
+        post_dict.update({  'short_name': 'Make Eggs',
+                            'subscribe': False,
+                            'submit': "Cancel",
+                            'feedback_set-TOTAL_FORMS': '3',
+                            'feedback_set-INITIAL_FORMS': '0',
+                            'feedback_set-MAX_NUM_FORMS': '',
+                            'feedback_set-0-short_name': 'The eggs are bad',
+                            'feedback_set-1-short_name': 'No one wants them'})        
+        
+        path = reverse('edit_decision', args=[decision.id])
+        response = self.client.post(path,
+                                post_dict,
+                                follow=True )
+
+        decision = Decision.objects.all()[0]
+        self.assertEqual("Decision Time", decision.short_name, "Hitting 'Cancel' created an object!")
+        
