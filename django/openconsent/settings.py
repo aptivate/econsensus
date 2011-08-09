@@ -147,4 +147,6 @@ TINYMCE_DEFAULT_CONFIG = {
             "theme_advanced_buttons3" : ""
             }
 
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
 from local_settings import *

@@ -12,6 +12,8 @@ LOGIN_REDIRECT_URL = '/sandbox/public/list/'
 MEDIA_URL = '/sandbox/site_media/'
 ADMIN_MEDIA_PREFIX = '/sandbox/media/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

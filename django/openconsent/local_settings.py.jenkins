@@ -16,6 +16,8 @@ LOGIN_REDIRECT_URL = '/public/list/'
 MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
 # Database settings
 
 DATABASES = {

@@ -5,3 +5,4 @@ from publicweb.tests.add_decision_test import AddDecisionTest
 from publicweb.tests.decision_list_test import DecisionListTest
 from publicweb.tests.decision_table_test import DecisionTableTest
 from publicweb.tests.feedback_test import FeedbackTest
+from publicweb.tests.email_test import EmailTest

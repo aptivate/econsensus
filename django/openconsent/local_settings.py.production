@@ -12,6 +12,8 @@ LOGIN_REDIRECT_URL = '/aptivate/public/list/'
 MEDIA_URL = '/aptivate/site_media/'
 ADMIN_MEDIA_PREFIX = '/aptivate/media/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
