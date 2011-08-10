@@ -35,7 +35,7 @@ class Decision(models.Model):
     expiry_date = models.DateField(null=True, blank=True,
         verbose_name=_('Expiry date'))
     budget = models.CharField(blank=True, max_length=255,
-        verbose_name=_('Budget'))
+        verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
