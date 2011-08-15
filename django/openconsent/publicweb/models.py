@@ -1,10 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from django.db.models.signals import pre_save
-from django.conf import settings
 
+from emails import OpenConsentEmailMessage
 import tinymce.models
 
 # Ideally django-tinymce should be patched
@@ -82,27 +80,25 @@ class Decision(models.Model):
     def save(self, *args, **kwargs):
 
         #record newness before saving
-        exists = self.id
-                
-        super(Decision, self).save(*args, **kwargs)
-        
-        if exists:
-            title = "Open Consent: Item %s [%s] has changed" % (self.short_name, self.status_text())
-            content = "URL to this decision: %s" % self.get_absolute_url()
-            queryset = self.subscribers.all()
-        
+        if self.id:
+            type='status_change'
+            old = Decision.objects.get(id=self.id)
+            if old.status != self.status:
+                type='status_change'
+            else:
+                type='content_change'
         else:
-            title = "Open Consent: A new item has been created."
-            content = "URL to this decision: %s" % self.get_absolute_url() 
-            queryset = User.objects.all()
+            old = None
+            type='new'
+                    
+        super(Decision, self).save(*args, **kwargs)
 
-        mailing_list = []        
-        for this_user in queryset:
-            if this_user.email:
-                mailing_list.append(this_user.email)
-             
-        send_mail(title, content, settings.ADMINS[0][1], mailing_list)        
-                
+        email = OpenConsentEmailMessage(type=type,
+                                        object = self,
+                                        old_object = old)  
+
+        email.send()
+        
 class Feedback(models.Model):
 
     QUESTION_STATUS = 0
@@ -133,28 +129,3 @@ class Feedback(models.Model):
     def __unicode__(self):
         return self.short_name
     
-#----------------------------------------------
-# Signal Stuff.
-#----------------------------------------------
-
-#def sending_mail(sender, instance, **kwargs):
-#
-#    print "Doing stuff before save"
-#    title = "Title"
-#    content = "Content"
-#    mailing_list = [] 
-#    
-#    if instance.id:
-#        title = "Open Consent: Item %s [%s] has changed" % (instance.short_name, instance.status_text())
-#        content = "URL to this decision: %s" % instance.get_absolute_url()
-#        queryset = instance.subscribers.all()
-#    else:
-#        queryset = User.objects.all()
-#        
-#    for this_user in queryset:
-#        if this_user.email:
-#            mailing_list.append(this_user.email)
-#         
-#    send_mail(title, content, settings.ADMINS[0][1], mailing_list)        
-#    
-#pre_save.connect(sending_mail, sender=Decision)

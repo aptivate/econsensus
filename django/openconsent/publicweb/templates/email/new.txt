@@ -1,0 +1,12 @@
+Hello from the {{ site }} OpenConsent server!
+
+This is to let you know that the following item:
+
+"{{ name }}"
+
+has been created.
+
+To interact with it, click here: {{ link }}
+
+You are receiving this mail because you are signed up to the {{ site }} 
+OpenConsent service and you are subscribed to this item. To change your subscription, use the link above.

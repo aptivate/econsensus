@@ -1,0 +1,12 @@
+Hello from the {{ site }} OpenConsent server!
+
+This is to let you know that the following item:
+
+"{{ name }}"
+
+ has changed status from "{{ old }}" to "{{ new }}"
+
+To interact with it, click here: {{ link }}
+
+You are receiving this mail because you are signed up to the {{ site }}
+OpenConsent service.

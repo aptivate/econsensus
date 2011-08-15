@@ -52,6 +52,16 @@ USE_L10N = True
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_HOME, 'media')
 
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+STATIC_ROOT = os.path.join(PROJECT_HOME, 'static')
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = '/static/'
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
@@ -101,19 +111,17 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.sites',
     'django.contrib.admin',
+    'django.contrib.admindocs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-#    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'publicweb',
     'tinymce',
     'south',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging
