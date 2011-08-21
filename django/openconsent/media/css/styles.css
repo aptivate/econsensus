@@ -194,6 +194,11 @@ img {
     background-position: right bottom;
 }
 
+#nav a.go.nav.csv {
+	background-image: url("/site_media/images/sprite-decision-icons.png");
+    background-position: right -166px;
+}
+
 
 #contacts p {
     color: #333333;
