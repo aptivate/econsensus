@@ -3,12 +3,12 @@ from publicweb.views import add_decision, edit_decision, decision_list
 from publicweb.models import Decision
 
 from django.views.generic.list_detail import object_detail
-#from publicweb.views import export_csv
+from publicweb.views import export_csv
 
 urlpatterns = patterns('openconsent.publicweb.views',
-    #url(r'^export_csv/$',
-    #    export_csv,
-    #    name='export_csv'),
+    url(r'^export_csv/$',
+        export_csv,
+        name='export_csv'),
     url(r'^add/$',
         add_decision,
         name='add_decision'),
