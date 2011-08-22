@@ -7,7 +7,7 @@ LOGIN_URL = '/public/login/'
 LOGIN_REDIRECT_URL = '/public/list/'
 
 MEDIA_URL = '/site_media/'
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
