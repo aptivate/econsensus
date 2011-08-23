@@ -2,6 +2,7 @@ from django.template.loader import get_template
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.template import Context
+from django.template import Template
 from django.core.mail import EmailMessage
 
 #work in progress... remove email sending from model save
@@ -15,13 +16,24 @@ class OpenConsentEmailMessage(EmailMessage):
     
         #record newness before saving
         if type == 'new':
-            self.subject = "Open Consent: A new item has been created."
+            if object.status == object.CONSENSUS_STATUS:
+                subject_template = Template("[{{ site }} Open Consent]: Consensus Reached: {{ name }}")
+            else:
+                subject_template = Template("[{{ site }} Open Consent]: New {{ status }}: {{ name }}")
+
+            subject_dict = {'site': current_site.name,
+                            'status' : object.status_text(),
+                            'name': object.short_name }
             email_template = get_template('email/new.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = User.objects.all()
             
         elif type == 'status_change':
-            self.subject = "Open Consent: An item's status has changed."
+            subject_template = Template("[{{ site }} Open Consent]: {{ name }} changed status from {{ old_status }} to {{ new_status }}")
+            subject_dict = {'site': current_site.name,
+                            'old_status' : old_object.status_text(),
+                            'new_status' : object.status_text(),
+                            'name': object.short_name }
             email_template = get_template('email/status_change.txt')
             email_dict = { 'site': current_site.name, 
                           'name': item_name,
@@ -30,10 +42,15 @@ class OpenConsentEmailMessage(EmailMessage):
                           'new': object.status_text()}
             queryset = User.objects.all()
         elif type == 'content_change':
-            self.subject = "Open Consent: An item has been modified"
+            subject_template = Template("[{{ site }} Open Consent]: Change to {{ name }}")
+            subject_dict = {'site': current_site.name,
+                            'name': object.short_name }
             email_template = get_template('email/content_change.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = object.subscribers.all()
+
+        subject_context = Context(subject_dict)
+        self.subject = subject_template.render(subject_context)
 
         email_context = Context(email_dict)            
         self.body = email_template.render(email_context)
