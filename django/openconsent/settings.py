@@ -162,7 +162,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 #from http://djangosnippets.org/snippets/1873/
 #--------------------------------
 try:
-    import local_settings
+    from local_settings import *
 except ImportError:
     print """ 
     -------------------------------------------------------------------------
