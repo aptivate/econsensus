@@ -20,7 +20,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         { 'queryset': Decision.objects.all(),
          'template_name': 'decision_detail.html'},
         name='view_decision'),
-    url(r'^decision_list/$',
+    url(r'^list/$',
         decision_list,
         name='decision_list')
     )

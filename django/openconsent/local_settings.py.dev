@@ -22,3 +22,18 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+
+#-----------------------------------
+# Code to add django_debug_toolbar
+#-----------------------------------
+INTERNAL_IPS = ('127.0.0.1',)
+
+EXTRA_MIDDLEWARE_CLASSES = ( 
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+EXTRA_INSTALLED_APPS = ( 
+    'debug_toolbar',
+)
+

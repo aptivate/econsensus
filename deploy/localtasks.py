@@ -5,13 +5,12 @@ import sys
 
 import tasklib
 
-fixtures_to_load = [
-                    'fixtures/publicweb.decision.json',
-                    'fixtures/user.json'
+production_fixtures = [
+                    'initial_data.json.production',
                   ]
 
-fixtures_to_deploy = [
-                    'fixtures/productionuser.json'
+development_fixtures = [
+                    'initial_data.json.dev',
                      ]
     
 def deploy(environment=None, svnuser=None, svnpass=None):
@@ -27,9 +26,9 @@ def deploy(environment=None, svnuser=None, svnpass=None):
 def load_fixtures():
     """load fixtures for this environment"""
     if tasklib._infer_environment() == 'production':
-        fixtures_list = fixtures_to_deploy
+        fixtures_list = production_fixtures
     else:
-        fixtures_list = fixtures_to_load
+        fixtures_list = development_fixtures
     for fixture in fixtures_list:
         tasklib._manage_py(['loaddata'] + [fixture])
         

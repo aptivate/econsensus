@@ -12,9 +12,17 @@
             "last_login": "2011-06-23 09:36:59", 
             "groups": [], 
             "user_permissions": [], 
-            "password": "sha1$80d67$53a381fbe360a724aadb558099e6e8ca5b9ff2b3", 
+            "password": "sha1$99af0$879c4ba07b9cdcecbe2c408df2242b8d1b29504b", 
             "email": "info@aptivate.org", 
             "date_joined": "2011-06-23 09:36:59"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "127.0.0.1:8000", 
+            "name": "localhost"
         }
     }
 ]
