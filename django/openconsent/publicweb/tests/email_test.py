@@ -30,7 +30,7 @@ class EmailTest(DecisionTestCase):
                 
     def test_new_decision_sends_email(self):
         #set up a memory based backend
-        settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmonlineailBackend'
+        settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
         
         #create a few users
         User.objects.create_user("Andy", "andy@example.com", password='password')
