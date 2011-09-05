@@ -5,6 +5,7 @@ from django.core import mail
 from openconsent.publicweb.emails import OpenConsentEmailMessage
 
 from publicweb.tests.decision_test_case import DecisionTestCase
+from openconsent.publicweb.models import Decision
 
 class EmailTest(DecisionTestCase):
     """
@@ -27,10 +28,9 @@ class EmailTest(DecisionTestCase):
         
         self.assertEqual(msg, outbox[0])
                 
-#Work in Progress...
-    def test_add_decision_sends_email(self):
+    def test_new_decision_sends_email(self):
         #set up a memory based backend
-        settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+        settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmonlineailBackend'
         
         #create a few users
         User.objects.create_user("Andy", "andy@example.com", password='password')
@@ -46,8 +46,30 @@ class EmailTest(DecisionTestCase):
         mymail = OpenConsentEmailMessage('new', decision, old_object=None)
 
         self.assertEqual(mymail, outbox[0])
+
+    def test_emails_dont_contain_escaped_characters(self):
+        """
+        We want to verify that the emails sent out do not contain
+        confusing text like '&amp' instead of '&' or ''&lt'
+        instead of '<'
         
-    def test_email_sent_on_edit(self):
-        pass
+        All plaintext emails should be marked 'safe' in the Django template.
+        """
+        decision = Decision(short_name='&', status=0, description='&')
+        decision.save()
 
+        mymail = OpenConsentEmailMessage('new', decision)
+        
+        self.assertNotIn('&amp', mymail.subject)
+        self.assertNotIn('&amp', mymail.body)
 
+        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
+        
+        self.assertNotIn('&amp', mymail.subject)
+        self.assertNotIn('&amp', mymail.body)
+        
+        mymail = OpenConsentEmailMessage('content_change', decision)
+        
+        self.assertNotIn('&amp', mymail.subject)
+        self.assertNotIn('&amp', mymail.body)
+        

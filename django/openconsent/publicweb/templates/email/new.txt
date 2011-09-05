@@ -2,7 +2,7 @@ Hello from the {{ site }} OpenConsent server!
 
 This is to let you know that the following item:
 
-"{{ name }}"
+"{{ name|safe }}"
 
 has been created.
 
