@@ -26,7 +26,7 @@ class OpenConsentEmailMessage(EmailMessage):
                             'name': object.short_name }
             email_template = get_template('email/new.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
-            queryset = User.objects.all()
+            queryset = User.objects.exclude(username=object.author.username)
             
         elif type == 'status_change':
             subject_template = Template("[{{ site }} Open Consent]: {{ name|safe }} changed status from {{ old_status }} to {{ new_status }}")
@@ -40,14 +40,14 @@ class OpenConsentEmailMessage(EmailMessage):
                           'link': item_link,
                           'old':  old_object.status_text(),
                           'new': object.status_text()}
-            queryset = User.objects.all()
+            queryset = User.objects.exclude(username=object.author.username)
         elif type == 'content_change':
             subject_template = Template("[{{ site }} Open Consent]: Change to {{ name|safe }}")
             subject_dict = {'site': current_site.name,
                             'name': object.short_name }
             email_template = get_template('email/content_change.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
-            queryset = object.subscribers.all()
+            queryset = object.subscribers.exclude(username=object.author.username)
 
         subject_context = Context(subject_dict)
         self.subject = subject_template.render(subject_context)

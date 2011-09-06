@@ -38,7 +38,7 @@ class Decision(models.Model):
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
         verbose_name=_('Description'))
-    #author = models.ForeignKey(User, blank=True, editable=False, related_name='open_consent_author')
+    author = models.ForeignKey(User, blank=True, editable=False, related_name='open_consent_author')
     subscribers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
@@ -77,8 +77,15 @@ class Decision(models.Model):
         return ('edit_decision', (), {'decision_id':self.id})
     get_absolute_url = models.permalink(get_absolute_url)
 
-    def save(self, *args, **kwargs):
+    def save(self, author, *args, **kwargs):
+        self.author = author
 
+        #-----------------------------------#
+        # This is email stuff. Would be good
+        # if it could be hived off to a signal
+        #-  --------------------------------#
+        # ||
+        # \/
         #record newness before saving
         if self.id:
             type='status_change'

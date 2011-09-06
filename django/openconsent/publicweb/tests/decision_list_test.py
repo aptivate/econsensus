@@ -36,7 +36,7 @@ class DecisionListTest(DecisionTestCase):
         for i in range(5, 0, -1):
             decision = Decision(short_name='Decision %d' % i)
             setattr(decision, column, datetime.date(2001, 3, i))
-            decision.save()
+            decision.save(self.user)
             
         response = self.load_decision_list_page_and_return_response(
             data=dict(sort=column))

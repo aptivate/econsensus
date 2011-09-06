@@ -66,6 +66,11 @@
         <label for="id_subscribers">{% trans "Subscribers" %}:</label>
         {{decision.subscribers.all|join:"," }}
     </div>
+  <div class="form_row subscribers">
+     <div class="form_item">
+        <label for="id_author">{% trans "Author" %}:</label>
+        {{ decision.author }}
+    </div>
  </div>
     
  <div class="form_row resources">

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.models import inlineformset_factory
 from django.forms.fields import ChoiceField
 
-from publicweb.widgets import JQueryUIDateWidget
+from widgets import JQueryUIDateWidget
 
 mce_attrs_setting = {
             "theme" : "advanced",

@@ -9,13 +9,13 @@ from django.contrib.auth.decorators import login_required
 
 from models import Decision
 from forms import DecisionForm, FeedbackFormSet, FilterForm
-from publicweb.decision_table import DecisionTable
+from decision_table import DecisionTable
 
 import unicodecsv
 from django.http import HttpResponse
-
+    
 def export_csv(request):
-	''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
+    ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
 	Expected input: request (not quite sure what this is!)
 	Expected output: http containing MIME info followed by the data itself as CSV.
 	>>> res = export_csv(1000)
@@ -29,25 +29,25 @@ def export_csv(request):
 	True
 	'''
 
-	def fieldOutput(obj,field):
-		'''Looks up the status_text() for status, otherwise just returns the getattr for the field'''
-		if field == 'status':
-			return obj.status_text()
-		else:
-			return getattr(obj, field)
+    def fieldOutput(obj,field):
+        '''Looks up the status_text() for status, otherwise just returns the getattr for the field'''
+        if field == 'status':
+            return obj.status_text()
+        else:
+            return getattr(obj, field)
 
-	opts = Decision._meta
-	field_names = set([field.name for field in opts.fields])
+    opts = Decision._meta
+    field_names = set([field.name for field in opts.fields])
 
-	response = HttpResponse(mimetype='text/csv')
-	response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
 
-	writer = unicodecsv.writer(response)
+    writer = unicodecsv.writer(response)
     # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-	writer.writerow(list(field_names))
-	for obj in Decision.objects.all():
-		writer.writerow([unicode(fieldOutput(obj,field)).encode("utf-8","replace") for field in field_names])
-	return response
+    writer.writerow(list(field_names))
+    for obj in Decision.objects.all():
+        writer.writerow([unicode(fieldOutput(obj,field)).encode("utf-8","replace") for field in field_names])
+    return response
 
 @login_required        
 def decision_list(request):
@@ -85,7 +85,7 @@ def add_decision(request):
                 decision = decision_form.save(commit=False)
                 feedback_formset = FeedbackFormSet(request.POST, instance=decision)
                 if feedback_formset.is_valid():
-                    decision.save()
+                    decision.save(request.user)
                     if decision_form.cleaned_data['subscribe']:
                         decision.add_subscriber(request.user)
                     else:
@@ -111,12 +111,13 @@ def edit_decision(request, decision_id):
 
         else:
             decision_form = DecisionForm(request.POST, instance=decision)
+            feedback_formset = FeedbackFormSet(instance=decision)
                     
             if decision_form.is_valid():
                 decision = decision_form.save(commit=False)
                 feedback_formset = FeedbackFormSet(request.POST,instance=decision)
                 if feedback_formset.is_valid():
-                    decision.save()
+                    decision.save(request.user)
                     if decision_form.cleaned_data['subscribe']:
                         decision.add_subscriber(request.user)
                     else:

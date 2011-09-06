@@ -2,10 +2,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.core import mail
-from openconsent.publicweb.emails import OpenConsentEmailMessage
+from publicweb.emails import OpenConsentEmailMessage
 
 from publicweb.tests.decision_test_case import DecisionTestCase
-from openconsent.publicweb.models import Decision
+from publicweb.models import Decision
 
 class EmailTest(DecisionTestCase):
     """
@@ -56,7 +56,7 @@ class EmailTest(DecisionTestCase):
         All plaintext emails should be marked 'safe' in the Django template.
         """
         decision = Decision(short_name='&', status=0, description='&')
-        decision.save()
+        decision.save(self.user)
 
         mymail = OpenConsentEmailMessage('new', decision)
         
@@ -73,3 +73,39 @@ class EmailTest(DecisionTestCase):
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
         
+    def test_emails_arent_sent_to_author(self):
+        """
+        We want to make sure that when a user creates or changes an 
+        item they are not sent an email. The email goes to those
+        that do not already know the item has changed!
+        """
+        andy = User.objects.create_user("Andy", "andy@example.com", password='password')
+        billy = User.objects.create_user("Billy", "billy@example.com", password='password')
+        chris = User.objects.create_user("Chris", "chris@example.com", password='password')
+        
+        decision = Decision(short_name='Test', status=0, description='Test')
+        decision.save(andy)
+        
+        mymail = OpenConsentEmailMessage('new', decision)
+        
+        self.assertIn(billy.email, mymail.to)
+        self.assertNotIn(andy.email, mymail.to)
+
+        #billy decides he wants to subscribe...
+        decision.subscribers = [billy]
+        
+        #andy changes the status
+        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
+
+        #everyone but andy gets a mail
+        self.assertNotIn(andy.email, mymail.to)
+        self.assertIn(billy.email, mymail.to) 
+        self.assertIn(chris.email, mymail.to) 
+
+        #andy changes the content
+        mymail = OpenConsentEmailMessage('content_change', decision)
+        
+        #only subscribers get mail, not the author
+        self.assertNotIn(andy.email, mymail.to)
+        self.assertIn(billy.email, mymail.to)         
+        self.assertNotIn(chris.email, mymail.to)

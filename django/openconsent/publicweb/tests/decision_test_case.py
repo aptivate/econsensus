@@ -29,7 +29,7 @@ class DecisionTestCase(OpenConsentTestCase):
     def create_and_return_decision(self, short_name='Decision Time',
                                    status=Decision.PROPOSAL_STATUS):
         decision = Decision(short_name=short_name, status=status)
-        decision.save()
+        decision.save(self.user)
         
         #decision.add_subscriber(self.user)
         #decision.save()
