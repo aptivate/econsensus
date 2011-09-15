@@ -175,7 +175,7 @@ img {
 
 #nav a.go.nav {
     background-color: #A9D300;
-	background-image: url("/site_media/images/sprite-decision-icons.png");
+	background-image: url("../images/sprite-decision-icons.png");
     background-position: right 0px;
     background-repeat: no-repeat;
     border-radius: 0 0 10px 10px;
@@ -190,12 +190,12 @@ img {
 }
 
 #nav a.go.nav.list {
-	background-image: url("/site_media/images/sprite-decision-icons.png");
+	background-image: url("../images/sprite-decision-icons.png");
     background-position: right bottom;
 }
 
 #nav a.go.nav.csv {
-	background-image: url("/site_media/images/sprite-decision-icons.png");
+	background-image: url("../images/sprite-decision-icons.png");
     background-position: right -166px;
 }
 
@@ -361,7 +361,7 @@ h2.page_title {
 
 #decision-list th a {
 	background-position:right -94px;
-	background-image:url(/site_media/images/sprite-sort-arrows.png);
+	background-image:url(../images/sprite-sort-arrows.png);
 	background-repeat:no-repeat;
 	padding-right:20px;
 }
