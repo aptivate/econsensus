@@ -1,12 +1,12 @@
-import django_tables
+import django_tables2 as tables
 from django.utils.translation import ugettext_lazy as _
 
-class DecisionTable(django_tables.ModelTable):
-    id = django_tables.Column(verbose_name=_('ID'))
-    short_name = django_tables.Column(verbose_name=_('Decision'))
-    status_text = django_tables.Column(verbose_name=_('Status'))
-    unresolvedfeedback = django_tables.Column(verbose_name=_('Feedback'))
-    decided_date = django_tables.Column(verbose_name=_('Decided'))
-    review_date = django_tables.Column(verbose_name=_('Review'))
-    expiry_date = django_tables.Column(verbose_name=_('Expires'))
+class DecisionTable(tables.Table):
+    id = tables.Column(verbose_name=_('ID'))
+    short_name = tables.Column(verbose_name=_('Decision'))
+    status_text = tables.Column(verbose_name=_('Status'))
+    unresolvedfeedback = tables.Column(verbose_name=_('Feedback'))
+    decided_date = tables.Column(verbose_name=_('Decided'))
+    review_date = tables.Column(verbose_name=_('Review'))
+    expiry_date = tables.Column(verbose_name=_('Expires'))
 

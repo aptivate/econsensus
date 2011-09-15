@@ -2,7 +2,7 @@ from publicweb.tests.decision_test_case import DecisionTestCase
 from publicweb.models import Decision
 import datetime
 from django.core.urlresolvers import reverse
-import django_tables
+import django_tables2 as tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
 
@@ -47,16 +47,16 @@ class DecisionListTest(DecisionTestCase):
 
         for i in range(1, 6):
             self.assertEquals(datetime.date(2001, 3, i), 
-                              getattr(rows[i-1].data, column))
+                              getattr(rows[i-1].record, column))
 
     def test_decisions_table_is_an_instance_of_model_table(self):
         """
-        The decisions table is represented using django_tables.ModelTable.
+        The decisions table is represented using django_tables2.ModelTable.
         """
         self.create_and_return_example_decision_with_feedback()
         response = self.load_decision_list_page_and_return_response()
         decisions_table = response.context['decisions']
-        self.assertTrue(isinstance(decisions_table, django_tables.ModelTable))
+        self.assertTrue(isinstance(decisions_table, tables.Table))
     
     def test_status_appears_in_table(self):
         self.create_and_return_example_decision_with_feedback()

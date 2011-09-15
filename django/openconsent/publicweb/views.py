@@ -52,6 +52,7 @@ def export_csv(request):
 @login_required        
 def decision_list(request):
     
+    #status parameter in GET is used to filter the statuses
     #build status tuple
     status_code_list = []
     for this_status in Decision.STATUS_CHOICES:
@@ -61,12 +62,14 @@ def decision_list(request):
     status = request.GET.get('status', None)
     if status is not None and int(status) in status_code_tuple:
         filter_form = FilterForm(request.GET)
-        objects = Decision.objects.filter(status=status)
+        queryset = Decision.objects.filter(status=status)
     else:
         filter_form = FilterForm()
-        objects = Decision.objects.all()
-        
-    decisions = DecisionTable(objects, order_by=request.GET.get('sort'))
+        queryset = Decision.objects.all()
+    
+    decisions = DecisionTable(list(queryset), order_by=request.GET.get('sort'))
+    request.session['filter'] = filter_form
+    
     return render_to_response('decision_list.html',
         RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
 
@@ -92,7 +95,7 @@ def add_decision(request):
                         decision.remove_subscriber(request.user)
                     feedback_formset.save()
                     return HttpResponseRedirect(reverse(decision_list))
-                            
+
     else:
         feedback_formset = FeedbackFormSet()
         decision_form = DecisionForm()

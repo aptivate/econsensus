@@ -1,5 +1,6 @@
 {% extends "fullpage.html" %}
 {% load i18n %}
+{% load django_tables2 %}
 
 {% block title %}
 {% trans "Home" %}
@@ -17,7 +18,20 @@
 <table id="decision-list" cellspacing="0">
 <tr>
     {% for column in decisions.columns %}
-    <th id="{{ column.name }}"{% if column.is_ordered_straight %} class="sorted straight"{% endif %}{% if column.is_ordered_reverse %} class="sorted reverse"{% endif %}><a href="?sort={{ column.name_toggled }}">{{ column }}</a></th>
+	    
+		
+	    <th id="{{ column.name }}"
+	    {% if column.order_by.is_ascending %}
+	    	class="sorted straight"
+	    {% endif %}
+	    {% if column.order_by.is_descending %}
+	    	class="sorted reverse"
+	    {% endif %}>
+	    <a href={% if column.order_by %}
+			{% set_url_param sort=column.order_by.opposite %}
+		{% else %}
+			{% set_url_param sort=column.name %}
+		{% endif %}>{{ column }}</a></th>
     {% endfor %}
 </tr>
 {% for decision in decisions.rows %}

@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'publicweb',
     'tinymce',
     'south',
+    'django_tables2',
 )
 
 # A sample logging configuration. The only tangible logging
