@@ -38,7 +38,7 @@ class Decision(models.Model):
         verbose_name=_('People'))
     description = tinymce.models.HTMLField(blank=True,
         verbose_name=_('Description'))
-    author = models.ForeignKey(User, blank=True, editable=False, related_name='open_consent_author')
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name='open_consent_author')
     subscribers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,

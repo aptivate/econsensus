@@ -36,6 +36,10 @@ class DecisionAdmin(admin.ModelAdmin):
         models.CharField: {'widget': forms.TextInput(attrs={'size':'86'})},
         }
 
+    def save_model(self, request, obj, form, change):
+        #obj.author = 
+        obj.save(request.user)
+
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('short_name','description','resolved')
         
