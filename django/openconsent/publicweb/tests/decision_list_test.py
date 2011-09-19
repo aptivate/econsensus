@@ -15,7 +15,7 @@ class DecisionListTest(DecisionTestCase):
         page = self.client.get(path)
         
         get_data = self.get_form_values_from_response(page)
-        get_data['status'] = Decision.PROPOSAL_STATUS
+        get_data['filter'] = Decision.PROPOSAL_STATUS
         response = self.client.get(path, get_data)
 
         self.check_cell_text_appears_in_table(response, "Proposal Decision")
@@ -66,7 +66,7 @@ class DecisionListTest(DecisionTestCase):
 
     def test_decision_list_can_be_filtered_by_status_proposal(self):
         self.create_decisions_with_different_statuses()
-        params = {'status': Decision.PROPOSAL_STATUS }
+        params = {'filter': Decision.PROPOSAL_STATUS }
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Proposal Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")
@@ -74,7 +74,7 @@ class DecisionListTest(DecisionTestCase):
     
     def test_decision_list_can_be_filtered_by_status_consensus(self):
         self.create_decisions_with_different_statuses()
-        params = {'status':Decision.CONSENSUS_STATUS}
+        params = {'filter':Decision.CONSENSUS_STATUS}
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Consensus Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Proposal Decision")
@@ -82,7 +82,7 @@ class DecisionListTest(DecisionTestCase):
     
     def test_decision_list_can_be_filtered_by_status_archived(self):
         self.create_decisions_with_different_statuses()
-        params = {'status':Decision.ARCHIVED_STATUS}
+        params = {'filter':Decision.ARCHIVED_STATUS}
         response = self.load_decision_list_page_and_return_response(data=params)
         self.check_cell_text_appears_in_table(response, "Archived Decision")
         self.check_cell_text_does_not_appear_in_table(response, "Consensus Decision")

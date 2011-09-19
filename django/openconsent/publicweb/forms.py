@@ -47,7 +47,7 @@ class DecisionForm(forms.ModelForm):
                    'people': forms.TextInput()
                    }
 
-EXTRA_CHOICE = (4, _('All'))
+EXTRA_CHOICE = (3, _('All'))
 
 class FilterForm(forms.Form):
     #this seems clunky...
@@ -55,9 +55,8 @@ class FilterForm(forms.Form):
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
     
-    status = ChoiceField(choices=FILTER_CHOICES,
+    filter = ChoiceField(choices=FILTER_CHOICES,
                          label = _('Status'),
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
-    

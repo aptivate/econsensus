@@ -59,16 +59,33 @@ def decision_list(request):
         status_code_list.append(this_status[0])
     status_code_tuple = tuple(status_code_list)
     
-    status = request.GET.get('status', None)
-    if status is not None and int(status) in status_code_tuple:
-        filter_form = FilterForm(request.GET)
-        queryset = Decision.objects.filter(status=status)
+    filter = request.GET.get('filter', None)
+    if filter is not None:
+        if int(filter) in status_code_tuple:
+            request.session['filter'] = filter
+            filter_form = FilterForm(request.GET)
+            queryset = Decision.objects.filter(status=filter)
+        else:
+            del request.session['filter']
+            filter_form = FilterForm()
+            queryset = Decision.objects.all()
+
     else:
-        filter_form = FilterForm()
-        queryset = Decision.objects.all()
-    
+        filter = request.session.get('filter', None)
+        if filter is not None:
+            if int(filter) in status_code_tuple:
+                filter_form = FilterForm(request.session)
+                queryset = Decision.objects.filter(status=filter)
+            else:
+                del request.session['filter']
+                filter_form = FilterForm()
+                queryset = Decision.objects.all()
+        else:
+            filter_form = FilterForm()
+            queryset = Decision.objects.all()
+
     decisions = DecisionTable(list(queryset), order_by=request.GET.get('sort'))
-    request.session['filter'] = filter_form
+    
     
     return render_to_response('decision_list.html',
         RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
