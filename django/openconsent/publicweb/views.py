@@ -61,10 +61,11 @@ def decision_list(request):
     
     if request.GET.get('filter', None):
         request.session['filter'] = request.GET['filter']
-        
-    if request.session.get('filter', None) and int(request.session['filter']) in status_code_tuple:
+    
+    filter = request.session.get('filter', None)
+    if filter and int(filter) in status_code_tuple:
         filter_form = FilterForm(request.session)
-        queryset = Decision.objects.filter(status=request.session['filter'])
+        queryset = Decision.objects.filter(status=filter)
     else:
         filter_form = FilterForm()
         queryset = Decision.objects.all()

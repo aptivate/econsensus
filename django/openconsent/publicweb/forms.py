@@ -59,8 +59,3 @@ class FilterForm(forms.Form):
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
-    
-#    def __init__(self, initial,*args, **kwargs):
-#        self.initial = initial
-#        print "Building form with filter ", self.initial
-#        super(FilterForm, self).__init__(*args, **kwargs)
