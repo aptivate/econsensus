@@ -54,9 +54,13 @@ class FilterForm(forms.Form):
     list_choices = list(Decision.STATUS_CHOICES)
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
-    
     filter = ChoiceField(choices=FILTER_CHOICES,
                          label = _('Status'),
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
+    
+#    def __init__(self, initial,*args, **kwargs):
+#        self.initial = initial
+#        print "Building form with filter ", self.initial
+#        super(FilterForm, self).__init__(*args, **kwargs)
