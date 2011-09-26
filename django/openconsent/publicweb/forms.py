@@ -21,12 +21,12 @@ mce_attrs_setting = {
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        widgets = {'short_name': forms.TextInput(),
+        widgets = {
                    'description': tinymce.widgets.TinyMCE(attrs={'rows': 20})
                    }
 
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
-                                       fields=('short_name','description','resolved','rating'),
+                                       fields=('description','resolved','rating'),
                                        form=FeedbackForm)
 
 class DecisionForm(forms.ModelForm):
@@ -35,7 +35,7 @@ class DecisionForm(forms.ModelForm):
        
     class Meta:
         model = Decision
-        widgets = {'short_name': forms.TextInput(),
+        widgets = {
                    'description': tinymce.widgets.TinyMCE(attrs={'rows': 5},
                                                           mce_attrs=mce_attrs_setting),
                    'feedback': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),

@@ -34,7 +34,7 @@ class DecisionListTest(DecisionTestCase):
     def assert_decisions_table_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order.         
         for i in range(5, 0, -1):
-            decision = Decision(short_name='Decision %d' % i)
+            decision = Decision(description='Decision %d' % i)
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
             
@@ -115,14 +115,14 @@ class DecisionListTest(DecisionTestCase):
 
 
     def test_header_class_is_sorted_straight_when_column_is_ordered(self):
-        params = {'sort' : 'short_name'}
+        params = {'sort' : 'description_excerpt'}
         response = self.load_decision_list_page_and_return_response(data=params)
     
         classes = self.get_table_header_classes(response)    
         self.assertEquals("sorted straight", classes[1])
     
     def test_header_class_is_sorted_reverse_when_column_is_reverse_ordered(self):
-        params = {'sort' : '-short_name'}
+        params = {'sort' : '-description_excerpt'}
         response = self.load_decision_list_page_and_return_response(data=params)
     
         classes = self.get_table_header_classes(response)    
@@ -136,7 +136,7 @@ class DecisionListTest(DecisionTestCase):
     def test_header_ids_are_internal_column_names(self):
         response = self.load_decision_list_page_and_return_response()
         ids = self.get_table_header_ids(response)
-        self.assertEquals(['id', 'short_name', 'status_text', \
+        self.assertEquals(['id', 'description_excerpt', 'status_text', \
                            'unresolvedfeedback', 'decided_date', \
                            'review_date', 'expiry_date'], ids)
         

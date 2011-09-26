@@ -8,7 +8,7 @@ class FeedbackInline(admin.TabularInline):
     model = Feedback
     extra = 1
     fieldsets = [
-        (None, {'fields': ('short_name','description', 'resolved')}),
+        (None, {'fields': ('description', 'resolved')}),
     ]
     template = 'admin/tabular.html'
     formfield_overrides = {
@@ -17,19 +17,19 @@ class FeedbackInline(admin.TabularInline):
 
 class DecisionAdmin(admin.ModelAdmin):
 #    can't get nested fields to work...
-#    fields = ['short_name',('effective_date','decided_date','review_date')]
+#    fields = [('effective_date','decided_date','review_date')]
 
     change_list_template = 'admin/decision_change_list.html'
         
     fieldsets = [
-        (None, {'fields': ('short_name','description', 
+        (None, {'fields': ('description', 
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
                            'budget','people')}),
     ]
 
-    list_display = ('short_name','unresolvedfeedback', 'decided_date','effective_date','review_date','expiry_date','budget','people')
-    search_fields = ('short_name',)
+    list_display = ('description','unresolvedfeedback', 'decided_date','effective_date','review_date','expiry_date','budget','people')
+    search_fields = ('description',)
     list_filter = ('decided_date','effective_date','review_date',)
     inlines = (FeedbackInline,)
     formfield_overrides = {
@@ -41,7 +41,7 @@ class DecisionAdmin(admin.ModelAdmin):
         obj.save(request.user)
 
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('short_name','description','resolved')
+    list_display = ('description','resolved')
         
 admin.site.register(Feedback,FeedbackAdmin)
 admin.site.register(Decision,DecisionAdmin)

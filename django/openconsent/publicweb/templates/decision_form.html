@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% block title %}
-{% if decision.short_name %}
-	{{ decision.short_name }}
+{% if decision.description_excerpt %}
+	{{ decision.description_excerpt }}
 {% else %}
 	{% trans "Add New Decision" %}
 {% endif %}{% endblock %}
@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block heading %}
-{% if decision.short_name %}
-	{% trans "View and Edit: " %}{{ decision.short_name }}
+{% if decision.description_excerpt %}
+	{% trans "View and Edit: " %}{{ decision.description_excerpt }}
 {% else %}
 	{% trans "Add New Decision" %}
 {% endif %}
@@ -27,11 +27,6 @@
     <p class="error" >{{ error }}</p>
 {% endfor %}
 <div class="form_row decision_summary">
-	<div class="form_item short_name">
-        {{ decision_form.short_name.errors }}
-        <label for="id_short_name">{% trans "Name" %}:</label>
-        {{ decision_form.short_name }}
-    </div>
     <div class="form_item status">
         {{ decision_form.status.errors }}
         <label for="id_status">{% trans "Status" %}:</label>
@@ -100,11 +95,6 @@
 	{{ feedback_form.id }}
 	<div class="formset_item">
 		<div class="form_row feedback_summary">
-		    <div class="form_item short_name">
-				{{ feedback_form.short_name.errors }}
-				<label for="id_short_name">{% trans "Name" %}:</label>
-				{{ feedback_form.short_name }}
-	    	</div>
 			<div class="form_item rating">
 				{{ feedback_form.rating.errors }}
 				<label for="id_rating">{% trans "Rating" %}:</label>

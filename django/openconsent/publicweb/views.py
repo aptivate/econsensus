@@ -13,6 +13,7 @@ from decision_table import DecisionTable
 
 import unicodecsv
 from django.http import HttpResponse
+from publicweb.models import Feedback
     
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -117,10 +118,11 @@ def edit_decision(request, decision_id):
         else:
             decision_form = DecisionForm(request.POST, instance=decision)
             feedback_formset = FeedbackFormSet(instance=decision)
-                    
+            
             if decision_form.is_valid():
                 decision = decision_form.save(commit=False)
                 feedback_formset = FeedbackFormSet(request.POST,instance=decision)
+                     
                 if feedback_formset.is_valid():
                     decision.save(request.user)
                     if decision_form.cleaned_data['subscribe']:

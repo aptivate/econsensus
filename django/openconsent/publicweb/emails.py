@@ -11,7 +11,7 @@ class OpenConsentEmailMessage(EmailMessage):
     def __init__(self, type, object, old_object=None, *args, **kwargs):
         super(OpenConsentEmailMessage, self).__init__(*args, **kwargs)
         current_site = Site.objects.get_current()
-        item_name = object.short_name
+        item_name = object.description
         item_link = 'http://%s%s' % (current_site.domain, object.get_absolute_url())
     
         #record newness before saving
@@ -23,7 +23,7 @@ class OpenConsentEmailMessage(EmailMessage):
 
             subject_dict = {'site': current_site.name,
                             'status' : object.status_text(),
-                            'name': object.short_name }
+                            'name': object.description_excerpt.replace('\r\n', '') }
             email_template = get_template('email/new.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = User.objects.exclude(username=object.author.username)
@@ -33,7 +33,7 @@ class OpenConsentEmailMessage(EmailMessage):
             subject_dict = {'site': current_site.name,
                             'old_status' : old_object.status_text(),
                             'new_status' : object.status_text(),
-                            'name': object.short_name }
+                            'name': object.description_excerpt.replace('\r\n', '') }
             email_template = get_template('email/status_change.txt')
             email_dict = { 'site': current_site.name, 
                           'name': item_name,
@@ -44,7 +44,7 @@ class OpenConsentEmailMessage(EmailMessage):
         elif type == 'content_change':
             subject_template = Template("[{{ site }} Open Consent]: Change to {{ name|safe }}")
             subject_dict = {'site': current_site.name,
-                            'name': object.short_name }
+                            'name': object.description_excerpt.replace('\r\n', '') }
             email_template = get_template('email/content_change.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = object.subscribers.exclude(username=object.author.username)

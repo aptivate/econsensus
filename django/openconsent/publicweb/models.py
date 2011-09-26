@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
@@ -9,9 +10,34 @@ import tinymce.models
 # http://south.aeracode.org/wiki/MyFieldsDontWork
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
 from south.modelsinspector import add_introspection_rules
+
 add_introspection_rules([], ["^tinymce\.models.\HTMLField"])
 
-class Decision(models.Model):
+class Idea(models.Model):
+    description_excerpt = models.CharField(max_length=255,
+                                           blank=True)
+    description = tinymce.models.HTMLField(verbose_name=_('Description'))
+    
+    DEFAULT_SIZE = 60
+    
+    def _get_excerpt(self):
+        description = strip_tags(self.description)
+        position = description.find('.')
+        if position == -1:
+            position = self.DEFAULT_SIZE
+        return description[:position]
+    
+    def __unicode__(self):
+        return self.description_excerpt
+    
+    def save(self, *args, **kwargs):
+        self.description_excerpt = self._get_excerpt()
+        return super(Idea, self).save(*args, **kwargs)
+    
+    class Meta:
+        abstract = True
+
+class Decision(Idea):
 
     PROPOSAL_STATUS = 0
     CONSENSUS_STATUS = 1
@@ -23,7 +49,7 @@ class Decision(models.Model):
                   (ARCHIVED_STATUS, _('Archived')),
                   )
 
-    short_name = models.CharField(max_length=255, verbose_name=_('Name'))
+    #short_name = models.CharField(max_length=255, verbose_name=_('Name'))
     decided_date = models.DateField(null=True, blank=True,
         verbose_name=_('Decided date'))
     effective_date = models.DateField(null=True, blank=True,
@@ -36,8 +62,6 @@ class Decision(models.Model):
         verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,
         verbose_name=_('People'))
-    description = tinymce.models.HTMLField(blank=True,
-        verbose_name=_('Description'))
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name='open_consent_author')
     subscribers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
@@ -50,7 +74,7 @@ class Decision(models.Model):
     def add_subscriber(self, user):
         if user not in self.subscribers.all():
             self.subscribers.add(user)
- 
+    
     def remove_subscriber(self, user):
         if user in self.subscribers.all():
             self.subscribers.remove(user)
@@ -70,12 +94,9 @@ class Decision(models.Model):
     
     unresolvedfeedback.short_description = _("Unresolved Feedback")
     
-    def __unicode__(self):
-        return self.short_name
-    
+    @models.permalink
     def get_absolute_url(self):
         return ('edit_decision', (), {'decision_id':self.id})
-    get_absolute_url = models.permalink(get_absolute_url)
 
     def save(self, author, *args, **kwargs):
         self.author = author
@@ -106,7 +127,7 @@ class Decision(models.Model):
 
         email.send()
         
-class Feedback(models.Model):
+class Feedback(Idea):
 
     QUESTION_STATUS = 0
     DANGER_STATUS = 1
@@ -124,15 +145,10 @@ class Feedback(models.Model):
                   (DELIGHTED_STATUS, _('Delighted')),
                   )
     
-    short_name = models.CharField(max_length=255, verbose_name=_('Feedback'))
+    #short_name = models.CharField(max_length=255, verbose_name=_('Feedback'))
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
-    description = tinymce.models.HTMLField(blank=True, 
-                                           verbose_name=_('Feedback Description'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES,
                                  verbose_name=_('Rating'),
                                  null=True, 
                                  blank=True )
-    def __unicode__(self):
-        return self.short_name
-    

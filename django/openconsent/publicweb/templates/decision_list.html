@@ -37,7 +37,7 @@
 {% for decision in decisions.rows %}
     <tr>
         <td>{{ decision.id }}</td>
-        <td><a href="{% url publicweb.views.edit_decision decision_id=decision.id %}">{{decision.short_name}}</a></td>
+        <td><a href="{% url publicweb.views.edit_decision decision_id=decision.id %}">{{decision.description_excerpt|safe}}</a></td>
         <td>{{ decision.status_text }}</td>
 		<td>{{ decision.unresolvedfeedback }}</td>
 		<td>{{ decision.decided_date }}</td>

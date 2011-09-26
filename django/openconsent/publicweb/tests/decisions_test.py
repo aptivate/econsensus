@@ -60,14 +60,14 @@ class DecisionsTest(DecisionTestCase):
         
         post_dict = self.get_default_decision_form_dict()
 
-        post_dict.update({  'short_name': 'Make Eggs',
+        post_dict.update({  'description': 'Make Eggs',
                             'subscribe': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})        
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})        
        
         response = self.client.post(path, post_dict,
                                     follow=True)
@@ -132,12 +132,12 @@ class DecisionsTest(DecisionTestCase):
     def get_edit_feedback_response(self, decision):
         path = reverse(edit_decision,
                        args=[decision.id])
-        response = self.client.post(path, {'short_name': 'Modified',
+        response = self.client.post(path, {'description': 'Modified',
                                     'feedback_set-TOTAL_FORMS': '3',
                                     'feedback_set-INITIAL_FORMS': '0',
                                     'feedback_set-MAX_NUM_FORMS': '',
-                                    'feedback_set-1-short_name': 'This feedback has been modified',
-                                    'feedback_set-2-short_name': 'No one wants them',
+                                    'feedback_set-1-description': 'This feedback has been modified',
+                                    'feedback_set-2-description': 'No one wants them',
                                     })
         return response
     
@@ -148,19 +148,19 @@ class DecisionsTest(DecisionTestCase):
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page)
-        post_data['feedback_set-0-short_name'] = 'Modified'
+        post_data['feedback_set-0-description'] = 'Modified'
         post_data['submit'] = 'Submit'
                 
-        self.client.post(path, post_data)
+        response = self.client.post(path, post_data)
         
         decision = Decision.objects.get(id=self.decision.id)
-        self.assertEquals('Modified', decision.feedback_set.all()[0].short_name)
+        self.assertEquals('Modified', decision.feedback_set.all()[0].description)
         
     def get_edit_decision_response(self, decision):
         path = reverse(edit_decision,
                        args=[decision.id])
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'short_name': 'Feed the cat',
+        post_dict.update({'description': 'Feed the cat',
                            'feedback_set-TOTAL_FORMS': '3',
                            'feedback_set-INITIAL_FORMS': '0',
                            'feedback_set-MAX_NUM_FORMS': '',
@@ -174,7 +174,7 @@ class DecisionsTest(DecisionTestCase):
         self.get_edit_decision_response(decision)
         
         decision_db = Decision.objects.get(id=decision.id)
-        self.assertEquals('Feed the cat', decision_db.short_name)
+        self.assertEquals('Feed the cat', decision_db.description)
     
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
@@ -190,12 +190,12 @@ class DecisionsTest(DecisionTestCase):
     
     def test_add_decision_with_feedback(self):
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'short_name': 'Make Eggs',
+        post_dict.update({'description': 'Make Eggs',
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})
         
         response = self.client.post(reverse('add_decision'), 
                                 post_dict,
@@ -205,8 +205,8 @@ class DecisionsTest(DecisionTestCase):
                
         feedback = decision.feedback_set.all()
         
-        self.assertEquals('The eggs are bad', feedback[0].short_name)
-        self.assertEquals('No one wants them', feedback[1].short_name)
+        self.assertEquals('The eggs are bad', feedback[0].description)
+        self.assertEquals('No one wants them', feedback[1].description)
     
     def assert_decision_datepickers(self,field):
         form = DecisionForm()
@@ -243,13 +243,13 @@ class DecisionsTest(DecisionTestCase):
 
     def test_add_decision_web_post_updates_subscribers(self):
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'short_name': 'Make Eggs',
+        post_dict.update({'description': 'Make Eggs',
                             'subscribe': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})
         
         self.client.post(reverse('add_decision'), 
                                 post_dict,
@@ -263,13 +263,13 @@ class DecisionsTest(DecisionTestCase):
         decision = self.create_and_return_decision()
         
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'short_name': 'Make Eggs',
+        post_dict.update({'description': 'Make Eggs',
                             'subscribe': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})
         
         self.client.post(reverse('edit_decision', args=[decision.id]), 
                                 post_dict,
@@ -296,13 +296,13 @@ class DecisionsTest(DecisionTestCase):
 
     def test_unsubscribe(self):
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({  'short_name': 'Make Eggs',
+        post_dict.update({  'description': 'Make Eggs',
                             'subscribe': False,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})
         
         response = self.client.post(reverse('add_decision'), 
                                 post_dict,
@@ -326,14 +326,14 @@ class DecisionsTest(DecisionTestCase):
 
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({  'short_name': 'Make Eggs',
+        post_dict.update({  'description': 'Make Eggs',
                             'subscribe': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})        
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})        
         
         path = reverse('add_decision')
         response = self.client.post(path, post_dict)
@@ -344,14 +344,14 @@ class DecisionsTest(DecisionTestCase):
         decision = self.create_and_return_decision()
         
         post_dict = self.get_default_decision_form_dict()
-        post_dict.update({  'short_name': 'Make Eggs',
+        post_dict.update({  'description': 'Make Eggs',
                             'subscribe': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-short_name': 'The eggs are bad',
-                            'feedback_set-1-short_name': 'No one wants them'})        
+                            'feedback_set-0-description': 'The eggs are bad',
+                            'feedback_set-1-description': 'No one wants them'})        
         
         path = reverse('edit_decision', args=[decision.id])
         response = self.client.post(path,
@@ -359,5 +359,11 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )
 
         decision = Decision.objects.all()[0]
-        self.assertEqual("Decision Time", decision.short_name, "Hitting 'Cancel' created an object!")
+        self.assertEqual("Decision Time", decision.description, "Hitting 'Cancel' created an object!")
+
+    def test_excerpts_is_first_sentence(self):
+        decision = self.create_and_return_decision("A.B.C.")
+        self.assertEqual(decision.description_excerpt, "A")
         
+        
+    
