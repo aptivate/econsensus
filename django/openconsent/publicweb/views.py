@@ -74,52 +74,26 @@ def decision_list(request):
         RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
 
 @login_required
-def add_decision(request):
+def modify_decision(request, decision_id = None):
+    if decision_id is None:
+        decision = None
+    else:
+        decision = get_object_or_404(Decision, id = decision_id)
     
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(reverse(decision_list))
         
         else:
-            decision_form = DecisionForm(data=request.POST)
-            feedback_formset = FeedbackFormSet(data=request.POST)
+            decision_form = DecisionForm(data=request.POST, 
+                                         instance=decision)
+            feedback_formset = FeedbackFormSet(data=request.POST, 
+                                               instance=decision)
 
             if decision_form.is_valid():
                 decision = decision_form.save(commit=False)
-                feedback_formset = FeedbackFormSet(request.POST, instance=decision)
-                if feedback_formset.is_valid():
-                    decision.save(request.user)
-                    if decision_form.cleaned_data['subscribe']:
-                        decision.add_subscriber(request.user)
-                    else:
-                        decision.remove_subscriber(request.user)
-                    feedback_formset.save()
-                    return HttpResponseRedirect(reverse(decision_list))
-
-    else:
-        feedback_formset = FeedbackFormSet()
-        decision_form = DecisionForm()
-        
-    return render_to_response('decision_form.html',
-        RequestContext(request,
-            dict(decision_form=decision_form, feedback_formset=feedback_formset)))
-
-@login_required    
-def edit_decision(request, decision_id):
-    decision = get_object_or_404(Decision, id = decision_id)
-    
-    if request.method == 'POST':
-        if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse(decision_list))
-
-        else:
-            decision_form = DecisionForm(request.POST, instance=decision)
-            feedback_formset = FeedbackFormSet(instance=decision)
-            
-            if decision_form.is_valid():
-                decision = decision_form.save(commit=False)
-                feedback_formset = FeedbackFormSet(request.POST,instance=decision)
-                     
+                feedback_formset = FeedbackFormSet(request.POST, 
+                                                   instance=decision)
                 if feedback_formset.is_valid():
                     decision.save(request.user)
                     if decision_form.cleaned_data['subscribe']:
@@ -135,6 +109,13 @@ def edit_decision(request, decision_id):
         
     return render_to_response('decision_form.html',
         RequestContext(request,
-                       dict(decision = decision,
-                            decision_form=decision_form,
-                            feedback_formset=feedback_formset)))    
+            dict(decision_form=decision_form, feedback_formset=feedback_formset)))
+
+@login_required
+def add_decision(request):
+    return modify_decision(request)
+    
+
+@login_required    
+def edit_decision(request, decision_id):
+    return modify_decision(request, decision_id)
