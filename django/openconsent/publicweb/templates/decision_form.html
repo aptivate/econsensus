@@ -21,12 +21,17 @@
 {% endblock %}
 
 {% block content %}
-
+<h2>{{ decision_form.instance.description_excerpt|safe }}</h2>
 <form id="decision_add" action="" method="post">{% csrf_token %}
 {% for error in decision_form.non_field_errors %}
     <p class="error" >{{ error }}</p>
 {% endfor %}
 <div class="form_row decision_summary">
+    <div class="form_item short_name">
+        {{ decision_form.description.errors }}
+        <label for="id_description">{% trans "Description" %}:</label>
+        {{ decision_form.description }}
+    </div>
     <div class="form_item status">
         {{ decision_form.status.errors }}
         <label for="id_status">{% trans "Status" %}:</label>
@@ -61,6 +66,7 @@
         <label for="id_subscribers">{% trans "Subscribers" %}:</label>
         {{decision.subscribers.all|join:"," }}
     </div>
+   </div>
   <div class="form_row subscribers">
      <div class="form_item">
         <label for="id_author">{% trans "Author" %}:</label>
@@ -80,13 +86,6 @@
         {{ decision_form.people }}
     </div>
  </div>
- <div class="form_row description">
-    <div class="form_item">
-        {{ decision_form.description.errors }}
-        <label for="id_description">{% trans "Description" %}:</label>
-        {{ decision_form.description }}
-    </div>
-</div>
 
 <div id="feedback">
 	<h2>{% trans "Feedback" %}</h2>

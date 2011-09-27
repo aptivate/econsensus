@@ -16,7 +16,7 @@ class AddDecisionTest(DecisionTestCase):
         response = self.load_add_decision_and_return_response()
         self.assertContains(response, "tiny_mce.js")
 
-    def test_edit_description_form_doesnt_ask_for_name(self):
+    def test_add_description_form_doesnt_ask_for_name(self):
         response = self.load_add_decision_and_return_response()
         self.assertNotContains(response, "id_short_name")
     

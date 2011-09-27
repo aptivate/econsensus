@@ -1,4 +1,5 @@
 from publicweb.tests.decisions_test import DecisionsTest
+from publicweb.tests.edit_decision_test import EditDecisionTest
 from publicweb.tests.login_test import LoginTest
 from publicweb.tests.internationalisation_test import InternationalisationTest
 from publicweb.tests.add_decision_test import AddDecisionTest
