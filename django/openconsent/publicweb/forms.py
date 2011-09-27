@@ -22,7 +22,7 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         widgets = {
-                   'description': tinymce.widgets.TinyMCE(attrs={'rows': 20})
+                   'description': tinymce.widgets.TinyMCE()
                    }
 
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
@@ -36,8 +36,7 @@ class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
         widgets = {
-                   'description': tinymce.widgets.TinyMCE(attrs={'rows': 5},
-                                                          mce_attrs=mce_attrs_setting),
+                   'description': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'feedback': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,

@@ -1,6 +1,4 @@
 # Create your views here.
-
-from django.db import models
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -13,7 +11,6 @@ from decision_table import DecisionTable
 
 import unicodecsv
 from django.http import HttpResponse
-from publicweb.models import Feedback
     
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -37,7 +34,7 @@ def export_csv(request):
         else:
             return getattr(obj, field)
 
-    opts = Decision._meta
+    opts = Decision._meta #@UndefinedVariable
     field_names = set([field.name for field in opts.fields])
 
     response = HttpResponse(mimetype='text/csv')

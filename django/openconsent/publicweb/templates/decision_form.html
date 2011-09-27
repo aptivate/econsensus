@@ -3,7 +3,7 @@
 
 {% block title %}
 {% if decision.description_excerpt %}
-	{{ decision.description_excerpt }}
+	{{ decision.description_excerpt|safe }}
 {% else %}
 	{% trans "Add New Decision" %}
 {% endif %}{% endblock %}
@@ -14,7 +14,7 @@
 
 {% block heading %}
 {% if decision.description_excerpt %}
-	{% trans "View and Edit: " %}{{ decision.description_excerpt }}
+	{% trans "View and Edit: " %}{{ decision.description_excerpt|safe }}
 {% else %}
 	{% trans "Add New Decision" %}
 {% endif %}
@@ -29,7 +29,6 @@
 <div class="form_row decision_summary">
     <div class="form_item short_name">
         {{ decision_form.description.errors }}
-        <label for="id_description">{% trans "Description" %}:</label>
         {{ decision_form.description }}
     </div>
     <div class="form_item status">
@@ -99,11 +98,8 @@
 				<label for="id_rating">{% trans "Rating" %}:</label>
 				{{ feedback_form.rating }}
 	    	</div>
-	    </div>
-	    <div class="form_row description">
 	    	<div class="form_item description">
 				{{ feedback_form.description.errors }}
-				<label for="id_description">{% trans "Description" %}:</label>
 				{{ feedback_form.description }}
 	    	</div>
 	    </div>

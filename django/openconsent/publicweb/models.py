@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from emails import OpenConsentEmailMessage
 import tinymce.models
+import re
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -18,13 +19,16 @@ class Idea(models.Model):
                                            blank=True)
     description = tinymce.models.HTMLField(verbose_name=_('Description'))
     
-    DEFAULT_SIZE = 60
+    DEFAULT_SIZE = 140
     
     def _get_excerpt(self):
         description = strip_tags(self.description)
-        position = description.find('.')
-        if position == -1:
-            position = self.DEFAULT_SIZE
+        match = re.search("\.|\\r|\\n", description)
+        position = self.DEFAULT_SIZE
+        if match:
+            start = match.start()
+            if start < position:
+                position = start
         return description[:position]
     
     def __unicode__(self):
