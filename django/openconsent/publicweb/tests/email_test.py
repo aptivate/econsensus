@@ -89,19 +89,12 @@ class EmailTest(DecisionTestCase):
         mymail = OpenConsentEmailMessage('new', decision)
         
         self.assertIn(billy.email, mymail.to)
-        self.assertNotIn(andy.email, mymail.to)
+        self.assertIn(andy.email, mymail.to)
+        self.assertIn(chris.email, mymail.to)
 
         #billy decides he wants to subscribe...
-        decision.subscribers = [billy]
+        decision.subscribers = [andy, billy]
         
-        #andy changes the status
-        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
-
-        #everyone but andy gets a mail
-        self.assertNotIn(andy.email, mymail.to)
-        self.assertIn(billy.email, mymail.to) 
-        self.assertIn(chris.email, mymail.to) 
-
         #andy changes the content
         mymail = OpenConsentEmailMessage('content_change', decision)
         
@@ -109,3 +102,12 @@ class EmailTest(DecisionTestCase):
         self.assertNotIn(andy.email, mymail.to)
         self.assertIn(billy.email, mymail.to)         
         self.assertNotIn(chris.email, mymail.to)
+
+        #andy changes the status
+        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
+
+        #everyone gets a mail
+        self.assertIn(andy.email, mymail.to)
+        self.assertIn(billy.email, mymail.to) 
+        self.assertIn(chris.email, mymail.to) 
+
