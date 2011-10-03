@@ -25,7 +25,7 @@ class DecisionAdmin(admin.ModelAdmin):
         (None, {'fields': ('description', 
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
-                           'budget','people')}),
+                           'budget','people', 'status')}),
     ]
 
     list_display = ('description','unresolvedfeedback', 'decided_date','effective_date','review_date','expiry_date','budget','people')

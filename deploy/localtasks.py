@@ -20,7 +20,7 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     tasklib.create_ve()
     tasklib.create_private_settings()
     tasklib.link_local_settings(environment)
-    link_local_fixtures()
+    link_local_fixtures(environment)
     tasklib.update_db()
     load_fixtures(environment)
 

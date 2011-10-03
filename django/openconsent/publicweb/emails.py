@@ -47,7 +47,7 @@ class OpenConsentEmailMessage(EmailMessage):
                             'name': object.description_excerpt.replace('\r\n', '') }
             email_template = get_template('email/content_change.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
-            queryset = object.subscribers.exclude(username=object.author.username)
+            queryset = object.watchers.exclude(username=object.author.username)
 
         subject_context = Context(subject_dict)
         self.subject = subject_template.render(subject_context)

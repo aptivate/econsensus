@@ -9,41 +9,54 @@
 
 {% block content %}
 
-<form id="decision_list_filter" action="{% url publicweb.views.decision_list %}" method="GET">
-{{ filter_form.as_p }}
-<noscript><input type="submit" value="Submit"></noscript>
-</form>
-
-
-<table id="decision-list" cellspacing="0">
-<tr>
+<div id="list_view decision">
+    <div class="item proposal">
+        <div class="headings">
     {% for column in decisions.columns %}
-	    
-		
-	    <th id="{{ column.name }}"
-	    {% if column.order_by.is_ascending %}
+        	<span id="{{ column.name }}" {% if column.order_by.is_ascending %}
 	    	class="sorted straight"
 	    {% endif %}
 	    {% if column.order_by.is_descending %}
 	    	class="sorted reverse"
-	    {% endif %}>
-	    <a href={% if column.order_by %}
-			{% set_url_param sort=column.order_by.opposite %}
+	    {% endif %}><a href={% if column.order_by %}
+			"{% set_url_param sort=column.order_by.opposite %}"
 		{% else %}
-			{% set_url_param sort=column.name %}
-		{% endif %}>{{ column }}</a></th>
-    {% endfor %}
-</tr>
-{% for decision in decisions.rows %}
-    <tr>
-        <td>{{ decision.id }}</td>
-        <td><a href="{% url publicweb.views.edit_decision decision_id=decision.id %}">{{decision.description_excerpt|safe}}</a></td>
-        <td>{{ decision.status_text }}</td>
-		<td>{{ decision.unresolvedfeedback }}</td>
-		<td>{{ decision.decided_date }}</td>
-		<td>{{ decision.review_date }}</td>
-		<td>{{ decision.expiry_date }}</td>
-    </tr>
-{% endfor %}
-</table>
+			"{% set_url_param sort=column.name %}"
+		{% endif %}>{{ column }}</a></span>
+	{% endfor %}
+        </div>
+        {% for decision in decisions.rows %}
+	         <div class="id">
+	            <a title="view item" href="">{{ decision.id }}</a>
+	        </div>
+	        <div class="item_description">
+	            <p>{{ decision.description_excerpt }}</p>
+	        </div>
+	        <div class="item_activity">
+	            <img src="/site_media/tmp/activity_barchart.png" />
+	        </div>
+	        <div class="item_date decided">
+	        {% if decision.decided_date %}
+	            <span>{{ decision.decided_date|date:"d N Y" }}</span>
+	        {% else %}
+	             <span>--</span>
+	        {% endif %}
+	        </div>
+	        <div class="item_date review">
+	        {% if decision.review_date %}
+	            <span>{{ decision.review_date|date:"d N Y" }}</span>
+	        {% else %}
+	             <span>--</span>
+	        {% endif %}
+	        </div>
+	        <div class="item_date expiry">
+	        {% if decision.expiry_date %}
+	            <span>{{ decision.expiry_date|date:"d N Y" }}</span>
+	        {% else %}
+	             <span>--</span>
+	        {% endif %}
+	        </div>
+		{% endfor %}
+    </div>
+</div>
 {% endblock %}

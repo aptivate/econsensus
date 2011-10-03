@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, url
-from publicweb.views import add_decision, edit_decision, decision_list
+from publicweb.views import add_decision, edit_decision, decision_list, \
+proposal_list
 from publicweb.models import Decision
 
 from django.views.generic.list_detail import object_detail
@@ -20,7 +21,10 @@ urlpatterns = patterns('openconsent.publicweb.views',
         { 'queryset': Decision.objects.all(),
          'template_name': 'decision_detail.html'},
         name='view_decision'),
-    url(r'^list/$',
+    url(r'^proposal/list/$',
+        proposal_list,
+        name='proposal_list'),
+    url(r'^decision/list/$',
         decision_list,
         name='decision_list')
     )

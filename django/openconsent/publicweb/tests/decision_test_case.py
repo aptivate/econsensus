@@ -25,13 +25,19 @@ class DecisionTestCase(OpenConsentTestCase):
         feedback.save()
         
         return decision
+    
+    def create_and_return_example_concensus_decision_with_feedback(self):
+        decision = self.create_and_return_decision(status=Decision.CONSENSUS_STATUS)
+        
+        feedback = Feedback(description='No time to decide',
+                          decision=decision)
+        feedback.save()
+        
+        return decision
 
     def create_and_return_decision(self, description='Decision Time',
                                    status=Decision.PROPOSAL_STATUS):
         decision = Decision(description=description, status=status)
         decision.save(self.user)
         
-        #decision.add_subscriber(self.user)
-        #decision.save()
-
         return decision

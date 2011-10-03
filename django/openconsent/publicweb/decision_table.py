@@ -4,7 +4,6 @@ from django.utils.translation import ugettext_lazy as _
 class DecisionTable(tables.Table):
     id = tables.Column(verbose_name=_('ID'))
     description_excerpt = tables.Column(verbose_name=_('Excerpt'))
-    status_text = tables.Column(verbose_name=_('Status'))
     unresolvedfeedback = tables.Column(verbose_name=_('Feedback'))
     decided_date = tables.Column(verbose_name=_('Decided'))
     review_date = tables.Column(verbose_name=_('Review'))

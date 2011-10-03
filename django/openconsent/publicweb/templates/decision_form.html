@@ -60,13 +60,13 @@
     </div>
  </div>
  
-  <div class="form_row subscribers">
+  <div class="form_row watchers">
      <div class="form_item">
-        <label for="id_subscribers">{% trans "Subscribers" %}:</label>
-        {{decision.subscribers.all|join:"," }}
+        <label for="id_watchers">{% trans "watchers" %}:</label>
+        {{decision.watchers.all|join:"," }}
     </div>
    </div>
-  <div class="form_row subscribers">
+  <div class="form_row watchers">
      <div class="form_item">
         <label for="id_author">{% trans "Author" %}:</label>
         {{ decision.author }}
@@ -85,6 +85,12 @@
         {{ decision_form.people }}
     </div>
  </div>
+ 
+<div id="tags">
+    {{ decision_form.tags.errors }}
+    <label for="id_tags">{% trans "Tags" %}:</label>
+    {{ decision_form.tags }} {{ decision_form.tags.help_text }}
+</div>
 
 <div id="feedback">
 	<h2>{% trans "Feedback" %}</h2>
@@ -111,10 +117,10 @@
     <input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" />
     <input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" />
     
-	<div class="form_item subscribe">
-        {{ decision_form.subscribe.errors }}
-        <label for="id_subscribe">{% trans "Subscribe" %}?</label>
-        {{ decision_form.subscribe }}
+	<div class="form_item watch">
+        {{ decision_form.watch.errors }}
+        <label for="id_watch">{% trans "Watch" %}?</label>
+        {{ decision_form.watch }}
     </div>
     
 </div>

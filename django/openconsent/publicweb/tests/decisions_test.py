@@ -61,7 +61,7 @@ class DecisionsTest(DecisionTestCase):
         post_dict = self.get_default_decision_form_dict()
 
         post_dict.update({  'description': 'Make Eggs',
-                            'subscribe': False,
+                            'watch': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
@@ -148,6 +148,7 @@ class DecisionsTest(DecisionTestCase):
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page)
+        post_data['description'] = "Description"
         post_data['feedback_set-0-description'] = 'Modified'
         post_data['submit'] = 'Submit'
                 
@@ -231,20 +232,20 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals(True, hasattr(decision, "status"), 
                           "Decision does not have a status")
         
-    def test_decision_model_has_subscribers(self):
+    def test_decision_model_has_watchers(self):
         decision_model = self.create_and_return_decision()
-        self.assertTrue(hasattr(decision_model, "subscribers"), 
-                          "Decision does not have subscribers")
+        self.assertTrue(hasattr(decision_model, "watchers"), 
+                          "Decision does not have watchers")
                 
-    def test_decision_form_omits_subscribers(self):
+    def test_decision_form_omits_watchers(self):
         decision_form = DecisionForm()
-        self.assertTrue("subscriber" not in decision_form.fields,
-                          "Decision form should not contain subscribers")
+        self.assertTrue("watcher" not in decision_form.fields,
+                          "Decision form should not contain watchers")
 
-    def test_add_decision_web_post_updates_subscribers(self):
+    def test_add_decision_web_post_updates_watchers(self):
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'description': 'Make Eggs',
-                            'subscribe': True,
+                            'watch': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -256,15 +257,15 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )
 
         decision = Decision.objects.all()[0]
-        self.assertEqual(1, len(decision.subscribers.all()), "Expected one subscriber only.")        
-        self.assertEqual(self.user, decision.subscribers.all()[0], "User not added to subscriber list during add")
+        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")        
+        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watcher list during add")
         
-    def test_edit_decision_web_post_updates_subscribers(self):
+    def test_edit_decision_web_post_updates_watchers(self):
         decision = self.create_and_return_decision()
         
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'description': 'Make Eggs',
-                            'subscribe': True,
+                            'watch': True,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -276,28 +277,28 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )
 
         decision = Decision.objects.all()[0]
-        self.assertEqual(1, len(decision.subscribers.all()), "Expected one subscriber only.")
+        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")
         
-        self.assertEqual(self.user, decision.subscribers.all()[0], "User not added to subscriber list during edit")
+        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watcher list during edit")
 
-    def test_form_has_subscribe(self):
+    def test_form_has_watch(self):
         decision_form = DecisionForm()
-        self.assertTrue("subscribe" in decision_form.fields,
-                          "Decision form does not contain subscribe checkbox")
+        self.assertTrue("watch" in decision_form.fields,
+                          "Decision form does not contain watch checkbox")
 
         self.assertEquals(BooleanField,
-                          type(decision_form.fields["subscribe"]),
-                          "Decision form subscribe is not a BooleanField")
+                          type(decision_form.fields["watch"]),
+                          "Decision form watch is not a BooleanField")
         
         self.assertEquals(CheckboxInput,
-                          type(decision_form.fields["subscribe"].widget),
-                          "Decision form subscribe is not a CheckboxInput widget")
+                          type(decision_form.fields["watch"].widget),
+                          "Decision form watch is not a CheckboxInput widget")
 
 
-    def test_unsubscribe(self):
+    def test_unwatch(self):
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({  'description': 'Make Eggs',
-                            'subscribe': False,
+                            'watch': False,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -309,7 +310,7 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )
         self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
         decision = Decision.objects.all()[0]
-        self.assertEqual(0, len(decision.subscribers.all()), "Subscribe was deselected!")
+        self.assertEqual(0, len(decision.watchers.all()), "watch was deselected!")
         
     def test_add_page_contains_cancel(self):
         path = reverse('add_decision')
@@ -327,7 +328,7 @@ class DecisionsTest(DecisionTestCase):
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({  'description': 'Make Eggs',
-                            'subscribe': False,
+                            'watch': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
@@ -345,7 +346,7 @@ class DecisionsTest(DecisionTestCase):
         
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({  'description': 'Make Eggs',
-                            'subscribe': False,
+                            'watch': False,
                             'submit': "Cancel",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',

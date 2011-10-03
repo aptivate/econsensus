@@ -3,6 +3,8 @@ from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
+from tagging.fields import TagField
+
 from emails import OpenConsentEmailMessage
 import tinymce.models
 import re
@@ -12,7 +14,9 @@ import re
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
 from south.modelsinspector import add_introspection_rules
 
-add_introspection_rules([], ["^tinymce\.models.\HTMLField"])
+add_introspection_rules([], ["^tagging\.fields\.TagField"])
+add_introspection_rules([], ["^tinymce\.models\.HTMLField"])
+
 
 class Idea(models.Model):
     description_excerpt = models.CharField(max_length=255,
@@ -43,6 +47,7 @@ class Idea(models.Model):
 
 class Decision(Idea):
 
+    TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
     PROPOSAL_STATUS = 0
     CONSENSUS_STATUS = 1
     ARCHIVED_STATUS = 2
@@ -62,26 +67,30 @@ class Decision(Idea):
         verbose_name=_('Review date'))
     expiry_date = models.DateField(null=True, blank=True,
         verbose_name=_('Expiry date'))
+    deadline = models.DateField(null=True, blank=True,
+        verbose_name=_('Expiry date'))
     budget = models.CharField(blank=True, max_length=255,
         verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,
         verbose_name=_('People'))
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name='open_consent_author')
-    subscribers = models.ManyToManyField(User, blank=True, editable=False)
+    watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  verbose_name=_('Status'))
+    tags = TagField(null=True, blank=True, editable=True, 
+                    help_text=TAGS_HELP_FIELD_TEXT)
 
-    def is_subscribed(self, user):
-        return user in self.subscribers.all()
+    def is_watched(self, user):
+        return user in self.watchers.all()
                         
-    def add_subscriber(self, user):
-        if user not in self.subscribers.all():
-            self.subscribers.add(user)
+    def add_watcher(self, user):
+        if user not in self.watchers.all():
+            self.watchers.add(user)
     
-    def remove_subscriber(self, user):
-        if user in self.subscribers.all():
-            self.subscribers.remove(user)
+    def remove_watcher(self, user):
+        if user in self.watchers.all():
+            self.watchers.remove(user)
     
     def status_text(self):
         return self.STATUS_CHOICES[self.status][1]

@@ -11,6 +11,7 @@ from decision_table import DecisionTable
 
 import unicodecsv
 from django.http import HttpResponse
+from publicweb.proposal_table import ProposalTable
     
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -48,30 +49,23 @@ def export_csv(request):
     return response
 
 @login_required        
-def decision_list(request):
-    
-    #status parameter in GET is used to filter the statuses
-    #build status tuple
-    status_code_list = []
-    for this_status in Decision.STATUS_CHOICES:
-        status_code_list.append(this_status[0])
-    status_code_tuple = tuple(status_code_list)
-    
-    if request.GET.get('filter', None):
-        request.session['filter'] = request.GET['filter']
-    
-    filter = request.session.get('filter', None)
-    if filter and int(filter) in status_code_tuple:
-        filter_form = FilterForm(request.session)
-        queryset = Decision.objects.filter(status=filter)
-    else:
-        filter_form = FilterForm()
-        queryset = Decision.objects.all()
+def decision_list(request):  
+    filter = Decision.CONSENSUS_STATUS
+    queryset = Decision.objects.filter(status=filter)
             
     decisions = DecisionTable(list(queryset), order_by=request.GET.get('sort'))
         
     return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions,filter_form=filter_form)))
+        RequestContext(request, dict(decisions=decisions)))
+
+@login_required        
+def proposal_list(request):
+    filter = Decision.PROPOSAL_STATUS
+    queryset = Decision.objects.filter(status=filter)      
+    proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
+        
+    return render_to_response('proposal_list.html',
+        RequestContext(request, dict(proposals=proposals)))
 
 @login_required
 def modify_decision(request, decision_id = None):
@@ -96,10 +90,10 @@ def modify_decision(request, decision_id = None):
                                                    instance=decision)
                 if feedback_formset.is_valid():
                     decision.save(request.user)
-                    if decision_form.cleaned_data['subscribe']:
-                        decision.add_subscriber(request.user)
+                    if decision_form.cleaned_data['watch']:
+                        decision.add_watcher(request.user)
                     else:
-                        decision.remove_subscriber(request.user)
+                        decision.remove_watcher(request.user)
                     feedback_formset.save()
                     return HttpResponseRedirect(reverse(decision_list))
 

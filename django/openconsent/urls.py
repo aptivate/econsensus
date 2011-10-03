@@ -8,7 +8,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', redirect_to, {'url': 'public/list/'}),
+    url(r'^$', redirect_to, {'url': 'public/proposal/list/'}),
 
     url(r'^public/', include('openconsent.publicweb.urls')),
 

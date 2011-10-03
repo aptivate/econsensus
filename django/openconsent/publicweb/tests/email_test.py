@@ -86,28 +86,13 @@ class EmailTest(DecisionTestCase):
         decision = Decision(description='Test', status=0)
         decision.save(andy)
         
-        mymail = OpenConsentEmailMessage('new', decision)
-        
-        self.assertIn(billy.email, mymail.to)
-        self.assertIn(andy.email, mymail.to)
-        self.assertIn(chris.email, mymail.to)
-
-        #billy decides he wants to subscribe...
-        decision.subscribers = [andy, billy]
+        #billy decides he wants to watch...
+        decision.watchers = [billy]
         
         #andy changes the content
         mymail = OpenConsentEmailMessage('content_change', decision)
         
-        #only subscribers get mail, not the author
+        #only watchers get mail, not the author
         self.assertNotIn(andy.email, mymail.to)
         self.assertIn(billy.email, mymail.to)         
         self.assertNotIn(chris.email, mymail.to)
-
-        #andy changes the status
-        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
-
-        #everyone gets a mail
-        self.assertIn(andy.email, mymail.to)
-        self.assertIn(billy.email, mymail.to) 
-        self.assertIn(chris.email, mymail.to) 
-

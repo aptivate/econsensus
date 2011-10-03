@@ -31,7 +31,7 @@ FeedbackFormSet = inlineformset_factory(Decision, Feedback,
 
 class DecisionForm(forms.ModelForm):
     
-    subscribe = forms.BooleanField(required=False, initial=True)
+    watch = forms.BooleanField(required=False, initial=True)
        
     class Meta:
         model = Decision
@@ -42,6 +42,7 @@ class DecisionForm(forms.ModelForm):
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget,
+                   'deadline': JQueryUIDateWidget,
                    'budget': forms.TextInput(),
                    'people': forms.TextInput()
                    }

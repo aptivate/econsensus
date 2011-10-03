@@ -26,9 +26,8 @@
 				{% block topbar %}
 				<div id="nav">
 					<ul class="navigation">
+						<li><a class="go nav list" href="{% url proposal_list %}">{% trans "Proposal list" %}</a></li>
 						<li><a class="go nav list" href="{% url decision_list %}">{% trans "Decision list" %}</a></li>
-						<li><a class="go nav add" href="{% url publicweb.views.add_decision %}">{% trans "Add decision" %}</a></li>
-						<li><a class="go nav csv" href="{% url publicweb.views.export_csv %}">{% trans "Export CSV" %}</a></li>
 					</ul>
 				</div>
 				{% endblock %}

@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'django_tables2',
+    'tagging'
 )
 
 # A sample logging configuration. The only tangible logging

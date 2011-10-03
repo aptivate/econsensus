@@ -3,12 +3,15 @@ from django.contrib.auth.models import User
 from mechanize import ParseString
 
 class OpenConsentTestCase(TestCase):
+    user = None
+    
     def login(self):
         username = 'admin'
         password = 'aptivate'
         email = 'admin@aptivate.org'
-        self.user = User.objects.create_user(username, email, password=password)
-        self.user.save()
+        if self.user is None:
+            self.user = User.objects.create_user(username, email, password=password)
+            self.user.save()
         self.client.login(username=username, password=password)
         
     def deleteUser(self):
