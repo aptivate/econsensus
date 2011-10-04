@@ -25,9 +25,9 @@
 			<div id="navigation-wrapper">
 				<div id="navigation">
 					<ul>
-						<li class="active"><a href="#">Proposals</a></li>
-						<li><a href="#">Decisions</a></li>
-						<li><a href="#">Archive</a></li>
+						<li class="active"><a href="{% url proposal_list %}">{% trans "Proposals" %}</a></li>
+						<li><a href="{% url decision_list %}">{% trans "Decisions" %}</a></li>
+						<li><a href="#">{% trans "Archived" %}</a></li>
 					</ul>
 					<form id="search_form" action="search" method="get">
 						<p>

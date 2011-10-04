@@ -10,13 +10,12 @@
 {% block content %}
 	<div id="content">
 		<h2 class="page_title">Proposals</h2>
-		<a class="button add_proposal" href="#">Add Proposal</a>
-	
+		<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
 		<ul class="list_view proposal">
 	        {% for proposal in proposals.rows %}
 			    <li class="item proposal">	        
 					<div class="item_id">
-			            <a title="view item" href="">{{ proposal.id }}</a>
+					<a title="view item" href="{% url publicweb.views.edit_decision decision_id=proposal.id %}">{{ proposal.id }}</a>					
 			        </div>
 					<div class="item_description">
 		            	<p>{{ proposal.description_excerpt }}</p>
