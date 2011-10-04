@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from models import Decision
-from forms import DecisionForm, FeedbackFormSet, FilterForm
+from forms import DecisionForm, FeedbackFormSet
 from decision_table import DecisionTable
 
 import unicodecsv
