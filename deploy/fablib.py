@@ -1,6 +1,7 @@
 import os, sys
 import getpass
 import time
+import shutil
 
 from fabric.api import *
 from fabric.contrib import files, console
@@ -61,13 +62,20 @@ def deploy_clean(revision=None):
     deploy(revision)
 
 
-def deploy(revision=None):
-    """ update remote host environment (virtualenv, deploy, update) """
+def deploy(revision=None, keep=None):
+    """ update remote host environment (virtualenv, deploy, update) 
+    
+    It takes two arguments:
+    
+    * revision is the VCS revision ID to checkout (if not specified then 
+      the latest will be checked out)
+    * keep is the number of old versions to keep around for rollback (default
+      5)"""
     require('project_root', provided_by=env.valid_envs)
     with settings(warn_only=True):
         apache_cmd('stop')
     if files.exists(env.project_root):
-        create_copy_for_rollback()
+        create_copy_for_rollback(keep)
     else:
         sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
@@ -84,7 +92,7 @@ def deploy(revision=None):
     apache_cmd('start')
 
 
-def create_copy_for_rollback():
+def create_copy_for_rollback(keep):
     """Copy the current version out of the way so we can rollback to it if required."""
     require('prev_root', 'vcs_root', 'tasks_bin', provided_by=env.valid_envs)
     # create directory for it
@@ -95,6 +103,31 @@ def create_copy_for_rollback():
     # dump database
     with cd(prev_dir):
         sudo(env.tasks_bin + ' dump_db')
+    if keep == None or int(keep) > 0:
+        delete_old_versions(keep)
+
+
+def delete_old_versions(keep=None):
+    """Delete old rollback directories, keeping the last "keep" (default 5)"."""
+    require('prev_root', provided_by=env.valid_envs)
+    prev_versions = run('ls ' + env.prev_root).split('\n')
+    if keep == None:
+        if env.has_key('versions_to_keep'):
+            keep = env.versions_to_keep
+        else:
+            keep = 5
+    versions_to_keep = -1 * int(keep)
+    prev_versions_to_delete = prev_versions[:versions_to_keep]
+    for version_to_delete in prev_versions_to_delete:
+        with cd(env.prev_root):
+            sudo('rm -rf ' + version_to_delete)
+
+
+def list_previous():
+    """List the previous versions available to rollback to."""
+    # could also determine the VCS revision number
+    require('prev_root', provided_by=env.valid_envs)
+    run('ls ' + env.prev_root)
 
 
 def rollback(version='last', migrate=False, restore_db=False):
@@ -112,41 +145,38 @@ def rollback(version='last', migrate=False, restore_db=False):
       The default is False
 
     Note that migrate and restore_db cannot both be True."""
-    utils.abort('rollback has not been implemented yet')
+    require('prev_root', 'vcs_root', 'tasks_bin', provided_by=env.valid_envs)
     if migrate and restore_db:
         utils.abort('rollback cannot do both migrate and restore_db')
     if migrate:
         utils.abort("rollback: haven't worked out how to do migrate yet ...")
+    if restore_db:
+        utils.abort("rollback: haven't worked out how to restore the database yet ...")
 
     if version == 'last':
         # get the latest directory from prev_dir
-        pass
         # list directories in env.prev_root, use last one
-    else:
-        # check version specified exists
-        rollback_dir = os.path.join(env.prev_root, version)
-        if not files.exists(rollback_dir):
-            utils.abort("Cannot rollback to version %s, it does not exist, use list_previous to see versions available" % version)
+        version = run('ls ' + env.prev_root).split('\n')[-1]
+    # check version specified exists
+    rollback_dir = os.path.join(env.prev_root, version, 'dev')
+    if not files.exists(rollback_dir):
+        utils.abort("Cannot rollback to version %s, it does not exist, use list_previous to see versions available" % version)
         
+    apache_cmd("stop")
     # first copy this version out of the way
-    create_copy_for_rollback()
+    create_copy_for_rollback(-1)
+    if migrate:
+        # run the south migrations back to the old version
+        # but how to work out what the old version is??
+        pass
     # delete everything - don't want stray files left over
+    sudo('rm -rf %s' % env.vcs_root)
     # cp -a from rollback_dir to vcs_root
+    sudo('cp -a %s %s' % (rollback_dir, env.vcs_root))
     if restore_db:
         # feed the dump file into mysql command
         pass
-
-
-def list_previous():
-    """List the previous versions available to rollback to."""
-    utils.abort('list_previous has not been implemented yet')
-    # list the previous directory, convert to format.
-    # could also determine the VCS revision number
-
-
-def delete_old_versions(keep=5):
-    """Delete old rollback directories, keeping the last "keep" (default 5)"."""
-    utils.abort('delete_old_versions has not been implemented yet')
+    apache_cmd("start")
 
 
 def local_test():
@@ -261,7 +291,7 @@ def link_local_settings():
     # check that settings imports local_settings, as it always should,
     # and if we forget to add that to our project, it could cause mysterious
     # failures
-    run('grep -q "import local_settings" %s' %
+    run('grep -q "^from local_settings import \*" %s' %
         os.path.join(env.django_root, 'settings.py'))
 
     # touch the wsgi file to reload apache

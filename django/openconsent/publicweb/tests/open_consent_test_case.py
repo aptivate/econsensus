@@ -9,9 +9,16 @@ class OpenConsentTestCase(TestCase):
         username = 'admin'
         password = 'aptivate'
         email = 'admin@aptivate.org'
+<<<<<<< HEAD
+        for user in User.objects.all():
+            user.delete()
+        self.user = User.objects.create_user(username, email, password=password)
+        self.user.save()
+=======
         if self.user is None:
             self.user = User.objects.create_user(username, email, password=password)
             self.user.save()
+>>>>>>> branch 'refs/heads/master' of git@github.com:aptivate/openconsent.git
         self.client.login(username=username, password=password)
         
     def deleteUser(self):
