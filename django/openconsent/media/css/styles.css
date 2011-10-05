@@ -188,6 +188,8 @@ a.button {
     display: block;
     float: right;
     padding: 8px 10px;
+	display: none; /* pcb : disbled for the moment since it's nonfunctional */
+    
 }
 
 #navigation #search_form input#search {
@@ -217,7 +219,7 @@ a.button {
     padding: 10px;
 	display:block;
 	position:relative;
-	float:left;
+	clear : both;
 }
 
 .list_view .item {

@@ -50,8 +50,7 @@ def export_csv(request):
 
 @login_required        
 def decision_list(request):  
-    filter = Decision.CONSENSUS_STATUS
-    queryset = Decision.objects.filter(status=filter)
+    queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS)
             
     decisions = DecisionTable(list(queryset), order_by=request.GET.get('sort'))
         
@@ -60,8 +59,7 @@ def decision_list(request):
 
 @login_required        
 def proposal_list(request):
-    filter = Decision.PROPOSAL_STATUS
-    queryset = Decision.objects.filter(status=filter)      
+    queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)      
     proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
         
     return render_to_response('proposal_list.html',

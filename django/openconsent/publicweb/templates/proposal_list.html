@@ -15,13 +15,13 @@
 	        {% for proposal in proposals.rows %}
 			    <li class="item proposal">	        
 					<div class="item_id">
-					<a title="view item" href="{% url publicweb.views.edit_decision decision_id=proposal.id %}">{{ proposal.id }}</a>					
+					<a title="view item" href="{{ proposal.record.get_absolute_url }}">{{ proposal.id }}</a>
 			        </div>
 					<div class="item_description">
 		            	<p>{{ proposal.description_excerpt }}</p>
 			        </div>
 			        <div class="item_activity">
-			            <img src="/site_media/images/activity-barchart.svg" />
+			            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
 			        </div>
 			        <div class="item_date deadline">
 				        {% if proposal.decided_date %}
