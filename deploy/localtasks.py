@@ -27,7 +27,7 @@ def deploy(environment=None, svnuser=None, svnpass=None):
 def link_local_fixtures(environment):
     """ link local_settings.py.environment as local_settings.py """
     # die if the correct local settings does not exist
-    local_fixtures_directory = os.path.join(env['django_dir'], 'publicweb',
+    local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
     local_fixtures_path = os.path.join(local_fixtures_directory,
                                         'initial_data.json.'+environment)
