@@ -242,6 +242,21 @@ a.button {
     position: relative;
 }
 
+.list_view .item.decision {
+    border-color: #3E6EA3;
+    display: block;
+    overflow: auto;
+    position: relative;
+}
+
+.list_view .item.archived {
+    border-color: #483E37;
+    display: block;
+    overflow: auto;
+    position: relative;
+}
+
+
 .item_id {
     display: block;
     float: left;

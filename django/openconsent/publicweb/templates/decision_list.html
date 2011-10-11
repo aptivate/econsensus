@@ -9,56 +9,36 @@
 
 {% block content %}
 	<div id="content">
-
-		<div id="list_view decision">
-		    <div class="item proposal">
-		        <div class="headings">
-		    {% for column in decisions.columns %}
-		        	<span id="{{ column.name }}" {% if column.order_by.is_ascending %}
-			    	class="sorted straight"
-			    {% endif %}
-			    {% if column.order_by.is_descending %}
-			    	class="sorted reverse"
-			    {% endif %}><a href={% if column.order_by %}
-					"{% set_url_param sort=column.order_by.opposite %}"
-				{% else %}
-					"{% set_url_param sort=column.name %}"
-				{% endif %}>{{ column }}</a></span>
-			{% endfor %}
-		        </div>
-		        {% for decision in decisions.rows %}
-			         <div class="id">
-			            <a title="view item" href="">{{ decision.id }}</a>
+		<h2 class="page_title">Decisions Made</h2>
+		<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
+		<ul class="list_view decision">
+	        {% for decision in decisions.rows %}
+			    <li class="item decision">	        
+					<div class="item_id">
+					<a title="view item" href="{{ decision.record.get_absolute_url }}">{{ decision.id }}</a>
 			        </div>
-			        <div class="item_description">
-			            <p>{{ decision.description_excerpt }}</p>
+					<div class="item_description">
+		            	<p>{{ decision.description_excerpt }}</p>
 			        </div>
 			        <div class="item_activity">
-			            <img src="/site_media/tmp/activity_barchart.png" />
+			            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
 			        </div>
-			        <div class="item_date decided">
-			        {% if decision.decided_date %}
-			            <span>{{ decision.decided_date|date:"d N Y" }}</span>
-			        {% else %}
-			             <span>--</span>
-			        {% endif %}
-			        </div>
-			        <div class="item_date review">
-			        {% if decision.review_date %}
-			            <span>{{ decision.review_date|date:"d N Y" }}</span>
-			        {% else %}
-			             <span>--</span>
-			        {% endif %}
-			        </div>
-			        <div class="item_date expiry">
-			        {% if decision.expiry_date %}
-			            <span>{{ decision.expiry_date|date:"d N Y" }}</span>
-			        {% else %}
-			             <span>--</span>
-			        {% endif %}
-			        </div>
-				{% endfor %}
-		    </div>
-		</div>
+			        <div class="item_date deadline">
+				        {% if decision.decided_date %}
+				            <span>{{ decision.decided_date|date:"d N Y" }}</span>
+				        {% else %}
+				             <span>--</span>
+				        {% endif %}
+			        </div> <!-- class item_date deadline -->
+			        <div class="item_date deadline">
+				        {% if decision.decided_date %}
+				            <span>{{ decision.review_date|date:"d N Y" }}</span>
+				        {% else %}
+				             <span>--</span>
+				        {% endif %}
+			        </div> <!-- class item_date deadline -->
+			    </li> <!-- item decision -->
+			{% endfor %}  
+		</ul> <!-- list_view decision -->
 	</div><!-- content end -->
 {% endblock %}

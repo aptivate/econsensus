@@ -65,6 +65,14 @@ def proposal_list(request):
     return render_to_response('proposal_list.html',
         RequestContext(request, dict(proposals=proposals)))
 
+@login_required        
+def archived_list(request):
+    queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS)      
+    proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
+        
+    return render_to_response('archived_list.html',
+        RequestContext(request, dict(objects=proposals)))
+
 @login_required
 def modify_decision(request, decision_id = None):
     if decision_id is None:

@@ -1,0 +1,27 @@
+{% extends "fullpage.html" %}
+{% load i18n %}
+{% load django_tables2 %}
+
+{% block title %}
+{% trans "Home" %}
+{% endblock %}
+{% block body_class%}decision-list{% endblock %}
+
+{% block content %}
+	<div id="content">
+		<h2 class="page_title">Archived</h2>
+		<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
+		<ul class="list_view archived">
+	        {% for object in objects.rows %}
+			    <li class="item archived">	        
+					<div class="item_id">
+						<a title="view item" href="{{ object.record.get_absolute_url }}">{{ object.id }}</a>
+			        </div>
+					<div class="item_description">
+		            	<p>{{ object.description_excerpt }}</p>
+			        </div>
+			    </li> <!-- item archived -->
+			{% endfor %}	    
+		</ul> <!-- list_view archived -->
+	</div><!-- content end -->
+{% endblock %}
