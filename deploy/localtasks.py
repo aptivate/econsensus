@@ -4,6 +4,10 @@ import subprocess
 
 import tasklib
 
+fixtures_to_deploy = [
+        'initial_data.json',
+        ]
+
 def deploy(environment=None, svnuser=None, svnpass=None):
     if environment == None:
         environment = tasklib._infer_environment()
@@ -16,12 +20,18 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     load_fixtures()
 
 def link_local_fixtures(environment):
-    """ link local_settings.py.environment as local_settings.py """
+    """ 
+    Link local_settings.py.environment as local_settings.py
+    """
+    # Note that we only have production and dev fixtures. Any non-production environment
+    # uses the dev version. Change that here if you want to
+    if environment != 'production':
+        environment = 'dev'
     # die if the correct local settings does not exist
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
     local_fixtures_path = os.path.join(local_fixtures_directory,
-                                        'initial_data.json.'+environment)
+                                        fixtures_to_deploy[0]+'.'+environment)
     if not os.path.exists(local_fixtures_path):
         print "Could not find file to link to: %s" % local_fixtures_path
         sys.exit(1)
@@ -33,7 +43,7 @@ def link_local_fixtures(environment):
 def load_fixtures():
     """load fixtures for this environment"""
     for fixture in fixtures_to_deploy:
-        tasklib._manage_py(['loaddata'] + [fixture])
+        tasklib._manage_py(['loaddata', fixture])
         
 def create_ve():
     """Create the virtualenv"""
