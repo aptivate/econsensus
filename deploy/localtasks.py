@@ -1,18 +1,9 @@
 # functions just for this project
-import os
+import os, sys
 import subprocess
-import sys
 
 import tasklib
 
-production_fixtures = [
-                    'initial_data.json.production',
-                  ]
-
-development_fixtures = [
-                    'initial_data.json.dev',
-                     ]
-    
 def deploy(environment=None, svnuser=None, svnpass=None):
     if environment == None:
         environment = tasklib._infer_environment()
@@ -20,9 +11,9 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     tasklib.create_ve()
     tasklib.create_private_settings()
     tasklib.link_local_settings(environment)
-    link_local_fixtures()
+    link_local_fixtures(environment)
     tasklib.update_db()
-    load_fixtures(environment)
+    load_fixtures()
 
 def link_local_fixtures(environment):
     """ link local_settings.py.environment as local_settings.py """
@@ -34,16 +25,14 @@ def link_local_fixtures(environment):
     if not os.path.exists(local_fixtures_path):
         print "Could not find file to link to: %s" % local_fixtures_path
         sys.exit(1)
-    subprocess.call(['ln', '-s', 'initial_data.json.'+environment, 'initial_data.json'], 
-            cwd=local_fixtures_directory)
+    for fixture in fixtures_to_deploy:
+        # eg. 'ln -s initial_data.json.dev initial_data.json
+        subprocess.call(['ln', '-s', fixture+'.'+environment, fixture], 
+                cwd=local_fixtures_directory)
 
 def load_fixtures():
     """load fixtures for this environment"""
-    if tasklib._infer_environment() == 'production':
-        fixtures_list = production_fixtures
-    else:
-        fixtures_list = development_fixtures
-    for fixture in fixtures_list:
+    for fixture in fixtures_to_deploy:
         tasklib._manage_py(['loaddata'] + [fixture])
         
 def create_ve():
