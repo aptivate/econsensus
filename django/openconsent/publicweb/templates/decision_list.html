@@ -9,8 +9,6 @@
 
 {% block content %}
 	<div id="content">
-		<h2 class="page_title">Decisions Made</h2>
-		<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
 		<ul class="list_view decision">
 	        {% for decision in decisions.rows %}
 			    <li class="item decision">	        

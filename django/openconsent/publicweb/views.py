@@ -12,6 +12,8 @@ from decision_table import DecisionTable
 import unicodecsv
 from django.http import HttpResponse
 from publicweb.proposal_table import ProposalTable
+from publicweb.forms import SortForm
+from publicweb.forms import FilterForm
     
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -59,11 +61,16 @@ def decision_list(request):
 
 @login_required        
 def proposal_list(request):
-    queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)      
+    sort_form = SortForm(request.GET)
+    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
+        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS).order_by(str(sort_form.cleaned_data['sort']))
+    else:
+        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)
+
     proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
         
     return render_to_response('proposal_list.html',
-        RequestContext(request, dict(proposals=proposals)))
+        RequestContext(request, dict(proposals=proposals, sort_form=sort_form)))
 
 @login_required        
 def archived_list(request):
@@ -114,7 +121,6 @@ def modify_decision(request, decision_id = None):
 @login_required
 def add_decision(request):
     return modify_decision(request)
-    
 
 @login_required    
 def edit_decision(request, decision_id):

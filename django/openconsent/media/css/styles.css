@@ -83,7 +83,6 @@ a.button {
 	font-size:0.9em;
 	position:relative;
 	top:0.2em;
-	border: 3px solid #3E6EA3;
 }
 
 /* Main Blocks */
@@ -175,9 +174,24 @@ a.button {
 	font-weight:bold;
 }
 
-#navigation ul li.active a, #navigation ul li a:hover {
+#navigation ul li a:hover {
 	color:#FFCC00;
 	background-color:#2A2724;
+}
+
+body.proposal-list ul li.active_proposals a {
+	color:#FFCC00;
+	background-color:#161514;
+}
+
+body.decision-list ul li.active_decisions a {
+	color:#FFCC00;
+	background-color:#161514;
+}
+
+body.archived-list ul li.active_archived a {
+	color:#FFCC00;
+	background-color:#161514;
 }
 
 #navigation ul li a:hover {
@@ -316,9 +330,9 @@ a.button.add_proposal {
     background-image: url("../images/icon-add-decision.png");
     background-position: right center;
     background-repeat: no-repeat;
-    border: 3px solid #FFCC00;
     color: #333333;
     padding-right: 30px;
+    float:right
 }
 
 

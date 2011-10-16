@@ -25,9 +25,9 @@
 			<div id="navigation-wrapper">
 				<div id="navigation">
 					<ul>
-						<li class="active"><a href="{% url proposal_list %}">{% trans "Proposals" %}</a></li>
-						<li><a href="{% url decision_list %}">{% trans "Decisions Made" %}</a></li>
-						<li><a href="{% url archived_list %}">{% trans "Archived" %}</a></li>
+						<li class="active_proposals"><a href="{% url proposal_list %}">{% trans "Proposals" %}</a></li>
+						<li class="active_decisions"><a href="{% url decision_list %}">{% trans "Decisions Made" %}</a></li>
+						<li class="active_archived"><a href="{% url archived_list %}">{% trans "Archived" %}</a></li>
 					</ul>
 					<form id="search_form" action="search" method="get">
 						<p>
@@ -35,6 +35,8 @@
 							<input id="search_button" type="submit" value="Search"/>
 						</p>
 					</form>
+					<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
+					
 				</div>
 			</div>
 		{% endblock %}

@@ -41,6 +41,10 @@ class Idea(models.Model):
     def save(self, *args, **kwargs):
         self.description_excerpt = self._get_excerpt()
         return super(Idea, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_fields(cls):
+        return cls._meta.fields
     
     class Meta:
         abstract = True

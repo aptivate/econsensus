@@ -59,3 +59,19 @@ class FilterForm(forms.Form):
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
+    
+class SortForm(forms.Form):
+    
+    #This is a more robus way of getting attributes to sort on.
+    #However it generates a list that is probably too long.
+    #TDOD: Think about creating a mechanism to integrate the sorting with the fields that are / 
+    #shown on the page
+    #list_choices = [(field.name, field.name) for field in Decision.get_fields()]        
+
+    list_choices = [('id', 'id'), ('description', 'description'), ('deadline', 'deadline')]
+    sort = ChoiceField(choices=list_choices,
+                         label = 'Sort by',
+                         initial=list_choices[0],
+                         required=False,
+                         widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
+    
