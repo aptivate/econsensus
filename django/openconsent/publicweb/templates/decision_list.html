@@ -8,35 +8,38 @@
 {% block body_class%}decision-list{% endblock %}
 
 {% block content %}
-	<div id="content">
+	<div id="content">		
+		<form id="sort_form" action="{% url publicweb.views.decision_list %}" method="GET">
+			{{ sort_form.as_p }}
+			<noscript><input type="submit" value="Submit"></noscript>
+		</form>
+				
 		<ul class="list_view decision">
-	        {% for decision in decisions.rows %}
-			    <li class="item decision">	        
-					<div class="item_id">
-					<a title="view item" href="{{ decision.record.get_absolute_url }}">{{ decision.id }}</a>
-			        </div>
-					<div class="item_description">
-		            	<p>{{ decision.description_excerpt }}</p>
-			        </div>
-			        <div class="item_activity">
-			            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
-			        </div>
-			        <div class="item_date deadline">
-				        {% if decision.decided_date %}
-				            <span>{{ decision.decided_date|date:"d N Y" }}</span>
-				        {% else %}
-				             <span>--</span>
-				        {% endif %}
-			        </div> <!-- class item_date deadline -->
-			        <div class="item_date deadline">
-				        {% if decision.decided_date %}
-				            <span>{{ decision.review_date|date:"d N Y" }}</span>
-				        {% else %}
-				             <span>--</span>
-				        {% endif %}
-			        </div> <!-- class item_date deadline -->
-			    </li> <!-- item decision -->
-			{% endfor %}  
-		</ul> <!-- list_view decision -->
+			{% if object_list %}
+		        {% for object in object_list %}
+				    <li class="item proposal">	        
+						<div class="item_id">
+						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
+				        </div>
+						<div class="item_description">
+			            	<p>{{ object.description_excerpt }}</p>
+				        </div>
+				        <div class="item_activity">
+				            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
+				        </div>
+				        <div class="item_date deadline">
+				        	Deadline:
+					        {% if object.deadline %}
+					            <span>{{ object.deadline|date:"d N Y" }}</span>
+					        {% else %}
+					             <span>--</span>
+					        {% endif %}
+				        </div> <!-- class item_date deadline -->
+				    </li> <!-- item proposal -->
+				{% endfor %}
+			{% else %}
+				<p>No decisions have been made.<p>
+			{% endif %}				
+		</ul> <!-- list_view proposal -->
 	</div><!-- content end -->
 {% endblock %}

@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.generic import list_detail
 
 from models import Decision
 from forms import DecisionForm, FeedbackFormSet
@@ -52,12 +53,18 @@ def export_csv(request):
 
 @login_required        
 def decision_list(request):  
-    queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS)
-            
-    decisions = DecisionTable(list(queryset), order_by=request.GET.get('sort'))
-        
-    return render_to_response('decision_list.html',
-        RequestContext(request, dict(decisions=decisions)))
+    sort_form = SortForm(request.GET)
+    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
+        queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS).order_by(str(sort_form.cleaned_data['sort']))
+    else:
+        queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS)
+
+    return list_detail.object_list(
+        request,
+        queryset,
+        template_name = 'decision_list.html',
+        extra_context = {'sort_form':sort_form}
+        )
 
 @login_required        
 def proposal_list(request):
@@ -67,18 +74,29 @@ def proposal_list(request):
     else:
         queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)
 
-    proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
-        
-    return render_to_response('proposal_list.html',
-        RequestContext(request, dict(proposals=proposals, sort_form=sort_form)))
+    return list_detail.object_list(
+        request,
+        queryset,
+        template_name = 'proposal_list.html',
+        extra_context = {'sort_form':sort_form}
+        )
+    #return render_to_response('proposal_list.html',
+    #    RequestContext(request, dict(proposals=proposals, sort_form=sort_form)))
 
 @login_required        
 def archived_list(request):
-    queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS)      
-    proposals = ProposalTable(list(queryset), order_by=request.GET.get('sort'))
-        
-    return render_to_response('archived_list.html',
-        RequestContext(request, dict(objects=proposals)))
+    sort_form = SortForm(request.GET)
+    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
+        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS).order_by(str(sort_form.cleaned_data['sort']))
+    else:
+        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS)
+
+    return list_detail.object_list(
+        request,
+        queryset,
+        template_name = 'archived_list.html',
+        extra_context = {'sort_form':sort_form}
+        )
 
 @login_required
 def modify_decision(request, decision_id = None):

@@ -179,17 +179,17 @@ a.button {
 	background-color:#2A2724;
 }
 
-body.proposal-list ul li.active_proposals a {
+body.proposal-list ul li.navigation_proposals a {
 	color:#FFCC00;
 	background-color:#161514;
 }
 
-body.decision-list ul li.active_decisions a {
+body.decision-list ul li.navigation_decisions a {
 	color:#FFCC00;
 	background-color:#161514;
 }
 
-body.archived-list ul li.active_archived a {
+body.archived-list ul li.navigation_archived a {
 	color:#FFCC00;
 	background-color:#161514;
 }

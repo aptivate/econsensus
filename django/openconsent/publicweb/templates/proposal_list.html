@@ -15,27 +15,31 @@
 		</form>
 				
 		<ul class="list_view proposal">
-	        {% for proposal in proposals.rows %}
-			    <li class="item proposal">	        
-					<div class="item_id">
-					<a title="view item" href="{{ proposal.record.get_absolute_url }}">{{ proposal.id }}</a>
-			        </div>
-					<div class="item_description">
-		            	<p>{{ proposal.description_excerpt }}</p>
-			        </div>
-			        <div class="item_activity">
-			            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
-			        </div>
-			        <div class="item_date deadline">
-			        	Deadline:
-				        {% if proposal.deadline %}
-				            <span>{{ proposal.deadline|date:"d N Y" }}</span>
-				        {% else %}
-				             <span>--</span>
-				        {% endif %}
-			        </div> <!-- class item_date deadline -->
-			    </li> <!-- item proposal -->
-			{% endfor %}	    
+			{% if object_list %}
+		        {% for object in object_list %}
+				    <li class="item proposal">	        
+						<div class="item_id">
+						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
+				        </div>
+						<div class="item_description">
+			            	<p>{{ object.description_excerpt }}</p>
+				        </div>
+				        <div class="item_activity">
+				            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
+				        </div>
+				        <div class="item_date deadline">
+				        	Deadline:
+					        {% if object.deadline %}
+					            <span>{{ object.deadline|date:"d N Y" }}</span>
+					        {% else %}
+					             <span>--</span>
+					        {% endif %}
+				        </div> <!-- class item_date deadline -->
+				    </li> <!-- item proposal -->
+				{% endfor %}
+			{% else %}
+				<p>There are currently no proposals.<p>
+			{% endif %}				
 		</ul> <!-- list_view proposal -->
 	</div><!-- content end -->
 {% endblock %}
