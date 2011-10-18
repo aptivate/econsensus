@@ -1,23 +1,30 @@
-from publicweb.tests.decision_test_case import DecisionTestCase
-from publicweb.models import Decision
+from decision_test_case import DecisionTestCase
+from openconsent.publicweb.models import Decision
 import datetime
 from django.core.urlresolvers import reverse
-import django_tables2 as tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
 
 class DecisionListTest(DecisionTestCase):
 
-    def test_decisions_table_rows_can_be_sorted_by_review_date(self):
-        self.assert_decisions_table_sorted_by_date_column('review_date')
+    def test_decisions_can_be_sorted_by_id(self):
+        for i in range(5,0,-1):
+            decision = Decision(description='Decision %d' % i)
+            decision.save(self.user)
+        response = self.client.get(reverse('proposal_list'), {'sort':'id'})
+                
+        object_list = response.context['object_list']    
         
-    def test_descisions_table_rows_can_be_sorted_by_decided_date(self):
-        self.assert_decisions_table_sorted_by_date_column('decided_date')
+        for i in range(1,6):
+            self.assertEquals(i, object_list[i-1].id)
+        
+    def test_descisions_can_be_sorted_by_excerpt(self):
+        self.assert_decisions_sorted_by('excerpt')
 
-    def test_descisions_table_rows_can_be_sorted_by_expiry_date(self):
-        self.assert_decisions_table_sorted_by_date_column('expiry_date')
+    def test_descisions_can_be_sorted_by_deadline(self):
+        self.assert_decisions_sorted_by('deadline')
 
-    def assert_decisions_table_sorted_by_date_column(self, column):
+    def assert_decisions_sorted_by(self, column):
         # Create test decisions in reverse date order.         
         for i in range(5, 0, -1):
             decision = Decision(description='Decision %d' % i, 
@@ -36,15 +43,6 @@ class DecisionListTest(DecisionTestCase):
             self.assertEquals(datetime.date(2001, 3, i), 
                               getattr(rows[i-1].record, column))
 
-    def test_decisions_table_is_an_instance_of_model_table(self):
-        """
-        The decisions table is represented using django_tables2.ModelTable.
-        """
-        self.create_and_return_example_concensus_decision_with_feedback()
-        response = self.load_decision_list_page_and_return_response()
-        decisions_table = response.context['decisions']
-        self.assertTrue(isinstance(decisions_table, tables.Table))
-    
     def test_decision_list_can_be_filtered_by_status_consensus(self):
         self.create_decisions_with_different_statuses()
         params = {'filter':Decision.CONSENSUS_STATUS}

@@ -5,16 +5,15 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
+from django.http import HttpResponse
+
+import unicodecsv
 
 from models import Decision
 from forms import DecisionForm, FeedbackFormSet
-from decision_table import DecisionTable
+from forms import SortForm
+from forms import FilterForm
 
-import unicodecsv
-from django.http import HttpResponse
-from publicweb.proposal_table import ProposalTable
-from publicweb.forms import SortForm
-from publicweb.forms import FilterForm
     
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -51,6 +50,10 @@ def export_csv(request):
         writer.writerow([unicode(fieldOutput(obj,field)).encode("utf-8","replace") for field in field_names])
     return response
 
+# TODO: a better way to handle all these list views is to create a single view for listing items
+# that view will use a search function that takes a 'filter' parameter and an 'order_by' parameter and gives an ordered queryset back.
+# The list view will use a single template but will pass a parameter as extra context to individualise the page
+
 @login_required        
 def decision_list(request):  
     sort_form = SortForm(request.GET)
@@ -80,8 +83,6 @@ def proposal_list(request):
         template_name = 'proposal_list.html',
         extra_context = {'sort_form':sort_form}
         )
-    #return render_to_response('proposal_list.html',
-    #    RequestContext(request, dict(proposals=proposals, sort_form=sort_form)))
 
 @login_required        
 def archived_list(request):

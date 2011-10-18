@@ -1,8 +1,7 @@
-from publicweb.tests.decision_test_case import DecisionTestCase
-from publicweb.models import Decision
+from decision_test_case import DecisionTestCase
+from openconsent.publicweb.models import Decision
 import datetime
 from django.core.urlresolvers import reverse
-import django_tables2 as tables
 from lxml.html import fromstring
 from lxml.cssselect import CSSSelector
 
