@@ -68,9 +68,11 @@ class SortForm(forms.Form):
     #shown on the page
     #list_choices = [(field.name, field.name) for field in Decision.get_fields()]        
 
-    list_choices = [('id', 'id'), ('description', 'description'), ('deadline', 'deadline')]
+    list_choices = [('id', _('id')),
+                    ('description', _('description')),
+                    ('deadline', _('deadline'))]
     sort = ChoiceField(choices=list_choices,
-                         label = 'Sort by',
+                         label = _('Sort by'),
                          initial=list_choices[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))

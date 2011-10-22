@@ -1,9 +1,8 @@
 {% extends "fullpage.html" %}
 {% load i18n %}
 
-{% block title %}
-{% trans "Home" %}
-{% endblock %}
+{% block title %}{{ block.super }}{% trans "Proposals" %}{% endblock %}
+
 {% block body_class%}proposal-list{% endblock %}
 
 {% block content %}
@@ -21,7 +20,7 @@
 						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
 				        </div>
 						<div class="item_description">
-			            	<p>{{ object.description_excerpt }}</p>
+			            	<p>{{ object.excerpt }}</p>
 				        </div>
 				        <div class="item_activity">
 				            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
@@ -37,7 +36,7 @@
 				    </li> <!-- item proposal -->
 				{% endfor %}
 			{% else %}
-				<p>There are currently no proposals.<p>
+				<p>{% trans "There are currently no proposals" %}.<p>
 			{% endif %}				
 		</ul> <!-- list_view proposal -->
 	</div><!-- content end -->

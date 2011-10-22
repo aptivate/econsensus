@@ -23,7 +23,7 @@ class OpenConsentEmailMessage(EmailMessage):
 
             subject_dict = {'site': current_site.name,
                             'status' : object.status_text(),
-                            'name': object.description_excerpt.replace('\r\n', '') }
+                            'name': object.excerpt.replace('\r\n', '') }
             email_template = get_template('email/new.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = User.objects.all()
@@ -33,7 +33,7 @@ class OpenConsentEmailMessage(EmailMessage):
             subject_dict = {'site': current_site.name,
                             'old_status' : old_object.status_text(),
                             'new_status' : object.status_text(),
-                            'name': object.description_excerpt.replace('\r\n', '') }
+                            'name': object.excerpt.replace('\r\n', '') }
             email_template = get_template('email/status_change.txt')
             email_dict = { 'site': current_site.name, 
                           'name': item_name,
@@ -44,7 +44,7 @@ class OpenConsentEmailMessage(EmailMessage):
         elif type == 'content_change':
             subject_template = Template("[{{ site }} Open Consent]: Change to {{ name|safe }}")
             subject_dict = {'site': current_site.name,
-                            'name': object.description_excerpt.replace('\r\n', '') }
+                            'name': object.excerpt.replace('\r\n', '') }
             email_template = get_template('email/content_change.txt')
             email_dict = { 'site': current_site.name, 'name': item_name, 'link': item_link }
             queryset = object.watchers.exclude(username=object.author.username)

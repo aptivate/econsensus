@@ -19,7 +19,7 @@ add_introspection_rules([], ["^tinymce\.models\.HTMLField"])
 
 
 class Idea(models.Model):
-    description_excerpt = models.CharField(max_length=255,
+    excerpt = models.CharField(max_length=255,
                                            blank=True)
     description = tinymce.models.HTMLField(verbose_name=_('Description'))
     
@@ -36,10 +36,10 @@ class Idea(models.Model):
         return description[:position]
     
     def __unicode__(self):
-        return self.description_excerpt
+        return self.excerpt
     
     def save(self, *args, **kwargs):
-        self.description_excerpt = self._get_excerpt()
+        self.excerpt = self._get_excerpt()
         return super(Idea, self).save(*args, **kwargs)
 
     @classmethod

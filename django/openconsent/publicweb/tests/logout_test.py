@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 class LogoutTest(OpenConsentTestCase):       
     def test_logout_is_redirected(self):
         self.login()
-        path = reverse('decision_add')
+        path = reverse('add_decision')
         self.client.get(path, follow=True)
         path = reverse('logout')
         response = self.client.get(path, follow=True)

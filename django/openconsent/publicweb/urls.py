@@ -1,10 +1,9 @@
 from django.conf.urls.defaults import patterns, url
-from publicweb.views import add_decision, edit_decision, decision_list, \
-proposal_list, archived_list
-from publicweb.models import Decision
-
 from django.views.generic.list_detail import object_detail
-from publicweb.views import export_csv
+
+from views import add_decision, edit_decision, decision_list, \
+                    proposal_list, archived_list, export_csv
+from models import Decision
 
 urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^export_csv/$',

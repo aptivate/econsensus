@@ -32,7 +32,7 @@
             "status": 0, 
             "review_date": "2001-01-01", 
             "description": "Productivity would be increased if all staff members were given laptops.", 
-            "description_excerpt": "Buy laptops for all permanent staff members", 
+            "excerpt": "Buy laptops for all permanent staff members", 
             "people": "Amy", 
             "budget": "", 
             "expiry_date": "2001-04-03", 
@@ -48,7 +48,7 @@
             "status": 0, 
             "review_date": "2001-02-01", 
             "description": "We should relocate our board meetings to KPM HQ so that KPM members can attend these meetings.", 
-            "description_excerpt": "Relocate board meetings to KPM HQ", 
+            "excerpt": "Relocate board meetings to KPM HQ", 
             "people": "Luke", 
             "budget": "", 
             "expiry_date": "2001-08-07", 
@@ -64,7 +64,7 @@
             "status": 0, 
             "review_date": "2000-03-04", 
             "description": "We need to recruit a junior clerk to take pressure off Steve", 
-            "description_excerpt": "Recruit Junior Clerk", 
+            "excerpt": "Recruit Junior Clerk", 
             "people": "Mark", 
             "budget": "", 
             "expiry_date": "2007-02-06", 
@@ -81,7 +81,7 @@
             "rating": null, 
             "decision": 2, 
             "description": "People from RJQ will have to travel further. Will we get extra travel allowance?", 
-            "description_excerpt": "But we would have to travel further"
+            "excerpt": "But we would have to travel further"
         }
     }, 
     {
@@ -92,7 +92,7 @@
             "rating": null, 
             "decision": 3, 
             "description": "This would let me work on expanding our core accounts. - Steve", 
-            "description_excerpt": "Good idea"
+            "excerpt": "Good idea"
         }
     }, 
     {
@@ -103,7 +103,7 @@
             "rating": null, 
             "decision": 3, 
             "description": "We don't have the money at the moment. Maybe we can put this off for 3 months.", 
-            "description_excerpt": "Financial implications?"
+            "excerpt": "Financial implications?"
         }
     }
 ]

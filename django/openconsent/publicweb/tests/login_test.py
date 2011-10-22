@@ -22,7 +22,7 @@ class LoginTest(OpenConsentTestCase):
         path = reverse('login')
         page = self.client.get(path)
         
-        post_data = self.get_form_values_from_response(page)
+        post_data = self.get_form_values_from_response(page, 1)
         self.assertIn('username', post_data, 'No username field in page content!')
         self.assertIn('password', post_data, 'No password field in page content!')
         post_data['login'] = 'admin'
