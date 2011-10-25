@@ -48,7 +48,7 @@ def _setup_paths():
     env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
 
 
-def _manage_py(args, cwd=None):
+def _manage_py(args, cwd=None, supress_output=False):
     # for manage.py, always use the system python 2.6
     # otherwise the update_ve will fail badly, as it deletes
     # the virtualenv part way through the process ...
@@ -67,13 +67,17 @@ def _manage_py(args, cwd=None):
 
     if env['verbose']:
         print 'Executing manage command: %s' % ' '.join(manage_cmd)
+    output_lines = []
     popen = subprocess.Popen(manage_cmd, cwd=cwd, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
     for line in iter(popen.stdout.readline, ""):
-        print line,
+        if env['verbose'] or not supress_output:
+            print line,
+        output_lines.append(line)
     returncode = popen.wait()
     if returncode != 0:
         sys.exit(popen.returncode)
+    return output_lines
 
 
 def _get_django_db_settings():
@@ -114,8 +118,9 @@ def _get_django_db_settings():
     env['db_port'] = db_port
     return (db_engine, db_name, db_user, db_pw, db_port)
 
-def _mysql_exec(mysql_cmd):
-    """ execute a SQL statement using MySQL """
+
+def _mysql_exec_as_root(mysql_cmd):
+    """ execute a SQL statement using MySQL as the root MySQL user"""
     mysql_call = ['mysql', '-u', 'root', '-p'+_get_mysql_root_password()]
     if env['db_port'] != None:
         mysql_call += ['--host=127.0.0.1', '--port=%s' % env['db_port']]
@@ -159,10 +164,10 @@ def clean_db():
         os.remove(db_path)
     elif db_engine.endswith('mysql'):
         # DROP DATABASE
-        _mysql_exec('DROP DATABASE IF EXISTS %s' % db_name)
+        _mysql_exec_as_root('DROP DATABASE IF EXISTS %s' % db_name)
 
         test_db_name = 'test_' + db_name
-        _mysql_exec('DROP DATABASE IF EXISTS %s' % test_db_name)
+        _mysql_exec_as_root('DROP DATABASE IF EXISTS %s' % test_db_name)
 
 
 def create_ve():
@@ -201,7 +206,8 @@ def link_local_settings(environment):
             cwd=env['django_dir'])
 
 
-def update_db():
+def update_db(syncdb=True):
+    """ create the database, and do syncdb and migrations (if syncdb==True)"""
     # first work out the database username and password
     db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
     # then see if the database exists
@@ -213,37 +219,44 @@ def update_db():
         db_exist = subprocess.call(db_exist_call)
         if db_exist != 0:
             # create the database and grant privileges
-            _mysql_exec('CREATE DATABASE %s CHARACTER SET utf8' % db_name)
-            _mysql_exec(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
+            _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % db_name)
+            _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
                 (db_name, db_user, db_pw)))
 
             # create the test database, grant privileges and drop it again
             test_db_name = 'test_' + db_name
-            _mysql_exec('CREATE DATABASE %s CHARACTER SET utf8' % test_db_name)
-            _mysql_exec(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
+            _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % test_db_name)
+            _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
                 (test_db_name, db_user, db_pw)))
-            _mysql_exec(('DROP DATABASE %s' % test_db_name))
-    # if we are using South we need to do the migrations aswell
-    use_migrations = False
-    for app in project_settings.django_apps:
-        if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
-            use_migrations = True
-    _manage_py(['syncdb', '--noinput'])
-    if use_migrations:
-        _manage_py(['migrate', '--noinput'])
+            _mysql_exec_as_root(('DROP DATABASE %s' % test_db_name))
+    print 'syncdb: %s' % type(syncdb)
+    if syncdb:
+        # if we are using South we need to do the migrations aswell
+        use_migrations = False
+        for app in project_settings.django_apps:
+            if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
+                use_migrations = True
+        _manage_py(['syncdb', '--noinput'])
+        if use_migrations:
+            _manage_py(['migrate', '--noinput'])
 
-def dump_db():
+def dump_db(dump_filename='db_dump.sql'):
     """Dump the database in the current working directory"""
     project_name = project_settings.django_dir.split('/')[-1]
     db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
     if not db_engine.endswith('mysql'):
         print 'dump_db only knows how to dump mysql so far'
         sys.exit(1)
-    dump_cmd = '/usr/bin/mysqldump --user=%s --password=%s --host=127.0.0.1 ' %\
-            (db_user, db_pw)
-    if db_port != None:
-        dump_cmd += '--port=%s ' % db_port
-    dump_cmd += '%s > db_dump.sql' % db_name
+    dump_cmd = ['/usr/bin/mysqldump', '--user='+db_user, '--password='+db_pw, '--host=127.0.0.1']
+    if db_port != None and len(db_port) > 0:
+        dump_cmd += ['--port=%s' % db_port]
+    dump_cmd += [db_name]
+    # open the file to write to
+    dump_file = open(dump_filename, 'w')
+    if env['verbose']:
+        print 'Executing dump command: %s - stdout to %s' % (' '.join(dump_cmd), dump_filename)
+    subprocess.call(dump_cmd, stdout=dump_file)
+    dump_file.close()
 
 
 def setup_db_dumps(dump_dir):
@@ -337,6 +350,9 @@ def _manage_py_jenkins():
     """ run the jenkins command """
     args = ['jenkins', ]
     args += ['--pylint-rcfile', os.path.join(env['project_dir'], 'jenkins', 'pylint.rc')]
+    coveragerc_filepath = os.path.join(env['project_dir'], 'jenkins', 'coverage.rc')
+    if os.path.exists(coveragerc_filepath):
+        args += ['--coverage-rcfile', coveragerc_filepath]
     args += project_settings.django_apps
     _manage_py(args, cwd=env['project_dir'])
 

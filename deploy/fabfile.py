@@ -138,7 +138,13 @@ def load_fixtures():
     """load fixtures for this environment"""
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
-        sudo(env.tasks_bin + ' load_fixtures')
+        sudo(env.tasks_bin + ' load_admin_user:' + env.environment)
+        sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
+
+def load_sample_data():
+    """load fixtures for this environment"""
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' load_sample_data')
 
 def link_apache_conf(apache_conf_name=None):
     """link the apache.conf file"""
