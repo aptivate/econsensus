@@ -10,16 +10,14 @@ from django.core.urlresolvers import reverse
 from django.forms.fields import BooleanField
 from django.forms.widgets import CheckboxInput
 
-from publicweb.views import edit_decision
-from publicweb.models import Decision
-from publicweb.forms import DecisionForm
-
 import tinymce.widgets
-
 import difflib
 
-from publicweb.widgets import JQueryUIDateWidget
-from publicweb.tests.decision_test_case import DecisionTestCase
+from openconsent.publicweb.views import edit_decision
+from openconsent.publicweb.models import Decision
+from openconsent.publicweb.forms import DecisionForm
+from openconsent.publicweb.widgets import JQueryUIDateWidget
+from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
 
 ### As a general note, I can see our tests are evolving into...
 ### 1 - model tests (does the model have x property?)
@@ -147,7 +145,7 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('edit_decision', args=[self.decision.id])
         page = self.client.get(path)
         
-        post_data = self.get_form_values_from_response(page)
+        post_data = self.get_form_values_from_response(page, 2)
         post_data['description'] = "Description"
         post_data['feedback_set-0-description'] = 'Modified'
         post_data['submit'] = 'Submit'
@@ -316,14 +314,14 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('add_decision')
         response = self.client.get(path)
                 
-        self.assertContains(response, "submit", count=5)
+        self.assertContains(response, "submit", count=6)
 
     def test_edit_page_contains_cancel(self):
         decision = self.create_and_return_decision()
         path = reverse('edit_decision', args=[decision.id])
         response = self.client.get(path)
-                
-        self.assertContains(response, "submit", count=5)
+        
+        self.assertContains(response, "submit", count=6)
 
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()
@@ -364,7 +362,7 @@ class DecisionsTest(DecisionTestCase):
 
     def test_excerpts_is_first_sentence(self):
         decision = self.create_and_return_decision("A.B.C.")
-        self.assertEqual(decision.description_excerpt, "A")
+        self.assertEqual(decision.excerpt, "A")
         
         
     
