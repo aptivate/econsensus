@@ -85,6 +85,15 @@ a.button {
 	top:0.2em;
 }
 
+textarea, input {
+    border: 2px solid #ddd;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 3px 3px 3px #CCCCCC inset;
+    display: block;
+    position: relative;
+}
+
+
 /* Main Blocks */
 
 #header-wrapper, #navigation-wrapper, #content-wrapper, #footer-wrapper {
@@ -223,6 +232,7 @@ body.archived-list ul li.navigation_archived a {
 	color:#666;
 	display:block;
 	float:left;
+	width:80%;
 }
 
 /* list view */
@@ -328,14 +338,119 @@ body.archived-list ul li.navigation_archived a {
 a.button.add_proposal {
     background-color: #FFCC00;
     background-image: url("../images/icon-add-decision.png");
-    background-position: right center;
+    background-position: 3px center;
     background-repeat: no-repeat;
     color: #333333;
-    padding-right: 30px;
-    float:right
+    float: right;
+    line-height: 24px;
+    margin-top: 6px;
+    padding-left: 30px;
+}
+
+/* Decision View */
+
+h2.page_title strong {
+	font-size:0.6em;
+	color:#333;
+	font-weight:bold;
+}
+
+#decision {
+    border: 3px solid #FFCC00;
+    border-radius: 15px 15px 15px 15px;
+    clear: both;
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.decision_summary {
+    float: left;
+    width: 80%;
+}
+
+.decision_meta {
+	float:right;
+	width:20%;
+}
+
+.decision_author {
+    font-size: 1.2em;
+    position: absolute;
+    right: 0;
+    top: -40px;
+}
+
+.form_item.description, .form_item.resources {
+	padding:20px;
+	display:block;
+	position:relative;
+}
+
+#decision_feedback {
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+#decision label {
+	display:block;
+	padding-bottom:0.3em;
+	font-weight:bold;
+	font-size:0.8em;
+	width:6em;
+	float:left;
+}
+
+#id_description, #id_budget {
+    display: block;
+    padding: 15px;
+    position: relative;
+    width: 94%;
+	clear:both;
 }
 
 
+.form_item.resources {
+	padding-top:0;
+}
+
+.decision_meta {
+	padding:10px 0;
+}
+
+.decision_meta div {
+	padding:0.2em 1em 0.3em 0;
+}
+
+.decision_meta label {
+    float: left;
+    font-size: 0.9em;
+    font-weight: bold;
+    width: 80px;
+	clear:both;
+}
+
+.decision_meta input {
+	padding:8px 10px 2px 10px;
+	width:90%;
+}
+
+.decision_controls {
+	display:block;
+	position:relative;
+	clear:both;
+}
+
+.decision_meta #tags #id_tags {
+	width:90%;
+}
+
+
+
+/* Footer */
 
 #footer {
 	padding:0;
@@ -349,6 +464,15 @@ a.button.add_proposal {
 
 /* login form */
 
+body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
+	width:400px;
+	display:block;
+	float:none;
+	margin:0 auto;
+	clear:both;
+	position:relative;
+}
+
 body.login #header, body.login #content {
 	position:relative;
 	padding-top:0;
@@ -356,22 +480,27 @@ body.login #header, body.login #content {
 }
 
 body.login #header {
-    border-bottom: 10px solid #EEEEEE;
     margin-bottom: 20px;
     margin-top: 30px;
 }
 
 body.login #header h1 {
-	padding-left: 0px;
+    padding-bottom: 30px;
+    padding-left: 0;
+    padding-top: 20px;
 }
 
 body.login #branding, body.login #columns {
 	width:400px;
 }
 
-body.login #columns .col1 h2:first-child {
-	float:left;
-	padding-right:20px;
+body.login #content h2.page_title {
+	display:none;
+}
+
+body.login #footer {
+	padding: 5px 20px;
+    text-align: center;
 }
 
 #login-form {
@@ -380,7 +509,7 @@ body.login #columns .col1 h2:first-child {
     display: block;
     float: left;
     padding: 20px;
-    width: 280px;
+    width: 360px;
 }
 
 #login-form p {
@@ -402,8 +531,23 @@ body.login #columns .col1 h2:first-child {
     border-radius: 10px 10px 10px 10px;
     display: block;
     float: right;
+    padding: 10px 10px 8px;
+    width: 200px;
+}
+
+#login-form .button {
+    background: none repeat scroll 0 0 #AAD400;
+    border: medium none;
+    box-shadow: none;
+    color: #FFFFFF;
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-top: 10px;
     padding: 5px;
-    width: 150px;
+    position: relative;
+    width: 215px;
 }
 
 /* Media Queries*/

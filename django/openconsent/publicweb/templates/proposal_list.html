@@ -5,11 +5,14 @@
 
 {% block body_class%}proposal-list{% endblock %}
 
+{% block heading %}
+	{% trans "Active Proposals:" %}
+{% endblock %}
+
 {% block content %}
 	<div id="content">		
-		<form id="sort_form" action="{% url publicweb.views.proposal_list %}" method="GET">
+		<form id="sort_form" action="{% url publicweb.views.proposal_list %}" method="get">
 			{{ sort_form.as_p }}
-			<noscript><input type="submit" value="Submit"></noscript>
 		</form>
 				
 		<ul class="list_view proposal">

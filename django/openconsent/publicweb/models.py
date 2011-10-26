@@ -15,13 +15,12 @@ import re
 from south.modelsinspector import add_introspection_rules
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
-add_introspection_rules([], ["^tinymce\.models\.HTMLField"])
 
 
 class Idea(models.Model):
     excerpt = models.CharField(max_length=255,
                                            blank=True)
-    description = tinymce.models.HTMLField(verbose_name=_('Description'))
+    description = models.TextField(verbose_name=_('Description'))
     
     DEFAULT_SIZE = 140
     

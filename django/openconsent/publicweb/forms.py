@@ -2,7 +2,6 @@
 
 from django import forms
 from models import Decision, Feedback
-import tinymce.widgets
 
 from django.utils.translation import ugettext_lazy as _
 from django.forms.models import inlineformset_factory
@@ -10,21 +9,9 @@ from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
 
-mce_attrs_setting = {
-            "theme" : "advanced",
-            "theme_advanced_buttons1" : "bold,italic,underline,link,unlink," +
-                "bullist,blockquote,undo",
-            "theme_advanced_buttons2" : "",
-            "theme_advanced_buttons3" : "",
-            }
-
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        widgets = {
-                   'description': tinymce.widgets.TinyMCE()
-                   }
-
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
                                        fields=('description','resolved','rating'),
                                        form=FeedbackForm)
@@ -36,8 +23,6 @@ class DecisionForm(forms.ModelForm):
     class Meta:
         model = Decision
         widgets = {
-                   'description': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
-                   'feedback': tinymce.widgets.TinyMCE(mce_attrs=mce_attrs_setting),
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
