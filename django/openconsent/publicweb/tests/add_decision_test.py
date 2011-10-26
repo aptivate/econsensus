@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from publicweb.tests.decision_test_case import DecisionTestCase
+from decision_test_case import DecisionTestCase
 
 class AddDecisionTest(DecisionTestCase):
     def test_jquery_javascript_included_in_page(self):

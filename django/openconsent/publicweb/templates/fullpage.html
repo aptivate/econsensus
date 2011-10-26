@@ -1,12 +1,7 @@
 {% extends "base.html" %}
-{% block base_content%}
-	<div id="columns" class="colmask fullpage">
-	    <div class="col1">
-	        <!-- Column 1 start -->
-			<h2 class="page_title">{% block heading %}{{ page.title }}{% endblock heading %}</h2>
-	        {% block content%}{% endblock content%}
-	        <!-- Column 1 end -->
-	    </div>
-	</div>
+{% block base_content %}
+	<div id="content-wrapper">
+	        {% block content %}{% endblock content %}
+	</div> <!-- content-wrapper end -->
 {% endblock %}
 

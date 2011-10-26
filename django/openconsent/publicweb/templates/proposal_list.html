@@ -1,48 +1,43 @@
 {% extends "fullpage.html" %}
 {% load i18n %}
-{% load django_tables2 %}
 
-{% block title %}
-{% trans "Home" %}
-{% endblock %}
-{% block body_class%}decision-list{% endblock %}
+{% block title %}{{ block.super }}{% trans "Proposals" %}{% endblock %}
+
+{% block body_class%}proposal-list{% endblock %}
 
 {% block content %}
-
-<div id="list_view proposal">
-    <div class="item proposal">
-        <div class="headings">
-    {% for column in proposals.columns %}
-        	<span id="{{ column.name }}" {% if column.order_by.is_ascending %}
-	    	class="sorted straight"
-	    {% endif %}
-	    {% if column.order_by.is_descending %}
-	    	class="sorted reverse"
-	    {% endif %}><a href={% if column.order_by %}
-			{% set_url_param sort=column.order_by.opposite %}
-		{% else %}
-			{% set_url_param sort=column.name %}
-		{% endif %}>{{ column }}</a></span>
-	{% endfor %}
-        </div>
-        {% for proposal in proposals.rows %}
-	         <div class="id">
-	            <a title="view item" href="">{{ proposal.id }}</a>
-	        </div>
-	        <div class="item_description">
-            	<p>{{ proposal.description_excerpt }}</p>
-	        </div>
-	        <div class="item_activity">
-	            <img src="/site_media/tmp/activity_barchart.png" />
-	        </div>
-	        <div class="item_date deadline">
-	        {% if proposal.deadline %}
-	            <span>{{ proposal.deadline|date:"d N Y" }}</span>
-	        {% else %}
-	             <span>--</span>
-	        {% endif %}
-	        </div>
-	{% endfor %}
-    </div>
-</div>
+	<div id="content">		
+		<form id="sort_form" action="{% url publicweb.views.proposal_list %}" method="GET">
+			{{ sort_form.as_p }}
+			<noscript><input type="submit" value="Submit"></noscript>
+		</form>
+				
+		<ul class="list_view proposal">
+			{% if object_list %}
+		        {% for object in object_list %}
+				    <li class="item proposal">	        
+						<div class="item_id">
+						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
+				        </div>
+						<div class="item_description">
+			            	<p>{{ object.excerpt }}</p>
+				        </div>
+				        <div class="item_activity">
+				            <img alt="Barchart" src="/site_media/images/activity-barchart.svg" />
+				        </div>
+				        <div class="item_date deadline">
+				        	Deadline:
+					        {% if object.deadline %}
+					            <span>{{ object.deadline|date:"d N Y" }}</span>
+					        {% else %}
+					             <span>--</span>
+					        {% endif %}
+				        </div> <!-- class item_date deadline -->
+				    </li> <!-- item proposal -->
+				{% endfor %}
+			{% else %}
+				<p>{% trans "There are currently no proposals" %}.<p>
+			{% endif %}				
+		</ul> <!-- list_view proposal -->
+	</div><!-- content end -->
 {% endblock %}

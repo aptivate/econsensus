@@ -6,7 +6,7 @@ class EditDecisionTest(DecisionTestCase):
     def test_edit_description_form_displays_title(self):
         decision = self.create_and_return_decision()
         response = self.load_add_decision_and_return_response(decision.id)
-        self.assertContains(response, u"<h2>" + decision.description_excerpt + \
+        self.assertContains(response, u"<h2>" + decision.excerpt + \
                             u"</h2>")
     
     def load_add_decision_and_return_response(self, id):

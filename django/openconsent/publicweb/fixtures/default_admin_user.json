@@ -1,0 +1,20 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "admin", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2011-09-01 15:46:32", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$03e54$0d29c46245eb96b2a799c0668e0e58f12791b7c5", 
+            "email": "openconsent@localhost", 
+            "date_joined": "2011-09-01 15:45:42"
+        }
+    }
+]

@@ -148,6 +148,15 @@ def describe_task(args):
             print
         sys.exit(0)
 
+def convert_args(value):
+    if value.lower() == 'true':
+        return True
+    elif value.lower() == 'false':
+        return False
+    elif value.isdigit():
+        return int(value)
+    else:
+        return value
 
 def main():
     # parse command line options
@@ -191,12 +200,12 @@ def main():
             f()
         else:
             f_args = task_bits[1].split(',')
-            pos_args = [arg for arg in f_args if arg.find('=') == -1]
+            pos_args = [convert_args(arg) for arg in f_args if arg.find('=') == -1]
             kwargs = [arg for arg in f_args if arg.find('=') >= 0]
             kwargs_dict = {}
             for kwarg in kwargs:
                 kw, value = kwarg.split('=', 1)
-                kwargs_dict[kw] = value
+                kwargs_dict[kw] = convert_args(value)
             f(*pos_args, **kwargs_dict)
 
 

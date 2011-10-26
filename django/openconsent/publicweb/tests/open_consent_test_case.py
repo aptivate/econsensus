@@ -24,11 +24,11 @@ class OpenConsentTestCase(TestCase):
     def deleteUser(self):
         self.user.delete()
 
-    def get_form_values_from_response(self, response):
+    def get_form_values_from_response(self, response, number):
         forms = ParseString(response.content, '')
         
         form_data = {}
-        for control in forms[1].controls:
+        for control in forms[number].controls:
             name = control.name
             form_data[name]=control.value
         

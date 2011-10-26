@@ -1,31 +1,58 @@
-[
+ [
     {
         "pk": 1, 
-        "model": "auth.user", 
+        "model": "publicweb.decision", 
         "fields": {
-            "username": "admin", 
-            "first_name": "", 
-            "last_name": "", 
-            "is_active": true, 
-            "is_superuser": true, 
-            "is_staff": true, 
-            "last_login": "2011-09-01 15:46:32", 
-            "groups": [], 
-            "user_permissions": [], 
-            "password": "sha1$03e54$0d29c46245eb96b2a799c0668e0e58f12791b7c5", 
-            "email": "openconsent@localhost", 
-            "date_joined": "2011-09-01 15:45:42"
-        }
-    },
-    {
-        "pk": 1, 
-        "model": "sites.site", 
-        "fields": {
-            "domain": "127.0.0.1:8000", 
-            "name": "localhost"
+            "status": 0, 
+            "review_date": "2001-01-01", 
+            "description": "Productivity would be increased if all staff members were given laptops.", 
+            "excerpt": "Buy laptops for all permanent staff members", 
+            "people": "Amy", 
+            "budget": "", 
+            "expiry_date": "2001-04-03", 
+            "watchers": [], 
+            "effective_date": null, 
+            "decided_date": "1999-12-24"
         }
     }, 
     {
+        "pk": 2, 
+        "model": "publicweb.decision", 
+        "fields": {
+            "status": 0, 
+            "review_date": "2001-02-01", 
+            "description": "We should relocate our board meetings to KPM HQ so that KPM members can attend these meetings.", 
+            "excerpt": "Relocate board meetings to KPM HQ", 
+            "people": "Luke", 
+            "budget": "", 
+            "expiry_date": "2001-08-07", 
+            "watchers": [], 
+            "effective_date": null, 
+            "decided_date": "2000-01-17"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "publicweb.decision", 
+        "fields": {
+            "status": 0, 
+            "review_date": "2000-03-04", 
+            "description": "We need to recruit a junior clerk to take pressure off Steve", 
+            "excerpt": "Recruit Junior Clerk", 
+            "people": "Mark", 
+            "budget": "", 
+            "expiry_date": "2007-02-06", 
+            "watchers": [], 
+            "effective_date": null, 
+            "decided_date": "2000-03-01"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "publicweb.feedback", 
+        "fields": {
+            "resolved": false, 
+         {
         "pk": 1, 
         "model": "publicweb.decision", 
         "fields": {
@@ -105,5 +132,32 @@
             "description": "We don't have the money at the moment. Maybe we can put this off for 3 months.", 
             "excerpt": "Financial implications?"
         }
+    }      "rating": null, 
+            "decision": 2, 
+            "description": "People from RJQ will have to travel further. Will we get extra travel allowance?", 
+            "excerpt": "But we would have to travel further"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "publicweb.feedback", 
+        "fields": {
+            "resolved": false, 
+            "rating": null, 
+            "decision": 3, 
+            "description": "This would let me work on expanding our core accounts. - Steve", 
+            "excerpt": "Good idea"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "publicweb.feedback", 
+        "fields": {
+            "resolved": false, 
+            "rating": null, 
+            "decision": 3, 
+            "description": "We don't have the money at the moment. Maybe we can put this off for 3 months.", 
+            "excerpt": "Financial implications?"
+        }
     }
-]
+ ]

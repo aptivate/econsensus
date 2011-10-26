@@ -1,18 +1,9 @@
 # functions just for this project
-import os
+import os, sys
 import subprocess
-import sys
 
 import tasklib
 
-production_fixtures = [
-                    'initial_data.json.production',
-                  ]
-
-development_fixtures = [
-                    'initial_data.json.dev',
-                     ]
-    
 def deploy(environment=None, svnuser=None, svnpass=None):
     if environment == None:
         environment = tasklib._infer_environment()
@@ -20,32 +11,42 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     tasklib.create_ve()
     tasklib.create_private_settings()
     tasklib.link_local_settings(environment)
-    link_local_fixtures(environment)
     tasklib.update_db()
-    load_fixtures(environment)
-
-def link_local_fixtures(environment):
-    """ link local_settings.py.environment as local_settings.py """
-    # die if the correct local settings does not exist
-    local_fixtures_directory = os.path.join(env['django_dir'], 'publicweb',
-                                           'fixtures')
-    local_fixtures_path = os.path.join(local_fixtures_directory,
-                                        'initial_data.json.'+environment)
-    if not os.path.exists(local_fixtures_path):
-        print "Could not find file to link to: %s" % local_fixtures_path
-        sys.exit(1)
-    subprocess.call(['ln', '-s', 'initial_data.json.'+environment, 'initial_data.json'], 
-            cwd=local_fixtures_directory)
-
-def load_fixtures():
-    """load fixtures for this environment"""
-    if tasklib._infer_environment() == 'production':
-        fixtures_list = production_fixtures
-    else:
-        fixtures_list = development_fixtures
-    for fixture in fixtures_list:
-        tasklib._manage_py(['loaddata'] + [fixture])
+    load_admin_user(environment)
+    load_django_site_data(environment)
         
+def load_sample_data():
+    """load sample data (fixture) to play with"""
+    tasklib._manage_py(['loaddata', "sample_data.json"])
+
+def load_admin_user(environment):
+    """load admin user based on environment. """
+    # TODO: maybe check if the admin user already exists before replacing it ...
+    local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
+                                           'fixtures')
+    admin_user_path = os.path.join(local_fixtures_directory,
+                                        environment +'_admin_user.json')
+    if os.path.exists(admin_user_path):
+        tasklib._manage_py(['loaddata', admin_user_path])
+    else:
+        tasklib._manage_py(['loaddata', "default_admin_user.json"])
+
+def load_django_site_data(environment, force=False):
+    """load data for django sites framework. """
+    if force == False:
+        # first check if it has already been loaded
+        output_lines = tasklib._manage_py(['dumpdata', 'sites'], supress_output=True)
+        if output_lines[0] != '[]':
+            return
+    local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
+                                           'fixtures')
+    site_fixture_path = os.path.join(local_fixtures_directory,
+                                        environment +'_site.json')
+    if os.path.exists(site_fixture_path):
+        tasklib._manage_py(['loaddata', site_fixture_path])
+    else:
+        tasklib._manage_py(['loaddata', "default_site.json"])
+
 def create_ve():
     """Create the virtualenv"""
     tasklib.create_ve()

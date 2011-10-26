@@ -2,51 +2,63 @@
 {% load i18n %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" dir="ltr" lang="en-US">
-	<head>
-		<title>{% block title %}{% trans "Lorem Ipsum" %}{% endblock %} | {% trans "Aptivate Decisions" %}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/styles.css" />
-		{% block head_content%}{% endblock %}
-	</head>
-  <body class="{% block body_class%}base{% endblock %}">
+<head>
+	<title>{% block title %}{% trans "Home" %} | {% endblock %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/styles.css"/>
+	{% block head_content%}{% endblock %}
+</head>
+<body class="{% block body_class%}base{% endblock %}">
+	<div id="header-wrapper">		
 		<div id="header">
-			
-				<div id="branding">
-				  	{% block header_content%}
-					  	<h1><a href="/"><img alt="Econsensus" src="{{MEDIA_URL}}images/econsensus-logo-header.png" /></a></h1>
-						<span class="user-org not_translated">: Aptivate</span>
-						{% block user_access %}
-						<div id="user_access">
-							<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
-							<a href='{% url django.contrib.auth.views.logout %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
-						</div>
-						{% endblock user_access%}
-					{% endblock %}
-				</div>
-				{% block topbar %}
-				<div id="nav">
-					<ul class="navigation">
-						<li><a class="go nav list" href="{% url proposal_list %}">{% trans "Proposal list" %}</a></li>
-						<li><a class="go nav list" href="{% url decision_list %}">{% trans "Decision list" %}</a></li>
-					</ul>
-				</div>
-				{% endblock %}
-		</div><!-- Header end -->
 		
-		<div id="content">
-			{% block base_content%}
-				{% block content %}
-				{% endblock content%}
-			{% endblock base_content%}
+			<h1><a href="http://www.econsensus.org/"><img alt="Econsensus" src="{{MEDIA_URL}}/images/econsensus-logo-header.png"/></a><span class="user-org not_translated">: Aptivate</span></h1>
+
+			{% block user_access %}
+				<div id="user_access">
+					<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
+					{% if user.is_authenticated %}
+						<a href='{% url django.contrib.auth.views.logout %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
+					{% else %}
+						<a href='{% url django.contrib.auth.views.login %}'> {%trans "Login" %}</a>
+					{% endif %}
+				</div>
+			{% endblock user_access%}
+			
 		</div>
-	<div id="footer">
-		<div id="site-info">
-			{% block footer_content%}
-			<p>{% trans "Econsensus is an open source project developed by " %}<a href="http://www.aptivate.org">{% trans "Aptivate" %}</a></p>
-			{% endblock %}
+		{% block topbar %}
+			<div id="navigation-wrapper">
+				<div id="navigation">
+					<ul>
+						<li class="navigation_proposals"><a href="{% url proposal_list %}">{% trans "Proposals" %}</a></li>
+						<li class="navigation_decisions"><a href="{% url decision_list %}">{% trans "Decisions Made" %}</a></li>
+						<li class="navigation_archived"><a href="{% url archived_list %}">{% trans "Archived" %}</a></li>
+					</ul>
+					<form id="search_form" action="search" method="get">
+						<p>
+							<input id="search" type="text" maxlength="128" value="" name="search"/>
+							<input id="search_button" type="submit" value="Search"/>
+						</p>
+					</form>
+					<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
+					
+				</div>
+			</div>
+		{% endblock %}
+	</div><!-- Header end -->
+		
+	{% block base_content%}
+		{% block content %}
+		{% endblock content%}
+	{% endblock base_content%}
+	
+	<div id="footer-wrapper">
+		<div id="footer">
+			<p>{% trans "Econsensus is an open source project developed by" %} <a href="http://www.aptivate.org/"><span class="user-org not_translated">Aptivate</span></a></p>
 		</div>
 	</div><!-- footer end -->
-  </body>
+
+	</body>
 </html>
 {% endautoescape %}
 

@@ -1,0 +1,20 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "admin", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2011-06-23 09:36:59", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$99af0$879c4ba07b9cdcecbe2c408df2242b8d1b29504b", 
+            "email": "info@aptivate.org", 
+            "date_joined": "2011-06-23 09:36:59"
+        }
+    }
+]

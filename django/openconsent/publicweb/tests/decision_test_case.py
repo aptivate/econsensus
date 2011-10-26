@@ -1,5 +1,5 @@
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
-from publicweb.models import Decision, Feedback
+from open_consent_test_case import OpenConsentTestCase
+from openconsent.publicweb.models import Decision, Feedback
 
 class DecisionTestCase(OpenConsentTestCase):
     def setUp(self):
