@@ -9,9 +9,12 @@ class OpenConsentTestCase(TestCase):
         username = 'admin'
         password = 'aptivate'
         email = 'admin@aptivate.org'
-        if self.user is None:
-            self.user = User.objects.create_user(username, email, password=password)
-            self.user.save()
+
+        for user in User.objects.all():
+            user.delete()
+        self.user = User.objects.create_user(username, email, password=password)
+        self.user.save()
+
         self.client.login(username=username, password=password)
         
     def deleteUser(self):

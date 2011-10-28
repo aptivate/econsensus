@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 LOGIN_URL = '/public/login/'
-LOGIN_REDIRECT_URL = '/public/list/'
+LOGIN_REDIRECT_URL = '/proposal/list/'
 
 MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
@@ -22,7 +22,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
 
 #-----------------------------------
 # Code to add django_debug_toolbar

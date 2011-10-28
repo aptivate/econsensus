@@ -88,7 +88,7 @@ class EmailTest(DecisionTestCase):
         
         #billy decides he wants to watch...
         decision.watchers = [billy]
-        
+
         #andy changes the content
         mymail = OpenConsentEmailMessage('content_change', decision)
         

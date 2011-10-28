@@ -15,13 +15,12 @@ import re
 from south.modelsinspector import add_introspection_rules
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
-add_introspection_rules([], ["^tinymce\.models\.HTMLField"])
 
 
 class Idea(models.Model):
     excerpt = models.CharField(max_length=255,
                                            blank=True)
-    description = tinymce.models.HTMLField(verbose_name=_('Description'))
+    description = models.TextField(verbose_name=_('Description'))
     
     DEFAULT_SIZE = 140
     
@@ -57,9 +56,9 @@ class Decision(Idea):
     ARCHIVED_STATUS = 2
 
     STATUS_CHOICES = ( 
-                  (PROPOSAL_STATUS, _('Proposal')),
-                  (CONSENSUS_STATUS, _('Consensus')),
-                  (ARCHIVED_STATUS, _('Archived')),
+                  (PROPOSAL_STATUS, _('proposal')),
+                  (CONSENSUS_STATUS, _('consensus')),
+                  (ARCHIVED_STATUS, _('archived')),
                   )
 
     #short_name = models.CharField(max_length=255, verbose_name=_('Name'))
