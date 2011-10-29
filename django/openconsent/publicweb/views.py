@@ -84,36 +84,6 @@ def listing(request,status):
         extra_context = extra_context
         )
 
-@login_required        
-def proposal_list(request):
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS).order_by(str(sort_form.cleaned_data['sort']))
-    else:
-        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)
-
-    return list_detail.object_list(
-        request,
-        queryset,
-        template_name = 'proposal_list.html',
-        extra_context = {'sort_form':sort_form}
-        )
-
-@login_required        
-def archived_list(request):
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS).order_by(str(sort_form.cleaned_data['sort']))
-    else:
-        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS)
-
-    return list_detail.object_list(
-        request,
-        queryset,
-        template_name = 'archived_list.html',
-        extra_context = {'sort_form':sort_form}
-        )
-
 @login_required
 def modify_decision(request, decision_id = None):
     if decision_id is None:
@@ -123,7 +93,7 @@ def modify_decision(request, decision_id = None):
     
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse(decision_list))
+            return HttpResponseRedirect(reverse(listing, args=['consensus']))
         
         else:
             decision_form = DecisionForm(data=request.POST, 
@@ -142,7 +112,7 @@ def modify_decision(request, decision_id = None):
                     else:
                         decision.remove_watcher(request.user)
                     feedback_formset.save()
-                    return HttpResponseRedirect(reverse(decision_list))
+                    return HttpResponseRedirect(reverse(listing, args=['consensus']))
 
     else:
         feedback_formset = FeedbackFormSet(instance=decision)

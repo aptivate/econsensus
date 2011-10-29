@@ -16,7 +16,7 @@ urlpatterns += patterns('django.contrib.auth.views',
     url(r'^accounts/login/',
         'login', name='login'),
     url(r'^accounts/logout/',
-        'logout', name='logout'),
+        'logout_then_login', name='logout'),
 )
 
 if settings.DEBUG == True:
