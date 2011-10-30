@@ -14,7 +14,7 @@
 {{ decision_form.media }}
 {% endblock %}
 
-{% block heading %}{% if decision_form.instance %}{% trans "View and Edit: " %}<strong>{{ decision_form.instance.excerpt }} (#{{ decision_form.instance.id }})</strong>
+{% block heading %}{% if decision_form.instance %}{% trans "View and Edit: " %}<strong class="not_translated">{{ decision_form.instance.excerpt }} (#{{ decision_form.instance.id }})</strong>
 {% else %}{% trans "Add New Decision" %}
 {% endif %}
 {% endblock %}

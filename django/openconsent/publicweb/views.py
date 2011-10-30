@@ -69,13 +69,20 @@ context_list = { 'proposal' : proposal_context,
              'archived' : archived_context,
              }
 
+#Codes are used to dosge translation in urls.
+#Need to think of a better way to do this...
+context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
+             'consensus' : Decision.CONSENSUS_STATUS,
+             'archived' : Decision.ARCHIVED_STATUS,
+             }
+
 @login_required        
 def listing(request,status):
     extra_context = context_list[status]
     extra_context['sort_form'] = SortForm(request.GET)
-    status_code = [inner[0] for inner in Decision.STATUS_CHOICES if inner[1] == status]
+    status_code = context_codes[status]
     
-    queryset = _filter(_sort(request), status_code[0])
+    queryset = _filter(_sort(request), status_code)
     
     return list_detail.object_list(
         request,

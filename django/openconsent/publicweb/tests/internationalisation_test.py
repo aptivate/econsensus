@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
+from openconsent.publicweb.tests.open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
 from django.utils import translation
 from lxml.html.soupparser import fromstring
@@ -12,17 +12,17 @@ class InternationalisationTest(OpenConsentTestCase):
         self.login()
         
     def test_all_text_translated_when_viewing_decision_list(self):
-        self.check_all_text_translated('decision_list')
+        self.check_all_text_translated('list', args=['consensus'])
 
     def test_all_text_translated_when_adding_decision(self):
         self.check_all_text_translated('add_decision')
 
-    def check_all_text_translated(self, view):
+    def check_all_text_translated(self, view, args=[]):
         self.mock_get_text_functions_for_french()
         
         translation.activate("fr")
 
-        response = self.client.get(reverse(view), follow=True)
+        response = self.client.get(reverse(view, args=args), follow=True)
         html = response.content
                 
         root = fromstring(html)        

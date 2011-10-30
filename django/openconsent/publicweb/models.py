@@ -56,9 +56,9 @@ class Decision(Idea):
     ARCHIVED_STATUS = 2
 
     STATUS_CHOICES = ( 
-                  (PROPOSAL_STATUS, _('proposal')),
-                  (CONSENSUS_STATUS, _('consensus')),
-                  (ARCHIVED_STATUS, _('archived')),
+                  (PROPOSAL_STATUS, _('Proposal')),
+                  (CONSENSUS_STATUS, _('Consensus')),
+                  (ARCHIVED_STATUS, _('Archived')),
                   )
 
     #short_name = models.CharField(max_length=255, verbose_name=_('Name'))
