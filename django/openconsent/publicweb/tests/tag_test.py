@@ -1,13 +1,15 @@
-from publicweb.tests.decision_test_case import DecisionTestCase
-from publicweb.models import Decision
-from publicweb.forms import DecisionForm
+from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
+from openconsent.publicweb.models import Decision
+from openconsent.publicweb.forms import DecisionForm
 from tagging.forms import TagField
 from django.forms.widgets import TextInput
+
+#TODO: paths should not be hard coded in test code.
 
 class TagsTest(DecisionTestCase):
     def test_tag_can_be_created(self):
         self.login()
-        path = "/public/add/"
+        path = "/add/"
 
         data = {
                 'description': 'A description.',
@@ -38,13 +40,13 @@ class TagsTest(DecisionTestCase):
         
     def test_tags_field_appears_on_page(self): 
         self.login()
-        path = "/public/add/"
+        path = "/add/"
         response = self.client.get(path)
         self.assertContains(response, "input id=\"id_tags\"")
     
     def test_page_contains_tags_field_help_text_appears_on_page(self): 
         self.login()
-        path = "/public/add/"
+        path = "/add/"
         response = self.client.get(path)
         self.assertContains(response, Decision.TAGS_HELP_FIELD_TEXT)
     

@@ -88,24 +88,7 @@ class EmailTest(DecisionTestCase):
         
         #billy decides he wants to watch...
         decision.watchers = [billy]
-        
-<<<<<<< HEAD
-        self.assertIn(billy.email, mymail.to)
-        self.assertNotIn(andy.email, mymail.to)
 
-        #billy decides he wants to watch...
-        decision.watchers = [billy]
-        
-        #andy changes the status
-        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
-
-        #everyone but andy gets a mail
-        self.assertNotIn(andy.email, mymail.to)
-        self.assertIn(billy.email, mymail.to) 
-        self.assertIn(chris.email, mymail.to) 
-
-=======
->>>>>>> branch 'refs/heads/master' of git@github.com:aptivate/openconsent.git
         #andy changes the content
         mymail = OpenConsentEmailMessage('content_change', decision)
         

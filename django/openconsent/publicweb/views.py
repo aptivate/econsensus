@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
 
 import unicodecsv
 
@@ -54,49 +55,40 @@ def export_csv(request):
 # that view will use a search function that takes a 'filter' parameter and an 'order_by' parameter and gives an ordered queryset back.
 # The list view will use a single template but will pass a parameter as extra context to individualise the page
 
-@login_required        
-def decision_list(request):  
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS).order_by(str(sort_form.cleaned_data['sort']))
-    else:
-        queryset = Decision.objects.filter(status=Decision.CONSENSUS_STATUS)
+proposal_context = {'page_title' : _("Current Active Proposals"),
+                     'class' : 'proposal'}
 
+consensus_context = {'page_title' : _("Decisions Made"),
+                     'class' : 'decision'}
+
+archived_context = {'page_title' : _("Archived Decisions"),
+                     'class' : 'archived'}
+
+context_list = { 'proposal' : proposal_context,
+             'consensus' : consensus_context,
+             'archived' : archived_context,
+             }
+
+#Codes are used to dosge translation in urls.
+#Need to think of a better way to do this...
+context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
+             'consensus' : Decision.CONSENSUS_STATUS,
+             'archived' : Decision.ARCHIVED_STATUS,
+             }
+
+@login_required        
+def listing(request,status):
+    extra_context = context_list[status]
+    extra_context['sort_form'] = SortForm(request.GET)
+    status_code = context_codes[status]
+    
+    queryset = _filter(_sort(request), status_code)
+    
     return list_detail.object_list(
         request,
         queryset,
-        template_name = 'decision_list.html',
-        extra_context = {'sort_form':sort_form}
-        )
-
-@login_required        
-def proposal_list(request):
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS).order_by(str(sort_form.cleaned_data['sort']))
-    else:
-        queryset = Decision.objects.filter(status=Decision.PROPOSAL_STATUS)
-
-    return list_detail.object_list(
-        request,
-        queryset,
-        template_name = 'proposal_list.html',
-        extra_context = {'sort_form':sort_form}
-        )
-
-@login_required        
-def archived_list(request):
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS).order_by(str(sort_form.cleaned_data['sort']))
-    else:
-        queryset = Decision.objects.filter(status=Decision.ARCHIVED_STATUS)
-
-    return list_detail.object_list(
-        request,
-        queryset,
-        template_name = 'archived_list.html',
-        extra_context = {'sort_form':sort_form}
+        template_name = 'consensus_list.html',
+        extra_context = extra_context
         )
 
 @login_required
@@ -108,7 +100,7 @@ def modify_decision(request, decision_id = None):
     
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse(decision_list))
+            return HttpResponseRedirect(reverse(listing, args=['consensus']))
         
         else:
             decision_form = DecisionForm(data=request.POST, 
@@ -127,7 +119,7 @@ def modify_decision(request, decision_id = None):
                     else:
                         decision.remove_watcher(request.user)
                     feedback_formset.save()
-                    return HttpResponseRedirect(reverse(decision_list))
+                    return HttpResponseRedirect(reverse(listing, args=['consensus']))
 
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
@@ -144,3 +136,16 @@ def add_decision(request):
 @login_required    
 def edit_decision(request, decision_id):
     return modify_decision(request, decision_id)
+
+def _sort(request):
+    sort_form = SortForm(request.GET)
+    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
+        order = str(sort_form.cleaned_data['sort'])
+    else:
+        order = 'id'
+
+    return Decision.objects.order_by(order)
+
+def _filter(queryset, status):    
+    return queryset.filter(status=status)
+        

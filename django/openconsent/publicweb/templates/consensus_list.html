@@ -1,21 +1,21 @@
 {% extends "fullpage.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}{% trans "Decisions Made" %}{% endblock %}
+{% block title %}{{ block.super }}{{ page_title }}{% endblock %}
 
 {% block body_class%}decision-list{% endblock %}
 
 {% block content %}
 	<div id="content">		
-		<form id="sort_form" action="{% url publicweb.views.decision_list %}" method="GET">
+		<form id="sort_form" action="{% url list 'proposal'%}" method="GET">
 			{{ sort_form.as_p }}
 			<noscript><input type="submit" value="Submit"></noscript>
 		</form>
 				
-		<ul class="list_view decision">
+		<ul class="list_view {{ class }}">
 			{% if object_list %}
 		        {% for object in object_list %}
-				    <li class="item proposal">	        
+				    <li class="item {{ class }}">	        
 						<div class="item_id">
 						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
 				        </div>

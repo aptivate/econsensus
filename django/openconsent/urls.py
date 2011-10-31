@@ -1,5 +1,3 @@
-from django.views.generic.simple import redirect_to
-
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
@@ -8,17 +6,18 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', redirect_to, {'url': 'public/proposal/list/'}),
-
-    url(r'^public/', include('openconsent.publicweb.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
+    #url(r'^public/', include('openconsent.publicweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    #url(r'^admin/$', redirect_to, {'url': '/admin/publicweb/decision/'}),
     url(r'^admin/', include(admin.site.urls), name='admin'),
+    url(r'', include('openconsent.publicweb.urls')),    
     )
+
+urlpatterns += patterns('django.contrib.auth.views',
+    url(r'^accounts/login/',
+        'login', name='login'),
+    url(r'^accounts/logout/',
+        'logout_then_login', name='logout'),
+)
 
 if settings.DEBUG == True:
     urlpatterns += patterns('',

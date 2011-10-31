@@ -267,14 +267,14 @@ body.archived-list ul li.navigation_archived a {
 }
 
 .list_view .item.decision {
-    border-color: #3E6EA3;
+    border-color: #31B404;
     display: block;
     overflow: auto;
     position: relative;
 }
 
 .list_view .item.archived {
-    border-color: #483E37;
+    border-color: #A4A4A4;
     display: block;
     overflow: auto;
     position: relative;

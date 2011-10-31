@@ -12,6 +12,7 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     tasklib.create_private_settings()
     tasklib.link_local_settings(environment)
     tasklib.update_db()
+
     load_admin_user(environment)
     load_django_site_data(environment)
         
