@@ -7,8 +7,8 @@ import private_settings
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-LOGIN_URL = '/public/login/'
-LOGIN_REDIRECT_URL = '/public/list/'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/list/proposal/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

@@ -3,8 +3,8 @@ import private_settings
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-LOGIN_URL = '/test1/public/login/'
-LOGIN_REDIRECT_URL = '/test1/public/list/'
+LOGIN_URL = '/test1/accounts/login/'
+LOGIN_REDIRECT_URL = '/test1/list/proposal/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

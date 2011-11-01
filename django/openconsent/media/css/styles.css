@@ -337,7 +337,7 @@ body.archived-list ul li.navigation_archived a {
 
 a.button.add_proposal {
     background-color: #FFCC00;
-    background-image: url("../images/icon-add-decision.png");
+    background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
     color: #333333;

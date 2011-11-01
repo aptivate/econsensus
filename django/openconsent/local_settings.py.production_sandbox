@@ -3,8 +3,8 @@ import private_settings
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-LOGIN_URL = '/sandbox/public/login/'
-LOGIN_REDIRECT_URL = '/sandbox/public/list/'
+LOGIN_URL = '/sandbox/accounts/login/'
+LOGIN_REDIRECT_URL = '/sandbox/list/proposal/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

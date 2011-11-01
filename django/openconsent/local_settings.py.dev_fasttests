@@ -3,8 +3,8 @@ import private_settings
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-LOGIN_URL = '/public/login/'
-LOGIN_REDIRECT_URL = '/public/list/'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/list/proposal/'
 
 MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'
