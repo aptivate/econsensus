@@ -10,7 +10,6 @@ from django.core.urlresolvers import reverse
 from django.forms.fields import BooleanField
 from django.forms.widgets import CheckboxInput
 
-import tinymce.widgets
 import difflib
 
 from openconsent.publicweb.views import edit_decision
@@ -72,29 +71,11 @@ class DecisionsTest(DecisionTestCase):
         
         
         self.assertRedirects(response,
-            reverse('decision_list'),
+            reverse('list', args=['proposal']),
             msg_prefix=response.content)
 
     def get_default_decision_form_dict(self):
         return {'status': 1}
-
-    def assert_decision_form_field_uses_tinymce_widget(self, field):
-
-        form = DecisionForm()
-        
-        self.assertEquals(tinymce.widgets.TinyMCE,
-            type(form.fields[field].widget))
-    
-        mce_attrs = form._meta.widgets[field].mce_attrs
-        # check the MCE widget is set to advanced theme with our preferred buttons
-        self.assertEquals({'theme': 'advanced',
-            'theme_advanced_buttons1': 'bold,italic,underline,link,unlink,' + 
-                'bullist,blockquote,undo',
-            'theme_advanced_buttons3': '',
-            'theme_advanced_buttons2': ''}, mce_attrs)
-    
-    def test_decision_form_description_field_uses_tinymce_widget(self):
-        self.assert_decision_form_field_uses_tinymce_widget('description')
 
     def get_diff(self, s1, s2):
         diff = difflib.context_diff(s1, s2)
@@ -178,7 +159,7 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('decision_list'),
+        self.assertRedirects(response, reverse('list', args=['proposal']),
             msg_prefix=response.content)
         
    
@@ -314,14 +295,14 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('add_decision')
         response = self.client.get(path)
                 
-        self.assertContains(response, "submit", count=6)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
 
     def test_edit_page_contains_cancel(self):
         decision = self.create_and_return_decision()
         path = reverse('edit_decision', args=[decision.id])
         response = self.client.get(path)
         
-        self.assertContains(response, "submit", count=6)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
 
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()

@@ -14,7 +14,7 @@ class DecisionListTest(DecisionTestCase):
             decision.save(self.user)
             id_list.append(decision.id)
             
-        response = self.client.get(reverse('proposal_list'), {'sort':'id'})
+        response = self.client.get(reverse('list', args=['proposal']), {'sort':'id'})
                 
         object_list = response.context['object_list']    
                 
@@ -29,7 +29,7 @@ class DecisionListTest(DecisionTestCase):
             decision.save(self.user)
             id_list.append(decision.id)
             
-        response = self.client.get(reverse('proposal_list'), {'sort':'description'})
+        response = self.client.get(reverse('list', args=['proposal']), {'sort':'description'})
                 
         object_list = response.context['object_list']    
 
@@ -42,7 +42,7 @@ class DecisionListTest(DecisionTestCase):
 
     def test_decision_list_can_be_filtered_by_status_consensus(self):
         self.create_decisions_with_different_statuses()
-        response = self.client.get(reverse('decision_list'),{'filter':Decision.CONSENSUS_STATUS})
+        response = self.client.get(reverse('list', args=['consensus']))
         self.assertContains(response, "Consensus Decision")
         self.assertNotContains(response, "Proposal Decision")
         self.assertNotContains(response, "Archived Decision") 
@@ -55,7 +55,7 @@ class DecisionListTest(DecisionTestCase):
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
             
-        response = self.client.get(reverse('decision_list'), dict(sort=column))
+        response = self.client.get(reverse('list', args=['consensus']), dict(sort=column))
         
         object_list = response.context['object_list']    
                 

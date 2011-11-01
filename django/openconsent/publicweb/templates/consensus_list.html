@@ -7,7 +7,7 @@
 
 {% block content %}
 	<div id="content">		
-		<form id="sort_form" action="{% url list 'proposal'%}" method="GET">
+		<form id="sort_form" action="{% url list class %}" method="GET">
 			{{ sort_form.as_p }}
 			<noscript><input type="submit" value="Submit"></noscript>
 		</form>

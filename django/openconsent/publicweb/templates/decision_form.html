@@ -100,63 +100,6 @@
 		        <label for="id_watch">{% trans "Watch" %}?</label>
 		        {{ decision_form.watch }}
 		    </div>
-		   </div>
-		  <div class="form_row watchers">
-		     <div class="form_item">
-		        <label for="id_author">{% trans "Author" %}:</label>
-		        {{ decision.author }}
-		    </div>
-		 </div>
-		    
-		 <div class="form_row resources">
-		 	<div class="form_item budget">
-		        {{ decision_form.budget.errors }}
-		        <label for="id_budget">{% trans "Budget/Resources" %}:</label>
-		        {{ decision_form.budget }}
-		    </div>
-		    <div class="form_item people">
-		        {{ decision_form.people.errors }}
-		        <label for="id_people">{% trans "People" %}:</label>
-		        {{ decision_form.people }}
-		    </div>
-		 </div>
-		 
-		<div id="tags">
-		    {{ decision_form.tags.errors }}
-		    <label for="id_tags">{% trans "Tags" %}:</label>
-		    {{ decision_form.tags }} {{ decision_form.tags.help_text }}
-		</div>
-		
-		<div id="feedback">
-			<h2>{% trans "Feedback" %}</h2>
-			{{ feedback_formset.management_form }}
-			{% for feedback_form in feedback_formset %}
-			{{ feedback_form.id }}
-			<div class="formset_item">
-				<div class="form_row feedback_summary">
-					<div class="form_item rating">
-						{{ feedback_form.rating.errors }}
-						<label for="id_rating">{% trans "Rating" %}:</label>
-						{{ feedback_form.rating }}
-			    	</div>
-			    	<div class="form_item description">
-						{{ feedback_form.description.errors }}
-						{{ feedback_form.description }}
-			    	</div>
-			    </div>
-			</div>
-		    {% endfor %}		
-		</div>
-		
-		<div class="form_row decision_submit">
-		    <input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" />
-		    <input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" />
-		    
-			<div class="form_item watch">
-		        {{ decision_form.watch.errors }}
-		        <label for="id_watch">{% trans "Watch" %}?</label>
-		        {{ decision_form.watch }}
-		    </div>
 		</div>
 	</form>
 {% endblock %}

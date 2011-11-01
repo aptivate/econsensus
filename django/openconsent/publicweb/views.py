@@ -15,7 +15,9 @@ from forms import DecisionForm, FeedbackFormSet
 from forms import SortForm
 from forms import FilterForm
 
-    
+#TODO: Exporting as csv is a generic function that can be required of any database.
+#Therefore it should be its own app.
+#This looks like it's already been done... see https://github.com/joshourisman/django-tablib
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
 	Expected input: request (not quite sure what this is!)
@@ -59,7 +61,7 @@ proposal_context = {'page_title' : _("Current Active Proposals"),
                      'class' : 'proposal'}
 
 consensus_context = {'page_title' : _("Decisions Made"),
-                     'class' : 'decision'}
+                     'class' : 'consensus'}
 
 archived_context = {'page_title' : _("Archived Decisions"),
                      'class' : 'archived'}
@@ -100,7 +102,7 @@ def modify_decision(request, decision_id = None):
     
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse(listing, args=['consensus']))
+            return HttpResponseRedirect(reverse(listing, args=['proposal']))
         
         else:
             decision_form = DecisionForm(data=request.POST, 
@@ -119,7 +121,7 @@ def modify_decision(request, decision_id = None):
                     else:
                         decision.remove_watcher(request.user)
                     feedback_formset.save()
-                    return HttpResponseRedirect(reverse(listing, args=['consensus']))
+                    return HttpResponseRedirect(reverse(listing, args=['proposal']))
 
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
