@@ -251,12 +251,35 @@ body.archived-list ul li.navigation_archived a {
 	margin:2px 0;
 	border-radius:10px;
 	padding:10px;
+	overflow:auto;
 }
 
 /* Proposal list view */
 
 #header h1 span {
 	line-height:1.5em;
+}
+
+.list_view .item.header .id{
+    display: block;
+    float: left;
+    margin-left: 10px;
+    width: 5%;
+}
+
+.list_view .item.header .excerpt{
+    float: left;
+    padding-right: 10px;
+    width: 70%;
+}
+.list_view .item.header .activity{
+	float: left;
+	width:10%;
+}
+
+.list_view .item.header .deadline{
+	float:right;
+	padding-right:25px
 }
 
 .list_view .item.proposal {
@@ -313,7 +336,6 @@ body.archived-list ul li.navigation_archived a {
 .list_view .item_activity {
 	width:4em;
 	float:left;
-	display:none;
 }
 
 .list_view .item_activity img {

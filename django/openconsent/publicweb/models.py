@@ -36,7 +36,7 @@ class Idea(models.Model):
     
     def __unicode__(self):
         return self.excerpt
-    
+
     def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()
         return super(Idea, self).save(*args, **kwargs)
@@ -107,6 +107,9 @@ class Decision(Idea):
                 break
             
         return answer
+
+    def feedbackcount(self):
+        return self.feedback_set.all().count()    
     
     unresolvedfeedback.short_description = _("Unresolved Feedback")
     
