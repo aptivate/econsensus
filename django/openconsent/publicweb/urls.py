@@ -3,7 +3,7 @@ from django.views.generic.list_detail import object_detail
 from django.views.generic.simple import redirect_to
 
 from views import add_decision, edit_decision, listing, \
-                     export_csv
+                     export_csv, inline_edit_decision
 from models import Decision
 
 urlpatterns = patterns('openconsent.publicweb.views',
@@ -21,6 +21,9 @@ urlpatterns = patterns('openconsent.publicweb.views',
         { 'queryset': Decision.objects.all(),
          'template_name': 'decision_detail.html'},
         name='view_decision'),
+    url(r'^view/(?P<decision_id>[\d]+)/edit/$',
+        inline_edit_decision,
+        name='inline_edit_decision'),
     url(r'^list/(?P<status>[a-z]+)/$',
         listing,
         name='list'),

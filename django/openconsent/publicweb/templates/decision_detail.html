@@ -17,6 +17,16 @@
 
 {% block content %}
 
+{% if show_form %}
+<form action="#" method="post">
+  {% include "decision_form.html" %}
+    <p class="decision_controls">
+      <input type="submit" name="submit" value="Submit" />
+      <input type="submit" name="submit" value="Cancel" />
+    </p>
+  </form>
+{% else %}
+
 {% if object.decided_date %}
 	Decided Date: {{ object.decided_date }}
 {% endif %}
@@ -28,6 +38,10 @@
 {% endif %}
 {% if object.expiry_date %}
 	Expiry Date: {{ object.expiry_date }}
+{% endif %}
+<p>
+<a href="{% url view_decision object.id %}edit/">Edit</a>
+</p>
 {% endif %}
 
 {% endblock %}

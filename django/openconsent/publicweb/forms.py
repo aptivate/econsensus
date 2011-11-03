@@ -47,7 +47,7 @@ class FilterForm(forms.Form):
     
 class SortForm(forms.Form):
     
-    #This is a more robus way of getting attributes to sort on.
+    #This is a more robust way of getting attributes to sort on.
     #However it generates a list that is probably too long.
     #TODO: Think about creating a mechanism to integrate the sorting with the fields that are / 
     #shown on the page
