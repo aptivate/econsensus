@@ -104,10 +104,10 @@ def production_test1():
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
-def production_test2():
+def production_seedltd():
     """ use production environment on remote host"""
-    env.project_dir = env.project + '_test2'
-    env.environment = 'production_test2'
+    env.project_dir = env.project + '_seedltd'
+    env.environment = 'production_seedltd'
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
