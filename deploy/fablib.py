@@ -291,7 +291,7 @@ def link_local_settings():
     # check that settings imports local_settings, as it always should,
     # and if we forget to add that to our project, it could cause mysterious
     # failures
-    run('grep -q "^from local_settings import \*" %s' %
+    run('grep -q "^[ ]\{4\}import local_settings" %s' %
         os.path.join(env.django_root, 'settings.py'))
 
     # touch the wsgi file to reload apache
