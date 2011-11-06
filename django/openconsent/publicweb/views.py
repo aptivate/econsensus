@@ -140,7 +140,7 @@ def edit_decision(request, decision_id):
     return modify_decision(request, decision_id)
 
 @login_required
-def inline_edit_decision(request, decision_id):
+def inline_edit_decision(request, decision_id, template_name="decision_detail.html"):
     if decision_id is None:
         decision = None
     else:
@@ -149,7 +149,7 @@ def inline_edit_decision(request, decision_id):
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(reverse("view_decision", args=[decision_id]))
-        
+
         else:
             decision_form = DecisionForm(data=request.POST, 
                                          instance=decision)
@@ -160,9 +160,9 @@ def inline_edit_decision(request, decision_id):
     else:
         decision_form = DecisionForm(instance=decision)
 
-    return render_to_response('decision_detail.html',
+    return render_to_response(template_name,
         RequestContext(request,
-            dict(decision_form=decision_form, show_form=True)))
+            dict(object=decision, decision_form=decision_form, show_form=True)))
 
 def _sort(request):
     sort_form = SortForm(request.GET)

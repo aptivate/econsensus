@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<div id="decision">
+	<div class="decision_summary halfwidth">
+		{{ object.description }}
+		<p class="edit_decision">
+			<a href="{% url view_decision object.id %}edit/">Edit</a>
+		</p>
+	</div>
+
+	<div class="decision_meta halfwidth">
+		<ul class="decision_dates">
+{% if object.decided_date %}
+			<li class="decided">
+				<strong>{{ object.decided_date }}</strong>
+				<br />
+				Decided
+			</li>
+{% endif %}
+{% if object.effective_date %}
+			<li class="effective">
+				<strong>{{ object.effective_date }}</strong>
+				<br />
+				Effective
+			</li>
+{% endif %}
+{% if object.review_date %}
+			<li class="review">
+				<strong>{{ object.review_date }}</strong>
+				<br />
+				Review
+			</li>
+{% endif %}
+{% if object.expiry_date %}
+			<li class="expiry">
+				<strong>{{ object.expiry_date }}</strong>
+				<br />
+				Expiry
+			</li>
+{% endif %}
+		</ul>
+	</div>
+</div>
