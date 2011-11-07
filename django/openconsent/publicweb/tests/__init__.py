@@ -1,5 +1,6 @@
 from decisions_test import DecisionsTest
 from edit_decision_test import EditDecisionTest
+from view_decision_test import ViewDecisionTest
 from login_test import LoginTest
 from logout_test import LogoutTest
 from internationalisation_test import InternationalisationTest

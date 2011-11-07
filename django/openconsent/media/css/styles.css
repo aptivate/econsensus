@@ -375,6 +375,10 @@ h2.page_title strong {
 	width:20%;
 }
 
+.decision_summary.halfwidth, .decision_meta.halfwidth {
+	width:50%;
+}
+
 .decision_author {
     font-size: 1.2em;
     position: absolute;
@@ -446,6 +450,33 @@ h2.page_title strong {
 
 .decision_meta #tags #id_tags {
 	width:90%;
+}
+
+.decision_dates li {
+	float:left;
+	margin:0 2em 0 0;
+	text-align:center;
+}
+
+.decision_dates li strong {
+	border-radius:10px;
+	padding:5px 8px;
+}
+
+.decision_dates .decided strong {
+	background: #f6f6f6;
+}
+
+.decision_dates .effective strong {
+	background: #f6f6f6;
+}
+
+.decision_dates .review strong {
+	background: #a1b8d3;
+}
+
+.decision_dates .expiry strong {
+	background: #d5ea81;
 }
 
 

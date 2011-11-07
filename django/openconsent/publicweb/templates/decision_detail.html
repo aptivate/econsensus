@@ -4,44 +4,106 @@
 {% comment %}This is a stub template for the time being - PCB {% endcomment %}
 
 {% block title %}
-	{{ decision.excerpt}}
+	{{ object.excerpt}}
 {% endblock %}
 
 {% block head_content %}
 {{ object.media }}
+	<link href="/site_media//jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+{% if not show_form %}
+	<script type="text/javascript">
+jQuery(function ($) {
+	function replaceWithRemote(url, selector) {
+		$.ajax(url,
+				{
+					cache: false,
+					success: function (data) { $(selector).replaceWith(data); }
+				});
+	}
+
+	// Override redirect to form and put it inline
+	$(".edit_decision a").live("click", function (e) {
+		replaceWithRemote("{% url inline_edit_decision_form object.id %}", "#decision");
+		e.preventDefault();
+	});
+
+	// Override redirect to view and put it inline
+	$('.edit_decision_form').live("submit", function (e) {
+		var parameters = $(this).serialize();
+
+		$.post("{% url inline_edit_decision_form object.id %}",
+			parameters,
+			function (data) {
+				// Post successful, now fetch stored value and add it as a snippet
+				replaceWithRemote("{% url view_decision_snippet object.id %}", "form.edit_decision_form");
+			}
+		);
+		e.preventDefault();
+	});
+});
+	</script>{% endif %}
 {% endblock %}
 
 {% block heading %}
-	{{ object.excerpt }}
+	Edit proposal: <span>{{ object.excerpt }}</span>
 {% endblock %}
 
 {% block content %}
 
 {% if show_form %}
-<form action="#" method="post">
+<form action="#" method="post" class="edit_decision_form">
   {% include "decision_form.html" %}
-    <p class="decision_controls">
-      <input type="submit" name="submit" value="Submit" />
-      <input type="submit" name="submit" value="Cancel" />
-    </p>
-  </form>
+	<p class="decision_controls">
+		<input type="submit" name="submit" value="Submit" />
+		 <input type="submit" name="submit" value="Cancel" />
+	</p>
+</form>
 {% else %}
+<div id="decision">
+	<div class="decision_summary halfwidth">
+		{{ object.description }}
+		<p class="edit_decision">
+			<a href="{% url view_decision object.id %}edit/">Edit</a>
+		</p>
+	</div>
 
+	<div class="decision_meta halfwidth">
+		<ul class="decision_dates">
 {% if object.decided_date %}
-	Decided Date: {{ object.decided_date }}
+			<li class="decided">
+				<strong>{{ object.decided_date }}</strong>
+				<br />
+				Decided
+			</li>
 {% endif %}
 {% if object.effective_date %}
-	Effective Date: {{ object.effective_date }}
+			<li class="effective">
+				<strong>{{ object.effective_date }}</strong>
+				<br />
+				Effective
+			</li>
 {% endif %}
 {% if object.review_date %}
-	Review Date: {{ object.review_date }}
+			<li class="review">
+				<strong>{{ object.review_date }}</strong>
+				<br />
+				Review
+			</li>
 {% endif %}
 {% if object.expiry_date %}
-	Expiry Date: {{ object.expiry_date }}
+			<li class="expiry">
+				<strong>{{ object.expiry_date }}</strong>
+				<br />
+				Expiry
+			</li>
 {% endif %}
-<p>
-<a href="{% url view_decision object.id %}edit/">Edit</a>
-</p>
+		</ul>
+	</div>
+</div>
 {% endif %}
+
+<h2 class="page_title">Feedback</h2>
 
 {% endblock %}
