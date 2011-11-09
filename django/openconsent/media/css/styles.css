@@ -60,7 +60,7 @@ a, a:link, a:active a:visited {
 }
 
 p {
-	line-height:1.3em;
+	line-height:1.3em;	
 }
 
 h1, h2, h3, h4, h5, h6 {margin:0.3em 0 0.5em 0;}
@@ -414,7 +414,10 @@ h2.page_title strong {
     display: block;
     float: left;
     position: relative;
-    width: 100%;
+	border: 3px solid #FFCC00;
+    border-radius: 15px 15px 15px 15px;
+    clear: both;
+    width: 100%;    
 }
 
 #decision label {
@@ -570,6 +573,12 @@ body.login #footer {
     padding: 5px;
     position: relative;
     width: 215px;
+}
+
+/* 404 Page Styling */
+p.error404 {
+	clear : both;
+	margin-bottom : 40px;
 }
 
 /* Media Queries*/
