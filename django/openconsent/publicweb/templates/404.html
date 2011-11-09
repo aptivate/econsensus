@@ -1,1 +1,10 @@
-<html><body>Hi</body></html>
+{% extends "fullpage.html" %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}{% trans "Page Not Found" %}{% endblock %}
+
+{% block content %}
+	<div id="content">		
+	<p>Sorry the page you were looking for could not be found.</p>
+	</div><!-- content end -->
+{% endblock %}
