@@ -37,7 +37,6 @@ env.valid_envs = ('dev_server', 'staging_test', 'staging', 'production')
 # does this use apache - mostly for staging_test
 env.use_apache = True
 
-
 # this function can just call the fablib _setup_path function
 # or you can use it to override the defaults
 def _local_setup():
@@ -140,11 +139,7 @@ def load_fixtures():
     with settings(warn_only=True):
         sudo(env.tasks_bin + ' load_admin_user:' + env.environment)
         sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
-
-def load_sample_data():
-    """load fixtures for this environment"""
-    require('tasks_bin', provided_by=env.valid_envs)
-    sudo(env.tasks_bin + ' load_sample_data')
+        sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
 
 def link_apache_conf(apache_conf_name=None):
     """link the apache.conf file"""
