@@ -3,20 +3,21 @@
 """
 Tests for the public website part of the OpenConsent project
 """
-
-from __future__ import absolute_import
-
 from django.core.urlresolvers import reverse
 from django.forms.fields import BooleanField
 from django.forms.widgets import CheckboxInput
 
 import difflib
 
+#TODO: References to upper project "openconsent"
+#should be removed from this app. Otherwise
+#tests will fail when the app is deployed elsewhere.
+#Cant understand why edit_decision can't be found without openconsent reference
 from openconsent.publicweb.views import edit_decision
-from openconsent.publicweb.models import Decision
-from openconsent.publicweb.forms import DecisionForm
-from openconsent.publicweb.widgets import JQueryUIDateWidget
-from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.models import Decision
+from publicweb.forms import DecisionForm
+from publicweb.widgets import JQueryUIDateWidget
+from publicweb.tests.decision_test_case import DecisionTestCase
 
 ### As a general note, I can see our tests are evolving into...
 ### 1 - model tests (does the model have x property?)

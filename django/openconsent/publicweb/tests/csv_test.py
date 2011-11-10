@@ -3,7 +3,7 @@ Tests for the csv export functionality
 """
 
 from publicweb.views import export_csv
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
+from open_consent_test_case import OpenConsentTestCase
 
 class CsvTest(OpenConsentTestCase):
     def test_export_csv(self):

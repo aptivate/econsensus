@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.tests.decision_test_case import DecisionTestCase
 
 #TODO: This class is a bit stumpy... merge with other (web) tests.
 class EditDecisionTest(DecisionTestCase):

@@ -1,6 +1,6 @@
-from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
-from openconsent.publicweb.models import Decision
-from openconsent.publicweb.forms import DecisionForm
+from decision_test_case import DecisionTestCase
+from publicweb.models import Decision
+from publicweb.forms import DecisionForm
 from tagging.forms import TagField
 from django.forms.widgets import TextInput
 

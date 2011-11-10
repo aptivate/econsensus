@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from tagging.fields import TagField
 
 from emails import OpenConsentEmailMessage
-import tinymce.models
 import re
 
 # Ideally django-tinymce should be patched

@@ -10,3 +10,5 @@ from email_test import EmailTest
 from csv_test import CsvTest
 from tag_test import TagsTest
 from model_test import ModelTest
+from view_test import ViewTest
+from url_test import URLTest

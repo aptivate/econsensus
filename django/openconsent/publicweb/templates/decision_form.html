@@ -72,7 +72,7 @@
 		</div>
 		
 		<div id="decision_feedback">
-			<h2>{% trans "Feedback" %}</h2>
+			<h2 class="feedback">{% trans "Feedback" %}</h2>
 			{{ feedback_formset.management_form }}
 			{% for feedback_form in feedback_formset %}
 			{{ feedback_form.id }}

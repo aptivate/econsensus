@@ -58,20 +58,23 @@ def export_csv(request):
 # The list view will use a single template but will pass a parameter as extra context to individualise the page
 
 proposal_context = {'page_title' : _("Current Active Proposals"),
-                     'class' : 'proposal'}
+                     'class' : 'proposal',
+                     'columns': ('decided_date', 'review_date')}
 
 consensus_context = {'page_title' : _("Decisions Made"),
-                     'class' : 'consensus'}
+                     'class' : 'consensus',
+                     'columns': ('decided_date', 'review_date')}
 
 archived_context = {'page_title' : _("Archived Decisions"),
-                     'class' : 'archived'}
+                     'class' : 'archived',
+                     'columns': ('decided_date', 'review_date')}
 
 context_list = { 'proposal' : proposal_context,
              'consensus' : consensus_context,
              'archived' : archived_context,
              }
 
-#Codes are used to dosge translation in urls.
+#Codes are used to dodge translation in urls.
 #Need to think of a better way to do this...
 context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
              'consensus' : Decision.CONSENSUS_STATUS,
