@@ -127,21 +127,21 @@ class Decision(Idea):
         # \/
         #record newness before saving
         if self.id:
-            type='status_change'
+            typ='status_change'
             old = Decision.objects.get(id=self.id)
             if old.status != self.status:
-                type='status_change'
+                typ='status_change'
             else:
-                type='content_change'
+                typ='content_change'
         else:
             old = None
-            type='new'
+            typ='new'
                     
         super(Decision, self).save(*args, **kwargs)
 
-        email = OpenConsentEmailMessage(type=type,
-                                        object = self,
-                                        old_object = old)  
+        email = OpenConsentEmailMessage(typ=typ,
+                                        obj = self,
+                                        old_obj = old)  
 
         email.send()
         

@@ -43,7 +43,7 @@ class EmailTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
-        mymail = OpenConsentEmailMessage('new', decision, old_object=None)
+        mymail = OpenConsentEmailMessage('new', decision, old_obj=None)
 
         self.assertEqual(mymail, outbox[0])
 
@@ -63,7 +63,7 @@ class EmailTest(DecisionTestCase):
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
 
-        mymail = OpenConsentEmailMessage('status_change', decision, old_object=decision)
+        mymail = OpenConsentEmailMessage('status_change', decision, old_obj=decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
