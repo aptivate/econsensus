@@ -24,7 +24,6 @@ def load_sample_data(environment, force=False):
         if output_lines[0] != '[]':
             return
 
-    if os.path.exists("sample_data.json"):
         tasklib._manage_py(['loaddata', "sample_data.json"])
 
 def load_admin_user(environment):
