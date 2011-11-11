@@ -8,6 +8,16 @@ class ViewDecisionTest(DecisionTestCase):
         response = self.client.get(reverse('view_decision', args=[decision.id]))
 
         self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
+        self.assertContains(response, u'<rect width="9"')
+
+    def test_view_decision_with_feedback(self):
+        decision = self.create_and_return_example_decision_with_feedback()
+        response = self.client.get(reverse('view_decision', args=[decision.id]))
+
+        self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
+        self.assertContains(response, u'<rect width="9"')
+        self.assertContains(response, u'<span class="feedback_all">1</span>')
+        self.assertContains(response, u'<ol class="feedback_list">')
 
     def test_load_decision_snippet(self):
         decision = self.create_and_return_decision()
@@ -15,6 +25,7 @@ class ViewDecisionTest(DecisionTestCase):
 
         self.assertContains(response, u'<a href="/view/%s/edit/">Edit</a>' % decision.id)
         self.assertTrue(response.content.strip().startswith('<div id="decision">'))
+        self.assertContains(response, u'<rect width="9"')
 
     def test_load_form_snippet(self):
         form_fields = set(['status', 'review_date', 'description', 'tags', 'budget', 'effective_date', 'csrfmiddlewaretoken', 'decided_date'])

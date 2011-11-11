@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import unicodecsv
 
-from models import Decision
+from models import Decision, Feedback
 from forms import DecisionForm, FeedbackFormSet
 from forms import SortForm
 from forms import FilterForm
@@ -163,6 +163,43 @@ def inline_edit_decision(request, decision_id, template_name="decision_detail.ht
     return render_to_response(template_name,
         RequestContext(request,
             dict(object=decision, decision_form=decision_form, show_form=True)))
+
+@login_required
+def view_decision(request, decision_id, template_name="decision_detail.html"):
+    decision = get_object_or_404(Decision, id = decision_id)
+    feedback_stats = {'all': 0,
+                      'question': 0,
+                      'danger': 0,
+                      'concern': 0,
+                      'test_var': 2,
+                      'consensus': 0
+                     }
+    feedback_list = []
+
+    # Bookkeeping
+    for feedback in decision.feedback_set.all():
+        f = {
+            'description': feedback.description
+        }
+        if feedback.rating == Feedback.QUESTION_STATUS:
+            feedback_stats['question'] += 1
+            f['type'] = 'question'
+        elif feedback.rating == Feedback.DANGER_STATUS:
+            feedback_stats['danger'] += 1
+            f['type'] = 'danger'
+        elif feedback.rating == Feedback.SIGNIFICANT_CONCERNS_STATUS:
+            feedback_stats['concern'] += 1
+            f['type'] = 'concern'
+        else:
+            feedback_stats['consensus'] += 1
+            f['type'] = 'consensus'
+        feedback_stats['all'] += 1
+        feedback_list.append(f)
+
+
+    return render_to_response(template_name,
+        RequestContext(request,
+            dict(object=decision, feedback_stats=feedback_stats, feedback_list=feedback_list)))
 
 def _sort(request):
     sort_form = SortForm(request.GET)

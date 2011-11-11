@@ -47,7 +47,7 @@ jQuery(function ($) {
 {% endblock %}
 
 {% block heading %}
-	Edit proposal: <span>{{ object.excerpt }}</span>
+	{% trans "Edit proposal:" %} <span>{{ object.excerpt }}</span>
 {% endblock %}
 
 {% block content %}
@@ -61,49 +61,25 @@ jQuery(function ($) {
 	</p>
 </form>
 {% else %}
-<div id="decision">
-	<div class="decision_summary halfwidth">
-		{{ object.description }}
-		<p class="edit_decision">
-			<a href="{% url view_decision object.id %}edit/">Edit</a>
-		</p>
-	</div>
+{% include "decision_detail_snippet.html" %}
+{% endif %}
 
-	<div class="decision_meta halfwidth">
-		<ul class="decision_dates">
-{% if object.decided_date %}
-			<li class="decided">
-				<strong>{{ object.decided_date }}</strong>
-				<br />
-				Decided
-			</li>
+<h2 class="page_title">{% trans "Feedback" %}</h2>
+<div class="decision_feedback">
+{% if feedback_list|length %}
+	<ol class="feedback_list">{% for feedback in feedback_list %}
+		<li>
+			<div class="decision_type {{ feedback.type }}">{{ feedback.type }}</div>
+			<div class="description">
+			{{ feedback.description }}
+			</div>
+		</li>{% endfor %}
+	</ol>
+{% else %}
+<p>{% trans "No feedback yet." %}
 {% endif %}
-{% if object.effective_date %}
-			<li class="effective">
-				<strong>{{ object.effective_date }}</strong>
-				<br />
-				Effective
-			</li>
-{% endif %}
-{% if object.review_date %}
-			<li class="review">
-				<strong>{{ object.review_date }}</strong>
-				<br />
-				Review
-			</li>
-{% endif %}
-{% if object.expiry_date %}
-			<li class="expiry">
-				<strong>{{ object.expiry_date }}</strong>
-				<br />
-				Expiry
-			</li>
-{% endif %}
-		</ul>
-	</div>
 </div>
-{% endif %}
 
-<h2 class="page_title">Feedback</h2>
+<h2 class="page_title">{% trans "Members:" %}</h2>
 
 {% endblock %}
