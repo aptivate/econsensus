@@ -102,7 +102,7 @@ class Decision(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('edit_decision', (), {'decision_id':self.id})
+        return ('publicweb_decision_edit', (), {'decision_id':self.id})
 
     def save(self, author, *args, **kwargs):
         self.excerpt = self._get_excerpt()        

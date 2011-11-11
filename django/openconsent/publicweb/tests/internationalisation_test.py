@@ -15,7 +15,7 @@ class InternationalisationTest(OpenConsentTestCase):
         self.check_all_text_translated('list', args=['consensus'])
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('add_decision')
+        self.check_all_text_translated('publicweb_decision_add')
 
     def check_all_text_translated(self, view, args=[]):
         self.mock_get_text_functions_for_french()

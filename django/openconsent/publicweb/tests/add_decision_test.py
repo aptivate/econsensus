@@ -17,5 +17,5 @@ class AddDecisionTest(DecisionTestCase):
         self.assertNotContains(response, "id_short_name")
     
     def load_add_decision_and_return_response(self):
-        return self.client.get(reverse('add_decision'))
+        return self.client.get(reverse('publicweb_decision_add'))
 

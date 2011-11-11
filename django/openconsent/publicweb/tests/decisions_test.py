@@ -9,11 +9,6 @@ from django.forms.widgets import CheckboxInput
 
 import difflib
 
-#TODO: References to upper project "openconsent"
-#should be removed from this app. Otherwise
-#tests will fail when the app is deployed elsewhere.
-#Cant understand why edit_decision can't be found without openconsent reference
-from openconsent.publicweb.views import edit_decision
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 from publicweb.widgets import JQueryUIDateWidget
@@ -33,7 +28,7 @@ class DecisionsTest(DecisionTestCase):
         """
         Test error conditions for the add decision page. 
         """
-        path = reverse('add_decision')
+        path = reverse('publicweb_decision_add')
         # Test that the decision add view returns an empty form
         response = self.client.get(path)
         form = DecisionForm()
@@ -80,16 +75,16 @@ class DecisionsTest(DecisionTestCase):
 
     def get_diff(self, s1, s2):
         diff = difflib.context_diff(s1, s2)
-        str = ''
+        rope = ''
         for line in diff:
-            str += line
+            rope += line
             
-        return str
+        return rope
         
     def test_edit_decision(self):
         decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse(edit_decision, 
+        path = reverse('publicweb_decision_edit', 
                        args=[decision.id])
         response = self.client.get(path)
         
@@ -102,7 +97,7 @@ class DecisionsTest(DecisionTestCase):
     def test_edit_decision_has_feedback_formset(self):
         decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse('edit_decision', args=[decision.id])
+        path = reverse('publicweb_decision_edit', args=[decision.id])
         response = self.client.get(path)
         
         feedback_formset = response.context['feedback_formset']
@@ -110,7 +105,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals(list(feedback), list(feedback_formset.queryset))
 
     def get_edit_feedback_response(self, decision):
-        path = reverse(edit_decision,
+        path = reverse('publicweb_decision_edit',
                        args=[decision.id])
         response = self.client.post(path, {'description': 'Modified',
                                     'feedback_set-TOTAL_FORMS': '3',
@@ -124,7 +119,7 @@ class DecisionsTest(DecisionTestCase):
     def test_edit_decision_update_feedback(self):
         self.decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse('edit_decision', args=[self.decision.id])
+        path = reverse('publicweb_decision_edit', args=[self.decision.id])
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page, 2)
@@ -132,13 +127,13 @@ class DecisionsTest(DecisionTestCase):
         post_data['feedback_set-0-description'] = 'Modified'
         post_data['submit'] = 'Submit'
                 
-        response = self.client.post(path, post_data)
+        self.client.post(path, post_data)
         
         decision = Decision.objects.get(id=self.decision.id)
         self.assertEquals('Modified', decision.feedback_set.all()[0].description)
         
     def get_edit_decision_response(self, decision):
-        path = reverse(edit_decision,
+        path = reverse('publicweb_decision_edit',
                        args=[decision.id])
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'description': 'Feed the cat',
@@ -165,7 +160,7 @@ class DecisionsTest(DecisionTestCase):
         
    
     def test_add_decision_has_feedback_form(self):
-        response = self.client.get(reverse('add_decision'))        
+        response = self.client.get(reverse('publicweb_decision_add'))        
         self.assertTrue('feedback_formset' in response.context, 
                         "\"feedback_formset\" not in this context")
     
@@ -178,7 +173,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})
         
-        response = self.client.post(reverse('add_decision'), 
+        response = self.client.post(reverse('publicweb_decision_add'), 
                                 post_dict,
                                 follow=True )
         self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
@@ -232,7 +227,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})
         
-        self.client.post(reverse('add_decision'), 
+        self.client.post(reverse('publicweb_decision_add'), 
                                 post_dict,
                                 follow=True )
 
@@ -252,7 +247,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})
         
-        self.client.post(reverse('edit_decision', args=[decision.id]), 
+        self.client.post(reverse('publicweb_decision_edit', args=[decision.id]), 
                                 post_dict,
                                 follow=True )
 
@@ -285,7 +280,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})
         
-        response = self.client.post(reverse('add_decision'), 
+        response = self.client.post(reverse('publicweb_decision_add'), 
                                 post_dict,
                                 follow=True )
         self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
@@ -293,14 +288,14 @@ class DecisionsTest(DecisionTestCase):
         self.assertEqual(0, len(decision.watchers.all()), "watch was deselected!")
         
     def test_add_page_contains_cancel(self):
-        path = reverse('add_decision')
+        path = reverse('publicweb_decision_add')
         response = self.client.get(path)
                 
         self.assertContains(response, 'type="submit" value="Cancel"', count=1)
 
     def test_edit_page_contains_cancel(self):
         decision = self.create_and_return_decision()
-        path = reverse('edit_decision', args=[decision.id])
+        path = reverse('publicweb_decision_edit', args=[decision.id])
         response = self.client.get(path)
         
         self.assertContains(response, 'type="submit" value="Cancel"', count=1)
@@ -316,8 +311,8 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})        
         
-        path = reverse('add_decision')
-        response = self.client.post(path, post_dict)
+        path = reverse('publicweb_decision_add')
+        self.client.post(path, post_dict)
 
         self.assertEqual(0, len(Decision.objects.all()), "Hitting 'Cancel' created an object!")
 
@@ -334,8 +329,8 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})        
         
-        path = reverse('edit_decision', args=[decision.id])
-        response = self.client.post(path,
+        path = reverse('publicweb_decision_edit', args=[decision.id])
+        self.client.post(path,
                                 post_dict,
                                 follow=True )
 
