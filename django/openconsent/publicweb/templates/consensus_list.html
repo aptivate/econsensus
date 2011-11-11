@@ -1,5 +1,6 @@
 {% extends "fullpage.html" %}
 {% load i18n %}
+{% load publicweb_filters %}
 
 {% block title %}{{ block.super }}{{ page_title }}{% endblock %}
 
@@ -12,33 +13,29 @@
 			<noscript><input type="submit" value="Submit"></noscript>
 		</form>
 
-				
 		<ul class="list_view {{ class }}">
 			{% if object_list %}
 		       	<li class="item header">
-					<p class="id">ID</p>
-					<p class="excerpt">Excerpt</p>
-					<p class="activity">Activity</p>
-					<p class="deadline">Deadline</p>		        	
+			    	{% for column in columns %}
+						<p class="{{ column }}">{{ column }}</p>
+					{% endfor %}	
 		       	</li>
 		        {% for object in object_list %}
-				    <li class="item {{ class }}">	        
-						<div class="item_id">
-						<a title="view item" href="{{ object.get_absolute_url }}">{{ object.id }}</a>
-				        </div>
-						<div class="item_description">
-			            	<p>{{ object.excerpt }}</p>
-				        </div>
-				        <div class="item_activity">
-				            <p>{{ object.feedbackcount }}</p>
-				        </div>
-				        <div class="item_date deadline">
-					        {% if object.deadline %}
-					            <span>{{ object.deadline|date:"d N Y" }}</span>
-					        {% else %}
-					             <span>--</span>
-					        {% endif %}
-				        </div> <!-- class item_date deadline -->
+				    <li class="item {{ class }}">
+				    	{% for column in columns %}
+							<div class="{{ column }}">
+				    		{% if column == 'id' %}
+				    			<p>{{ object|model_name:column }}</p>
+								<a title="view item" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+							{% else %}
+								{% if object|decision_field:column %}
+				            		<p>{{ object|decision_field:column }}</p>
+				            	{% else %}
+				            		<p>--</p>
+				            	{% endif %}
+							{% endif %}
+					        </div> <!-- class item_date deadline -->
+					    {% endfor %}
 				    </li> <!-- item proposal -->
 				{% endfor %}
 			{% else %}

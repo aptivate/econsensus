@@ -289,7 +289,7 @@ body.archived-list ul li.navigation_archived a {
     position: relative;
 }
 
-.list_view .item.decision {
+.list_view .item.consensus {
     border-color: #31B404;
     display: block;
     overflow: auto;
@@ -304,14 +304,14 @@ body.archived-list ul li.navigation_archived a {
 }
 
 
-.item_id {
+.id {
     display: block;
     float: left;
     overflow: visible;
 	margin-right:10px;
 }
 
-.item_id a {
+.id a {
     background-color: #EFEFEF;
     background-image: url("../images/icon-view-item.png");
     background-position: right center;
@@ -327,22 +327,22 @@ body.archived-list ul li.navigation_archived a {
 }
 
 
-.list_view .item_description {
+.list_view .excerpt {
 	width:70%;
 	float:left;
 	padding-right:10px;
 }
 
-.list_view .item_activity {
+.list_view .feedbackcount {
 	width:4em;
 	float:left;
 }
 
-.list_view .item_activity img {
+.list_view .feedbackcount img {
 	width:100%;
 }
 
-.list_view .item_date {
+.list_view .deadline {
     border-radius: 15px 15px 15px 15px;
     float: right;
     font-size: 0.8em;

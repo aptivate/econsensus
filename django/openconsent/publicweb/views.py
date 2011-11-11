@@ -13,7 +13,6 @@ import unicodecsv
 from models import Decision
 from forms import DecisionForm, FeedbackFormSet
 from forms import SortForm
-from forms import FilterForm
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -59,15 +58,15 @@ def export_csv(request):
 
 proposal_context = {'page_title' : _("Current Active Proposals"),
                      'class' : 'proposal',
-                     'columns': ('decided_date', 'review_date')}
+                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')}
 
 consensus_context = {'page_title' : _("Decisions Made"),
                      'class' : 'consensus',
-                     'columns': ('decided_date', 'review_date')}
+                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')}
 
 archived_context = {'page_title' : _("Archived Decisions"),
                      'class' : 'archived',
-                     'columns': ('decided_date', 'review_date')}
+                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
 
 context_list = { 'proposal' : proposal_context,
              'consensus' : consensus_context,
