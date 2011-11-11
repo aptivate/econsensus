@@ -1,10 +1,8 @@
-from decision_test_case import DecisionTestCase
-from publicweb.models import Decision, Feedback
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
-#TODO: Write generic test in the form:
-#test_model_has_attribute()
-#with a given model and a given attribute
-#then farm out function to a generic test suite
+from publicweb.models import Decision, Feedback
+from decision_test_case import DecisionTestCase
 
 class ModelTest(DecisionTestCase):
 
@@ -23,6 +21,12 @@ class ModelTest(DecisionTestCase):
         self.assertEqual(value, result, 
                           "Attribute %s does not have expected value %s" % (attr,value))
 
+    def instance_validates(self, instance):
+        try:
+            instance.full_clean()
+        except ValidationError, e:
+            self.fail("'%s' model instance did not validate: %s" % (instance, e.message_dict))
+
 #The real work:
     def test_decision_has_feedbackcount(self):
         self.model_has_attribute(Decision, "feedbackcount")
@@ -33,7 +37,10 @@ class ModelTest(DecisionTestCase):
         self.instance_attribute_has_value(decision,"feedbackcount",0)
         feedback = Feedback(description="Feedback test data", decision=decision)
         feedback.save()
-        self.instance_attribute_has_value(decision,"feedbackcount",1)
+        self.instance_attribute_has_value(decision,"feedbackcount",1)       
         
-        
-        
+    def test_feedback_can_have_empty_description(self):
+        decision = Decision(description='Test', status=Decision.CONSENSUS_STATUS)
+        decision.save(self.user)     
+        feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
+        self.instance_validates(feedback)

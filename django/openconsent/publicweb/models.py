@@ -15,39 +15,7 @@ from south.modelsinspector import add_introspection_rules
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
-
-class Idea(models.Model):
-    excerpt = models.CharField(max_length=255,
-                                           blank=True)
-    description = models.TextField(verbose_name=_('Description'))
-    
-    DEFAULT_SIZE = 140
-    
-    def _get_excerpt(self):
-        description = strip_tags(self.description)
-        match = re.search("\.|\\r|\\n", description)
-        position = self.DEFAULT_SIZE
-        if match:
-            start = match.start()
-            if start < position:
-                position = start
-        return description[:position]
-    
-    def __unicode__(self):
-        return self.excerpt
-
-    def save(self, *args, **kwargs):
-        self.excerpt = self._get_excerpt()
-        return super(Idea, self).save(*args, **kwargs)
-
-    @classmethod
-    def get_fields(cls):
-        return cls._meta.fields
-    
-    class Meta:
-        abstract = True
-
-class Decision(Idea):
+class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
     PROPOSAL_STATUS = 0
@@ -60,7 +28,10 @@ class Decision(Idea):
                   (ARCHIVED_STATUS, _('Archived')),
                   )
 
-    #short_name = models.CharField(max_length=255, verbose_name=_('Name'))
+    DEFAULT_SIZE = 140
+
+    excerpt = models.CharField(max_length=255, blank=True)
+    description = models.TextField(verbose_name=_('Description'))
     decided_date = models.DateField(null=True, blank=True,
         verbose_name=_('Decided date'))
     effective_date = models.DateField(null=True, blank=True,
@@ -111,12 +82,30 @@ class Decision(Idea):
         return self.feedback_set.all().count()    
     
     unresolvedfeedback.short_description = _("Unresolved Feedback")
+
+    def _get_excerpt(self):
+        description = strip_tags(self.description)
+        match = re.search("\.|\\r|\\n", description)
+        position = self.DEFAULT_SIZE
+        if match:
+            start = match.start()
+            if start < position:
+                position = start
+        return description[:position]
+    
+    def __unicode__(self):
+        return self.excerpt
+
+    @classmethod
+    def get_fields(cls):
+        return cls._meta.fields
     
     @models.permalink
     def get_absolute_url(self):
         return ('edit_decision', (), {'decision_id':self.id})
 
     def save(self, author, *args, **kwargs):
+        self.excerpt = self._get_excerpt()        
         self.author = author
 
         #-----------------------------------#
@@ -145,7 +134,7 @@ class Decision(Idea):
 
         email.send()
         
-class Feedback(Idea):
+class Feedback(models.Model):
 
     QUESTION_STATUS = 0
     DANGER_STATUS = 1
@@ -163,7 +152,7 @@ class Feedback(Idea):
                   (DELIGHTED_STATUS, _('Delighted')),
                   )
     
-    #short_name = models.CharField(max_length=255, verbose_name=_('Feedback'))
+    description = models.TextField(verbose_name=_('Description'), null=True, blank=True)    
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES,

@@ -12,3 +12,4 @@ from tag_test import TagsTest
 from model_test import ModelTest
 from view_test import ViewTest
 from url_test import URLTest
+from form_test import FormTest
