@@ -277,9 +277,19 @@ body.archived-list ul li.navigation_archived a {
 	width:10%;
 }
 
+.list_view .item.header .decided_date{
+	float:left;
+	width:10%;
+}
+
+.list_view .item.header .review_date{
+	float:right;
+	padding-right:25px;
+}
+
 .list_view .item.header .deadline{
 	float:right;
-	padding-right:25px
+	padding-right:25px;
 }
 
 .list_view .item.proposal {
@@ -327,22 +337,49 @@ body.archived-list ul li.navigation_archived a {
 }
 
 
-.list_view .excerpt {
+.list_view.proposal .excerpt {
 	width:70%;
 	float:left;
 	padding-right:10px;
 }
 
-.list_view .feedbackcount {
+.list_view.proposal .feedbackcount {
 	width:4em;
 	float:left;
+}
+
+.list_view.consensus .decided_date{
+	float:left;
+	width:10%;
+}
+
+.list_view.consensus .review_date{
+	float:right;
+	padding-right:25px;
+}
+
+.list_view.consensus .excerpt {
+	width:70%;
+	float:left;
+	padding-right:10px;
+}
+
+.list_view.archived .created_date{
+	float:left;
+	width:10%;
+}
+
+.list_view.archived .excerpt {
+	width:70%;
+	float:left;
+	padding-right:10px;
 }
 
 .list_view .feedbackcount img {
 	width:100%;
 }
 
-.list_view .deadline {
+.list_view.proposal .deadline {
     border-radius: 15px 15px 15px 15px;
     float: right;
     font-size: 0.8em;

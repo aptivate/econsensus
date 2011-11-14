@@ -17,15 +17,14 @@
 			{% if object_list %}
 		       	<li class="item header">
 			    	{% for column in columns %}
-						<p class="{{ column }}">{{ column }}</p>
-					{% endfor %}	
+						<p class="{{ column }}">{{ object_list|first|model_name:column }}</p>
+					{% endfor %}
 		       	</li>
 		        {% for object in object_list %}
 				    <li class="item {{ class }}">
 				    	{% for column in columns %}
 							<div class="{{ column }}">
 				    		{% if column == 'id' %}
-				    			<p>{{ object|model_name:column }}</p>
 								<a title="view item" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
 							{% else %}
 								{% if object|decision_field:column %}

@@ -6,21 +6,44 @@ from django.core.urlresolvers import reverse
 
 class ViewTest(DecisionTestCase):
 
-    expected_key_tuple = ('class', 'page_title','columns')
-    expected_dict_tuple = ({'class':'consensus'},)
+    expected_proposal_key_tuple = ('class', 'page_title','columns')
+    expected_proposal_dict_tuple = ({'class':'proposal'},
+                                      {'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')})
         
-    def assert_context_has_key(self, key):
-        response = self.client.get(reverse('list', args=['consensus']))
+    expected_consensus_key_tuple = ('class', 'page_title','columns')
+    expected_consensus_dict_tuple = ({'class':'consensus'},
+                                      {'columns': ('id', 'excerpt', 'decided_date', 'review_date')})
+        
+    expected_archived_key_tuple = ('class', 'page_title','columns')
+    expected_archived_dict_tuple = ({'class':'archived'},
+                                      {'columns': ('id', 'excerpt', 'created_date', 'archived_date')})
+        
+    def assert_context_has_key(self, key, url):
+        response = self.client.get(url)
         self.assertTrue(key in response.context, 'Key "%s" not found in response.context' % key)
 
-    def assert_context_has_dict(self, dictionary):
-        response = self.client.get(reverse('list', args=['consensus']))
+    def assert_context_has_dict(self, dictionary, url):
+        response = self.client.get(url)
         self.assertDictContainsSubset(dictionary, response.context, 'warning will robinson!')
 
     def test_expected_context_keys(self):
-        for key in self.expected_key_tuple:
-            self.assert_context_has_key(key)
+        url = reverse('list', args=['proposal'])
+        for key in self.expected_proposal_key_tuple:
+            self.assert_context_has_key(key, url)
+        url = reverse('list', args=['consensus'])
+        for key in self.expected_consensus_key_tuple:
+            self.assert_context_has_key(key, url)
+        url = reverse('list', args=['archived'])
+        for key in self.expected_archived_key_tuple:
+            self.assert_context_has_key(key, url)
         
     def test_expected_context_dict(self):
-        for dictionary in self.expected_dict_tuple:
-            self.assert_context_has_dict(dictionary)        
+        url = reverse('list', args=['proposal'])        
+        for dictionary in self.expected_proposal_dict_tuple:
+            self.assert_context_has_dict(dictionary, url)        
+        url = reverse('list', args=['consensus'])        
+        for dictionary in self.expected_consensus_dict_tuple:
+            self.assert_context_has_dict(dictionary, url)        
+        url = reverse('list', args=['archived'])        
+        for dictionary in self.expected_archived_dict_tuple:
+            self.assert_context_has_dict(dictionary, url)                                

@@ -12,6 +12,7 @@ import re
 # http://south.aeracode.org/wiki/MyFieldsDontWork
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
 from south.modelsinspector import add_introspection_rules
+import datetime
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -30,18 +31,18 @@ class Decision(models.Model):
 
     DEFAULT_SIZE = 140
 
-    excerpt = models.CharField(max_length=255, blank=True)
+    #User entered fields
     description = models.TextField(verbose_name=_('Description'))
     decided_date = models.DateField(null=True, blank=True,
-        verbose_name=_('Decided date'))
+        verbose_name=_('Decided Date'))
     effective_date = models.DateField(null=True, blank=True,
-        verbose_name=_('Effective date'))
+        verbose_name=_('Effective Date'))
     review_date = models.DateField(null=True, blank=True,
-        verbose_name=_('Review date'))
+        verbose_name=_('Review Date'))
     expiry_date = models.DateField(null=True, blank=True,
-        verbose_name=_('Expiry date'))
+        verbose_name=_('Expiry Date'))
     deadline = models.DateField(null=True, blank=True,
-        verbose_name=_('Expiry date'))
+        verbose_name=_('Expiry Date'))
     budget = models.CharField(blank=True, max_length=255,
         verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,
@@ -54,6 +55,13 @@ class Decision(models.Model):
     tags = TagField(null=True, blank=True, editable=True, 
                     help_text=TAGS_HELP_FIELD_TEXT)
 
+    #Autocompleted fields
+    #should use editable=False?
+    excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
+    created_date = models.DateField(null=True, blank=True, editable=False,
+        verbose_name=_('Created Date'))
+
+    #methods
     def is_watched(self, user):
         return user in self.watchers.all()
                         
@@ -78,10 +86,12 @@ class Decision(models.Model):
             
         return answer
 
+    unresolvedfeedback.short_description = _("Unresolved Feedback")
+
     def feedbackcount(self):
         return self.feedback_set.all().count()    
-    
-    unresolvedfeedback.short_description = _("Unresolved Feedback")
+
+    feedbackcount.short_description = _("Feedback")
 
     def _get_excerpt(self):
         description = strip_tags(self.description)
@@ -107,6 +117,9 @@ class Decision(models.Model):
     def save(self, author, *args, **kwargs):
         self.excerpt = self._get_excerpt()        
         self.author = author
+
+        if not self.id:
+            self.created_date = datetime.date.today()        
 
         #-----------------------------------#
         # This is email stuff. Would be good
