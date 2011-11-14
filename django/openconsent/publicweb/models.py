@@ -43,6 +43,8 @@ class Decision(models.Model):
         verbose_name=_('Expiry Date'))
     deadline = models.DateField(null=True, blank=True,
         verbose_name=_('Expiry Date'))
+    archived_date = models.DateField(null=True, blank=True,
+        verbose_name=_('Archived Date'))
     budget = models.CharField(blank=True, max_length=255,
         verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,

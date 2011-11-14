@@ -29,7 +29,8 @@ class ModelTest(DecisionTestCase):
 
 #The real work:
     def test_decision_has_feedbackcount(self):
-        self.model_has_attribute(Decision, "feedbackcount")
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "feedbackcount")
     
     def test_model_feedbackcount_changes(self):
         decision = Decision(description="Decision test data")
@@ -44,3 +45,8 @@ class ModelTest(DecisionTestCase):
         decision.save(self.user)     
         feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
         self.instance_validates(feedback)
+
+    def test_decision_has_archived_date(self):
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "archived_date")
+
