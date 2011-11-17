@@ -34,10 +34,10 @@ class ModelTest(DecisionTestCase):
     def test_model_feedbackcount_changes(self):
         decision = Decision(description="Decision test data")
         decision.save(self.user)
-        self.instance_attribute_has_value(decision,"feedbackcount",0)
+        self.instance_attribute_has_value(decision,"feedbackcount", 0)
         feedback = Feedback(description="Feedback test data", decision=decision)
         feedback.save()
-        self.instance_attribute_has_value(decision,"feedbackcount",1)       
+        self.instance_attribute_has_value(decision,"feedbackcount", 1)       
         
     def test_feedback_can_have_empty_description(self):
         decision = Decision(description='Test', status=Decision.CONSENSUS_STATUS)

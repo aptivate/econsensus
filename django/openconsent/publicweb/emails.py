@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage
 #work in progress... remove email sending from model save
 class OpenConsentEmailMessage(EmailMessage):
     
-    def __init__(self, typ, obj, old_obj=None, *args, **kwargs):
+    def __init__(self, typ, obj, old_obj=None, *args, **kwargs):  # pylint: disable=R0914
         super(OpenConsentEmailMessage, self).__init__(*args, **kwargs)
         current_site = Site.objects.get_current()
         item_name = obj.description

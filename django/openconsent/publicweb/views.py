@@ -56,17 +56,17 @@ def export_csv(request):
 # that view will use a search function that takes a 'filter' parameter and an 'order_by' parameter and gives an ordered queryset back.
 # The list view will use a single template but will pass a parameter as extra context to individualise the page
 
-proposal_context = {'page_title' : _("Current Active Proposals"),
+proposal_context = {'page_title' : _("Current Active Proposals"), # pylint: disable=E1102
                      'class' : 'proposal',
-                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')} # pylint: disable=E1102
+                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')}
 
-consensus_context = {'page_title' : _("Decisions Made"),
+consensus_context = {'page_title' : _("Decisions Made"), # pylint: disable=E1102
                      'class' : 'consensus',
-                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')} # pylint: disable=E1102
+                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')}
 
-archived_context = {'page_title' : _("Archived Decisions"),
+archived_context = {'page_title' : _("Archived Decisions"), # pylint: disable=E1102
                      'class' : 'archived',
-                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')} # pylint: disable=E1102
+                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
 
 context_list = { 'proposal' : proposal_context,
              'consensus' : consensus_context,

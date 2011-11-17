@@ -13,9 +13,9 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
 
-FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
+FeedbackFormSet = inlineformset_factory(Decision, Feedback,  #pylint: disable-msg=C0103
                                        fields=('description','resolved','rating'),
-                                       form=FeedbackForm) #pylint: disable-msg=C0103
+                                       form=FeedbackForm)
 
 class DecisionForm(forms.ModelForm):
     
