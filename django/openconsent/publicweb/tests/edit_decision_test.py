@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from publicweb.tests.decision_test_case import DecisionTestCase
+from decision_test_case import DecisionTestCase
 
 #TODO: This class is a bit stumpy... merge with other (web) tests.
 class EditDecisionTest(DecisionTestCase):
@@ -10,5 +10,5 @@ class EditDecisionTest(DecisionTestCase):
 
         self.assertContains(response, u"<h2 class=\"page_title\">View and Edit: <strong class=\"not_translated\">" + decision.excerpt)
 
-    def load_add_decision_and_return_response(self, id):
-        return self.client.get(reverse('publicweb_decision_edit', args=[id]))
+    def load_add_decision_and_return_response(self, idd):
+        return self.client.get(reverse('publicweb_decision_edit', args=[idd]))

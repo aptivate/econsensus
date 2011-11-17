@@ -15,5 +15,5 @@ class JQueryUIDateWidget(forms.DateInput):
             )
         }
 
-    def __init__(self, attrs={}, format=None):
+    def __init__(self, *args, **kwargs):
         super(JQueryUIDateWidget, self).__init__(attrs={'class': 'vDateField', 'size': '10'}, format=format)

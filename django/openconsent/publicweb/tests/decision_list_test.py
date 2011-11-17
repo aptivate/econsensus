@@ -2,8 +2,6 @@ from decision_test_case import DecisionTestCase
 from publicweb.models import Decision
 import datetime
 from django.core.urlresolvers import reverse
-from lxml.html import fromstring
-from lxml.cssselect import CSSSelector
 
 class DecisionListTest(DecisionTestCase):
 

@@ -9,7 +9,7 @@ register = template.Library()
 
 @register.filter
 @stringfilter
-def decision_field(obj,attr):
+def decision_field(obj, attr):
     try:
         decision = Decision.objects.get(excerpt=obj)
         value = getattr(decision, attr)

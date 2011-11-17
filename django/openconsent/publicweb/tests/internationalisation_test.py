@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
+from open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
 from django.utils import translation
 from lxml.html.soupparser import fromstring

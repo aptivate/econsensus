@@ -43,7 +43,7 @@ class FilterForm(forms.Form):
     list_choices = list(Decision.STATUS_CHOICES)
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
-    filter = ChoiceField(choices=FILTER_CHOICES,
+    filtar = ChoiceField(choices=FILTER_CHOICES,
                          label = _('Status'),
                          initial=EXTRA_CHOICE[0],
                          required=False,

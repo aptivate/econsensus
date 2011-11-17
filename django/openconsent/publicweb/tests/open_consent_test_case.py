@@ -26,6 +26,6 @@ class OpenConsentTestCase(TestCase):
         form_data = {}
         for control in forms[number].controls:
             name = control.name
-            form_data[name]=control.value
+            form_data[name] = control.value
         
         return form_data

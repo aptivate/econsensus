@@ -1,4 +1,4 @@
-from publicweb.tests.open_consent_test_case import OpenConsentTestCase
+from open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
 
 class LogoutTest(OpenConsentTestCase):       

@@ -1,4 +1,4 @@
-from publicweb.tests.decision_test_case import DecisionTestCase
+from decision_test_case import DecisionTestCase
 
 class FeedbackTest(DecisionTestCase):
 

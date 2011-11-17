@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 from django.core import mail
 from publicweb.emails import OpenConsentEmailMessage
 
-from publicweb.tests.decision_test_case import DecisionTestCase
+from decision_test_case import DecisionTestCase
 from publicweb.models import Decision
 
 class EmailTest(DecisionTestCase):

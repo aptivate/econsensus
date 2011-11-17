@@ -12,7 +12,7 @@ import difflib
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 from publicweb.widgets import JQueryUIDateWidget
-from publicweb.tests.decision_test_case import DecisionTestCase
+from decision_test_case import DecisionTestCase
 
 ### As a general note, I can see our tests are evolving into...
 ### 1 - model tests (does the model have x property?)
