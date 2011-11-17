@@ -7,7 +7,7 @@ class DecisionListTest(DecisionTestCase):
 
     def test_decisions_can_be_sorted_by_id(self):
         id_list = []
-        for i in range(5,0,-1):
+        for i in range(5, 0, -1):
             decision = Decision(description='Decision %d' % i)
             decision.save(self.user)
             id_list.append(decision.id)
@@ -16,13 +16,13 @@ class DecisionListTest(DecisionTestCase):
                 
         object_list = response.context['object_list']    
                 
-        for i in range(1,6):
+        for i in range(1, 6):
             self.assertEquals(id_list[i-1], object_list[i-1].id)
         
     def test_decisions_can_be_sorted_by_description(self):
         
         id_list = []        
-        for i in range(5,0,-1):
+        for i in range(5, 0, -1):
             decision = Decision(description='Decision %d' % i)
             decision.save(self.user)
             id_list.append(decision.id)
@@ -32,7 +32,7 @@ class DecisionListTest(DecisionTestCase):
         object_list = response.context['object_list']    
 
         
-        for i in range(1,6):            
+        for i in range(1, 6):            
             self.assertEquals('Decision %d' % i, object_list[i-1].description)
 
     def test_decisions_can_be_sorted_by_deadline(self):
@@ -57,6 +57,6 @@ class DecisionListTest(DecisionTestCase):
         
         object_list = response.context['object_list']    
                 
-        for i in range(1,6):
+        for i in range(1, 6):
             self.assertEquals(datetime.date(2001, 3, i), getattr(object_list[i-1], column))
 

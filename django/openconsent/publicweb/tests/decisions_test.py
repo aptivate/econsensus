@@ -73,7 +73,7 @@ class DecisionsTest(DecisionTestCase):
     def get_default_decision_form_dict(self):
         return {'status': 1}
 
-    def get_diff(self, s1, s2):
+    def get_diff(self, s1, s2): #pylint: disable-msg=C0103
         diff = difflib.context_diff(s1, s2)
         rope = ''
         for line in diff:
@@ -117,9 +117,9 @@ class DecisionsTest(DecisionTestCase):
         return response
     
     def test_edit_decision_update_feedback(self):
-        self.decision = self.create_and_return_example_decision_with_feedback()
+        decision = self.create_and_return_example_decision_with_feedback()
         
-        path = reverse('publicweb_decision_edit', args=[self.decision.id])
+        path = reverse('publicweb_decision_edit', args=[decision.id])
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page, 2)
@@ -129,7 +129,7 @@ class DecisionsTest(DecisionTestCase):
                 
         self.client.post(path, post_data)
         
-        decision = Decision.objects.get(id=self.decision.id)
+        decision = Decision.objects.get(id=decision.id)
         self.assertEquals('Modified', decision.feedback_set.all()[0].description)
         
     def get_edit_decision_response(self, decision):
@@ -184,7 +184,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals('The eggs are bad', feedback[0].description)
         self.assertEquals('No one wants them', feedback[1].description)
     
-    def assert_decision_datepickers(self,field):
+    def assert_decision_datepickers(self, field):
         form = DecisionForm()
         
         self.assertEquals(JQueryUIDateWidget,

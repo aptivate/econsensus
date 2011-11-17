@@ -32,7 +32,7 @@ def export_csv(request):
 	True
 	'''
 
-    def fieldOutput(obj,field):
+    def fieldOutput(obj, field):
         '''Looks up the status_text() for status, otherwise just returns the getattr for the field'''
         if field == 'status':
             return obj.status_text()
@@ -49,7 +49,7 @@ def export_csv(request):
     # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
     writer.writerow(list(field_names))
     for obj in Decision.objects.all():
-        writer.writerow([unicode(fieldOutput(obj,field)).encode("utf-8","replace") for field in field_names])
+        writer.writerow([unicode(fieldOutput(obj, field)).encode("utf-8","replace") for field in field_names])
     return response
 
 # TODO: a better way to handle all these list views is to create a single view for listing items
@@ -58,15 +58,15 @@ def export_csv(request):
 
 proposal_context = {'page_title' : _("Current Active Proposals"),
                      'class' : 'proposal',
-                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')}
+                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')} # pylint: disable=E1102
 
 consensus_context = {'page_title' : _("Decisions Made"),
                      'class' : 'consensus',
-                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')}
+                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')} # pylint: disable=E1102
 
 archived_context = {'page_title' : _("Archived Decisions"),
                      'class' : 'archived',
-                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
+                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')} # pylint: disable=E1102
 
 context_list = { 'proposal' : proposal_context,
              'consensus' : consensus_context,
@@ -81,7 +81,7 @@ context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
              }
 
 @login_required        
-def listing(request,status):
+def listing(request, status):
     extra_context = context_list[status]
     extra_context['sort_form'] = SortForm(request.GET)
     status_code = context_codes[status]

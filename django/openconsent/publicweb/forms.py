@@ -15,7 +15,7 @@ class FeedbackForm(forms.ModelForm):
 
 FeedbackFormSet = inlineformset_factory(Decision, Feedback, 
                                        fields=('description','resolved','rating'),
-                                       form=FeedbackForm)
+                                       form=FeedbackForm) #pylint: disable-msg=C0103
 
 class DecisionForm(forms.ModelForm):
     
@@ -33,7 +33,7 @@ class DecisionForm(forms.ModelForm):
                    'people': forms.TextInput()
                    }
 
-EXTRA_CHOICE = (3, _('All'))
+EXTRA_CHOICE = (3, _('All')) #pylint: disable-msg=E1102
 
 #TODO: Sort and filter forms have nothing to do with the app itself.
 #Move to site when site and app are split.
@@ -44,7 +44,7 @@ class FilterForm(forms.Form):
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
     filtar = ChoiceField(choices=FILTER_CHOICES,
-                         label = _('Status'),
+                         label = _('Status'), #pylint: disable-msg=E1102
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
@@ -56,12 +56,12 @@ class SortForm(forms.Form):
     #TODO: Think about creating a mechanism to integrate the sorting with the fields that are / 
     #shown on the page
     #list_choices = [(field.name, field.name) for field in Decision.get_fields()]        
-
-    list_choices = [('id', _('id')),
-                    ('description', _('description')),
-                    ('deadline', _('deadline'))]
+    
+    list_choices = [('id', _('id')), #pylint: disable-msg=E1102
+                    ('description', _('description')), #pylint: disable-msg=E1102
+                    ('deadline', _('deadline'))] #pylint: disable-msg=E1102
     sort = ChoiceField(choices=list_choices,
-                         label = _('Sort by'),
+                         label = _('Sort by'), #pylint: disable-msg=E1102
                          initial=list_choices[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))

@@ -1,3 +1,5 @@
+#pylint: disable-msg=E1102
+
 from django.db import models
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
@@ -131,19 +133,19 @@ class Decision(models.Model):
         # \/
         #record newness before saving
         if self.id:
-            typ='status_change'
+            typ = 'status_change'
             old = Decision.objects.get(id=self.id)
             if old.status != self.status:
-                typ='status_change'
+                typ = 'status_change'
             else:
-                typ='content_change'
+                typ = 'content_change'
         else:
             old = None
-            typ='new'
+            typ = 'new'
                     
         super(Decision, self).save(*args, **kwargs)
 
-        email = OpenConsentEmailMessage(typ=typ,
+        email = OpenConsentEmailMessage(typ = typ,
                                         obj = self,
                                         old_obj = old)  
 

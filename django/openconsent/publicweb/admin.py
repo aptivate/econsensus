@@ -28,9 +28,9 @@ class DecisionAdmin(admin.ModelAdmin):
                            'budget','people', 'status')}),
     ]
 
-    list_display = ('description','unresolvedfeedback', 'decided_date','effective_date','review_date','expiry_date','budget','people')
+    list_display = ('description', 'unresolvedfeedback', 'decided_date', 'effective_date', 'review_date', 'expiry_date', 'budget', 'people')
     search_fields = ('description',)
-    list_filter = ('decided_date','effective_date','review_date',)
+    list_filter = ('decided_date', 'effective_date', 'review_date')
     inlines = (FeedbackInline,)
     formfield_overrides = {
         models.CharField: {'widget': forms.TextInput(attrs={'size':'86'})},
@@ -43,5 +43,5 @@ class DecisionAdmin(admin.ModelAdmin):
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('description','resolved')
         
-admin.site.register(Feedback,FeedbackAdmin)
-admin.site.register(Decision,DecisionAdmin)
+admin.site.register(Feedback, FeedbackAdmin)
+admin.site.register(Decision, DecisionAdmin)

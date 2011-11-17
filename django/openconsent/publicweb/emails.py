@@ -55,7 +55,7 @@ class OpenConsentEmailMessage(EmailMessage):
         email_context = Context(email_dict)            
         self.body = email_template.render(email_context)
 
-        self.to = []        
+        self.to = []        #pylint: disable-msg=C0103
         for this_user in queryset:
             if this_user.email:
                 self.to.append(this_user.email)

@@ -15,24 +15,25 @@ class InternationalisationTest(OpenConsentTestCase):
         self.check_all_text_translated('list', args=['consensus'])
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('publicweb_decision_add')
+        self.check_all_text_translated('publicweb_decision_add', args=None)
 
-    def check_all_text_translated(self, view, args=[]):
+    def check_all_text_translated(self, view, args):
         self.mock_get_text_functions_for_french()
         
         translation.activate("fr")
 
         response = self.client.get(reverse(view, args=args), follow=True)
-        html = response.content
+        html = response.content # pylint: disable=E1103
                 
         root = fromstring(html)        
         sel = CSSSelector('*')
                
         for element in sel(root):
             if self.has_translatable_text(element):             
-                self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element) + " with text '" + element.text + "' from view '" + view + "'")
+                self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element)
+                                + " with text '" + element.text + "' from view '" + view + "'")
      
-    def has_translatable_text(self,element):
+    def has_translatable_text(self, element):
         if element.text is None \
             or element.text.strip() == "" \
             or element.text.strip('-') == "" \
