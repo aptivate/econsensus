@@ -1,4 +1,5 @@
 #@PydevCodeAnalysisIgnore
+#pylint: disable-msg=W0611
 # encoding: utf-8
 import datetime
 from south.db import db
