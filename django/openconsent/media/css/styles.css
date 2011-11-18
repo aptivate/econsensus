@@ -524,6 +524,12 @@ h2.page_title strong {
 	padding:5px 10px;
 }
 
+#footer div.exportcsv a {
+	font-size:0.8em;
+	float: right;
+	padding:5px 10px;
+}
+
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {

@@ -146,7 +146,7 @@ def _sort(request):
     if sort_form.is_valid() and sort_form.cleaned_data['sort']:
         order = str(sort_form.cleaned_data['sort'])
     else:
-        order = 'id'
+        order = '-id'
 
     return Decision.objects.order_by(order)
 
