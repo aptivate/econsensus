@@ -112,7 +112,7 @@ def production_seedltd():
 
 def production_goodgovernment():
     """ use production environment on remote host"""
-    env.project_dir = env.project + 'goodgovernment'
+    env.project_dir = env.project + '_goodgovernment'
     env.environment = 'production_goodgovernment'
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
