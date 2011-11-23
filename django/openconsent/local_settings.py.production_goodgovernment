@@ -3,24 +3,24 @@ import private_settings
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-LOGIN_URL = '/seedltd/accounts/login/'
-LOGIN_REDIRECT_URL = '/seedltd/list/proposal/'
+LOGIN_URL = '/goodgovernment/accounts/login/'
+LOGIN_REDIRECT_URL = '/goodgovernment/list/proposal/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/seedltd/site_media/'
-ADMIN_MEDIA_PREFIX = '/seedltd/media/'
+MEDIA_URL = '/goodgovernment/site_media/'
+ADMIN_MEDIA_PREFIX = '/goodgovernment/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'admin@aptivate.org'
+DEFAULT_FROM_EMAIL = 'admin@open.consens.us'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'openconsent_seed',                      # Or path to database file if using sqlite3.
-        'USER': 'openconsent_seed',                      # Not used with sqlite3.
+        'NAME': 'openconsent_good',                      # Or path to database file if using sqlite3.
+        'USER': 'openconsent_good',                      # Not used with sqlite3.
         'OPTIONS' : {"init_command": "SET storage_engine=INNODB"},
         'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
