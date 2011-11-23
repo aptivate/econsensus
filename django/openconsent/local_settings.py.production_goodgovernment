@@ -3,14 +3,14 @@ import private_settings
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-LOGIN_URL = '/goodgovernment/accounts/login/'
-LOGIN_REDIRECT_URL = '/goodgovernment/list/proposal/'
+LOGIN_URL = '/pdx/goodgovernment/accounts/login/'
+LOGIN_REDIRECT_URL = '/pdx/goodgovernment/list/proposal/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/goodgovernment/site_media/'
-ADMIN_MEDIA_PREFIX = '/goodgovernment/media/'
+MEDIA_URL = '/pdx/goodgovernment/site_media/'
+ADMIN_MEDIA_PREFIX = '/pdx/goodgovernment/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
