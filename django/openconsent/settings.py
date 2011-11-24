@@ -168,6 +168,8 @@ TINYMCE_DEFAULT_CONFIG = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
+DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
+
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
