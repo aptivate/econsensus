@@ -264,7 +264,7 @@ body.archived-list ul li.navigation_archived a {
     display: block;
     float: left;
     margin-left: 10px;
-    width: 5%;
+    width: 6%;
 }
 
 .list_view .item.header .excerpt{
@@ -289,7 +289,6 @@ body.archived-list ul li.navigation_archived a {
 
 .list_view .item.header .deadline{
 	float:right;
-	padding-right:25px;
 }
 
 .list_view .item.proposal {
@@ -313,15 +312,14 @@ body.archived-list ul li.navigation_archived a {
     position: relative;
 }
 
-
-.id {
+.list_view .item.proposal .id {
     display: block;
     float: left;
-    overflow: visible;
-	margin-right:10px;
+    margin-right: 10px;
+    width: 6%;
 }
 
-.id a {
+.list_view .item.proposal .id p {
     background-color: #EFEFEF;
     background-image: url("../images/icon-view-item.png");
     background-position: right center;
@@ -441,19 +439,10 @@ h2.page_title strong {
     top: -40px;
 }
 
-.form_item.description, .form_item.resources {
-	padding:20px;
-	display:block;
-	position:relative;
-}
-
 #decision_feedback {
     display: block;
     float: left;
     position: relative;
-	border: 3px solid #FFCC00;
-    border-radius: 15px 15px 15px 15px;
-    clear: both;
     width: 100%;    
 }
 
@@ -472,11 +461,6 @@ h2.page_title strong {
     position: relative;
     width: 94%;
 	clear:both;
-}
-
-
-.form_item.resources {
-	padding-top:0;
 }
 
 .decision_meta {
@@ -510,8 +494,82 @@ h2.page_title strong {
 	width:90%;
 }
 
+.form_item.description, .form_item.resources {
+	padding: 10px;
+	display: block;
+	position: relative;
+}
 
+/* Feedback */
 
+.formset_item {
+	margin-bottom: 8px;
+	background-color: #eee;
+}
+
+.formset_item .form_item.description {
+	padding: 8px;
+	position: relative;
+}
+
+.formset_item .form_item.description textarea {
+	font-size: 1.1em;
+	color: #333;
+	width: 98%;
+	height: 40px;
+	padding: 10px;
+}
+
+.formset_item .form_item.rating {
+	padding: 4px;
+	width: 15%;
+	display: block;
+	font-size: 0.7em;
+}
+	
+.formset_item .form_item.rating select {
+	#color: #fff;
+	padding: 1px;
+	font-size: 1em;
+}
+
+/* question */
+.formset_item.feedback0 {
+	border: 1px solid #cbcbcb;
+	border-top: 10px solid #cbcbcb;
+	border-radius: 10px;
+	}
+/* danger */
+.formset_item.feedback1 {
+	border: 1px solid #d71515;
+	border-top: 10px solid #d71515;
+	border-radius: 10px;
+	}
+/* concerns */
+.formset_item.feedback2 {
+	border: 1px solid #d6ac04;
+	border-top: 10px solid #d6ac04;
+	border-radius: 10px;
+	}
+/* concent */
+.formset_item.feedback3 {
+	border: 1px solid #a9d300;
+	border-top: 10px solid #a9d300;
+	border-radius: 10px;
+	}
+/* happy */
+.formset_item.feedback4 {
+	border: 1px solid #FBEC5D;
+	border-top: 10px solid #FBEC5D;
+	border-radius: 10px;
+	}
+/* delighted */
+.formset_item.feedback5 {
+	border: 1px solid #FBEC5D;
+	border-top: 10px solid #FBEC5D;
+	border-radius: 10px;
+	}
+	
 /* Footer */
 
 #footer {

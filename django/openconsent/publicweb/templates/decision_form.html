@@ -76,11 +76,10 @@
 			{{ feedback_formset.management_form }}
 			{% for feedback_form in feedback_formset %}
 			{{ feedback_form.id }}
-			<div class="formset_item">
+			<div class="formset_item feedback{{ feedback_form.instance.rating }}">
 				<div class="form_row feedback_summary">
 					<div class="form_item rating">
 						{{ feedback_form.rating.errors }}
-						<label for="id_rating">{% trans "Rating" %}:</label>
 						{{ feedback_form.rating }}
 			    	</div>
 			    	<div class="form_item description">

@@ -21,11 +21,12 @@
 					{% endfor %}
 		       	</li>
 		        {% for object in object_list %}
+		        <a title="view item" href="{{ object.get_absolute_url }}">
 				    <li class="item {{ class }}">
 				    	{% for column in columns %}
 							<div class="{{ column }}">
 				    		{% if column == 'id' %}
-								<a title="view item" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+								<p>{{ object|decision_field:column }}</p>
 							{% else %}
 								{% if object|decision_field:column %}
 				            		<p>{{ object|decision_field:column }}</p>
@@ -36,6 +37,7 @@
 					        </div> <!-- class item_date deadline -->
 					    {% endfor %}
 				    </li> <!-- item proposal -->
+				    </a>
 				{% endfor %}
 			{% else %}
 				<p>{% trans "No decisions have been made" %}.<p>
