@@ -18,6 +18,8 @@ class InternationalisationTest(OpenConsentTestCase):
         self.check_all_text_translated('publicweb_decision_add', args=None)
 
     def check_all_text_translated(self, view, args):
+        old_lang = translation.get_language()
+                
         self.mock_get_text_functions_for_french()
         
         translation.activate("fr")
@@ -33,6 +35,8 @@ class InternationalisationTest(OpenConsentTestCase):
                 self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element)
                                 + " with text '" + element.text + "' from view '" + view + "'")
      
+        translation.activate(old_lang)
+
     def has_translatable_text(self, element):
         if element.text is None \
             or element.text.strip() == "" \

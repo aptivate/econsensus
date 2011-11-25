@@ -26,11 +26,24 @@ class ModelTest(DecisionTestCase):
         except ValidationError, e:
             self.fail("'%s' model instance did not validate: %s" % (instance, e.message_dict))
 
+    def get_column(self,matrix, i):
+        return [row[i] for row in matrix]
+
 #The real work:
     def test_decision_has_feedbackcount(self):
         decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "feedbackcount")
     
+    def test_decision_has_archived_date(self):
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "archived_date")
+
+    def test_feedback_can_have_empty_description(self):
+        decision = Decision(description='Test', status=Decision.CONSENSUS_STATUS)
+        decision.save(self.user)     
+        feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
+        self.instance_validates(feedback)
+
     def test_model_feedbackcount_changes(self):
         decision = Decision(description="Decision test data")
         decision.save(self.user)
@@ -39,13 +52,11 @@ class ModelTest(DecisionTestCase):
         feedback.save()
         self.instance_attribute_has_value(decision, "feedbackcount", 1)       
         
-    def test_feedback_can_have_empty_description(self):
-        decision = Decision(description='Test', status=Decision.CONSENSUS_STATUS)
-        decision.save(self.user)     
-        feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
-        self.instance_validates(feedback)
-
-    def test_decision_has_archived_date(self):
-        decision = Decision(description="Decision test data")
-        self.model_has_attribute(decision, "archived_date")
-
+    def test_feedback_rating_has_values(self):
+        expected = ('Question', 'Danger', 'Concerns', 'Consent')
+        names = self.get_column(Feedback.RATING_CHOICES, 1)
+        actual = []
+        for name in names:
+            actual.append(unicode(name))
+        
+        self.assertEqual(expected, tuple(actual), "Unexptected feedback rating values!")

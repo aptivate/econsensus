@@ -163,10 +163,8 @@ class Feedback(models.Model):
     RATING_CHOICES = ( 
                   (QUESTION_STATUS, _('Question')),
                   (DANGER_STATUS, _('Danger')),
-                  (SIGNIFICANT_CONCERNS_STATUS, _('Significant Concerns')),
+                  (SIGNIFICANT_CONCERNS_STATUS, _('Concerns')),
                   (CONSENT_STATUS, _('Consent')),
-                  (HAPPY_STATUS, _('Happy')),
-                  (DELIGHTED_STATUS, _('Delighted')),
                   )
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)    
