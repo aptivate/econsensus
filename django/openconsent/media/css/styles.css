@@ -312,7 +312,7 @@ body.archived-list ul li.navigation_archived a {
     position: relative;
 }
 
-.list_view .item.proposal .id {
+.list_view .item.proposal .id, .list_view .item.consensus .id {
     display: block;
     float: left;
     margin-right: 10px;
