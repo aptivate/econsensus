@@ -13,6 +13,9 @@ import re
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
+# TODO: Status codes could possibly be harvested off into its
+# own class with accessor methods to return values.
+
 from south.modelsinspector import add_introspection_rules
 import datetime
 
@@ -26,9 +29,9 @@ class Decision(models.Model):
     ARCHIVED_STATUS = 2
 
     STATUS_CHOICES = ( 
-                  (PROPOSAL_STATUS, _('Proposal')),
-                  (CONSENSUS_STATUS, _('Consensus')),
-                  (ARCHIVED_STATUS, _('Archived')),
+                  (PROPOSAL_STATUS, _('proposal')),
+                  (CONSENSUS_STATUS, _('consensus')),
+                  (ARCHIVED_STATUS, _('archived')),
                   )
 
     DEFAULT_SIZE = 140

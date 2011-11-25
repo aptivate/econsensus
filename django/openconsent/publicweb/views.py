@@ -104,7 +104,8 @@ def modify_decision(request, decision_id = None):
     
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse(listing, args=['proposal']))
+            return_page = unicode(decision.status_text())            
+            return HttpResponseRedirect(reverse(listing, args=[return_page]))
         
         else:
             decision_form = DecisionForm(data=request.POST, 
@@ -123,7 +124,9 @@ def modify_decision(request, decision_id = None):
                     else:
                         decision.remove_watcher(request.user)
                     feedback_formset.save()
-                    return HttpResponseRedirect(reverse(listing, args=['proposal']))
+                    
+                    return_page = unicode(decision.status_text())
+                    return HttpResponseRedirect(reverse(listing, args=[return_page]))
 
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
