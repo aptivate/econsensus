@@ -45,3 +45,9 @@
 		</ul> <!-- list_view proposal -->
 	</div><!-- content end -->
 {% endblock %}
+
+{% block footer_content %}
+	<div class="exportcsv">
+		<a title="Export as CSV file" href="{% url publicweb_export_csv %}">{% trans "Export as CSV file" %}</a>
+	</div>
+{% endblock %}

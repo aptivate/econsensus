@@ -110,6 +110,13 @@ def production_seedltd():
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
+def production_goodgovernment():
+    """ use production environment on remote host"""
+    env.project_dir = env.project + '_goodgovernment'
+    env.environment = 'production_goodgovernment'
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    _local_setup()
+
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
