@@ -319,7 +319,7 @@ body.archived-list ul li.navigation_archived a {
     width: 6%;
 }
 
-.list_view .item.proposal .id p {
+.list_view .item.proposal .id p, .list_view .item.consensus .id p {
     background-color: #EFEFEF;
     background-image: url("../images/icon-view-item.png");
     background-position: right center;
