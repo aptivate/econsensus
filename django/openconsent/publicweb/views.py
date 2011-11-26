@@ -98,7 +98,7 @@ def listing(request, status):
 @login_required
 def modify_decision(request, decision_id = None):
     if decision_id is None:
-        decision = None
+        decision = Decision()
     else:
         decision = get_object_or_404(Decision, id = decision_id)
     

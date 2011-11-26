@@ -55,7 +55,7 @@ class DecisionsTest(DecisionTestCase):
 
         post_dict.update({  'description': 'Make Eggs',
                             'watch': False,
-                            'submit': "Cancel",
+                            'submit': "Submit",
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -67,7 +67,7 @@ class DecisionsTest(DecisionTestCase):
         
         
         self.assertRedirects(response,
-            reverse('list', args=['proposal']),
+            reverse('list', args=['consensus']),
             msg_prefix=response.content)
 
     def get_default_decision_form_dict(self):
@@ -155,7 +155,7 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('list', args=['proposal']),
+        self.assertRedirects(response, reverse('list', args=['consensus']),
             msg_prefix=response.content)
         
    
