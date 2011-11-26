@@ -1,4 +1,4 @@
-{% extends "fullpage.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% comment %}This is a stub template for the time being - PCB {% endcomment %}
@@ -15,7 +15,7 @@
 	{{ object.excerpt }}
 {% endblock %}
 
-{% block content %}
+{% block main_content %}
 
 {% if object.decided_date %}
 	Decided Date: {{ object.decided_date }}

@@ -47,10 +47,12 @@
 		{% endblock %}
 	</div><!-- Header end -->
 		
-	{% block base_content%}
-		{% block content %}
-		{% endblock content%}
-	{% endblock base_content%}
+		<div id="content-wrapper">
+			<div id="content">
+				<h2 class="page_title">{% block heading %}{% endblock heading %}</h2>
+	        	{% block main_content %}{% endblock main_content %}
+			</div>
+		</div> <!-- content-wrapper end -->
 	
 	<div id="footer-wrapper">
 		<div id="footer">

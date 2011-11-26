@@ -1,4 +1,4 @@
-{% extends "fullpage.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load publicweb_filters %}
 
@@ -6,44 +6,41 @@
 
 {% block body_class%}{{ class }}-list{% endblock %}
 
-{% block content %}
-	<div id="content">		
-		<form id="sort_form" action="{% url list class %}" method="GET">
-			{{ sort_form.as_p }}
-			<noscript><input type="submit" value="Submit"></noscript>
-		</form>
-
-		<ul class="list_view {{ class }}">
-			{% if object_list %}
-		       	<li class="item header">
-			    	{% for column in columns %}
-						<p class="{{ column }}">{{ object_list|first|model_name:column }}</p>
-					{% endfor %}
-		       	</li>
-		        {% for object in object_list %}
-		        <a title="view item" href="{{ object.get_absolute_url }}">
-				    <li class="item {{ class }}">
-				    	{% for column in columns %}
-							<div class="{{ column }}">
-				    		{% if column == 'id' %}
-								<p>{{ object|decision_field:column }}</p>
-							{% else %}
-								{% if object|decision_field:column %}
-				            		<p>{{ object|decision_field:column }}</p>
-				            	{% else %}
-				            		<p>--</p>
-				            	{% endif %}
-							{% endif %}
-					        </div> <!-- class item_date deadline -->
-					    {% endfor %}
-				    </li> <!-- item proposal -->
-				    </a>
+{% block main_content %}
+	<form id="sort_form" action="{% url list class %}" method="GET">
+		{{ sort_form.as_p }}
+		<noscript><input type="submit" value="Submit"></noscript>
+	</form>
+	<ul class="list_view {{ class }}">
+		{% if object_list %}
+	       	<li class="item header">
+		    	{% for column in columns %}
+					<p class="{{ column }}">{{ object_list|first|model_name:column }}</p>
 				{% endfor %}
-			{% else %}
-				<p>{% trans "No decisions have been made" %}.<p>
-			{% endif %}				
-		</ul> <!-- list_view proposal -->
-	</div><!-- content end -->
+	       	</li>
+	        {% for object in object_list %}
+	        <a title="view item" href="{{ object.get_absolute_url }}">
+			    <li class="item {{ class }}">
+			    	{% for column in columns %}
+						<div class="{{ column }}">
+			    		{% if column == 'id' %}
+							<p>{{ object|decision_field:column }}</p>
+						{% else %}
+							{% if object|decision_field:column %}
+			            		<p>{{ object|decision_field:column }}</p>
+			            	{% else %}
+			            		<p>--</p>
+			            	{% endif %}
+						{% endif %}
+				        </div> <!-- class item_date deadline -->
+				    {% endfor %}
+			    </li> <!-- item proposal -->
+			    </a>
+			{% endfor %}
+		{% else %}
+			<p>{% trans "No decisions have been made" %}.<p>
+		{% endif %}				
+	</ul> <!-- list_view proposal -->
 {% endblock %}
 
 {% block footer_content %}

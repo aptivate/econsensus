@@ -1,4 +1,4 @@
-{% extends "fullpage.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block title %}{{ block.super }}{% trans "Proposals" %}{% endblock %}
@@ -9,7 +9,7 @@
 	{% trans "Active Proposals:" %}
 {% endblock %}
 
-{% block content %}
+{% block main_content %}
 	<div id="content">		
 		<form id="sort_form" action="{% url publicweb.views.proposal_list %}" method="get">
 			{{ sort_form.as_p }}

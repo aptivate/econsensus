@@ -1,4 +1,4 @@
-{% extends "fullpage.html" %}
+{% extends "base.html" %}
 {% load url from future %}
 
 {% block body_class%}
@@ -23,7 +23,7 @@ OpenConsent Login
 Login
 {% endblock %}
 
-{% block content %}
+{% block main_content %}
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -38,6 +38,4 @@ Login
 		<input class="button" type="hidden" name="next" value="{{ next }}" />
 	</div>
 </form>
-
-
 {% endblock %}
