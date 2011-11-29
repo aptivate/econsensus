@@ -7,38 +7,40 @@
 {% block body_class%}{{ class }}-list{% endblock %}
 
 {% block main_content %}
-	<form id="sort_form" action="{% url list class %}" method="GET">
+	<form id="sort_form" action="{% url list class %}" method="get">
 		{{ sort_form.as_p }}
-		<noscript><input type="submit" value="Submit"></noscript>
+		<noscript><div class='input'><input type="submit" value="Submit"/></div></noscript>
 	</form>
-	<ul class="list_view {{ class }}">
+	<ul class="thick_border lightgrey">
 		{% if object_list %}
-	       	<li class="item header">
+	       	<li class="thin_border darkgrey">
 		    	{% for column in columns %}
-					<p class="{{ column }}">{{ object_list|first|model_name:column }}</p>
+					<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
 				{% endfor %}
 	       	</li>
 	        {% for object in object_list %}
-	        <a title="view item" href="{{ object.get_absolute_url }}">
-			    <li class="item {{ class }}">
-			    	{% for column in columns %}
-						<div class="{{ column }}">
-			    		{% if column == 'id' %}
-							<p>{{ object|decision_field:column }}</p>
-						{% else %}
-							{% if object|decision_field:column %}
-			            		<p>{{ object|decision_field:column }}</p>
-			            	{% else %}
-			            		<p>--</p>
-			            	{% endif %}
-						{% endif %}
-				        </div> <!-- class item_date deadline -->
-				    {% endfor %}
-			    </li> <!-- item proposal -->
-			    </a>
+		    <li class="thin_border {{ class }}">
+		    	{% for column in columns %}
+		    		{% if column == 'id' %}
+						<p class="field {{column}}">
+						<a class="iconified" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+						</p>
+					{% else %}
+						{% if object|decision_field:column %}
+							<p class="field {{column}}">
+						<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+							</p>
+		            	{% else %}
+							<p class="field {{column}}">
+							<a href="{{ object.get_absolute_url }}">--</a>						
+							</p>
+		            	{% endif %}
+					{% endif %}
+			    {% endfor %}
+		    </li> <!-- item proposal -->
 			{% endfor %}
 		{% else %}
-			<p>{% trans "No decisions have been made" %}.<p>
+			<p>{% trans "There are no items in this list." %}.<p>
 		{% endif %}				
 	</ul> <!-- list_view proposal -->
 {% endblock %}

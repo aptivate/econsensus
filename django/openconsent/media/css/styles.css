@@ -1,5 +1,9 @@
 /* Reset CSS */
 
+/* Notes: list_view is an improper name. */
+/* the styling that is occuring on this class of items is */
+/* a border with blunted edges. The name should reflect this. */
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -42,8 +46,7 @@ q:before, q:after {
 }
 table {
 	border-collapse: collapse;
-	border-spacing: 0;>
-
+	border-spacing: 0;
 }
 
 /* General Styles */
@@ -88,11 +91,10 @@ a.button {
 textarea, input {
     border: 2px solid #ddd;
     border-radius: 10px 10px 10px 10px;
-    box-shadow: 3px 3px 3px #CCCCCC inset;
+    box-shadow: inset 3px 3px 3px #CCCCCC;
     display: block;
     position: relative;
 }
-
 
 /* Main Blocks */
 
@@ -189,6 +191,7 @@ textarea, input {
 }
 
 body.proposal-list ul li.navigation_proposals a {
+	display: block;
 	color:#FFCC00;
 	background-color:#161514;
 }
@@ -216,7 +219,7 @@ body.archived-list ul li.navigation_archived a {
 }
 
 #navigation #search_form input#search {
-	border:none;0
+	border:none;
 	height:1.6em;
 	border-radius:5px;
 	padding:5px;
@@ -237,21 +240,92 @@ body.archived-list ul li.navigation_archived a {
 
 /* list view */
 
-.list_view {
- 	border: 6px solid #ECECEC;
-    border-radius: 20px 20px 20px 20px;
+.thick_border {
+ 	border: 6px solid;
+    border-radius: 20px;
     padding: 10px;
-	display:block;
-	position:relative;
-	clear : both;
 }
 
-.list_view .item {
-	border:3px solid #888;
-	margin:2px 0;
+.thin_border {
+	border:3px solid;
 	border-radius:10px;
 	padding:10px;
+	margin:2px 0;
 	overflow:auto;
+}
+
+.thin_border a {
+	display: block;
+	color: #000000;
+}
+
+.thin_border a.iconified {
+	color: #3E6EA3;
+}
+
+.lightgrey {
+	border-color:  #ECECEC;
+}
+
+.darkgrey {
+	border-color: #888888;
+}
+
+.archived {
+	border-color: #A4A4A4;
+}
+
+.proposal {
+	border-color: #FFCC00;
+}
+
+.consensus {
+	border-color: #31B404;
+}
+
+.iconified {
+    background-color: #EFEFEF;
+    background-image: url("../images/icon-view-item.png");
+    background-position: right center;
+    background-repeat: no-repeat;
+    border-radius: 15px 15px 15px 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+	border:3px solid #EFEFEF;
+}
+
+.field {
+	float: left;
+	display: block;
+	margin-left: 10px;
+}
+
+.field.id {
+    width: 5%;
+}
+
+.field.excerpt {
+	width:70%;
+}
+
+.field.feedbackcount {
+	width:10%;
+}
+
+.field.decided_date {
+	width:10%;
+}
+
+.field.review_date {
+	width: 10%
+}
+
+.field.created_date{
+	width:10%;
+}
+
+.field.deadline {
+	width:10%;
 }
 
 /* Proposal list view */
@@ -259,138 +333,6 @@ body.archived-list ul li.navigation_archived a {
 #header h1 span {
 	line-height:1.5em;
 }
-
-.list_view .item.header .id{
-    display: block;
-    float: left;
-    margin-left: 10px;
-    width: 6%;
-}
-
-.list_view .item.header .excerpt{
-    float: left;
-    padding-right: 10px;
-    width: 70%;
-}
-.list_view .item.header .activity{
-	float: left;
-	width:10%;
-}
-
-.list_view .item.header .decided_date{
-	float:left;
-	width:10%;
-}
-
-.list_view .item.header .review_date{
-	float:right;
-	padding-right:25px;
-}
-
-.list_view .item.header .deadline{
-	float:right;
-}
-
-.list_view .item.proposal {
-    border-color: #FFCC00;
-    display: block;
-    overflow: auto;
-    position: relative;
-}
-
-.list_view .item.consensus {
-    border-color: #31B404;
-    display: block;
-    overflow: auto;
-    position: relative;
-}
-
-.list_view .item.archived {
-    border-color: #A4A4A4;
-    display: block;
-    overflow: auto;
-    position: relative;
-}
-
-.list_view .item.proposal .id, .list_view .item.consensus .id {
-    display: block;
-    float: left;
-    margin-right: 10px;
-    width: 6%;
-}
-
-.list_view .item.proposal .id p, .list_view .item.consensus .id p {
-    background-color: #EFEFEF;
-    background-image: url("../images/icon-view-item.png");
-    background-position: right center;
-    background-repeat: no-repeat;
-    border-radius: 15px 15px 15px 15px;
-    display: block;
-    float: left;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-right: 10px;
-    padding: 0px 30px 0px 10px;
-	border:3px solid #EFEFEF;
-}
-
-
-.list_view.proposal .excerpt {
-	width:70%;
-	float:left;
-	padding-right:10px;
-}
-
-.list_view.proposal .feedbackcount {
-	width:4em;
-	float:left;
-}
-
-.list_view.consensus .decided_date{
-	float:left;
-	width:10%;
-}
-
-.list_view.consensus .review_date{
-	float:right;
-	padding-right:25px;
-}
-
-.list_view.consensus .excerpt {
-	width:70%;
-	float:left;
-	padding-right:10px;
-}
-
-.list_view.archived .created_date{
-	float:left;
-	width:10%;
-}
-
-.list_view.archived .excerpt {
-	width:70%;
-	float:left;
-	padding-right:10px;
-}
-
-.list_view .feedbackcount img {
-	width:100%;
-}
-
-.list_view.proposal .deadline {
-    border-radius: 15px 15px 15px 15px;
-    float: right;
-    font-size: 0.8em;
-    font-weight: bold;
-    padding: 2px 15px;
-	margin-top:10px;
-}
-
-.list_view .item_date.deadline {
-	background-color: #D5EA81;
-	}
-
-
 
 a.button.add_proposal {
     background-color: #FFCC00;
@@ -528,7 +470,7 @@ h2.page_title strong {
 }
 	
 .formset_item .form_item.rating select {
-	#color: #fff;
+	color: #fff;
 	padding: 1px;
 	font-size: 1em;
 }
@@ -775,15 +717,11 @@ p.error404 {
 		width:100%;
 	}
 
-	
 	.list_view .item_description {
 		width:100%;
 		float:none;
 		clear:both;
 		margin:0;
-		padding:5px;
-		
+		padding:5px;	
 	}
-	
-	
 }
