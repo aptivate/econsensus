@@ -393,7 +393,6 @@ h2.page_title strong {
 	padding-bottom:0.3em;
 	font-weight:bold;
 	font-size:0.8em;
-	width:6em;
 	float:left;
 }
 
@@ -417,7 +416,7 @@ h2.page_title strong {
     float: left;
     font-size: 0.9em;
     font-weight: bold;
-    width: 80px;
+    margin-right: 20px;
 	clear:both;
 }
 
