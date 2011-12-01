@@ -28,7 +28,7 @@ class Decision(models.Model):
     CONSENSUS_STATUS = 1
     ARCHIVED_STATUS = 2
 
-    STATUS_CHOICES = ( 
+    STATUS_CHOICES = (
                   (PROPOSAL_STATUS, _('proposal')),
                   (CONSENSUS_STATUS, _('consensus')),
                   (ARCHIVED_STATUS, _('archived')),

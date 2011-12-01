@@ -334,9 +334,21 @@ body.archived-list ul li.navigation_archived a {
 	line-height:1.5em;
 }
 
-a.button.add_proposal {
+a.button.add_decision {
     background-color: #FFCC00;
     background-image: url("../images/icon-add.png");
+    background-position: 3px center;
+    background-repeat: no-repeat;
+    color: #333333;
+    float: right;
+    line-height: 24px;
+    margin-top: 6px;
+    padding-left: 30px;
+}
+
+a.button.add_proposal {
+    background-color: #90AA27;
+    background-image: url("../images/icon-add_prop.png");
     background-position: 3px center;
     background-repeat: no-repeat;
     color: #333333;
@@ -355,13 +367,32 @@ h2.page_title strong {
 }
 
 #decision {
-    border: 3px solid #FFCC00;
-    border-radius: 15px 15px 15px 15px;
     clear: both;
     display: block;
     float: left;
     position: relative;
     width: 100%;
+}
+
+/* from the decision model
+    PROPOSAL_STATUS = 0
+    CONSENSUS_STATUS = 1
+    ARCHIVED_STATUS = 2
+*/
+  
+#decision.status0 {
+	border: 3px solid #FFCC00; /* #993377 - I quite liked this colour */
+	border-radius: 15px 15px 15px 15px;
+}
+
+#decision.status1 {
+	border: 3px solid #90AA27;
+    border-radius: 15px 15px 15px 15px;
+}
+
+#decision.status2 {
+	border: 3px solid #666;
+    border-radius: 15px 15px 15px 15px;
 }
 
 .decision_summary {
@@ -469,7 +500,6 @@ h2.page_title strong {
 }
 	
 .formset_item .form_item.rating select {
-	color: #fff;
 	padding: 1px;
 	font-size: 1em;
 }

@@ -26,11 +26,11 @@
 		{% for error in decision_form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
-		<div id="decision">
+		<div id="decision" class="status{{ decision_form.instance.status }}">
 			<div class="decision_summary">
 			    <div class="form_item description">
 			        {{ decision_form.description.errors }}
-					<label for="id_description">{% trans "Proposal" %}:</label>
+					<label for="id_description">{% filter capfirst %}{{ decision_form.instance.get_status_display }}{% endfilter %}</label>
 			        {{ decision_form.description }}
 			    </div>
 			 	<div class="form_item resources">
