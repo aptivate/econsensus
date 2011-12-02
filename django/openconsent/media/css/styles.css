@@ -335,7 +335,7 @@ body.archived-list ul li.navigation_archived a {
 }
 
 a.button.add_decision {
-    background-color: #FFCC00;
+    background-color: #90AA27;
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -347,7 +347,7 @@ a.button.add_decision {
 }
 
 a.button.add_proposal {
-    background-color: #90AA27;
+    background-color: #FFCC00;
     background-image: url("../images/icon-add_prop.png");
     background-position: 3px center;
     background-repeat: no-repeat;
