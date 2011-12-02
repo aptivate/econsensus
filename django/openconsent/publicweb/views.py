@@ -60,8 +60,8 @@ proposal_context = {'page_title' : _("Current Active Proposals"), # pylint: disa
                      'class' : 'proposal',
                      'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')}
 
-consensus_context = {'page_title' : _("Decisions Made"), # pylint: disable=E1102
-                     'class' : 'consensus',
+decision_context = {'page_title' : _("Decisions Made"), # pylint: disable=E1102
+                     'class' : 'decision',
                      'columns': ('id', 'excerpt', 'decided_date', 'review_date')}
 
 archived_context = {'page_title' : _("Archived Decisions"), # pylint: disable=E1102
@@ -69,14 +69,14 @@ archived_context = {'page_title' : _("Archived Decisions"), # pylint: disable=E1
                      'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
 
 context_list = { 'proposal' : proposal_context,
-             'consensus' : consensus_context,
+             'decision' : decision_context,
              'archived' : archived_context,
              }
 
 #Codes are used to dodge translation in urls.
 #Need to think of a better way to do this...
 context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
-             'consensus' : Decision.DECISION_STATUS,
+             'decision' : Decision.DECISION_STATUS,
              'archived' : Decision.ARCHIVED_STATUS,
              }
 
@@ -96,9 +96,11 @@ def listing(request, status):
         )
 
 @login_required
-def modify_decision(request, decision_id = None):
+def modify_decision(request, decision_id = None, status_id = None):
     if decision_id is None:
         decision = Decision()
+        if status_id is not None:
+            decision.status = int(status_id);
     else:
         decision = get_object_or_404(Decision, id = decision_id)
     
@@ -140,9 +142,13 @@ def modify_decision(request, decision_id = None):
 def add_decision(request):
     return modify_decision(request)
 
+@login_required
+def add_decision_status(request, status_id):
+    return modify_decision(request, status_id = status_id)
+
 @login_required    
 def edit_decision(request, decision_id):
-    return modify_decision(request, decision_id)
+    return modify_decision(request, decision_id = decision_id)
 
 def _sort(request):
     sort_form = SortForm(request.GET)

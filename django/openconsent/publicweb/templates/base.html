@@ -31,7 +31,7 @@
 				<div id="navigation">
 					<ul>
 						<li class="navigation_proposals"><a href="{% url list 'proposal'%}">{% trans "Proposals" %}</a></li>
-						<li class="navigation_decisions"><a href="{% url list "consensus"%}">{% trans "Decisions" %}</a></li>
+						<li class="navigation_decisions"><a href="{% url list "decision"%}">{% trans "Decisions" %}</a></li>
 						<li class="navigation_archived"><a href="{% url list "archived"%}">{% trans "Archived" %}</a></li>
 					</ul>
 					<form id="search_form" action="search" method="get">
@@ -40,8 +40,8 @@
 							<input id="search_button" type="submit" value="Search"/>
 						</p>
 					</form>
-					<a class="button add_decision" href="{% url publicweb.views.add_decision %}">{% trans "Add Decision" %}</a>
-					<a class="button add_proposal" href="{% url publicweb.views.add_decision %}">{% trans "Add Proposal" %}</a>	
+					<a class="button add_decision" href="{% url publicweb.views.add_decision_status 1 %}">{% trans "Add Decision" %}</a>
+					<a class="button add_proposal" href="{% url publicweb.views.add_decision_status 0 %}">{% trans "Add Proposal" %}</a>	
 				</div>
 			</div>
 		{% endblock %}

@@ -196,7 +196,7 @@ body.proposal-list ul li.navigation_proposals a {
 	background-color:#161514;
 }
 
-body.consensus-list ul li.navigation_decisions a {
+body.decision-list ul li.navigation_decisions a {
 	color:#FFCC00;
 	background-color:#161514;
 }
@@ -279,7 +279,7 @@ body.archived-list ul li.navigation_archived a {
 	border-color: #FFCC00;
 }
 
-.consensus {
+.decision {
 	border-color: #31B404;
 }
 
@@ -376,7 +376,7 @@ h2.page_title strong {
 
 /* from the decision model
     PROPOSAL_STATUS = 0
-    CONSENSUS_STATUS = 1
+    DECISION_STATUS = 1
     ARCHIVED_STATUS = 2
 */
   
