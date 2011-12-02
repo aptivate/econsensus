@@ -39,7 +39,7 @@ class ModelTest(DecisionTestCase):
         self.model_has_attribute(decision, "archived_date")
 
     def test_feedback_can_have_empty_description(self):
-        decision = Decision(description='Test', status=Decision.CONSENSUS_STATUS)
+        decision = Decision(description='Test', status=Decision.DECISION_STATUS)
         decision.save(self.user)     
         feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
         self.instance_validates(feedback)

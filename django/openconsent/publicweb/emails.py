@@ -16,7 +16,7 @@ class OpenConsentEmailMessage(EmailMessage):
     
         #record newness before saving
         if typ == 'new':
-            if obj.status == obj.CONSENSUS_STATUS:
+            if obj.status == obj.DECISION_STATUS:
                 subject_template = Template("[{{ site }} Open Consent]: Consensus Reached: {{ name|safe }}")
             else:
                 subject_template = Template("[{{ site }} Open Consent]: New {{ status }}: {{ name|safe }}")

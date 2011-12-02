@@ -76,7 +76,7 @@ context_list = { 'proposal' : proposal_context,
 #Codes are used to dodge translation in urls.
 #Need to think of a better way to do this...
 context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
-             'consensus' : Decision.CONSENSUS_STATUS,
+             'consensus' : Decision.DECISION_STATUS,
              'archived' : Decision.ARCHIVED_STATUS,
              }
 

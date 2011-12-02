@@ -49,7 +49,7 @@ class DecisionListTest(DecisionTestCase):
         # Create test decisions in reverse date order.         
         for i in range(5, 0, -1):
             decision = Decision(description='Decision %d' % i, 
-                                status=Decision.CONSENSUS_STATUS)
+                                status=Decision.DECISION_STATUS)
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
             

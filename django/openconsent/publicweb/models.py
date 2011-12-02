@@ -25,12 +25,12 @@ class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
     PROPOSAL_STATUS = 0
-    CONSENSUS_STATUS = 1
+    DECISION_STATUS = 1
     ARCHIVED_STATUS = 2
 
     STATUS_CHOICES = (
                   (PROPOSAL_STATUS, _('proposal')),
-                  (CONSENSUS_STATUS, _('consensus')),
+                  (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
                   )
 

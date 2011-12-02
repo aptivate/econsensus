@@ -12,7 +12,7 @@ class DecisionTestCase(OpenConsentTestCase):
         self.create_and_return_decision(description='Proposal Decision')
         
         self.create_and_return_decision(description='Consensus Decision',
-                                        status=Decision.CONSENSUS_STATUS)
+                                        status=Decision.DECISION_STATUS)
         
         self.create_and_return_decision(description='Archived Decision',
                                         status=Decision.ARCHIVED_STATUS)
@@ -27,7 +27,7 @@ class DecisionTestCase(OpenConsentTestCase):
         return decision
     
     def create_and_return_example_concensus_decision_with_feedback(self):
-        decision = self.create_and_return_decision(status=Decision.CONSENSUS_STATUS)
+        decision = self.create_and_return_decision(status=Decision.DECISION_STATUS)
         
         feedback = Feedback(description='No time to decide',
                           decision=decision)
