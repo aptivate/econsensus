@@ -541,6 +541,11 @@ h2.page_title strong {
 	border-radius: 10px;
 	}
 	
+.formset_item.feedbackNone {
+	border: 1px solid #EEE;
+	border-top: 10px solid #EEE;
+	border-radius: 10px;
+	}
 /* Footer */
 
 #footer {
