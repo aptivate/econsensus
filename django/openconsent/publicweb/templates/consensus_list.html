@@ -11,34 +11,40 @@
 		{{ sort_form.as_p }}
 		<noscript><div class='input'><input type="submit" value="Submit"/></div></noscript>
 	</form>
-	<ul class="thick_border lightgrey">
+
+	<ul class="summary-list">
 		{% if object_list %}
-	       	<li class="thin_border darkgrey">
+		<div class="summary-header">
+		{% for column in columns %}
+			<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
+		{% endfor %}
+		</div>
+        {% for object in object_list %}
+	    <li class="summary-item">
+	    	<dl class="field {{column}}">
 		    	{% for column in columns %}
-					<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
-				{% endfor %}
-	       	</li>
-	        {% for object in object_list %}
-		    <li class="thin_border {{ class }}">
-		    	{% for column in columns %}
-		    		{% if column == 'id' %}
-						<p class="field {{column}}">
-						<a class="iconified" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
-						</p>
-					{% else %}
-						{% if object|decision_field:column %}
-							<p class="field {{column}}">
-						<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
-							</p>
-		            	{% else %}
-							<p class="field {{column}}">
-							<a href="{{ object.get_absolute_url }}">--</a>						
-							</p>
-		            	{% endif %}
-					{% endif %}
-			    {% endfor %}
-		    </li> <!-- item proposal -->
-			{% endfor %}
+		    	{% if column == 'id' %}
+				<dt>ID</dt>
+				<dd class="field {{column}}">
+					<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+				</dd>
+				{% else %}
+				{% if object|decision_field:column %}
+				<dt>{{ column }}</dt>
+				<dd class="field {{column}}">
+					<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+				</dd>
+	        	{% else %}
+				<dt>{{ column }}</dt>
+				<dd class="field {{column}}">
+					<a href="{{ object.get_absolute_url }}">--</a>						
+				</dd>
+		        {% endif %}
+		        {% endif %}
+		    	{% endfor %}
+		    </dl>
+	    </li> <!-- item proposal -->
+		{% endfor %}
 		{% else %}
 			<p>{% trans "There are no items in this list." %}.<p>
 		{% endif %}				
@@ -50,3 +56,4 @@
 		<a title="Export as CSV file" href="{% url publicweb_export_csv %}">{% trans "Export as CSV file" %}</a>
 	</div>
 {% endblock %}
+

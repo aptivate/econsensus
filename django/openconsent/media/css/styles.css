@@ -225,6 +225,7 @@ body.archived-list ul li.navigation_archived a {
 	padding:5px;
 }
 
+
 /****** Content ******/
 
 #content {
@@ -240,13 +241,17 @@ body.archived-list ul li.navigation_archived a {
 
 /* list view */
 
-.thick_border {
- 	border: 6px solid;
-    border-radius: 20px;
-    padding: 10px;
+dt {
+	display:none;
 }
 
-.thin_border {
+.summary-list {
+ 	border: 6px solid;
+    	border-radius: 20px;
+    	padding: 10px;
+}
+
+li.summary-item, .summary-header {
 	border:3px solid;
 	border-radius:10px;
 	padding:10px;
@@ -254,32 +259,35 @@ body.archived-list ul li.navigation_archived a {
 	overflow:auto;
 }
 
-.thin_border a {
+.summary-header {
+	border:none;
+}
+
+.summary-item a {
 	display: block;
 	color: #000000;
 }
 
-.thin_border a.iconified {
+.summary-item a.iconified {
 	color: #3E6EA3;
 }
 
-.lightgrey {
+/* borders */
+
+
+li.summary-item {
 	border-color:  #ECECEC;
 }
 
-.darkgrey {
-	border-color: #888888;
-}
-
-.archived {
+.archived-list li.summary-item {
 	border-color: #A4A4A4;
 }
 
-.proposal {
+.proposal-list li.summary-item {
 	border-color: #FFCC00;
 }
 
-.decision {
+.decision-list li.summary-item {
 	border-color: #31B404;
 }
 
@@ -292,6 +300,13 @@ body.archived-list ul li.navigation_archived a {
     font-size: 0.9em;
     font-weight: bold;
 	border:3px solid #EFEFEF;
+}
+
+#sort_form {
+	display:block;
+	clear:both;
+	float:right;
+	padding-right:15px;
 }
 
 .field {
@@ -709,6 +724,26 @@ p.error404 {
 		margin:10px;
 		min-width:70px;
 	}
+
+	#navigation .user-actions {
+		padding:0;
+		clear:both;
+		display:block;
+		position:relative;
+		width:100%;
+		float:left;
+		background-color:#fff;
+	}
+
+	#navigation .user-actions a.button {
+		padding:2px 0;
+		margin:2px 0;
+		width:48%;
+		margin:1%;
+		float:left!important;
+		text-indent:2em;
+		background-position:2px center;
+	}
 	
 	.list_view .item_description {
 		width:100%;
@@ -726,6 +761,10 @@ p.error404 {
 	#header h1 span {
 		display:none;
 	}
+
+	#navigation ul {
+		margin-bottom:10px;
+	}
 	
 	#navigation ul li {
 		float:none;
@@ -739,6 +778,21 @@ p.error404 {
 		width:60%;
 		float:left;
 		margin:10px;
+	}
+
+	#navigation .user-actions {
+		padding:0 10px;
+		clear:both;
+		display:block;
+		position:relative;
+		float:left;
+	}
+
+	#navigation .user-actions a.button {
+		padding:2px 0;
+		margin:2px 0;
+		text-indent:2em;
+		background-position:2px center;
 	}
 	
 	#content h2.page_title {
