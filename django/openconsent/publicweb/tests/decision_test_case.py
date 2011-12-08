@@ -9,12 +9,12 @@ class DecisionTestCase(OpenConsentTestCase):
         self.deleteUser()
 
     def create_decisions_with_different_statuses(self):
-        self.create_and_return_decision(description='Proposal Decision')
+        self.create_and_return_decision(description='Issue Proposal')
         
-        self.create_and_return_decision(description='Consensus Decision',
+        self.create_and_return_decision(description='Issue Decision',
                                         status=Decision.DECISION_STATUS)
         
-        self.create_and_return_decision(description='Archived Decision',
+        self.create_and_return_decision(description='Issue Archived',
                                         status=Decision.ARCHIVED_STATUS)
 
     def create_and_return_example_decision_with_feedback(self):

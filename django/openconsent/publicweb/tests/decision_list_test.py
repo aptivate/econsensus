@@ -38,12 +38,12 @@ class DecisionListTest(DecisionTestCase):
     def test_decisions_can_be_sorted_by_deadline(self):
         self.assert_decisions_sorted_by_date_column('deadline')
 
-    def test_decision_list_can_be_filtered_by_status_consensus(self):
+    def test_decision_list_can_be_filtered_by_status(self):
         self.create_decisions_with_different_statuses()
-        response = self.client.get(reverse('list', args=['consensus']))
-        self.assertContains(response, "Consensus Decision")
-        self.assertNotContains(response, "Proposal Decision")
-        self.assertNotContains(response, "Archived Decision") 
+        response = self.client.get(reverse('list', args=['decision']))
+        self.assertContains(response, "Issue Decision")
+        self.assertNotContains(response, "Issue Proposal")
+        self.assertNotContains(response, "Issue Archived") 
     
     def assert_decisions_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order.         
@@ -53,7 +53,7 @@ class DecisionListTest(DecisionTestCase):
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
             
-        response = self.client.get(reverse('list', args=['consensus']), dict(sort=column))
+        response = self.client.get(reverse('list', args=['decision']), dict(sort=column))
         
         object_list = response.context['object_list']    
                 

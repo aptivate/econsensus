@@ -67,7 +67,7 @@ class DecisionsTest(DecisionTestCase):
         
         
         self.assertRedirects(response,
-            reverse('list', args=['consensus']),
+            reverse('list', args=['decision']),
             msg_prefix=response.content)
 
     def get_default_decision_form_dict(self):
@@ -155,7 +155,7 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('list', args=['consensus']),
+        self.assertRedirects(response, reverse('list', args=['decision']),
             msg_prefix=response.content)
         
    

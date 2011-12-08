@@ -11,7 +11,7 @@ class ViewTest(DecisionTestCase):
                                       {'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')})
         
     expected_consensus_key_tuple = ('class', 'page_title','columns')
-    expected_consensus_dict_tuple = ({'class':'consensus'},
+    expected_consensus_dict_tuple = ({'class':'decision'},
                                       {'columns': ('id', 'excerpt', 'decided_date', 'review_date')})
         
     expected_archived_key_tuple = ('class', 'page_title','columns')
@@ -30,7 +30,7 @@ class ViewTest(DecisionTestCase):
         url = reverse('list', args=['proposal'])
         for key in self.expected_proposal_key_tuple:
             self.assert_context_has_key(key, url)
-        url = reverse('list', args=['consensus'])
+        url = reverse('list', args=['decision'])
         for key in self.expected_consensus_key_tuple:
             self.assert_context_has_key(key, url)
         url = reverse('list', args=['archived'])
@@ -41,7 +41,7 @@ class ViewTest(DecisionTestCase):
         url = reverse('list', args=['proposal'])        
         for dictionary in self.expected_proposal_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
-        url = reverse('list', args=['consensus'])        
+        url = reverse('list', args=['decision'])        
         for dictionary in self.expected_consensus_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
         url = reverse('list', args=['archived'])        
