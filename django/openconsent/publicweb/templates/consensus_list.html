@@ -15,7 +15,11 @@
 		{% if object_list %}
 	       	<li class="thin_border darkgrey">
 		    	{% for column in columns %}
-					<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
+		    		{% if column == 'excerpt' %}
+		    			<p class="field {{ column }} header">Issue</p>
+		    		{% else %}		    	
+						<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
+					{% endif %}
 				{% endfor %}
 	       	</li>
 	        {% for object in object_list %}
