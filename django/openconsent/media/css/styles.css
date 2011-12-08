@@ -13,7 +13,7 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
+article, aside, canvas, details, embed,  
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
@@ -225,6 +225,14 @@ body.archived-list ul li.navigation_archived a {
 	padding:5px;
 }
 
+/****** Sort ******/
+	
+form#sort_form p {
+	width: 100%;
+	text-align: right;
+	padding-bottom: 6px;
+}
+
 /****** Content ******/
 
 #content {
@@ -235,7 +243,7 @@ body.archived-list ul li.navigation_archived a {
 	color:#666;
 	display:block;
 	float:left;
-	width:80%;
+	width:100%;
 }
 
 /* list view */
@@ -406,10 +414,13 @@ h2.page_title strong {
 }
 
 .decision_author {
-    font-size: 1.2em;
-    position: absolute;
-    right: 0;
-    top: -40px;
+	font-size: 0.8em;
+	float: right;
+	padding: 10px;
+	margin: 0 60px 0 0;
+}
+.decision_author span {
+	font-weight: bold;
 }
 
 #decision_feedback {
@@ -459,9 +470,18 @@ h2.page_title strong {
 .decision_controls {
 	display:block;
 	position:relative;
-	clear:both;
+	float: right;
+	width: 100%;
 }
 
+.decision_controls div {
+	padding: 6px 6px 10px 6px;
+	float: right;
+	}
+	
+#id_watch {
+}
+	
 .decision_meta #tags #id_tags {
 	width:90%;
 }

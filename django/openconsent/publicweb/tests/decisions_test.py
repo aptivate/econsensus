@@ -291,14 +291,14 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('publicweb_decision_add')
         response = self.client.get(path)
                 
-        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=2)
 
     def test_edit_page_contains_cancel(self):
         decision = self.create_and_return_decision()
         path = reverse('publicweb_decision_edit', args=[decision.id])
         response = self.client.get(path)
         
-        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=2)
 
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()

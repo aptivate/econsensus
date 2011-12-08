@@ -15,8 +15,8 @@
 {% endblock %}
 
 
-{% block heading %}{% if decision_form.instance %}{% trans "View and Edit: " %}<strong class="not_translated">{{ decision_form.instance.excerpt }} (#{{ decision_form.instance.id }})</strong>
-{% else %}{% trans "Add New Decision" %}
+{% block heading %}{% if decision_form.instance.id %}{% trans "View and Edit: " %}<strong class="not_translated">{{ decision_form.instance.excerpt }} (#{{ decision_form.instance.id }})</strong>
+{% else %}{% trans "Add New " %}{% filter capfirst %}{{ decision_form.instance.get_status_display }}{% endfilter %}
 {% endif %}
 {% endblock %}
 
@@ -26,8 +26,15 @@
 		{% for error in decision_form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
+		<div class="decision_controls">
+		    <div><input class="go button" name="submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		    <div><input class="go button" name="submit" type="submit" value="{% trans "Save" %}" /></div>
+		</div>
 		<div id="decision" class="status{{ decision_form.instance.status }}">
 			<div class="decision_summary">
+				{% if decision_form.instance.author != null %}
+					<div class="decision_author">{% trans "Created by" %}:{{decision_form.instance.author}}</div>
+				{% endif %}
 			    <div class="form_item description">
 			        {{ decision_form.description.errors }}
 					<label for="id_description">{% filter capfirst %}{{ decision_form.instance.get_status_display }}{% endfilter %}</label>
@@ -39,13 +46,15 @@
 			        {{ decision_form.budget }}
 			    </div>
 			 </div>
-			 
 			 <div class="decision_meta">
-			 	<div class="decision_author">{% trans "Created by" %}: {{decision_form.instance.author}}</div>
 			 	<div class="form_item status">
 			        {{ decision_form.status.errors }}
-			        <label for="id_status">{% trans "Status" %}:</label>
-			        {{ decision_form.status }}
+				    <label for="id_status">{% trans "Status" %}:</label>
+				    	{% if decision_form.instance.id %}
+				        	{{ decision_form.status }}
+				        {% else %}
+				        	{{ decision_form.instance.get_status_display }}
+				   	{% endif %}
 				</div>
 				<div class="form_item">
 			        {{ decision_form.decided_date.errors }}
@@ -68,8 +77,7 @@
 				    {{ decision_form.tags }} {{ decision_form.tags.help_text }}
 				</div>
 			</div>
-		</div>
-		
+		</div>	
 		<div id="decision_feedback">
 			<h2 class="feedback">{% trans "Feedback" %}</h2>
 			{{ feedback_formset.management_form }}
@@ -90,14 +98,13 @@
 		    {% endfor %}		
 		</div>
 		<div class="decision_controls">
-		    <input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" />
-		    <input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" />
-		    
-			<div class="form_item watch">
-		        {{ decision_form.watch.errors }}
-		        <label for="id_watch">{% trans "Watch" %}?</label>
-		        {{ decision_form.watch }}
-		    </div>
+		    {{ decision_form.watch.errors }}
+			    <label id="id_watch">{% trans "Watch" %}?</label>
+		    {{ decision_form.watch }}
+		</div>
+		<div class="decision_controls">
+		    <div><input class="go button" name="submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		    <div><input class="go button" name="submit" type="submit" value="{% trans "Save" %}" /></div>
 		</div>
 	</form>
 {% endblock %}
