@@ -79,6 +79,8 @@ a.button {
 	line-height:2.5em;
 	background-color:#3E6EA3;
 	margin:0 0.5em;
+	-moz-border-radius: 12px;
+  	-webkit-border-radius: 12px;
 	border-radius:12px;
 	padding:1px 12px;
 	color:#fff;
@@ -90,7 +92,9 @@ a.button {
 
 textarea, input {
     border: 2px solid #ddd;
-    border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px;
+  	-webkit-border-radius: 10px;
+    border-radius: 10px;
     box-shadow: inset 3px 3px 3px #CCCCCC;
     display: block;
     position: relative;
@@ -221,6 +225,8 @@ body.archived-list ul li.navigation_archived a {
 #navigation #search_form input#search {
 	border:none;
 	height:1.6em;
+	-moz-border-radius: 5px;
+  	-webkit-border-radius: 5px;
 	border-radius:5px;
 	padding:5px;
 }
@@ -244,18 +250,23 @@ form#sort_form p {
 	display:block;
 	float:left;
 	width:100%;
+	padding-bottom: 6px;
 }
 
 /* list view */
 
 .thick_border {
  	border: 6px solid;
+ 	-moz-border-radius: 20px;
+  	-webkit-border-radius: 20px;
     border-radius: 20px;
     padding: 10px;
 }
 
 .thin_border {
 	border:3px solid;
+	-moz-border-radius: 10px;
+  	-webkit-border-radius: 10px;
 	border-radius:10px;
 	padding:10px;
 	margin:2px 0;
@@ -296,7 +307,9 @@ form#sort_form p {
     background-image: url("../images/icon-view-item.png");
     background-position: right center;
     background-repeat: no-repeat;
-    border-radius: 15px 15px 15px 15px;
+    -moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+    border-radius: 15px;
     font-size: 0.9em;
     font-weight: bold;
 	border:3px solid #EFEFEF;
@@ -390,17 +403,23 @@ h2.page_title strong {
   
 #decision.status0 {
 	border: 3px solid #FFCC00; /* #993377 - I quite liked this colour */
-	border-radius: 15px 15px 15px 15px;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+	border-radius: 15px;
 }
 
 #decision.status1 {
 	border: 3px solid #90AA27;
-    border-radius: 15px 15px 15px 15px;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+    border-radius: 15px;
 }
 
 #decision.status2 {
 	border: 3px solid #666;
-    border-radius: 15px 15px 15px 15px;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+    border-radius: 15px;
 }
 
 .decision_summary {
@@ -468,18 +487,20 @@ h2.page_title strong {
 }
 
 .decision_controls {
-	display:block;
-	position:relative;
-	float: right;
+	clear: both;
+	display: block;
+	position: relative;
 	width: 100%;
 }
 
 .decision_controls div {
-	padding: 6px 6px 10px 6px;
+	padding: 0 6px 4px 6px;
 	float: right;
 	}
 	
-#id_watch {
+.decision_controls div#watch {
+	padding: 0;
+	float: left;
 }
 	
 .decision_meta #tags #id_tags {
@@ -524,47 +545,45 @@ h2.page_title strong {
 	font-size: 1em;
 }
 
+.formset_item.feedback {
+	-moz-border-radius: 10px;
+  	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	}
 /* question */
 .formset_item.feedback0 {
 	border: 1px solid #cbcbcb;
 	border-top: 10px solid #cbcbcb;
-	border-radius: 10px;
 	}
 /* danger */
 .formset_item.feedback1 {
 	border: 1px solid #d71515;
 	border-top: 10px solid #d71515;
-	border-radius: 10px;
 	}
 /* concerns */
 .formset_item.feedback2 {
 	border: 1px solid #d6ac04;
 	border-top: 10px solid #d6ac04;
-	border-radius: 10px;
 	}
 /* concent */
 .formset_item.feedback3 {
 	border: 1px solid #a9d300;
 	border-top: 10px solid #a9d300;
-	border-radius: 10px;
 	}
 /* happy */
 .formset_item.feedback4 {
 	border: 1px solid #FBEC5D;
 	border-top: 10px solid #FBEC5D;
-	border-radius: 10px;
 	}
 /* delighted */
 .formset_item.feedback5 {
 	border: 1px solid #FBEC5D;
 	border-top: 10px solid #FBEC5D;
-	border-radius: 10px;
 	}
 	
 .formset_item.feedbackNone {
 	border: 1px solid #EEE;
 	border-top: 10px solid #EEE;
-	border-radius: 10px;
 	}
 /* Footer */
 
@@ -627,7 +646,9 @@ body.login #footer {
 
 #login-form {
     background: none repeat scroll 0 0 #EFEFEF;
-    border-radius: 20px 20px 20px 20px;
+    -moz-border-radius: 20px;
+  	-webkit-border-radius: 20px;
+    border-radius: 20px;
     display: block;
     float: left;
     padding: 20px;
@@ -650,7 +671,9 @@ body.login #footer {
 }
 
 #login-form input {
-    border-radius: 10px 10px 10px 10px;
+	-moz-border-radius: 10px;
+  	-webkit-border-radius: 10px;
+    border-radius: 10px;
     display: block;
     float: right;
     padding: 10px 10px 8px;

@@ -50,11 +50,7 @@
 			 	<div class="form_item status">
 			        {{ decision_form.status.errors }}
 				    <label for="id_status">{% trans "Status" %}:</label>
-				    	{% if decision_form.instance.id %}
-				        	{{ decision_form.status }}
-				        {% else %}
-				        	{{ decision_form.instance.get_status_display }}
-				   	{% endif %}
+				    {{ decision_form.status }}
 				</div>
 				<div class="form_item">
 			        {{ decision_form.decided_date.errors }}
@@ -83,7 +79,7 @@
 			{{ feedback_formset.management_form }}
 			{% for feedback_form in feedback_formset %}
 			{{ feedback_form.id }}
-			<div class="formset_item feedback{{ feedback_form.instance.rating }}">
+			<div class="formset_item feedback feedback{{ feedback_form.instance.rating }}">
 				<div class="form_row feedback_summary">
 					<div class="form_item rating">
 						{{ feedback_form.rating.errors }}
@@ -98,9 +94,11 @@
 		    {% endfor %}		
 		</div>
 		<div class="decision_controls">
+			<div id="watch">
 		    {{ decision_form.watch.errors }}
 			    <label id="id_watch">{% trans "Watch" %}?</label>
 		    {{ decision_form.watch }}
+		    </div>
 		</div>
 		<div class="decision_controls">
 		    <div><input class="go button" name="submit" type="submit" value="{% trans "Cancel" %}" /></div>
