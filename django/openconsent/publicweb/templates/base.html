@@ -40,8 +40,10 @@
 							<input id="search_button" type="submit" value="Search"/>
 						</p>
 					</form>
-					<a class="button add_decision" href="{% url publicweb.views.add_decision_status 1 %}">{% trans "Add Decision" %}</a>
-					<a class="button add_proposal" href="{% url publicweb.views.add_decision_status 0 %}">{% trans "Add Proposal" %}</a>	
+					<div class="user-actions">
+						<a class="button add_decision" href="{% url publicweb.views.add_decision_status 1 %}">{% trans "Add Decision" %}</a>
+						<a class="button add_proposal" href="{% url publicweb.views.add_decision_status 0 %}">{% trans "Add Proposal" %}</a>
+					</div>	
 				</div>
 			</div>
 		{% endblock %}
