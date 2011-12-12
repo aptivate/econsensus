@@ -231,14 +231,6 @@ body.archived-list ul li.navigation_archived a {
 	padding:5px;
 }
 
-/****** Sort ******/
-	
-form#sort_form p {
-	width: 100%;
-	text-align: right;
-	padding-bottom: 6px;
-}
-
 /****** Content ******/
 
 #content {
@@ -260,11 +252,12 @@ dt {
 }
 
 .summary-list {
- 	border: 6px solid;
+ 	border: 6px solid #D3CDC6;
  	-moz-border-radius: 20px;
   	-webkit-border-radius: 20px;
     border-radius: 20px;
     padding: 10px;
+    clear: both;
 }
 
 li.summary-item, .summary-header {
@@ -298,7 +291,7 @@ li.summary-item {
 }
 
 .archived-list li.summary-item {
-	border-color: #A4A4A4;
+	border-color: #483E37;
 }
 
 .proposal-list li.summary-item {
@@ -306,7 +299,7 @@ li.summary-item {
 }
 
 .decision-list li.summary-item {
-	border-color: #31B404;
+	border-color: #AAD400;
 }
 
 .iconified {
@@ -323,10 +316,9 @@ li.summary-item {
 }
 
 #sort_form {
-	display:block;
-	clear:both;
 	float:right;
 	padding-right:15px;
+	padding-bottom: 6px;	
 }
 
 .field {
@@ -336,7 +328,7 @@ li.summary-item {
 }
 
 .field.id {
-    width: 5%;
+    width: 50px;
 }
 
 .field.excerpt {
@@ -344,23 +336,30 @@ li.summary-item {
 }
 
 .field.feedbackcount {
-	width:10%;
+	width: 120px;
+	float: right;
 }
 
 .field.decided_date {
-	width:10%;
+	width: 120px;
+	float: right;
+	
 }
 
 .field.review_date {
-	width: 10%
+	width: 120px;
+	float: right;
+	
 }
 
 .field.created_date{
-	width:10%;
+	width:120px;
+	float: right;
 }
 
 .field.deadline {
-	width:10%;
+	width:120px;
+	float: right;	
 }
 
 /* Proposal list view */

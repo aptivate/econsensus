@@ -29,6 +29,7 @@ class DecisionForm(forms.ModelForm):
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget,
                    'deadline': JQueryUIDateWidget,
+                   'archived_date': JQueryUIDateWidget,
                    'budget': forms.TextInput(),
                    'people': forms.TextInput()
                    }

@@ -26,7 +26,7 @@
 		    	{% if column == 'id' %}
 				<dt>ID</dt>
 				<dd class="field {{column}}">
-					<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+					<a class="iconified" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
 				</dd>
 				{% else %}
 				{% if object|decision_field:column %}

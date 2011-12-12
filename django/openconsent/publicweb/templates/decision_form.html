@@ -53,9 +53,14 @@
 				    {{ decision_form.status }}
 				</div>
 				<div class="form_item">
-			        {{ decision_form.decided_date.errors }}
-			        <label for="id_decided_date">{% trans "Decided date" %}:</label>
+			        {{ decision_form.deadline.errors }}
+			        <label for="id_deadline">{% trans "Deadline" %}:</label>
 			        {{ decision_form.deadline }}
+			    </div>
+				<div class="form_item">
+			        {{ decision_form.decided_date.errors }}
+			        <label for="id_decided_date">{% trans "Decided" %}:</label>
+			        {{ decision_form.decided_date }}
 			    </div>
 				<div class="form_item">
 			        {{ decision_form.effective_date.errors }}
@@ -66,6 +71,11 @@
 			        {{ decision_form.review_date.errors }}
 			        <label for="id_review_date">{% trans "Review" %}:</label>
 			        {{ decision_form.review_date }}
+			    </div>
+				<div class="form_item">
+			        {{ decision_form.archived_date.errors }}
+			        <label for="id_archived_date">{% trans "Archived" %}:</label>
+			        {{ decision_form.archived_date }}
 			    </div>
 				<div id="tags">
 				    {{ decision_form.tags.errors }}
