@@ -397,6 +397,8 @@ h2.page_title strong {
 }
 
 #decision {
+	border: 3px solid #FFCC00;
+	border-radius: 15px;
     clear: both;
     display: block;
     float: left;
@@ -460,11 +462,51 @@ h2.page_title strong {
 	font-weight: bold;
 }
 
-#decision_feedback {
+.decision_feedback {
     display: block;
     float: left;
     position: relative;
     width: 100%;    
+}
+
+.decision_feedback ol.feedback_list {
+padding: 1em 15px;
+}
+
+.decision_feedback ol.feedback_list > li {
+position:relative;
+padding:.5em 0;
+border-bottom: 1px solid #3E6EA3;
+}
+
+.decision_feedback .decision_type {
+position:absolute;
+width:6em;
+color:#fff;
+background:#bbb;
+text-align:center;
+font-weight:bold;
+font-size:.8em;
+}
+
+.decision_type.question {
+background:#008080;
+}
+
+.decision_type.danger {
+background:#d81616;
+}
+
+.decision_type.concern {
+background:#f60;
+}
+
+.decision_type.consensus {
+background:#aad400;
+}
+
+.decision_feedback .description {
+margin: 0 0 0 6em;
 }
 
 #decision label {
