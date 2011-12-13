@@ -100,7 +100,7 @@ def modify_decision(request, decision_id = None, status_id = None):
     if decision_id is None:
         decision = Decision()
         if status_id is not None:
-            decision.status = int(status_id);
+            decision.status = int(status_id)
     else:
         decision = get_object_or_404(Decision, id = decision_id)
     
@@ -189,23 +189,23 @@ def view_decision(request, decision_id, template_name="decision_detail.html"):
 
     # Bookkeeping
     for feedback in decision.feedback_set.all():
-        f = {
+        item = {
             'description': feedback.description
         }
         if feedback.rating == Feedback.QUESTION_STATUS:
             feedback_stats['question'] += 1
-            f['type'] = 'question'
+            item['type'] = 'question'
         elif feedback.rating == Feedback.DANGER_STATUS:
             feedback_stats['danger'] += 1
-            f['type'] = 'danger'
+            item['type'] = 'danger'
         elif feedback.rating == Feedback.SIGNIFICANT_CONCERNS_STATUS:
             feedback_stats['concern'] += 1
-            f['type'] = 'concern'
+            item['type'] = 'concern'
         else:
             feedback_stats['consensus'] += 1
-            f['type'] = 'consensus'
+            item['type'] = 'consensus'
         feedback_stats['all'] += 1
-        feedback_list.append(f)
+        feedback_list.append(item)
 
 
     return render_to_response(template_name,

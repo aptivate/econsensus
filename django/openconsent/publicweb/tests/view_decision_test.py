@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from openconsent.publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.tests.decision_test_case import DecisionTestCase
 
 # TODO: Check that POSTs save correct data and redirects work
 class ViewDecisionTest(DecisionTestCase):

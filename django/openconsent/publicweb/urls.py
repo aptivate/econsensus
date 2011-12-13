@@ -1,10 +1,8 @@
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.list_detail import object_detail
 from django.views.generic.simple import redirect_to
 
 from views import add_decision, add_decision_status, edit_decision, listing, \
                      export_csv, inline_edit_decision, view_decision
-from models import Decision
 
 urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^export_csv/$',

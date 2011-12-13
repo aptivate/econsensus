@@ -26,7 +26,7 @@ class ModelTest(DecisionTestCase):
         except ValidationError, e:
             self.fail("'%s' model instance did not validate: %s" % (instance, e.message_dict))
 
-    def get_column(self,matrix, i):
+    def get_column(self, matrix, i):
         return [row[i] for row in matrix]
 
 #The real work:
