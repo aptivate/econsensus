@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<div id="decision">
+	<div class="decision_summary halfwidth">
+		<div class="decision_description">
+		{{ object.description }}
+		</div>
+		<p class="edit_decision">
+			<a href="{% url inline_edit_decision object.id %}">Edit</a>
+		</p>
+	</div>
+
+	<div class="decision_meta halfwidth">
+		<ul class="decision_dates">
+{% if object.decided_date %}
+			<li class="decided">
+				<strong>{{ object.decided_date }}</strong>
+				<br />
+				{% trans "Decided" %}
+			</li>
+{% endif %}
+{% if object.effective_date %}
+			<li class="effective">
+				<strong>{{ object.effective_date }}</strong>
+				<br />
+				{% trans "Effective" %}
+			</li>
+{% endif %}
+{% if object.review_date %}
+			<li class="review">
+				<strong>{{ object.review_date }}</strong>
+				<br />
+				{% trans "Review" %}
+			</li>
+{% endif %}
+{% if object.expiry_date %}
+			<li class="expiry">
+				<strong>{{ object.expiry_date }}</strong>
+				<br />
+				{% trans "Expiry" %}
+			</li>
+{% endif %}
+		</ul>
+		<p class="decision_stats">
+			<span class="feedback_all">{{ feedback_stats.all }}</span>
+{% include "feedback_infographic.svg" %}
+			<span class="question"><em>{{ feedback_stats.question }}</em> {% trans "questions" %}</span>
+			<span class="danger"><em>{{ feedback_stats.danger }}</em> {% trans "danger" %}</span>
+			<span class="concern"><em>{{ feedback_stats.concern }}</em> {% trans "concerns" %}</span>
+			<span class="consensus"><em>{{ feedback_stats.consensus }}</em> {% trans "consensus" %}</span>
+		</p>
+	</div>
+</div>

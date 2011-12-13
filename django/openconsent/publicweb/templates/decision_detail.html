@@ -4,30 +4,82 @@
 {% comment %}This is a stub template for the time being - PCB {% endcomment %}
 
 {% block title %}
-	{{ decision.excerpt}}
+	{{ object.excerpt}}
 {% endblock %}
 
 {% block head_content %}
 {{ object.media }}
+	<link href="/site_media//jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+{% if not show_form %}
+	<script type="text/javascript">
+jQuery(function ($) {
+	function replaceWithRemote(url, selector) {
+		$.ajax(url,
+				{
+					cache: false,
+					success: function (data) { $(selector).replaceWith(data); }
+				});
+	}
+
+	// Override redirect to form and put it inline
+	$(".edit_decision a").live("click", function (e) {
+		replaceWithRemote("{% url inline_edit_decision_form object.id %}", "#decision");
+		e.preventDefault();
+	});
+
+	// Override redirect to view and put it inline
+	$('.edit_decision_form').live("submit", function (e) {
+		var parameters = $(this).serialize();
+
+		$.post("{% url inline_edit_decision_form object.id %}",
+			parameters,
+			function (data) {
+				// Post successful, now fetch stored value and add it as a snippet
+				replaceWithRemote("{% url view_decision_snippet object.id %}", "form.edit_decision_form");
+			}
+		);
+		e.preventDefault();
+	});
+});
+	</script>{% endif %}
 {% endblock %}
 
 {% block heading %}
-	{{ object.excerpt }}
+	{% trans "Edit proposal:" %} <span>{{ object.excerpt }}</span>
 {% endblock %}
 
 {% block main_content %}
 
-{% if object.decided_date %}
-	Decided Date: {{ object.decided_date }}
+{% if show_form %}
+<form action="#" method="post" class="edit_decision_form">
+  {% include "decision_form.html" %}
+	<p class="decision_controls">
+		<input type="submit" name="submit" value="Submit" />
+		 <input type="submit" name="submit" value="Cancel" />
+	</p>
+</form>
+{% else %}
+{% include "decision_detail_snippet.html" %}
 {% endif %}
-{% if object.effective_date %}
-	Effective Date: {{ object.effective_date }}
+
+<h2 class="page_title">{% trans "Feedback" %}</h2>
+<div class="decision_feedback">
+{% if feedback_list|length %}
+	<ol class="feedback_list">{% for feedback in feedback_list %}
+		<li>
+			<div class="decision_type {{ feedback.type }}">{{ feedback.type }}</div>
+			<div class="description">
+			{{ feedback.description }}
+			</div>
+		</li>{% endfor %}
+	</ol>
+{% else %}
+<p>{% trans "No feedback yet." %}
 {% endif %}
-{% if object.review_date %}
-	Review Date: {{ object.review_date }}
-{% endif %}
-{% if object.expiry_date %}
-	Expiry Date: {{ object.expiry_date }}
-{% endif %}
+</div>
+
+<h2 class="page_title">{% trans "Members:" %}</h2>
 
 {% endblock %}
