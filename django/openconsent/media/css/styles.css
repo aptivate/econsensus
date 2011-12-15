@@ -723,6 +723,7 @@ margin: 0 0 0 6em;
 }
 
 .formset_item .form_item.description {
+	width: 85%;
 	padding: 8px;
 	position: relative;
 }
@@ -730,14 +731,23 @@ margin: 0 0 0 6em;
 .formset_item .form_item.description textarea {
 	font-size: 1.1em;
 	color: #333;
-	width: 98%;
-	height: 40px;
+	width: 96%;
 	padding: 10px;
+	height: 20px;
+}
+
+.formset_item .form_item.description textarea.expanded {
+	height: 80px;
+}
+
+.formset_item .form_item.description textarea.collapsed {
+	height: 20px;
 }
 
 .formset_item .form_item.rating {
+	float: right;
 	padding: 4px;
-	width: 15%;
+	width: 10%;
 	display: block;
 	font-size: 0.7em;
 }
