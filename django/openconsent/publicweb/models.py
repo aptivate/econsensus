@@ -80,8 +80,10 @@ class Decision(models.Model):
         if user in self.watchers.all():
             self.watchers.remove(user)
 
-	def watchercount(self)
-		return self.watchers.count()
+    def watchercount(self):
+        return self.watchers.count()
+	
+    watchercount.short_description = _("Watchers")
 
     def status_text(self):
         return self.STATUS_CHOICES[self.status][1]

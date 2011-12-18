@@ -38,9 +38,15 @@ class ModelTest(DecisionTestCase):
         decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "archived_date")
 
+    def test_watchercount_changes(self):
+        decision = Decision(description="Decision test data")
+        decision.save(self.user)
+        decision.add_watcher(self.user)
+        self.assertEqual(1, decision.watchercount())
+
     def test_feedback_can_have_empty_description(self):
         decision = Decision(description='Test', status=Decision.DECISION_STATUS)
-        decision.save(self.user)     
+        decision.save(self.user)
         feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
         self.instance_validates(feedback)
 

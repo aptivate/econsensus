@@ -328,18 +328,25 @@ li.summary-item {
 }
 
 .field.excerpt {
-	width:70%;
+	width:60%;
 }
 
 .field.feedbackcount {
 	width: 120px;
 	float: right;
+	text-align: center;
 }
 
 .field.decided_date {
 	width: 120px;
 	float: right;
 	
+}
+
+.field.watchercount {
+    width: 120px;
+    float: right;
+    text-align: center;
 }
 
 .field.review_date {
@@ -356,6 +363,7 @@ li.summary-item {
 .field.deadline {
 	width:120px;
 	float: right;	
+	text-align: center;
 }
 
 /* Proposal list view */

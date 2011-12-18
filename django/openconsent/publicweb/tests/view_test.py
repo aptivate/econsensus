@@ -8,7 +8,7 @@ class ViewTest(DecisionTestCase):
 
     expected_proposal_key_tuple = ('class', 'page_title','columns')
     expected_proposal_dict_tuple = ({'class':'proposal'},
-                                      {'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')})
+                                      {'columns': ('id', 'excerpt', 'feedbackcount', 'watchercount', 'deadline')})
         
     expected_consensus_key_tuple = ('class', 'page_title','columns')
     expected_consensus_dict_tuple = ({'class':'decision'},
