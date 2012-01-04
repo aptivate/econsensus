@@ -21,23 +21,24 @@
 		</div>
         {% for object in object_list %}
 	    <li class="summary-item">
+	    <a class="urloverlay" href="{{ object.get_absolute_url }}"></a>
 	    	<dl>
 		    	{% for column in columns %}
 		    	{% if column == 'id' %}
 				<dt>ID</dt>
 				<dd class="field {{column}}">
-					<a class="iconified" href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+					{{ object|decision_field:column }}
 				</dd>
 				{% else %}
 				{% if object|decision_field:column %}
 				<dt>{{ column }}</dt>
 				<dd class="field {{column}}">
-					<a href="{{ object.get_absolute_url }}">{{ object|decision_field:column }}</a>
+					{{ object|decision_field:column }}
 				</dd>
 	        	{% else %}
 				<dt>{{ column }}</dt>
 				<dd class="field {{column}}">
-					<a href="{{ object.get_absolute_url }}">--</a>						
+					--						
 				</dd>
 		        {% endif %}
 		        {% endif %}

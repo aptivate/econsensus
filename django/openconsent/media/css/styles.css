@@ -260,19 +260,14 @@ li.summary-item, .summary-header {
 	border:3px solid;
 	-moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
-	border-radius:10px;
-	padding:10px;
+	border-radius:10px;	padding:10px;
 	margin:2px 0;
 	overflow:auto;
+	position:relative;
 }
 
 .summary-header {
 	border:none;
-}
-
-.summary-item a {
-	display: block;
-	color: #000000;
 }
 
 .summary-item a.iconified {
@@ -281,20 +276,19 @@ li.summary-item, .summary-header {
 
 /* borders */
 
-
 li.summary-item {
 	border-color:  #ECECEC;
 }
 
-.archived-list li.summary-item {
+.archived-list li.summary-item  {
 	border-color: #483E37;
 }
 
-.proposal-list li.summary-item {
+.proposal-list li.summary-item  {
 	border-color: #FFCC00;
 }
 
-.decision-list li.summary-item {
+.decision-list li.summary-item  {
 	border-color: #AAD400;
 }
 
@@ -319,42 +313,47 @@ li.summary-item {
 
 .field {
 	float: left;
-	display: block;
 	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .field.id {
-    width: 50px;
+    width: 2em;
 }
 
 .field.excerpt {
-	width:70%;
+		width:65%;
 }
 
 .field.feedbackcount {
-	width: 120px;
+	width: 8em;
 	float: right;
 }
 
 .field.decided_date {
-	width: 120px;
+	width: 8em;
 	float: right;
 	
 }
 
 .field.review_date {
-	width: 120px;
+	width: 8em;
 	float: right;
 	
 }
 
+.field.archived_date {
+    float: right;
+	width: 8em;
+}
+
 .field.created_date{
-	width:120px;
+	width: 8em;
 	float: right;
 }
 
 .field.deadline {
-	width:120px;
+	width: 8em;
 	float: right;	
 }
 
@@ -362,6 +361,14 @@ li.summary-item {
 
 #header h1 span {
 	line-height:1.5em;
+}
+
+.urloverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+	width: 100%;
 }
 
 a.button.add_decision {
