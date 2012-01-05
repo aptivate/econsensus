@@ -1,15 +1,19 @@
-from decision_test_case import DecisionTestCase
+from django.forms.widgets import TextInput
+from django.core.urlresolvers import reverse
+
+from tagging.forms import TagField
+
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
-from tagging.forms import TagField
-from django.forms.widgets import TextInput
+
+from decision_test_case import DecisionTestCase
 
 #TODO: paths should not be hard coded in test code.
 
 class TagsTest(DecisionTestCase):
     def test_tag_can_be_created(self):
         self.login()
-        path = "/add/"
+        path = reverse('publicweb_decision_new', args=[0])
 
         data = {
                 'description': 'A description.',
@@ -40,13 +44,13 @@ class TagsTest(DecisionTestCase):
         
     def test_tags_field_appears_on_page(self): 
         self.login()
-        path = "/add/"
+        path = reverse('publicweb_decision_new', args=[0])
         response = self.client.get(path)
         self.assertContains(response, "input id=\"id_tags\"")
     
     def test_page_contains_tags_field_help_text_appears_on_page(self): 
         self.login()
-        path = "/add/"
+        path = reverse('publicweb_decision_new', args=[0])
         response = self.client.get(path)
         self.assertContains(response, Decision.TAGS_HELP_FIELD_TEXT)
     

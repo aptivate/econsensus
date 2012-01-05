@@ -11,4 +11,4 @@ class EditDecisionTest(DecisionTestCase):
         self.assertContains(response, u"<h2 class=\"page_title\">View and Edit: <strong class=\"not_translated\">" + decision.excerpt)
 
     def load_add_decision_and_return_response(self, idd):
-        return self.client.get(reverse('publicweb_decision_edit', args=[idd]))
+        return self.client.get(reverse('publicweb_decision_modify', args=[idd]))

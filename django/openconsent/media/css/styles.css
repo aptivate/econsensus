@@ -92,7 +92,6 @@ textarea, input {
   	-webkit-border-radius: 10px;
     border-radius: 10px;
     box-shadow: inset 3px 3px 3px #CCCCCC;
-    display: block;
     position: relative;
 }
 
@@ -235,9 +234,7 @@ body.archived-list ul li.navigation_archived a {
 
 #content h2.page_title {
 	color:#666;
-	display:block;
 	float:left;
-	width:100%;
 	padding-bottom: 6px;
 }
 
@@ -303,6 +300,8 @@ li.summary-item {
     font-size: 0.9em;
     font-weight: bold;
 	border:3px solid #EFEFEF;
+	color: #3E6EA3;
+	
 }
 
 #sort_form {
@@ -318,7 +317,7 @@ li.summary-item {
 }
 
 .field.id {
-    width: 2em;
+    width: 3em;
 }
 
 .field.excerpt {
@@ -554,10 +553,10 @@ margin: 0 0 0 6em;
 }
 
 .decision_controls {
-	clear: both;
-	display: block;
-	position: relative;
-	width: 100%;
+	float: right;
+	padding-bottom:6px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 .decision_controls div {

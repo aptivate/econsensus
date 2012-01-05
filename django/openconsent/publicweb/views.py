@@ -14,6 +14,37 @@ from models import Decision, Feedback
 from forms import DecisionForm, FeedbackFormSet
 from forms import SortForm
 
+def process_post_and_redirect(request, decision):
+    if request.POST.get('submit', None) == "Cancel":
+        return_page = unicode(decision.status_text())            
+        return HttpResponseRedirect(reverse(listing, args=[return_page]))
+    
+    else:
+        decision_form = DecisionForm(data=request.POST, 
+                                     instance=decision)
+        feedback_formset = FeedbackFormSet(data=request.POST, 
+                                           instance=decision)
+
+        if decision_form.is_valid():
+            decision = decision_form.save(commit=False)
+            feedback_formset = FeedbackFormSet(request.POST, 
+                                               instance=decision)
+            if feedback_formset.is_valid():
+                decision.save(request.user)
+                if decision_form.cleaned_data['watch']:
+                    decision.add_watcher(request.user)
+                else:
+                    decision.remove_watcher(request.user)
+                feedback_formset.save()
+                
+                return_page = unicode(decision.status_text())
+                return HttpResponseRedirect(reverse(listing, args=[return_page]))
+        
+        data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+        context = RequestContext(request, data)
+        return render_to_response('decision_edit.html', context)
+
+
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
 #This looks like it's already been done... see https://github.com/joshourisman/django-tablib
@@ -96,62 +127,37 @@ def listing(request, status):
         )
 
 @login_required
-def modify_decision(request, decision_id = None, status_id = None):
-    if decision_id is None:
-        decision = Decision()
-        if status_id is not None:
-            decision.status = int(status_id)
-    else:
-        decision = get_object_or_404(Decision, id = decision_id)
+def modify(request, decision_id):
+
+    decision = get_object_or_404(Decision, id = decision_id)
     
     if request.method == "POST":
-        if request.POST.get('submit', None) == "Cancel":
-            return_page = unicode(decision.status_text())            
-            return HttpResponseRedirect(reverse(listing, args=[return_page]))
-        
-        else:
-            decision_form = DecisionForm(data=request.POST, 
-                                         instance=decision)
-            feedback_formset = FeedbackFormSet(data=request.POST, 
-                                               instance=decision)
-
-            if decision_form.is_valid():
-                decision = decision_form.save(commit=False)
-                feedback_formset = FeedbackFormSet(request.POST, 
-                                                   instance=decision)
-                if feedback_formset.is_valid():
-                    decision.save(request.user)
-                    if decision_form.cleaned_data['watch']:
-                        decision.add_watcher(request.user)
-                    else:
-                        decision.remove_watcher(request.user)
-                    feedback_formset.save()
-                    
-                    return_page = unicode(decision.status_text())
-                    return HttpResponseRedirect(reverse(listing, args=[return_page]))
-
+        return process_post_and_redirect(request, decision)
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
         decision_form = DecisionForm(instance=decision)
         
-    return render_to_response('decision_edit.html',
-        RequestContext(request,
-            dict(decision_form=decision_form, feedback_formset=feedback_formset)))
+    data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+    context = RequestContext(request, data)
+    return render_to_response('decision_edit.html', context)
 
 @login_required
-def add_decision(request):
-    return modify_decision(request)
+def new(request, status_id):
+    
+    decision = Decision(status=int(status_id))
+        
+    if request.method == "POST":
+        return process_post_and_redirect(request, decision)
+    else:
+        feedback_formset = FeedbackFormSet(instance=decision)
+        decision_form = DecisionForm(instance=decision)
+        
+    data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+    context = RequestContext(request, data)
+    return render_to_response('decision_edit.html', context)
 
 @login_required
-def add_decision_status(request, status_id):
-    return modify_decision(request, status_id = status_id)
-
-@login_required    
-def edit_decision(request, decision_id):
-    return modify_decision(request, decision_id = decision_id)
-
-@login_required
-def inline_edit_decision(request, decision_id, template_name="decision_detail.html"):
+def inline_modify_decision(request, decision_id, template_name="decision_detail.html"):
     if decision_id is None:
         decision = None
     else:

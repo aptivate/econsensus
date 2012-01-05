@@ -26,7 +26,7 @@
 		    	{% for column in columns %}
 		    	{% if column == 'id' %}
 				<dt>ID</dt>
-				<dd class="field {{column}}">
+				<dd class="iconified field {{column}}">
 					{{ object|decision_field:column }}
 				</dd>
 				{% else %}
