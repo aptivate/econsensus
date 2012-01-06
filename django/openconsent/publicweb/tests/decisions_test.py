@@ -10,7 +10,7 @@ from django.forms.widgets import CheckboxInput
 import difflib
 
 from publicweb.models import Decision
-from publicweb.forms import DecisionForm
+from publicweb.forms import DecisionForm, ProposalForm
 from publicweb.widgets import JQueryUIDateWidget
 from decision_test_case import DecisionTestCase
 
@@ -28,15 +28,15 @@ class DecisionsTest(DecisionTestCase):
         """
         Test error conditions for the add decision page. 
         """
-        path = reverse('publicweb_decision_new', args=[0])
+        path = reverse('publicweb_decision_new', args=[Decision.PROPOSAL_STATUS])
         # Test that the decision add view returns an empty form
-        response = self.client.get(path)
-        form = DecisionForm()
-        self.assertEqual(form.as_p(),
-            response.context['decision_form'].as_p())
-    
-        # Test that the decision add view validates and rejects and empty post
+        actual = self.client.get(path).context['decision_form'].as_p().splitlines()
+        
+        expected = ProposalForm().as_p().splitlines()
 
+        self.assertEqual(expected, actual)
+            
+        # Test that the decision add view validates and rejects and empty post
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({  
                             'feedback_set-TOTAL_FORMS': '3',
@@ -71,7 +71,7 @@ class DecisionsTest(DecisionTestCase):
             msg_prefix=response.content)
 
     def get_default_decision_form_dict(self):
-        return {'status': 1}
+        return {'status': Decision.DECISION_STATUS}
 
     def get_diff(self, s1, s2): #pylint: disable-msg=C0103
         diff = difflib.context_diff(s1, s2)
@@ -88,7 +88,7 @@ class DecisionsTest(DecisionTestCase):
                        args=[decision.id])
         response = self.client.get(path)
         
-        test_form_str = str(DecisionForm(instance=decision))
+        test_form_str = str(ProposalForm(instance=decision))
         decision_form_str = str(response.context['decision_form'])
         
         self.assertEqual(test_form_str, decision_form_str,

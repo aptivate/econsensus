@@ -17,21 +17,46 @@ FeedbackFormSet = inlineformset_factory(Decision, Feedback,  #pylint: disable-ms
                                        fields=('description','resolved','rating'),
                                        form=FeedbackForm)
 
+class ProposalForm(forms.ModelForm):
+    
+    watch = forms.BooleanField(required=False, initial=True)
+       
+    class Meta:
+        model = Decision
+        exclude = ('decided_date','archived_date')        
+        widgets = {
+                   'deadline': JQueryUIDateWidget,
+                   'effective_date': JQueryUIDateWidget,
+                   'review_date': JQueryUIDateWidget,
+                   'expiry_date': JQueryUIDateWidget
+                   }
+
 class DecisionForm(forms.ModelForm):
     
     watch = forms.BooleanField(required=False, initial=True)
        
     class Meta:
         model = Decision
+        exclude = ('deadline','archived_date')
         widgets = {
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
-                   'expiry_date': JQueryUIDateWidget,
-                   'deadline': JQueryUIDateWidget,
+                   'expiry_date': JQueryUIDateWidget
+                   }
+
+class ArchivedForm(forms.ModelForm):
+    
+    watch = forms.BooleanField(required=False, initial=True)
+       
+    class Meta:
+        model = Decision
+        exclude = ('deadline','decided_date')        
+        widgets = {
                    'archived_date': JQueryUIDateWidget,
-                   'budget': forms.TextInput(),
-                   'people': forms.TextInput()
+                   'effective_date': JQueryUIDateWidget,
+                   'review_date': JQueryUIDateWidget,
+                   'expiry_date': JQueryUIDateWidget
                    }
 
 EXTRA_CHOICE = (3, _('All')) #pylint: disable-msg=E1102

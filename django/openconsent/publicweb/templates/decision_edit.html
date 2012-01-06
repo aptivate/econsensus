@@ -23,8 +23,14 @@
 {% block main_content %}
 
 	<form id="decision_add" action="" method="post">{% csrf_token %}
-    {% include "decision_form.html" %}
-		
+	{% if decision_form.instance.status_text == 'decision' %}
+	{% include "decision_form.html" %}
+	{% else %}
+	{% if decision_form.instance.status_text == 'archived' %}
+	{% include "archived_form.html" %}
+    {% else %}
+	{% include "proposal_form.html" %}    
+	{% endif %}{% endif %}
 		<div class="decision_feedback">
 			<h2>{% trans "Feedback" %}</h2>
 			{{ feedback_formset.management_form }}

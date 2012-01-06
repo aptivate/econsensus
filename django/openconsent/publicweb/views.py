@@ -11,17 +11,29 @@ from django.utils.translation import ugettext_lazy as _
 import unicodecsv
 
 from models import Decision, Feedback
-from forms import DecisionForm, FeedbackFormSet
+from forms import ProposalForm, DecisionForm, ArchivedForm, FeedbackFormSet
 from forms import SortForm
 
+def get_form(request, decision):
+    if request.method == 'POST':
+        data = request.POST
+    else:
+        data = None
+        
+    if decision.status == Decision.ARCHIVED_STATUS:
+        return ArchivedForm(data=data, instance=decision)
+    elif decision.status == Decision.DECISION_STATUS:
+        return DecisionForm(data=data, instance=decision)
+    else:
+        return ProposalForm(data=data, instance=decision)
+        
 def process_post_and_redirect(request, decision):
     if request.POST.get('submit', None) == "Cancel":
         return_page = unicode(decision.status_text())            
         return HttpResponseRedirect(reverse(listing, args=[return_page]))
-    
     else:
-        decision_form = DecisionForm(data=request.POST, 
-                                     instance=decision)
+        decision_form = get_form(request, decision)
+            
         feedback_formset = FeedbackFormSet(data=request.POST, 
                                            instance=decision)
 
@@ -135,7 +147,7 @@ def modify(request, decision_id):
         return process_post_and_redirect(request, decision)
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
-        decision_form = DecisionForm(instance=decision)
+        decision_form = get_form(request, decision)
         
     data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
     context = RequestContext(request, data)
@@ -150,7 +162,7 @@ def new(request, status_id):
         return process_post_and_redirect(request, decision)
     else:
         feedback_formset = FeedbackFormSet(instance=decision)
-        decision_form = DecisionForm(instance=decision)
+        decision_form = get_form(request, decision)
         
     data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
     context = RequestContext(request, data)
