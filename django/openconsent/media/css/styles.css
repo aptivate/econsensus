@@ -743,7 +743,7 @@ margin: 0 0 0 6em;
 }
 
 .formset_item .form_item.description textarea.expanded {
-	height: 80px;
+	height: 120px;
 }
 
 .formset_item .form_item.description textarea.collapsed {
