@@ -71,7 +71,7 @@ jQuery(function ($) {
 		<li>
 			<div class="decision_type {{ feedback.type }}">{{ feedback.type }}</div>
 			<div class="description">
-			{{ feedback.description }}
+			{{ feedback.description|urlize }}
 			</div>
 		</li>{% endfor %}
 	</ol>

@@ -3,7 +3,7 @@
 <div id="decision">
 	<div class="decision_summary halfwidth">
 		<div class="decision_description">
-		{{ object.description }}
+		{{ object.description|urlize }}
 		</div>
 		<p class="edit_decision">
 			<a href="{% url inline_edit_decision object.id %}">Edit</a>
