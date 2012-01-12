@@ -1,4 +1,4 @@
-#!/usr/bin/python2.6
+#!/usr/bin/python
 #
 # This script is to set up various things for our projects. It can be used by:
 #
@@ -44,7 +44,7 @@ def _setup_paths():
     env['project_dir'] = os.path.join(env['deploy_dir'], '..')
     env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
     env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
-    env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python2.6')
+    env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python')
     env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
 
 
@@ -52,7 +52,7 @@ def _manage_py(args, cwd=None, supress_output=False):
     # for manage.py, always use the system python 2.6
     # otherwise the update_ve will fail badly, as it deletes
     # the virtualenv part way through the process ...
-    manage_cmd = ['/usr/bin/python2.6', env['manage_py']]
+    manage_cmd = ['/usr/bin/python', env['manage_py']]
     if isinstance(args, str):
         manage_cmd.append(args)
     else:
