@@ -33,5 +33,6 @@ urlpatterns = patterns('openconsent.publicweb.views',
     url(r'^list/(?P<status>[a-z]+)/$',
         listing,
         name='list'),
+
     url(r'^$', redirect_to, {'url': 'list/proposal/'}),
     )
