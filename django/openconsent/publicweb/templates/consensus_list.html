@@ -7,7 +7,7 @@
 {% block body_class%}{{ class }}-list{% endblock %}
 
 {% block main_content %}
-	<h2>{% trans "{{ status }} list" %}</h2>
+	<h2>{{ status }}{% trans " list" %}</h2>
 	<ul class="summary-list">
 		{% if object_list %}
 		<div class="summary-header {{ status }}">
