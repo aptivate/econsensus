@@ -34,7 +34,13 @@ def _setup_path():
         if not env.has_key('virtualenv_root'):
             env.virtualenv_root = os.path.join(env.django_root, '.ve')
         if not env.has_key('python_bin'):
-            env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python')
+            python26 = os.path.join(env.virtualenv_root, 'bin', 'python2.6')
+            if os.path.exists(python26):
+                print "Using Python 2.6 path"
+                env.python_bin = python26
+            else:
+                print "Using generic Python path"                
+                env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python')
     if not env.has_key('settings'):
         env.settings        = '%(project)s.settings' % env
 

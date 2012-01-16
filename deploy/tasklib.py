@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#
 # This script is to set up various things for our projects. It can be used by:
 #
 # * developers - setting up their own environment
@@ -44,9 +42,16 @@ def _setup_paths():
     env['project_dir'] = os.path.join(env['deploy_dir'], '..')
     env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
     env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
-    env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python')
     env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
 
+    python26 = os.path.join(env['ve_dir'], 'bin', 'python2.6')
+    if os.path.exists(python26):
+        print "Using Python 2.6"        
+        env['python_bin'] = python26
+
+    else:
+        print "Using Python Generic Path"                
+        env.python_bin      = os.path.join(env['ve_dir'], 'bin', 'python')
 
 def _manage_py(args, cwd=None, supress_output=False):
     # for manage.py, always use the system python 2.6
