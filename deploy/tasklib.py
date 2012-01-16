@@ -19,19 +19,45 @@
 """
 
 import os, sys
-import getopt
 import getpass
-import subprocess 
 import random
+
+try:
+    # For testing replacement routines for older python compatibility
+    # raise ImportError()
+    import subprocess
+    from subprocess import call as _call_command
+
+    def _capture_command(argv):
+        return subprocess.Popen(argv, stdout=subprocess.PIPE).communicate()[0]
+
+except ImportError:
+    def _capture_command(argv):
+        command = ' '.join(argv)
+        # print "(_capture_command) Executing: %s" % command
+        fd = os.popen(command)
+        output = fd.read()
+        fd.close()
+        return output
+        
+    # older python
+    def _call_command(argv, stdin=None, stdout=None):
+        argv = [i.replace('"', '\"') for i in argv]
+        argv = ['"%s"' % i for i in argv]
+        command = " ".join(argv)
+        
+        if stdin is not None:
+            command += " < " + stdin.name
+        
+        if stdout is not None:
+            command += " > " + stdout.name
+        
+        # sys.stderr.write("(_call_command) Executing: %s\n" % command)
+        
+        return os.system(command)
 
 # import per-project settings
 import project_settings
-
-# are there any local tasks for this project?
-try:
-    import localtasks
-except ImportError:
-    localtasks = None
 
 env = {}
 
@@ -39,20 +65,28 @@ def _setup_paths():
     """Set up the paths used by other tasks"""
     env['deploy_dir'] = os.path.dirname(__file__)
     # what is the root of the project - one up from this directory
-    env['project_dir'] = os.path.join(env['deploy_dir'], '..')
+    env['project_dir'] = os.path.abspath(os.path.join(env['deploy_dir'], '..'))
     env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
     env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
+    env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python2.6')
     env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
+    env['project_name'] = project_settings.project_name
+    env['project_type'] = project_settings.project_type
 
     python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
     if os.path.exists(python26):
         if env['verbose']:
-            print "Using Python 2.6"        
+            print "Using Python 2.6"
         env['python_bin'] = python26
     else:
         if env['verbose']:
-            print "Using Python Generic Path"                
+            print "Using Python Generic Path"
         env['python_bin'] = os.path.join('/', 'usr', 'bin', 'python')
+
+def _call_wrapper(argv, **kwargs):
+    if env['verbose']:
+        print "Executing command: %s" % ' '.join(argv)
+    _call_command(argv, **kwargs)
 
 def _manage_py(args, cwd=None, supress_output=False):
     # for manage.py, always use the system python 2.6
@@ -86,6 +120,13 @@ def _manage_py(args, cwd=None, supress_output=False):
     return output_lines
 
 
+def _create_dir_if_not_exists(dir_path, world_writeable=False):
+    if not os.path.exists(dir_path):
+        _call_wrapper(['mkdir', '-p', dir_path])
+    if world_writeable:
+        _call_wrapper(['chmod', '-R', '777', dir_path])
+
+
 def _get_django_db_settings():
     # import local_settings from the django dir. Here we are adding the django
     # project directory to the path. Note that env['django_dir'] may be more than
@@ -95,6 +136,7 @@ def _get_django_db_settings():
 
     db_user = 'nouser'
     db_pw   = 'nopass'
+    db_host = '127.0.0.1'
     db_port = None
     # there are two ways of having the settings:
     # either as DATABASE_NAME = 'x', DATABASE_USER ...
@@ -108,6 +150,9 @@ def _get_django_db_settings():
             db_pw     = db['PASSWORD']
             if db.has_key('PORT'):
                 db_port = db['PORT']
+            if db.has_key('HOST'):
+                db_host = db['HOST']
+
     except (AttributeError, KeyError):
         try:
             db_engine = local_settings.DATABASE_ENGINE
@@ -117,34 +162,38 @@ def _get_django_db_settings():
                 db_pw     = local_settings.DATABASE_PASSWORD
                 if hasattr(local_settings, 'DATABASE_PORT'):
                     db_port = local_settings.DATABASE_PORT
+                if hasattr(local_settings, 'DATABASE_HOST'):
+                    db_host = local_settings.DATABASE_HOST
         except AttributeError:
             # we've failed to find the details we need - give up
             print("Failed to find database settings")
             sys.exit(1)
     env['db_port'] = db_port
-    return (db_engine, db_name, db_user, db_pw, db_port)
+    env['db_host'] = db_host
+    return (db_engine, db_name, db_user, db_pw, db_port, db_host)
 
 
 def _mysql_exec_as_root(mysql_cmd):
     """ execute a SQL statement using MySQL as the root MySQL user"""
     mysql_call = ['mysql', '-u', 'root', '-p'+_get_mysql_root_password()]
+    mysql_call += ['--host=%s' % env['db_host']]
+    
     if env['db_port'] != None:
-        mysql_call += ['--host=127.0.0.1', '--port=%s' % env['db_port']]
+        mysql_call += ['--port=%s' % env['db_port']]
     mysql_call += ['-e']
     if env['verbose']:
         print 'Executing MySQL command: %s' % ' '.join(mysql_call + [mysql_cmd])
-    subprocess.call(mysql_call + [mysql_cmd])
+    return _call_command(mysql_call + [mysql_cmd])
 
 
 def _get_mysql_root_password():
     # first try to read the root password from a file
     # otherwise ask the user
     if not env.has_key('root_pw'):
-        file_exists = subprocess.call(['sudo', 'test', '-f', '/root/mysql_root_password'])
+        file_exists = _call_command(['sudo', 'test', '-f', '/root/mysql_root_password'])
         if file_exists == 0:
             # note this requires sudoers to work with this - jenkins particularly ...
-            root_pw = subprocess.Popen(["sudo", "cat", "/root/mysql_root_password"], 
-                    stdout=subprocess.PIPE).communicate()[0]
+            root_pw = _capture_command(["sudo", "cat", "/root/mysql_root_password"])
             env['root_pw'] = root_pw.rstrip()
         else:
             env['root_pw'] = getpass.getpass('Enter MySQL root password:')
@@ -153,13 +202,13 @@ def _get_mysql_root_password():
 
 def clean_ve():
     """Delete the virtualenv so we can start again"""
-    subprocess.call(['rm', '-rf', env['ve_dir']])
-    
-    
+    _call_wrapper(['rm', '-rf', env['ve_dir']])
+
+
 def clean_db():
     """Delete the database for a clean start"""
     # first work out the database username and password
-    db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
+    db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
     # then see if the database exists
     if db_engine.endswith('sqlite'):
         # delete sqlite file
@@ -179,64 +228,63 @@ def clean_db():
 def create_ve():
     """Create the virtualenv"""
     _manage_py("update_ve")
-    
-    
+
+
 def update_ve():
     """ Update the virtualenv """
     create_ve()
 
 def create_private_settings():
 
-    private_settings_file = os.path.join(env['django_dir'], 
+    private_settings_file = os.path.join(env['django_dir'],
                                     'private_settings.py')
     if not os.path.exists(private_settings_file):
-    
-        with open(private_settings_file, 'w') as f:
+        # don't use "with" for compatibility with python 2.3 on whov2hinari
+        f = open(private_settings_file, 'w')
+        try:
             secret_key = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])
             db_password = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789") for i in range(12)])
             
             f.write("SECRET_KEY = '%s'\n" % secret_key)
             f.write("DB_PASSWORD = '%s'\n" % db_password)
-    
+        finally:
+            f.close()
+
 def link_local_settings(environment):
     """ link local_settings.py.environment as local_settings.py """
     # die if the correct local settings does not exist
-    local_settings_env_path = os.path.join(env['django_dir'], 
+    local_settings_env_path = os.path.join(env['django_dir'],
                                     'local_settings.py.'+environment)
     if not os.path.exists(local_settings_env_path):
         print "Could not find file to link to: %s" % local_settings_env_path
         sys.exit(1)
-    # remove the pyc aswell
-    subprocess.call(['rm', 'local_settings.py', 'local_settings.pyc'], cwd=env['django_dir'])
-    subprocess.call(['ln', '-s', 'local_settings.py.'+environment, 'local_settings.py'], 
-            cwd=env['django_dir'])
+
+    files_to_remove = ('local_settings.py', 'local_settings.pyc')
+    for file in files_to_remove:
+        full_path = os.path.join(env['django_dir'], file)
+        if os.path.exists(full_path):
+            os.remove(full_path)
+
+    os.symlink('local_settings.py.'+environment, 
+        os.path.join(env['django_dir'],'local_settings.py'))
 
 
-def update_db(syncdb=True):
+def update_db(syncdb=True, drop_test_db=True):
     """ create the database, and do syncdb and migrations (if syncdb==True)"""
     # first work out the database username and password
-    db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
+    db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
     # then see if the database exists
     if db_engine.endswith('mysql'):
-        db_exist_call = ['mysql', '-u', db_user, '-p'+db_pw]
-        if db_port != None:
-            db_exist_call += ['--host=127.0.0.1', '--port=%s' % db_port]
-        db_exist_call += [db_name, '-e', 'quit']
-        db_exist = subprocess.call(db_exist_call)
-        if db_exist != 0:
-            # create the database and grant privileges
+        if not db_exists(db_user, db_pw, db_name, db_port, db_host):
             _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % db_name)
             _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
                 (db_name, db_user, db_pw)))
 
-            # create the test database, grant privileges and drop it again
-            test_db_name = 'test_' + db_name
-            _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % test_db_name)
-            _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
-                (test_db_name, db_user, db_pw)))
-            _mysql_exec_as_root(('DROP DATABASE %s' % test_db_name))
+        if not db_exists(db_user, db_pw, 'test_'+db_name, db_port, db_host):
+            create_test_db(drop_after_create=drop_test_db)
+
     print 'syncdb: %s' % type(syncdb)
-    if syncdb:
+    if env['project_type'] == "django" and syncdb:
         # if we are using South we need to do the migrations aswell
         use_migrations = False
         for app in project_settings.django_apps:
@@ -246,24 +294,51 @@ def update_db(syncdb=True):
         if use_migrations:
             _manage_py(['migrate', '--noinput'])
 
+def db_exists(db_user, db_pw, db_name, db_port, db_host):
+    db_exist_call = ['mysql', '-u', db_user, '-p'+db_pw]
+    db_exist_call += ['--host=%s' % db_host]
+
+    if db_port != None:
+        db_exist_call += ['--port=%s' % db_port]
+
+    db_exist_call += [db_name, '-e', 'quit']
+    return _call_command(db_exist_call) == 0
+
+
+def create_test_db(drop_after_create=True):
+    db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
+
+    test_db_name = 'test_' + db_name
+    ret = _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % test_db_name)
+    ret = _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
+        (test_db_name, db_user, db_pw)))
+    if drop_after_create:
+        ret = _mysql_exec_as_root(('DROP DATABASE %s' % test_db_name))
+
 def dump_db(dump_filename='db_dump.sql'):
     """Dump the database in the current working directory"""
-    project_name = project_settings.django_dir.split('/')[-1]
-    db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
+    db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
     if not db_engine.endswith('mysql'):
         print 'dump_db only knows how to dump mysql so far'
         sys.exit(1)
-    dump_cmd = ['/usr/bin/mysqldump', '--user='+db_user, '--password='+db_pw, '--host=127.0.0.1']
-    if db_port != None and len(db_port) > 0:
-        dump_cmd += ['--port=%s' % db_port]
-    dump_cmd += [db_name]
-    # open the file to write to
+    dump_cmd = ['/usr/bin/mysqldump', '--user='+db_user, '--password='+db_pw,
+                '--host='+db_host]
+    if db_port != None:
+        dump_cmd.append('--port='+db_port)
+    dump_cmd.append(db_name)
+    
     dump_file = open(dump_filename, 'w')
     if env['verbose']:
-        print 'Executing dump command: %s - stdout to %s' % (' '.join(dump_cmd), dump_filename)
-    subprocess.call(dump_cmd, stdout=dump_file)
+        print 'Executing dump command: %s\nSending stdout to %s' % (' '.join(dump_cmd), dump_filename)
+    _call_command(dump_cmd, stdout=dump_file)
     dump_file.close()
 
+def update_git_submodules():
+    """If this is a git project then check for submodules and update"""
+    git_modules_file = os.path.join(env['project_dir'], '.gitmodules')
+    if os.path.exists(git_modules_file):
+        git_submodule_cmd =['git', 'submodule', 'update', '--init']
+        _call_wrapper(git_submodule_cmd, cwd=env['project_dir'])
 
 def setup_db_dumps(dump_dir):
     """ set up mysql database dumps in root crontab """
@@ -273,14 +348,13 @@ def setup_db_dumps(dump_dir):
     project_name = project_settings.django_dir.split('/')[-1]
     cron_file = os.path.join('/etc', 'cron.daily', 'dump_'+project_name)
 
-    db_engine, db_name, db_user, db_pw, db_port = _get_django_db_settings()
+    db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
     if db_engine.endswith('mysql'):
-        if not os.path.exists(dump_dir):
-            subprocess.call(['mkdir', '-p', dump_dir])
+        _create_dir_if_not_exists(dump_dir)
         dump_file_stub = os.path.join(dump_dir, 'daily-dump-')
 
         # has it been set up already
-        cron_grep = subprocess.call('sudo crontab -l | grep mysqldump', shell=True)
+        cron_grep = _call_wrapper('sudo crontab -l | grep mysqldump', shell=True)
         if cron_grep == 0:
             return
         if os.path.exists(cron_file):
@@ -288,22 +362,26 @@ def setup_db_dumps(dump_dir):
 
         # write something like:
         # 30 1 * * * mysqldump --user=osiaccounting --password=aptivate --host=127.0.0.1 osiaccounting >  /var/osiaccounting/dumps/daily-dump-`/bin/date +\%d`.sql
-        with open(cron_file, 'w') as f:
+
+        # don't use "with" for compatibility with python 2.3 on whov2hinari
+        f = open(cron_file, 'w')
+        try:
             f.write('#!/bin/sh\n')
-            f.write('/usr/bin/mysqldump --user=%s --password=%s --host=127.0.0.1 ' %
-                    (db_user, db_pw))
-            if db_port != None:
-                f.write('--port=%s ' % db_port)
+            f.write('/usr/bin/mysqldump --user=%s --password=%s --host=%s --port=%s ' %
+                    (db_user, db_pw, db_host, db_port))
             f.write('%s > %s' % (db_name, dump_file_stub))
             f.write(r'`/bin/date +\%d`.sql')
             f.write('\n')
+        finally:
+            f.close()
+        
         os.chmod(cron_file, 0755)
 
 
 def run_tests(*extra_args):
     """Run the django tests.
 
-    With no arguments it will run all the tests for you apps (as listed in 
+    With no arguments it will run all the tests for you apps (as listed in
     project_settings.py), but you can also pass in multiple arguments to run
     the tests for just one app, or just a subset of tests. Examples include:
 
@@ -328,7 +406,7 @@ def quick_test(*extra_args):
     with a mysqld running with a ramdisk, which should be a lot faster. The
     original environment will be reset afterwards.
 
-    With no arguments it will run all the tests for you apps (as listed in 
+    With no arguments it will run all the tests for you apps (as listed in
     project_settings.py), but you can also pass in multiple arguments to run
     the tests for just one app, or just a subset of tests. Examples include:
 
@@ -348,7 +426,7 @@ def _install_django_jenkins():
     """ ensure that pip has installed the django-jenkins thing """
     pip_bin = os.path.join(env['ve_dir'], 'bin', 'pip')
     cmd = [pip_bin, 'install', '-E', env['ve_dir'], 'django-jenkins']
-    subprocess.call(cmd)
+    _call_wrapper(cmd)
 
 def _manage_py_jenkins():
     """ run the jenkins command """
@@ -364,7 +442,7 @@ def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     update_ve()
     _install_django_jenkins()
-    create_private_settings()    
+    create_private_settings()
     link_local_settings('jenkins')
     clean_db()
     update_db()
@@ -384,9 +462,10 @@ def deploy(environment=None):
     """Do all the required steps in order"""
     if environment == None:
         environment = _infer_environment()
-    
+
     create_private_settings()
     link_local_settings(environment)
+    update_git_submodules()
     create_ve()
     update_db()
 
@@ -396,4 +475,4 @@ def patch_south():
                 'lib/python2.6/site-packages/south/db/__init__.py')
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
     cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
-    subprocess.call(cmd)
+    _call_wrapper(cmd)
