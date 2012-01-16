@@ -64,7 +64,7 @@ class Decision(models.Model):
 
     #Autocompleted fields
     #should use editable=False?
-    excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
+    excerpt = models.CharField(verbose_name=_('Description'), max_length=255, blank=True)
     created_date = models.DateField(null=True, blank=True, editable=False,
         verbose_name=_('Created Date'))
 

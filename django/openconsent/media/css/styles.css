@@ -245,7 +245,7 @@ dt {
 }
 
 .summary-list {
- 	border: 6px solid #D3CDC6;
+ 	border: 2px solid #D3CDC6;
  	-moz-border-radius: 20px;
   	-webkit-border-radius: 20px;
     border-radius: 20px;
@@ -264,7 +264,23 @@ li.summary-item, .summary-header {
 }
 
 .summary-header {
-	border:none;
+	border: 1px solid #D3CDC6;
+}
+
+.summary-header.proposal {
+	background: #FFCC00;
+}
+
+.summary-header.decision {
+	background: #AAD400;	
+}
+
+.summary-header a {
+	color: #000;
+}
+
+.summary-header a.sort {
+	text-decoration: underline;
 }
 
 .summary-item a.iconified {
@@ -512,7 +528,7 @@ background:#aad400;
 }
 
 .decision_feedback .description {
-margin: 0 0 0 6em;
+margin: 0 0 0 2em;
 }
 
 #decision label {
@@ -1020,7 +1036,7 @@ p.error404 {
 		font-size:1.5em;
 		width:100%;
 		border-right:none;
-	}
+	}lass="summary-header
 	
 	#navigation #search_form #search {
 		width:60%;

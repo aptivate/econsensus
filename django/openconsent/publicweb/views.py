@@ -126,10 +126,18 @@ context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
 @login_required        
 def listing(request, status):
     extra_context = context_list[status]
+    extra_context['status'] = status
     extra_context['sort_form'] = SortForm(request.GET)
     status_code = context_codes[status]
     
-    queryset = _filter(_sort(request), status_code)
+    if 'sort' in request.GET:
+        order = str(request.GET['sort'])
+        queryset = _filter(Decision.objects.order_by(order), status_code)
+    else:
+        queryset = _filter(Decision.objects.order_by('id'), status_code)
+        order = 'id'
+    
+    extra_context['sort'] = order
     
     return list_detail.object_list(
         request,
@@ -229,15 +237,6 @@ def view_decision(request, decision_id, template_name="decision_detail.html"):
     return render_to_response(template_name,
         RequestContext(request,
             dict(object=decision, feedback_stats=feedback_stats, feedback_list=feedback_list)))
-
-def _sort(request):
-    sort_form = SortForm(request.GET)
-    if sort_form.is_valid() and sort_form.cleaned_data['sort']:
-        order = str(sort_form.cleaned_data['sort'])
-    else:
-        order = '-id'
-
-    return Decision.objects.order_by(order)
 
 def _filter(queryset, status):    
     return queryset.filter(status=status)

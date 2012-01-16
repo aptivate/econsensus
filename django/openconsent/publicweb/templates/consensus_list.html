@@ -7,17 +7,17 @@
 {% block body_class%}{{ class }}-list{% endblock %}
 
 {% block main_content %}
-	<form id="sort_form" action="{% url list class %}" method="get">
-		{{ sort_form.as_p }}
-		<noscript><div class='input'><input type="submit" value="Submit"/></div></noscript>
-	</form>
-
+	<h2>{{ status }}{% trans " list" %}</h2>
 	<ul class="summary-list">
 		{% if object_list %}
-		<div class="summary-header">
-		{% for column in columns %}
-			<p class="field {{ column }} header">{{ object_list|first|model_name:column }}</p>
-		{% endfor %}
+		<div class="summary-header {{ status }}">
+			{% for column in columns %}
+			{% if column == "feedbackcount" %}
+				<span class="field {{ column }} header">Feedback</span>
+			{% else %}
+				<a href="/list/{{ status }}/?sort={{ column }}" class="field {{ column }} header {% if sort == column %}sort{% endif %}">{{ object_list|first|model_name:column }}</a>
+			{% endif %}
+			{% endfor %}
 		</div>
         {% for object in object_list %}
 	    <li class="summary-item">
