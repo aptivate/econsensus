@@ -88,6 +88,15 @@ def production_sandbox():
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
 
+def production_oos():
+    """ use staging environment on remote host to run tests"""
+    # this is on the same server as the customer facing stage site
+    # so we need project_root to be different ...
+    env.project_dir = env.project + '_oos'
+    env.environment = 'production_oos'
+    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    _local_setup()
+
 
 def production():
     """ use production environment on remote host"""
