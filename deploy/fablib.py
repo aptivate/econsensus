@@ -25,7 +25,6 @@ def _setup_path():
         env.dump_dir        = os.path.join(env.project_root, 'dbdumps')
     if not env.has_key('deploy_root'):
         env.deploy_root     = os.path.join(env.vcs_root, 'deploy')
-    env.tasks_bin = os.path.join(env.deploy_root, 'tasks.py')
     if env.project_type == "django" and not env.has_key('django_dir'):
         env.django_dir      = env.project
     if env.project_type == "django" and not env.has_key('django_root'):
@@ -34,15 +33,16 @@ def _setup_path():
         if not env.has_key('virtualenv_root'):
             env.virtualenv_root = os.path.join(env.django_root, '.ve')
         if not env.has_key('python_bin'):
-            python26 = os.path.join(env.virtualenv_root, 'bin', 'python2.6')
+            python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
             if os.path.exists(python26):
                 print "Using Python 2.6 path"
                 env.python_bin = python26
             else:
                 print "Using generic Python path"                
-                env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python')
+                env.python_bin = os.path.join('/', 'usr', 'bin', 'python')
+    env.tasks_bin = env.python_bin + ' ' + os.path.join(env.deploy_root, 'tasks.py')
     if not env.has_key('settings'):
-        env.settings        = '%(project)s.settings' % env
+        env.settings    = '%(project)s.settings' % env
 
 
 def _get_svn_user_and_pass():
@@ -196,7 +196,7 @@ def remote_test():
     """ run the django tests remotely - staging only """
     require('django_root', 'python_bin', 'test_cmd', provided_by=env.valid_non_prod_envs)
     with cd(env.django_root):
-        sudo(env.python_bin + env.test_cmd)
+        sudo(env.test_cmd)
 
 def version():
     """ return the deployed VCS revision and commit comments"""
@@ -258,7 +258,7 @@ def checkout_or_update(revision=None):
 
 def update_requirements():
     """ update external dependencies on remote host """
-    require('tasks_bin', provided_by=env.valid_envs)
+    require('tasks_bin', 'python_bin', provided_by=env.valid_envs)
     sudo(env.tasks_bin + ' update_ve')
 
 

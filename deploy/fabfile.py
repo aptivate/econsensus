@@ -22,7 +22,6 @@ env.django_dir = os.path.join('django', env.project)
 env.django_apps = ['publicweb', ]
 env.test_cmd = ' manage.py test -v0 ' + ' '.join(env.django_apps)
 
-
 # put "django" here if you want django specific stuff to run
 # put "plain" here for a basic apache app
 env.project_type = "django"
