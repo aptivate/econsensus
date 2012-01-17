@@ -37,7 +37,7 @@ jQuery(function ($) {
 			parameters,
 			function (data) {
 				// Post successful, now fetch stored value and add it as a snippet
-				replaceWithRemote("{% url view_decision_snippet object.id %}", "form.edit_decision_form");
+				replaceWithRemote("{% url publicweb_decision_view_snippet object.id %}", "form.edit_decision_form");
 			}
 		);
 		e.preventDefault();

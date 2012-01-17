@@ -5,14 +5,14 @@ from publicweb.tests.decision_test_case import DecisionTestCase
 class ViewDecisionTest(DecisionTestCase):
     def test_view_decision(self):
         decision = self.create_and_return_decision()
-        response = self.client.get(reverse('view_decision', args=[decision.id]))
+        response = self.client.get(reverse('publicweb_decision_view', args=[decision.id]))
 
         self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
         self.assertContains(response, u'<rect width="9"')
 
     def test_view_decision_with_feedback(self):
         decision = self.create_and_return_example_decision_with_feedback()
-        response = self.client.get(reverse('view_decision', args=[decision.id]))
+        response = self.client.get(reverse('publicweb_decision_view', args=[decision.id]))
 
         self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
         self.assertContains(response, u'<rect width="9"')
@@ -21,7 +21,7 @@ class ViewDecisionTest(DecisionTestCase):
 
     def test_load_decision_snippet(self):
         decision = self.create_and_return_decision()
-        response = self.client.get(reverse('view_decision_snippet', args=[decision.id]))
+        response = self.client.get(reverse('publicweb_decision_view_snippet', args=[decision.id]))
 
         self.assertContains(response, u'<a href="/view/%s/edit/">Edit</a>' % decision.id)
         self.assertTrue(response.content.strip().startswith('<div id="decision">'))

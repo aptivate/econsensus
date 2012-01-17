@@ -185,7 +185,7 @@ def inline_modify_decision(request, decision_id, template_name="decision_detail.
 
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse("view_decision", args=[decision_id]))
+            return HttpResponseRedirect(reverse("publicweb_decision_view", args=[decision_id]))
 
         else:
             decision_form = DecisionForm(data=request.POST, 
@@ -193,21 +193,13 @@ def inline_modify_decision(request, decision_id, template_name="decision_detail.
             if decision_form.is_valid():
                 decision = decision_form.save(commit=False)
                 decision.save(request.user)
-                return HttpResponseRedirect(reverse("view_decision", args=[decision_id]))
+                return HttpResponseRedirect(reverse("publicweb_decision_view", args=[decision_id]))
     else:
         decision_form = DecisionForm(instance=decision)
 
     return render_to_response(template_name,
         RequestContext(request,
             dict(object=decision, decision_form=decision_form, show_form=True)))
-
-@login_required
-def view_decision(request, decision_id, template_name="decision_detail.html"):
-    decision = get_object_or_404(Decision, id = decision_id)
-    
-    return render_to_response(template_name,
-                              {'object':decision},
-                              context_instance=RequestContext(request))
 
 def _filter(queryset, status):    
     return queryset.filter(status=status)
