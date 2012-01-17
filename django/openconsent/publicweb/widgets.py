@@ -7,7 +7,7 @@ class JQueryUIDateWidget(forms.DateInput):
     class Media:
         js = ('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js',
               'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js',
-              '/site_media//js/edit.js',
+              settings.MEDIA_URL + 'js/edit.js',
         )
 
         css = {

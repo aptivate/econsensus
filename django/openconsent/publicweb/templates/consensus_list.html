@@ -15,7 +15,7 @@
 			{% if column == "feedbackcount" %}
 				<span class="field {{ column }} header">Feedback</span>
 			{% else %}
-				<a href="/list/{{ status }}/?sort={{ column }}" class="field {{ column }} header {% if sort == column %}sort{% endif %}">{{ object_list|first|model_name:column }}</a>
+				<a href="{{ request.path }}?sort={{ column }}" class="field {{ column }} header {% if sort == column %}sort{% endif %}">{{ object_list|first|model_name:column }}</a>
 			{% endif %}
 			{% endfor %}
 		</div>
