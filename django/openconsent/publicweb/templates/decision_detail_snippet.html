@@ -42,12 +42,12 @@
 {% endif %}
 		</ul>
 		<p class="decision_stats">
-			<span class="feedback_all">{{ feedback_stats.all }}</span>
+			<span class="feedback_all">{{ object.get_feedback_statistics.all }}</span>
 {% include "feedback_infographic.svg" %}
-			<span class="question"><em>{{ feedback_stats.question }}</em> {% trans "questions" %}</span>
-			<span class="danger"><em>{{ feedback_stats.danger }}</em> {% trans "danger" %}</span>
-			<span class="concern"><em>{{ feedback_stats.concern }}</em> {% trans "concerns" %}</span>
-			<span class="consensus"><em>{{ feedback_stats.consensus }}</em> {% trans "consensus" %}</span>
+			<span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span>
+			<span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span>
+			<span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span>
+			<span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span>
 		</p>
 	</div>
 </div>

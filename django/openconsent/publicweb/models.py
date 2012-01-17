@@ -187,10 +187,10 @@ class Feedback(models.Model):
     DELIGHTED_STATUS = 5
 
     RATING_CHOICES = ( 
-                  (QUESTION_STATUS, _('Question')),
-                  (DANGER_STATUS, _('Danger')),
-                  (SIGNIFICANT_CONCERNS_STATUS, _('Concerns')),
-                  (CONSENT_STATUS, _('Consent')),
+                  (QUESTION_STATUS, _('question')),
+                  (DANGER_STATUS, _('danger')),
+                  (SIGNIFICANT_CONCERNS_STATUS, _('concerns')),
+                  (CONSENT_STATUS, _('consent')),
                   )
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)    
@@ -202,4 +202,4 @@ class Feedback(models.Model):
                                  blank=True )
 
     def rating_text(self):
-        return self.rating[1]
+        return self.RATING_CHOICES[self.rating][1]

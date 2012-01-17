@@ -66,14 +66,16 @@ jQuery(function ($) {
 
 <h2 class="page_title">{% trans "Feedback" %}</h2>
 <div class="decision_feedback">
-{% if feedback_list|length %}
-	<ol class="feedback_list">{% for feedback in feedback_list %}
+{% if object.feedback_set.all %}
+	<ol class="feedback_list">
+{% for feedback in object.feedback_set.all %}
 		<li>
-			<div class="decision_type {{ feedback.type }}">{{ feedback.type }}</div>
+			<div class="decision_type {{ feedback.rating_text }}">{{ feedback.rating_text|capfirst }}</div>
 			<div class="description">
 			{{ feedback.description|urlize }}
 			</div>
-		</li>{% endfor %}
+		</li>
+{% endfor %}
 	</ol>
 {% else %}
 <p>{% trans "No feedback yet." %}

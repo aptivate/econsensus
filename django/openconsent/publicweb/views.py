@@ -204,40 +204,10 @@ def inline_modify_decision(request, decision_id, template_name="decision_detail.
 @login_required
 def view_decision(request, decision_id, template_name="decision_detail.html"):
     decision = get_object_or_404(Decision, id = decision_id)
-    feedback_stats = {'all': 0,
-                      'question': 0,
-                      'danger': 0,
-                      'concern': 0,
-                      'test_var': 2,
-                      'consensus': 0
-                     }
-    feedback_list = []
-
-    # Bookkeeping .. moved to model .. -pcb
-    for feedback in decision.feedback_set.all():
-        item = {
-            'description': feedback.description
-        }
-        if feedback.rating == Feedback.QUESTION_STATUS:
-            feedback_stats['question'] += 1
-            item['type'] = 'question'
-        elif feedback.rating == Feedback.DANGER_STATUS:
-            feedback_stats['danger'] += 1
-            item['type'] = 'danger'
-        elif feedback.rating == Feedback.SIGNIFICANT_CONCERNS_STATUS:
-            feedback_stats['concern'] += 1
-            item['type'] = 'concern'
-        else:
-            feedback_stats['consensus'] += 1
-            item['type'] = 'consensus'
-        feedback_stats['all'] += 1
-        feedback_list.append(item)
-
-    statistics = decision.get_feedback_statistics()
     
     return render_to_response(template_name,
-        RequestContext(request,
-            dict(object=decision, feedback_stats=statistics, feedback_list=feedback_list)))
+                              {'object':decision},
+                              context_instance=RequestContext(request))
 
 def _filter(queryset, status):    
     return queryset.filter(status=status)

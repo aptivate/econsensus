@@ -53,7 +53,7 @@ class ModelTest(DecisionTestCase):
         self.instance_attribute_has_value(decision, "feedbackcount", 1)       
         
     def test_feedback_rating_has_values(self):
-        expected = ('Question', 'Danger', 'Concerns', 'Consent')
+        expected = ('question', 'danger', 'concerns', 'consent')
         names = self.get_column(Feedback.RATING_CHOICES, 1)
         actual = []
         for name in names:
