@@ -142,7 +142,7 @@ def listing(request, status):
     return list_detail.object_list(
         request,
         queryset,
-        template_name = 'consensus_list.html',
+        template_name = 'item_list.html',
         extra_context = extra_context
         )
 
