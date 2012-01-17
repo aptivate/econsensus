@@ -120,6 +120,29 @@ class Decision(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('publicweb_decision_modify', (), {'decision_id':self.id})
+    
+    def get_feedback_statistics(self):
+        statistics = {'all': 0,
+                      'question': 0,
+                      'danger': 0,
+                      'concern': 0,
+                      'consensus': 0
+                     }
+        
+        #is there a better way of doing this,
+        #using object/filter/count? - pcb
+        for feedback in self.feedback_set.all():
+            if feedback.rating == Feedback.QUESTION_STATUS:
+                statistics['question'] += 1
+            elif feedback.rating == Feedback.DANGER_STATUS:
+                statistics['danger'] += 1
+            elif feedback.rating == Feedback.SIGNIFICANT_CONCERNS_STATUS:
+                statistics['concern'] += 1
+            else:
+                statistics['consensus'] += 1
+            statistics['all'] += 1
+        
+        return statistics
 
     def save(self, author, *args, **kwargs):
         self.excerpt = self._get_excerpt()        
@@ -177,3 +200,6 @@ class Feedback(models.Model):
                                  verbose_name=_('Rating'),
                                  null=True, 
                                  blank=True )
+
+    def rating_text(self):
+        return self.rating[1]

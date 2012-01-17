@@ -213,7 +213,7 @@ def view_decision(request, decision_id, template_name="decision_detail.html"):
                      }
     feedback_list = []
 
-    # Bookkeeping
+    # Bookkeeping .. moved to model .. -pcb
     for feedback in decision.feedback_set.all():
         item = {
             'description': feedback.description
@@ -233,10 +233,11 @@ def view_decision(request, decision_id, template_name="decision_detail.html"):
         feedback_stats['all'] += 1
         feedback_list.append(item)
 
-
+    statistics = decision.get_feedback_statistics()
+    
     return render_to_response(template_name,
         RequestContext(request,
-            dict(object=decision, feedback_stats=feedback_stats, feedback_list=feedback_list)))
+            dict(object=decision, feedback_stats=statistics, feedback_list=feedback_list)))
 
 def _filter(queryset, status):    
     return queryset.filter(status=status)
