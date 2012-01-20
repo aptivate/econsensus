@@ -9,9 +9,9 @@ register = template.Library()
 
 @register.filter
 @stringfilter
-def decision_field(obj, attr):
+def decision_field(id, attr):
     try:
-        decision = Decision.objects.get(excerpt=obj)
+        decision = Decision.objects.get(id=id)
         value = getattr(decision, attr)
         if callable(value):
             return value()

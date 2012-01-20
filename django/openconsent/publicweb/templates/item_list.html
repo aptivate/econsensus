@@ -27,13 +27,13 @@
 		    	{% if column == 'id' %}
 				<dt>ID</dt>
 				<dd class="iconified field {{column}}">
-					{{ object|decision_field:column }}
+					{{ object.id|decision_field:column }}
 				</dd>
 				{% else %}
-				{% if object|decision_field:column %}
+				{% if object.id|decision_field:column %}
 				<dt>{{ column }}</dt>
 				<dd class="field {{column}}">
-					{{ object|decision_field:column }}
+					{{ object.id|decision_field:column }}
 				</dd>
 	        	{% else %}
 				<dt>{{ column }}</dt>
