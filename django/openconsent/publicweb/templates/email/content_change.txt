@@ -1,10 +1,8 @@
 Hello from the {{ site }} OpenConsent server!
 
-This is to let you know that the following item:
+This is to let you know that the following item has been changed.
 
 "{{ name|safe }}"
-
-has been changed.
 
 To interact with it, click here: {{ link }}
 
