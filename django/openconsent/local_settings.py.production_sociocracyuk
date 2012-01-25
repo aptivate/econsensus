@@ -14,11 +14,14 @@ ADMIN_MEDIA_PREFIX = '/sociocracyuk/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+#Note: MySQL has a 16 char limit on db name and user name:
+#http://dev.mysql.com/doc/refman/4.1/en/user-names.html
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'openconsent_sociocracyuk',                      # Or path to database file if using sqlite3.
-        'USER': 'openconsent_sociocracyuk',                      # Not used with sqlite3.
+        'NAME': 'openconsent_socuk',                      # Or path to database file if using sqlite3.
+        'USER': 'openconsent_socuk',                      # Not used with sqlite3.
         'OPTIONS' : {"init_command": "SET storage_engine=INNODB"},
         'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
