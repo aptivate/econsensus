@@ -1,10 +1,8 @@
 Hello from the {{ site }} OpenConsent server!
 
-This is to let you know that the following item:
+This is to let you know that the following item has changed status from "{{ old }}" to "{{ new }}"
 
 "{{ name|safe }}"
-
- has changed status from "{{ old }}" to "{{ new }}"
 
 To interact with it, click here: {{ link }}
 
