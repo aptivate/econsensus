@@ -7,8 +7,7 @@ class EditDecisionTest(DecisionTestCase):
     def test_edit_description_form_displays_title(self):
         decision = self.create_and_return_decision()
         response = self.load_add_decision_and_return_response(decision.id)
-
-        self.assertContains(response, u"<h2 class=\"page_title\">View and Edit: <strong class=\"not_translated\">" + decision.excerpt)
+        self.assertContains(response, u"Update Proposal #%s" % decision.id)
 
     def load_add_decision_and_return_response(self, idd):
-        return self.client.get(reverse('publicweb_decision_modify', args=[idd]))
+        return self.client.get(reverse('publicweb_decision_update', args=[idd]))

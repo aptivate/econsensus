@@ -64,7 +64,7 @@ class Decision(models.Model):
 
     #Autocompleted fields
     #should use editable=False?
-    excerpt = models.CharField(verbose_name=_('Description'), max_length=255, blank=True)
+    excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
     created_date = models.DateField(null=True, blank=True, editable=False,
         verbose_name=_('Created Date'))
 
@@ -119,7 +119,7 @@ class Decision(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_decision_modify', (), {'decision_id':self.id})
+        return ('publicweb_decision_detail', (), {'object_id':self.id})
     
     def get_feedback_statistics(self):
         statistics = {'all': 0,
@@ -144,9 +144,8 @@ class Decision(models.Model):
         
         return statistics
 
-    def save(self, author, *args, **kwargs):
+    def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()        
-        self.author = author
 
         if not self.id:
             self.created_date = datetime.date.today()        
@@ -200,6 +199,14 @@ class Feedback(models.Model):
                                  verbose_name=_('Rating'),
                                  null=True, 
                                  blank=True )
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('publicweb_feedback_detail', (), {'object_id':self.id})
+
+    @models.permalink
+    def get_parent_url(self):
+        return ('publicweb_item_detail', (), {'object_id': self.decision.id})
 
     def rating_text(self):
         return self.RATING_CHOICES[self.rating][1]

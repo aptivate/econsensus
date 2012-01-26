@@ -38,6 +38,7 @@ class DecisionTestCase(OpenConsentTestCase):
     def create_and_return_decision(self, description='Decision Time',
                                    status=Decision.PROPOSAL_STATUS):
         decision = Decision(description=description, status=status)
+        decision.author = self.user
         decision.save(self.user)
         
         return decision

@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<div class="formset_item feedback feedback{{ form.instance.rating }}">
+	<div class="form_row feedback_summary">
+		<div class="form_item rating">
+			{{ form.rating.errors }}
+			<label for="id_rating">{% trans "Rating" %}</label>
+			{{ form.rating }}
+    	</div>
+    	<div class="form_item description">
+			{{ form.description.errors }}
+			{{ form.description }}
+    	</div>
+    </div>
+</div>

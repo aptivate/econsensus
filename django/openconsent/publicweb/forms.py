@@ -4,7 +4,6 @@ from django import forms
 from models import Decision, Feedback
 
 from django.utils.translation import ugettext_lazy as _
-from django.forms.models import inlineformset_factory
 from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
@@ -12,24 +11,7 @@ from widgets import JQueryUIDateWidget
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-
-FeedbackFormSet = inlineformset_factory(Decision, Feedback,  #pylint: disable-msg=C0103
-                                       fields=('description','resolved','rating'),
-                                       form=FeedbackForm)
-
-class ProposalForm(forms.ModelForm):
-    
-    watch = forms.BooleanField(required=False, initial=True)
-       
-    class Meta:
-        model = Decision
-        exclude = ('decided_date','archived_date')        
-        widgets = {
-                   'deadline': JQueryUIDateWidget,
-                   'effective_date': JQueryUIDateWidget,
-                   'review_date': JQueryUIDateWidget,
-                   'expiry_date': JQueryUIDateWidget
-                   }
+        exclude = ("decision",)
 
 class DecisionForm(forms.ModelForm):
     
@@ -37,23 +19,8 @@ class DecisionForm(forms.ModelForm):
        
     class Meta:
         model = Decision
-        exclude = ('deadline','archived_date')
         widgets = {
                    'decided_date': JQueryUIDateWidget,
-                   'effective_date': JQueryUIDateWidget,
-                   'review_date': JQueryUIDateWidget,
-                   'expiry_date': JQueryUIDateWidget
-                   }
-
-class ArchivedForm(forms.ModelForm):
-    
-    watch = forms.BooleanField(required=False, initial=True)
-       
-    class Meta:
-        model = Decision
-        exclude = ('deadline','decided_date')        
-        widgets = {
-                   'archived_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
                    'expiry_date': JQueryUIDateWidget

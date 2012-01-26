@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+Feedback Detail
+{% endblock %}
+
+{% block heading %}
+Feedback
+{% endblock %}
+
+{% block main_content %}
+<div class="decision_feedback">
+	<ol class="feedback_list">
+	{% include "feedback_detail_snippet.html" %}
+	</ol>
+</div>
+{% endblock %}

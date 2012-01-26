@@ -67,23 +67,13 @@ jQuery(function ($) {
 {% if object.feedback_set.all %}
 	<ol class="feedback_list">
 {% for feedback in object.feedback_set.all %}
-		<li>
-			<div class="decision_type {{ feedback.rating_text }}">
-				{{ feedback.rating_text|capfirst }}
-			</div>
-			<div class="description">
-				{{ feedback.description|urlize }}
-			</div>
-			<div class="edit">
-				<a href='{% url publicweb_feedback_update feedback.id %}'>{% trans "Edit" %}</a>				
-			</div>
-		</li>
+{% include "feedback_detail_snippet.html" with object=feedback %}
 {% endfor %}
 	</ol>
 {% else %}
 <p>{% trans "No feedback yet." %}</p>
 {% endif %}
-<a href="{% include "feedback_form_page.html" with decision=object.id %}>Click to add feedback</a>
+<a href='{% url publicweb_feedback_create object.id %}'>Click to add feedback</a>
 </div>
 
 {% endblock %}

@@ -21,7 +21,7 @@
 		</div>
         {% for object in object_list %}
 	    <li class="summary-item">
-	    <a class="urloverlay" href="{{ object.get_absolute_url }}"></a>
+	    <a class="urloverlay" href="{% url publicweb_item_detail object.id %}"></a>
 	    	<dl>
 		    	{% for column in columns %}
 		    	{% if column == 'id' %}

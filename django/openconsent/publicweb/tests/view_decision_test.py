@@ -1,23 +1,24 @@
 from django.core.urlresolvers import reverse
 from publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.models import Feedback
 
 # TODO: Check that POSTs save correct data and redirects work
 class ViewDecisionTest(DecisionTestCase):
     def test_view_decision(self):
         decision = self.create_and_return_decision()
-        response = self.client.get(reverse('publicweb_decision_view', args=[decision.id]))
-
-        self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
+        response = self.client.get(reverse('publicweb_decision_detail', args=[decision.id]))
+        self.assertContains(response, u"Proposal")
+        self.assertContains(response, decision.description)
         self.assertContains(response, u'<rect width="9"')
 
-    def test_view_decision_with_feedback(self):
-        decision = self.create_and_return_example_decision_with_feedback()
-        response = self.client.get(reverse('publicweb_decision_view', args=[decision.id]))
-
-        self.assertContains(response, u"Edit proposal: <span>%s</span>" % decision.excerpt)
-        self.assertContains(response, u'<rect width="9"')
-        self.assertContains(response, u'<span class="feedback_all">1</span>')
-        self.assertContains(response, u'<ol class="feedback_list">')
+    def test_view_feedback(self):
+        decision = self.create_and_return_decision()
+        feedback = Feedback(description='test feedback',
+                          decision=decision)
+        feedback.save()
+        response = self.client.get(reverse('publicweb_feedback_detail', args=[feedback.id]))
+        self.assertContains(response, u"Feedback")
+        self.assertContains(response, feedback.description)
 
     def test_load_decision_snippet(self):
         decision = self.create_and_return_decision()

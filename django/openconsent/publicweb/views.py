@@ -10,52 +10,32 @@ from django.utils.translation import ugettext_lazy as _
 
 import unicodecsv
 
-from models import Decision, Feedback
-from forms import ProposalForm, DecisionForm, ArchivedForm, FeedbackFormSet
-from forms import SortForm
+from models import Decision
+from publicweb.forms import DecisionForm, FeedbackForm, SortForm
 
-def get_form(request, decision):
-    if request.method == 'POST':
-        data = request.POST
-    else:
-        data = None
-        
-    if decision.status == Decision.ARCHIVED_STATUS:
-        return ArchivedForm(data=data, instance=decision)
-    elif decision.status == Decision.DECISION_STATUS:
-        return DecisionForm(data=data, instance=decision)
-    else:
-        return ProposalForm(data=data, instance=decision)
-        
-def process_post_and_redirect(request, decision):
+#TODO: Remove references to feedback...
+def process_decision_post_and_redirect(request, decision, template_name):
     if request.POST.get('submit', None) == "Cancel":
         return_page = unicode(decision.status_text())            
-        return HttpResponseRedirect(reverse(listing, args=[return_page]))
+        return HttpResponseRedirect(reverse(object_list_by_status, args=[return_page]))
     else:
-        decision_form = get_form(request, decision)
-            
-        feedback_formset = FeedbackFormSet(data=request.POST, 
-                                           instance=decision)
-
-        if decision_form.is_valid():
-            decision = decision_form.save(commit=False)
-            feedback_formset = FeedbackFormSet(request.POST, 
-                                               instance=decision)
-            if feedback_formset.is_valid():
-                decision.save(request.user)
-                if decision_form.cleaned_data['watch']:
-                    decision.add_watcher(request.user)
-                else:
-                    decision.remove_watcher(request.user)
-                feedback_formset.save()
-                
-                return_page = unicode(decision.status_text())
-                return HttpResponseRedirect(reverse(listing, args=[return_page]))
+        form = DecisionForm(request.POST, instance=decision)
         
-        data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+        if form.is_valid():
+            decision = form.save(commit=False)
+            decision.author = request.user
+            decision.save()
+            if form.cleaned_data['watch']:
+                decision.add_watcher(request.user)
+            else:
+                decision.remove_watcher(request.user)
+                
+            return_page = unicode(decision.status_text())
+            return HttpResponseRedirect(reverse(object_list_by_status, args=[return_page]))
+        
+        data = dict(form=form)
         context = RequestContext(request, data)
-        return render_to_response('decision_edit.html', context)
-
+        return render_to_response(template_name, context)
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -124,7 +104,7 @@ context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
              }
 
 @login_required        
-def listing(request, status):
+def object_list_by_status(request, status):
     extra_context = context_list[status]
     extra_context['status'] = status
     extra_context['sort_form'] = SortForm(request.GET)
@@ -132,11 +112,9 @@ def listing(request, status):
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
-        queryset = _filter(Decision.objects.order_by(order), status_code)
     else:
-        queryset = _filter(Decision.objects.order_by('id'), status_code)
         order = 'id'
-    
+    queryset = _filter(Decision.objects.order_by(order), status_code)    
     extra_context['sort'] = order
     
     return list_detail.object_list(
@@ -147,34 +125,54 @@ def listing(request, status):
         )
 
 @login_required
+#redundant code....?
 def modify(request, decision_id):
 
     decision = get_object_or_404(Decision, id = decision_id)
     
     if request.method == "POST":
-        return process_post_and_redirect(request, decision)
+        return process_decision_post_and_redirect(request, decision)
     else:
-        feedback_formset = FeedbackFormSet(instance=decision)
-        decision_form = get_form(request, decision)
+        feedback_form = FeedbackForm()
+        decision_form = DecisionForm(request.POST, instance=decision)
         
-    data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+    data = dict(decision_form=decision_form, feedback_form=feedback_form)
     context = RequestContext(request, data)
     return render_to_response('decision_edit.html', context)
 
+def _get_template(status_id):
+    if status_id == Decision.ARCHIVED_STATUS:
+        return('archived_form_page.html')
+    elif status_id == Decision.DECISION_STATUS:
+        return('decision_form_page.html')
+    else:
+        return('proposal_form_page.html')
+
 @login_required
-def new(request, status_id):
+def create_decision(request, status_id):
     
     decision = Decision(status=int(status_id))
-        
+    template_name = _get_template(status_id)
+    
     if request.method == "POST":
-        return process_post_and_redirect(request, decision)
-    else:
-        feedback_formset = FeedbackFormSet(instance=decision)
-        decision_form = get_form(request, decision)
-        
-    data = dict(decision_form=decision_form, feedback_formset=feedback_formset)
+        return process_decision_post_and_redirect(request, decision, template_name)
+
+    form = DecisionForm(instance=decision)    
+    data = dict(form=form)
     context = RequestContext(request, data)
-    return render_to_response('decision_edit.html', context)
+    return render_to_response(template_name, context)
+
+def update_decision(request, object_id):
+    decision = get_object_or_404(Decision, id = object_id)
+    template_name = _get_template(decision.status)
+
+    if request.method == "POST":
+        return process_decision_post_and_redirect(request, decision, template_name)
+
+    form = DecisionForm(instance=decision)    
+    data = dict(form=form)
+    context = RequestContext(request, data)
+    return render_to_response(template_name, context)
 
 @login_required
 def inline_modify_decision(request, decision_id, template_name="decision_detail.html"):
@@ -185,21 +183,75 @@ def inline_modify_decision(request, decision_id, template_name="decision_detail.
 
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse("publicweb_decision_view", args=[decision_id]))
+            return HttpResponseRedirect(reverse("publicweb_decision_detail", args=[decision_id]))
 
         else:
             decision_form = DecisionForm(data=request.POST, 
                                          instance=decision)
             if decision_form.is_valid():
                 decision = decision_form.save(commit=False)
-                decision.save(request.user)
-                return HttpResponseRedirect(reverse("publicweb_decision_view", args=[decision_id]))
+                decision.author = request.user
+                decision.save()
+                return HttpResponseRedirect(reverse("publicweb_decision_detail", args=[decision_id]))
     else:
         decision_form = DecisionForm(instance=decision)
 
     return render_to_response(template_name,
         RequestContext(request,
             dict(object=decision, decision_form=decision_form, show_form=True)))
+
+def create_feedback(request, model, object_id, template_name):
+
+    decision = get_object_or_404(model, id = object_id)
+            
+    if request.method == "POST":
+        if request.POST.get('submit', None) == "Cancel":
+            return_page = unicode(decision.id)            
+            return HttpResponseRedirect(reverse('publicweb_item_detail', args=[return_page]))
+        else:
+            form = FeedbackForm(request.POST)
+            if form.is_valid():
+                feedback = form.save(commit=False)
+                feedback.decision = decision
+                feedback.save()
+                return_page = unicode(decision.id)
+                return HttpResponseRedirect(reverse('publicweb_item_detail', args=[return_page]))
+        
+        data = dict(form=form)
+        context = RequestContext(request, data)
+        return render_to_response(template_name, context)
+
+    else:
+        form = FeedbackForm()
+        
+    data = dict(form=form)
+    context = RequestContext(request, data)
+    return render_to_response(template_name, context)
+
+def update_feedback(request, model, object_id, template_name):
+
+    feedback = get_object_or_404(model, id = object_id)
+
+    if request.method == "POST":
+        if request.POST.get('submit', None) == "Cancel":
+            return HttpResponseRedirect(feedback.get_parent_url())
+        else:
+            form = FeedbackForm(request.POST, instance=feedback)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(feedback.get_parent_url())
+        
+        data = dict(form=form)
+        context = RequestContext(request, data)
+        return render_to_response(template_name, context)
+
+    else:
+        form = FeedbackForm(instance=feedback)
+        
+    data = dict(form=form)
+    context = RequestContext(request, data)
+    return render_to_response(template_name, context)
+
 
 def _filter(queryset, status):    
     return queryset.filter(status=status)

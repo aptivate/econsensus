@@ -56,7 +56,8 @@ class EmailTest(DecisionTestCase):
         All plaintext emails should be marked 'safe' in the Django template.
         """
         decision = Decision(description='&', status=0)
-        decision.save(self.user)
+        decision.author = self.user
+        decision.save()
 
         mymail = OpenConsentEmailMessage('new', decision)
         
@@ -84,7 +85,8 @@ class EmailTest(DecisionTestCase):
         chris = User.objects.create_user("Chris", "chris@example.com", password='password')
         
         decision = Decision(description='Test', status=0)
-        decision.save(andy)
+        decision.author = andy
+        decision.save()
         
         #billy decides he wants to watch...
         decision.watchers = [billy]

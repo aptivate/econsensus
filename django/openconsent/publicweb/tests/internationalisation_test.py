@@ -15,7 +15,7 @@ class InternationalisationTest(OpenConsentTestCase):
         self.check_all_text_translated('list', args=['decision'])
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('publicweb_decision_new', args=[0])
+        self.check_all_text_translated('publicweb_decision_create', args=[0])
 
     def check_all_text_translated(self, view, args):
         old_lang = translation.get_language()
