@@ -341,7 +341,7 @@ li.summary-item {
 }
 
 .field.feedbackcount {
-	width: 8em;
+	width: 5em;
 	float: right;
 	text-align: center;
 }
@@ -353,7 +353,7 @@ li.summary-item {
 }
 
 .field.watchercount {
-    width: 120px;
+    width: 5em;
     float: right;
     text-align: center;
 }
