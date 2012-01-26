@@ -337,18 +337,25 @@ li.summary-item {
 }
 
 .field.excerpt {
-		width:65%;
+	width:60%;
 }
 
 .field.feedbackcount {
 	width: 8em;
 	float: right;
+	text-align: center;
 }
 
 .field.decided_date {
 	width: 8em;
 	float: right;
 	
+}
+
+.field.watchercount {
+    width: 120px;
+    float: right;
+    text-align: center;
 }
 
 .field.review_date {
@@ -370,6 +377,7 @@ li.summary-item {
 .field.deadline {
 	width: 8em;
 	float: right;	
+	text-align: center;
 }
 
 /* Proposal list view */
@@ -1036,7 +1044,7 @@ p.error404 {
 		font-size:1.5em;
 		width:100%;
 		border-right:none;
-	}lass="summary-header
+	}
 	
 	#navigation #search_form #search {
 		width:60%;

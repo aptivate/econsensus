@@ -81,7 +81,7 @@ def export_csv(request):
 
 proposal_context = {'page_title' : _("Current Active Proposals"), # pylint: disable=E1102
                      'class' : 'proposal',
-                     'columns': ('id', 'excerpt', 'feedbackcount', 'deadline')}
+                     'columns': ('id', 'excerpt', 'feedbackcount', 'watchercount', 'deadline')}
 
 decision_context = {'page_title' : _("Decisions Made"), # pylint: disable=E1102
                      'class' : 'decision',
