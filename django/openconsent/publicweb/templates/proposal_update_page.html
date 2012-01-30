@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% if form.instance.excerpt %}
+	{{ form.instance.excerpt|safe }}
+{% else %}
+	{% trans "Create Proposal" %}
+{% endif %}{% endblock %}
+
+{% block body_class%}decision-view{% endblock %}
+
+{% block head_content %}
+{{ form.media }}
+{% endblock %}
+
+{% block heading %}
+{% if form.instance.id %}{% trans "Update Proposal"%} #{{ form.instance.id }}
+{% else %}{% trans "Create Proposal" %}
+{% endif %}
+{% endblock %}
+
+{% block main_content %}
+	<form id="decision_add" action="" method="post">{% csrf_token %}
+		{% include 'proposal_form_snippet.html' %}
+		<div class="decision_controls">
+			<div class="form_item watch">
+		        {{ form.watch.errors }}
+		        <label for="id_watch">{% trans "Watch" %}?</label>
+		        {{ form.watch }}
+		    </div>		
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
+		</div>
+	</form>
+{% endblock %}

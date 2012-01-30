@@ -82,7 +82,7 @@ class Decision(models.Model):
 
     def watchercount(self):
         return self.watchers.count()
-	
+
     watchercount.short_description = _("Watchers")
 
     def status_text(self):

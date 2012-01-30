@@ -14,7 +14,7 @@ from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm, SortForm
 
 #TODO: Remove references to feedback...
-def process_decision_post_and_redirect(request, decision, template_name):
+def process_post_and_redirect(request, decision, template_name):
     if request.POST.get('submit', None) == "Cancel":
         return_page = unicode(decision.status_text())            
         return HttpResponseRedirect(reverse(object_list_by_status, args=[return_page]))
@@ -125,80 +125,28 @@ def object_list_by_status(request, status):
         )
 
 @login_required
-#redundant code....?
-def modify(request, decision_id):
-
-    decision = get_object_or_404(Decision, id = decision_id)
-    
-    if request.method == "POST":
-        return process_decision_post_and_redirect(request, decision)
-    else:
-        feedback_form = FeedbackForm()
-        decision_form = DecisionForm(request.POST, instance=decision)
-        
-    data = dict(decision_form=decision_form, feedback_form=feedback_form)
-    context = RequestContext(request, data)
-    return render_to_response('decision_edit.html', context)
-
-def _get_template(status_id):
-    if status_id == Decision.ARCHIVED_STATUS:
-        return('archived_form_page.html')
-    elif status_id == Decision.DECISION_STATUS:
-        return('decision_form_page.html')
-    else:
-        return('proposal_form_page.html')
-
-@login_required
-def create_decision(request, status_id):
+def create_decision(request, status_id, template_name):
     
     decision = Decision(status=int(status_id))
-    template_name = _get_template(status_id)
     
     if request.method == "POST":
-        return process_decision_post_and_redirect(request, decision, template_name)
+        return process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
     data = dict(form=form)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
-def update_decision(request, object_id):
+def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
-    template_name = _get_template(decision.status)
 
     if request.method == "POST":
-        return process_decision_post_and_redirect(request, decision, template_name)
+        return process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
     data = dict(form=form)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
-
-@login_required
-def inline_modify_decision(request, decision_id, template_name="decision_detail.html"):
-    if decision_id is None:
-        decision = None
-    else:
-        decision = get_object_or_404(Decision, id = decision_id)
-
-    if request.method == "POST":
-        if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(reverse("publicweb_decision_detail", args=[decision_id]))
-
-        else:
-            decision_form = DecisionForm(data=request.POST, 
-                                         instance=decision)
-            if decision_form.is_valid():
-                decision = decision_form.save(commit=False)
-                decision.author = request.user
-                decision.save()
-                return HttpResponseRedirect(reverse("publicweb_decision_detail", args=[decision_id]))
-    else:
-        decision_form = DecisionForm(instance=decision)
-
-    return render_to_response(template_name,
-        RequestContext(request,
-            dict(object=decision, decision_form=decision_form, show_form=True)))
 
 def create_feedback(request, model, object_id, template_name):
 

@@ -27,23 +27,23 @@ class ViewTest(DecisionTestCase):
         self.assertDictContainsSubset(dictionary, response.context, 'warning will robinson!')
 
     def test_expected_context_keys(self):
-        url = reverse('list', args=['proposal'])
+        url = reverse('publicweb_item_list', args=['proposal'])
         for key in self.expected_proposal_key_tuple:
             self.assert_context_has_key(key, url)
-        url = reverse('list', args=['decision'])
+        url = reverse('publicweb_item_list', args=['decision'])
         for key in self.expected_consensus_key_tuple:
             self.assert_context_has_key(key, url)
-        url = reverse('list', args=['archived'])
+        url = reverse('publicweb_item_list', args=['archived'])
         for key in self.expected_archived_key_tuple:
             self.assert_context_has_key(key, url)
         
     def test_expected_context_dict(self):
-        url = reverse('list', args=['proposal'])        
+        url = reverse('publicweb_item_list', args=['proposal'])        
         for dictionary in self.expected_proposal_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
-        url = reverse('list', args=['decision'])        
+        url = reverse('publicweb_item_list', args=['decision'])        
         for dictionary in self.expected_consensus_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
-        url = reverse('list', args=['archived'])        
+        url = reverse('publicweb_item_list', args=['archived'])        
         for dictionary in self.expected_archived_dict_tuple:
             self.assert_context_has_dict(dictionary, url)                                

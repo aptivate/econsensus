@@ -12,7 +12,7 @@ class DecisionListTest(DecisionTestCase):
             decision.save(self.user)
             id_list.append(decision.id)
             
-        response = self.client.get(reverse('list', args=['proposal']), {'sort':'id'})
+        response = self.client.get(reverse('publicweb_item_list', args=['proposal']), {'sort':'id'})
                 
         object_list = response.context['object_list']    
                 
@@ -27,7 +27,7 @@ class DecisionListTest(DecisionTestCase):
             decision.save(self.user)
             id_list.append(decision.id)
             
-        response = self.client.get(reverse('list', args=['proposal']), {'sort':'description'})
+        response = self.client.get(reverse('publicweb_item_list', args=['proposal']), {'sort':'description'})
                 
         object_list = response.context['object_list']    
 
@@ -40,7 +40,7 @@ class DecisionListTest(DecisionTestCase):
 
     def test_decision_list_can_be_filtered_by_status(self):
         self.create_decisions_with_different_statuses()
-        response = self.client.get(reverse('list', args=['decision']))
+        response = self.client.get(reverse('publicweb_item_list', args=['decision']))
         self.assertContains(response, "Issue Decision")
         self.assertNotContains(response, "Issue Proposal")
         self.assertNotContains(response, "Issue Archived") 
@@ -53,7 +53,7 @@ class DecisionListTest(DecisionTestCase):
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
             
-        response = self.client.get(reverse('list', args=['decision']), dict(sort=column))
+        response = self.client.get(reverse('publicweb_item_list', args=['decision']), dict(sort=column))
         
         object_list = response.context['object_list']    
                 

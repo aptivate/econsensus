@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% if form.instance.id %}
+	{{ form.instance.excerpt|safe }}
+{% else %}
+	{% trans "Create Decision" %}
+{% endif %}{% endblock %}
+
+{% block body_class%}decision-view{% endblock %}
+
+{% block head_content %}
+{{ form.media }}
+{% endblock %}
+
+{% block heading %}
+{% if form.instance.id %}
+{% trans "Update Decision"%} #{{ form.instance.id }}
+{% else %}
+{% trans "Create Decision" %}
+{% endif %}
+{% endblock %}
+
+{% block main_content %}
+{% include 'decision_update_snippet.html' %}
+{% endblock %}

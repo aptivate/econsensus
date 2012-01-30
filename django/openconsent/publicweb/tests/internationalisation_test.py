@@ -12,7 +12,7 @@ class InternationalisationTest(OpenConsentTestCase):
         self.login()
         
     def test_all_text_translated_when_viewing_decision_list(self):
-        self.check_all_text_translated('list', args=['decision'])
+        self.check_all_text_translated('publicweb_item_list', args=['decision'])
 
     def test_all_text_translated_when_adding_decision(self):
         self.check_all_text_translated('publicweb_decision_create', args=[0])

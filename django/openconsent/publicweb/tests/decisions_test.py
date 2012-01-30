@@ -56,7 +56,7 @@ class DecisionsTest(DecisionTestCase):
         
         
         self.assertRedirects(response,
-            reverse('list', args=['decision']),
+            reverse('publicweb_item_list', args=['decision']),
             msg_prefix=response.content)
 
     def get_default_decision_form_dict(self):
@@ -125,7 +125,7 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('list', args=['decision']),
+        self.assertRedirects(response, reverse('publicweb_item_list', args=['decision']),
             msg_prefix=response.content)
             
     def test_add_feedback(self):
@@ -240,14 +240,14 @@ class DecisionsTest(DecisionTestCase):
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
                 
-        self.assertContains(response, 'type="submit" value="Cancel"', count=2)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
 
     def test_edit_page_contains_cancel(self):
         decision = self.create_and_return_decision()
         path = reverse('publicweb_decision_update', args=[decision.id])
         response = self.client.get(path)
         
-        self.assertContains(response, 'type="submit" value="Cancel"', count=2)
+        self.assertContains(response, 'type="submit" value="Cancel"', count=1)
 
     def test_cancel_does_not_add_changes(self):
         post_dict = self.get_default_decision_form_dict()

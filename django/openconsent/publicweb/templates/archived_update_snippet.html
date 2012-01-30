@@ -1,6 +1,4 @@
 {% load i18n %}
-
-		{% csrf_token %}
 		{% for error in decision_form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
