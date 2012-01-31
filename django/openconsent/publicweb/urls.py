@@ -126,7 +126,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         login_required(object_detail),
         item__detail_info,
         name='publicweb_item_detail'),                       
-    url(r'^item/list/(?P<status>[a-z]+)/$',
+    url(r'^item/list/(?P<status_text>[a-z]+)/$',
         object_list_by_status,
         name='publicweb_item_list'),
 

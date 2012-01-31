@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}{% trans "Active Proposals" %}{% endblock %}
+
+{% block heading %}{% trans "Active Proposals" %}{% endblock %}
+
+{% block body_class%}{{ status_text }}-list{% endblock %}
+
+{% block main_content %}
+	<ul class="summary-list">
+		{% if object_list %}
+		<div class="summary-header {{ status_text }}">
+				<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
+				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
+				<a href="{{ request.path }}?sort=feedbackcount" class="field feedbackcount header {% if sort == 'feedbackcount' %}sort{% endif %}">Feedback</a>
+				<a href="{{ request.path }}?sort=watchercount" class="field watchercount header {% if sort == 'watchercount' %}sort{% endif %}">Watchers</a>
+				<a href="{{ request.path }}?sort=deadline" class="field deadline header {% if sort == 'deadline' %}sort{% endif %}">Deadline</a>
+		</div>
+        {% for object in object_list %}
+	    <li class="summary-item">
+	    <a class="urloverlay" href="{% url publicweb_item_detail object.id %}"></a>
+	    	<dl>
+				<dt>ID</dt>
+				<dd class="iconified field id">
+					{{ object.id }}
+				</dd>
+				<dt>Excerpt</dt>
+				<dd class="field excerpt">
+					{{ object.excerpt }}
+				</dd>
+				<dt>Feedback</dt>
+				<dd class="field feedbackcount">
+					{{ object.feedbackcount }}
+				</dd>
+				<dt>Watchers</dt>
+				<dd class="field watchercount">
+					{{ object.watchercount }}
+				</dd>
+				<dt>Deadline</dt>
+				<dd class="field deadline">
+					{{ object.deadline }}
+				</dd>
+		    </dl>
+	    </li> <!-- item proposal -->
+		{% endfor %}
+		{% else %}
+			<p>{% trans "There are no decisions made." %}.<p>
+		{% endif %}				
+	</ul> <!-- list_view proposal -->
+{% endblock %}
+
+{% block footer_content %}
+	<div class="exportcsv">
+		<a title="Export as CSV file" href="{% url publicweb_export_csv %}">{% trans "Export as CSV file" %}</a>
+	</div>
+{% endblock %}
+

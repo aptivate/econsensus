@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
-from django.utils.translation import ugettext_lazy as _
 
 import unicodecsv
 
@@ -75,27 +74,6 @@ def export_csv(request):
         writer.writerow([unicode(fieldOutput(obj, field)).encode("utf-8","replace") for field in field_names])
     return response
 
-# TODO: a better way to handle all these list views is to create a single view for listing items
-# that view will use a search function that takes a 'filter' parameter and an 'order_by' parameter and gives an ordered queryset back.
-# The list view will use a single template but will pass a parameter as extra context to individualise the page
-
-proposal_context = {'page_title' : _("Current Active Proposals"), # pylint: disable=E1102
-                     'class' : 'proposal',
-                     'columns': ('id', 'excerpt', 'feedbackcount', 'watchercount', 'deadline')}
-
-decision_context = {'page_title' : _("Decisions Made"), # pylint: disable=E1102
-                     'class' : 'decision',
-                     'columns': ('id', 'excerpt', 'decided_date', 'review_date')}
-
-archived_context = {'page_title' : _("Archived Decisions"), # pylint: disable=E1102
-                     'class' : 'archived',
-                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
-
-context_list = { 'proposal' : proposal_context,
-             'decision' : decision_context,
-             'archived' : archived_context,
-             }
-
 #Codes are used to dodge translation in urls.
 #Need to think of a better way to do this...
 context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
@@ -104,23 +82,24 @@ context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
              }
 
 @login_required        
-def object_list_by_status(request, status):
-    extra_context = context_list[status]
-    extra_context['status'] = status
-    extra_context['sort_form'] = SortForm(request.GET)
-    status_code = context_codes[status]
+def object_list_by_status(request, status_text):
+    extra_context = { 'status_text': status_text,
+                     'sort_form': SortForm(request.GET) }
+    status = context_codes[status_text]
+    #need to check template exists...
+    template_name = status_text + '_list.html'
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
     else:
         order = 'id'
-    queryset = _filter(Decision.objects.order_by(order), status_code)    
+    queryset = Decision.objects.order_by(order).filter(status=status)
     extra_context['sort'] = order
     
     return list_detail.object_list(
         request,
         queryset,
-        template_name = 'item_list.html',
+        template_name = template_name,
         extra_context = extra_context
         )
 

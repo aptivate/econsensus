@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}{% trans "Archived Decisions" %}{% endblock %}
+
+{% block heading %}{% trans "Archived Decisions" %}{% endblock %}
+
+{% block body_class%}{{ status_text }}-list{% endblock %}
+                     'columns': ('id', 'excerpt', 'created_date', 'archived_date')}
+
+{% block main_content %}
+	<ul class="summary-list">
+		{% if object_list %}
+		<div class="summary-header {{ status_text }}">
+			<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
+			<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
+			<a href="{{ request.path }}?sort=created_date" class="field created_date header {% if sort == 'created_date' %}sort{% endif %}">Created Date</a>
+			<a href="{{ request.path }}?sort=archived_date" class="field archived_date header {% if sort == 'archived_date' %}sort{% endif %}">Archived Date</a>
+		</div>
+        {% for object in object_list %}
+	    <li class="summary-item">
+	    <a class="urloverlay" href="{% url publicweb_item_detail object.id %}"></a>
+	    	<dl>
+				<dt>ID</dt>
+				<dd class="iconified field id">
+					{{ object.id }}
+				</dd>
+				<dt>Excerpt</dt>
+				<dd class="field excerpt">
+					{{ object.excerpt }}
+				</dd>
+				<dt>Created Date</dt>
+				<dd class="field created_date">
+					{{ object.created_date }}
+				</dd>
+				<dt>Archived Date</dt>
+				<dd class="field archived_date">
+					{{ object.archived_date }}
+				</dd>
+		    </dl>
+	    </li> <!-- item proposal -->
+		{% endfor %}
+		{% else %}
+			<p>{% trans "There are no decisions made." %}.<p>
+		{% endif %}				
+	</ul> <!-- list_view proposal -->
+{% endblock %}
+
+{% block footer_content %}
+	<div class="exportcsv">
+		<a title="Export as CSV file" href="{% url publicweb_export_csv %}">{% trans "Export as CSV file" %}</a>
+	</div>
+{% endblock %}
+

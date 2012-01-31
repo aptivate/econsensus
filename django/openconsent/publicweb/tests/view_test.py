@@ -6,17 +6,14 @@ from django.core.urlresolvers import reverse
 
 class ViewTest(DecisionTestCase):
 
-    expected_proposal_key_tuple = ('class', 'page_title','columns')
-    expected_proposal_dict_tuple = ({'class':'proposal'},
-                                      {'columns': ('id', 'excerpt', 'feedbackcount', 'watchercount', 'deadline')})
+    expected_proposal_key_tuple = ('status_text',)
+    expected_proposal_dict_tuple = ({'status_text':'proposal'},)
         
-    expected_consensus_key_tuple = ('class', 'page_title','columns')
-    expected_consensus_dict_tuple = ({'class':'decision'},
-                                      {'columns': ('id', 'excerpt', 'decided_date', 'review_date')})
+    expected_consensus_key_tuple = ('status_text',)
+    expected_consensus_dict_tuple = ({'status_text':'decision'},)
         
-    expected_archived_key_tuple = ('class', 'page_title','columns')
-    expected_archived_dict_tuple = ({'class':'archived'},
-                                      {'columns': ('id', 'excerpt', 'created_date', 'archived_date')})
+    expected_archived_key_tuple = ('status_text',)
+    expected_archived_dict_tuple = ({'status_text':'archived'},)
         
     def assert_context_has_key(self, key, url):
         response = self.client.get(url)
