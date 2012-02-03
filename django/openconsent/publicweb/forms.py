@@ -23,7 +23,9 @@ class DecisionForm(forms.ModelForm):
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,
                    'review_date': JQueryUIDateWidget,
-                   'expiry_date': JQueryUIDateWidget
+                   'expiry_date': JQueryUIDateWidget,
+                   'archived_date': JQueryUIDateWidget,
+                   'deadline': JQueryUIDateWidget
                    }
 
 EXTRA_CHOICE = (3, _('All')) #pylint: disable-msg=E1102

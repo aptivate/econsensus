@@ -10,7 +10,6 @@
 	<link href="{{ MEDIA_URL }}jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
-{% if not show_form %}
 	<script type="text/javascript">
 jQuery(function ($) {
 	function replaceWithRemote(url, selector) {
@@ -23,25 +22,48 @@ jQuery(function ($) {
 
 	// Override redirect to form and put it inline
 	$(".edit_decision a").live("click", function (e) {
-		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision");
+		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_detail");
 		e.preventDefault();
 	});
 
 	// Override redirect to view and put it inline
-	$('.edit_decision_form').live("submit", function (e) {
+	$("#decision_update_form").live("submit", function (e) {
 		var parameters = $(this).serialize();
 
 		$.post("{% url publicweb_decision_update object.id %}",
 			parameters,
 			function (data) {
 				// Post successful, now fetch stored value and add it as a snippet
-				replaceWithRemote("{% url publicweb_decision_snippet_detail object.id %}", "form.edit_decision_form");
+				replaceWithRemote("{% url publicweb_decision_snippet_detail object.id %}", "form#decision_update_form");
 			}
 		);
 		e.preventDefault();
 	});
+
+{% comment %}This is a duplicate of the code above {% endcomment %}
+{% for object in object.feedback_set.all %}
+	// Override redirect to form and put it inline
+	$("li#id{{ object.id }} .feedback_edit a").live("click", function (e) {
+		replaceWithRemote("{% url publicweb_feedback_snippet_update object.id %}", "li#id{{ object.id }}");
+		e.preventDefault();
+	});
+
+	// Override redirect to view and put it inline
+	$('li#id{{ object.id }} .feedback_form').live("submit", function (e) {
+		var parameters = $(this).serialize();
+
+		$.post("{% url publicweb_feedback_update object.id %}",
+			parameters,
+			function (data) {
+				// Post successful, now fetch stored value and add it as a snippet
+				replaceWithRemote("{% url publicweb_feedback_snippet_detail object.id %}", "li#id{{ object.id }}");
+			}
+		);
+		e.preventDefault();
+	});
+{% endfor %}
 });
-	</script>{% endif %}
+	</script>
 {% endblock %}
 
 {% block heading %}

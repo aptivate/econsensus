@@ -426,7 +426,7 @@ h2.page_title strong {
 	font-weight:bold;
 }
 
-#decision {
+#decision_detail {
 	border: 3px solid #FFCC00;
 	border-radius: 15px;
     clear: both;
@@ -442,21 +442,24 @@ h2.page_title strong {
     ARCHIVED_STATUS = 2
 */
   
-#decision.status0 {
+#decision_update_form.proposal {
 	border: 3px solid #FFCC00; /* #993377 - I quite liked this colour */
 	-moz-border-radius: 15px;
   	-webkit-border-radius: 15px;
 	border-radius: 15px;
+    clear: both;
+    float: left;
+    width: 100%;	
 }
 
-#decision.status1 {
+#decision_update_form.decision {
 	border: 3px solid #90AA27;
 	-moz-border-radius: 15px;
   	-webkit-border-radius: 15px;
     border-radius: 15px;
 }
 
-#decision.status2 {
+#decision_update_form.archived {
 	border: 3px solid #666;
 	-moz-border-radius: 15px;
   	-webkit-border-radius: 15px;
@@ -509,7 +512,7 @@ padding:.5em 0;
 border-bottom: 1px solid #3E6EA3;
 }
 
-.decision_feedback .decision_type {
+.decision_feedback .feedback_type {
 position:absolute;
 width:6em;
 color:#fff;
@@ -519,19 +522,19 @@ font-weight:bold;
 font-size:.8em;
 }
 
-.decision_type.question {
+.feedback_type.question {
 background:#008080;
 }
 
-.decision_type.danger {
+.feedback_type.danger {
 background:#d81616;
 }
 
-.decision_type.concern {
+.feedback_type.concern {
 background:#f60;
 }
 
-.decision_type.consensus {
+.feedback_type.consensus {
 background:#aad400;
 }
 
@@ -578,9 +581,11 @@ margin: 0 0 0 6em;
 
 .decision_controls {
 	float: right;
+	clear: right;
 	padding-bottom:6px;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
+	margin-right: 0.5em;
 }
 
 .decision_controls div {

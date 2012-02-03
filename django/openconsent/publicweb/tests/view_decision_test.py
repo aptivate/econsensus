@@ -24,7 +24,7 @@ class ViewDecisionTest(DecisionTestCase):
         decision = self.create_and_return_decision()
         response = self.client.get(reverse('publicweb_decision_snippet_detail', args=[decision.id]))       
         self.assertContains(response, u'<a href="/decision/update/snippet/%s/">Edit</a>' % decision.id)
-        self.assertTrue(response.content.strip().startswith('<div id="decision">'))
+        self.assertTrue(response.content.strip().startswith('<div id="decision_detail">'))
         self.assertContains(response, u'<rect width="9"')
 
     def test_load_form_snippet(self):
@@ -32,7 +32,7 @@ class ViewDecisionTest(DecisionTestCase):
         decision = self.create_and_return_decision()
         response = self.client.get(reverse('publicweb_decision_snippet_update', args=[decision.id]))
 
-        self.assertTrue(response.content.strip().startswith('<form action="#" method="post" class="edit_decision_form">'))
+        self.assertTrue(response.content.strip().startswith('<form action="#" method="post" id="decision_update_form" class="proposal">'))
 
         form_data = self.get_form_values_from_response(response, 1)
         self.assertTrue(form_fields.issubset(set(form_data.keys())))

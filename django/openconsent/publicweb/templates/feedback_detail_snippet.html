@@ -1,13 +1,13 @@
 {% load i18n %}	
 
-<li>
-	<div class="decision_type {{ object.rating_text }}">
+<li id="id{{ object.id }}">
+	<div class="feedback_type {{ object.rating_text }}">
 		{{ object.rating_text|capfirst }}
 	</div>
 	<div class="description">
 		{{ object.description|urlize }}
 	</div>
-	<div class="edit">
+	<div class="feedback_edit">
 		<a href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>				
 	</div>
 </li>

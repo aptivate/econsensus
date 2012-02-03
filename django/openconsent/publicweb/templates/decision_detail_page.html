@@ -23,56 +23,5 @@ Archived
 {% endblock %}
 
 {% block main_content %}
-<div id="decision">
-	<div class="decision_summary halfwidth">
-		<div class="decision_description">
-		{{ object.description|urlize }}
-		</div>
-		<p class="edit_decision">
-			<a href="{% url publicweb_decision_update object.id %}">Edit</a>
-		</p>
-	</div>
-
-	<div class="decision_meta halfwidth">
-		<ul class="decision_dates">
-{% if object.decided_date %}
-			<li class="decided">
-				<strong>{{ object.decided_date }}</strong>
-				<br />
-				{% trans "Decided" %}
-			</li>
-{% endif %}
-{% if object.effective_date %}
-			<li class="effective">
-				<strong>{{ object.effective_date }}</strong>
-				<br />
-				{% trans "Effective" %}
-			</li>
-{% endif %}
-{% if object.review_date %}
-			<li class="review">
-				<strong>{{ object.review_date }}</strong>
-				<br />
-				{% trans "Review" %}
-			</li>
-{% endif %}
-{% if object.expiry_date %}
-			<li class="expiry">
-				<strong>{{ object.expiry_date }}</strong>
-				<br />
-				{% trans "Expiry" %}
-			</li>
-{% endif %}
-		</ul>
-		<p class="decision_stats">
-			<span class="feedback_all">{{ object.get_feedback_statistics.all }}</span>
-{% include "feedback_infographic.svg" %}
-			<span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span>
-			<span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span>
-			<span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span>
-			<span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span>
-		</p>
-	</div>
-</div>
-
+{% include 'decision_detail_snippet.html' %}
 {% endblock %}

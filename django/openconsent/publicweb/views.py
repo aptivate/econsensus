@@ -28,7 +28,6 @@ def process_post_and_redirect(request, decision, template_name):
                 decision.add_watcher(request.user)
             else:
                 decision.remove_watcher(request.user)
-                
             return_page = unicode(decision.status_text())
             return HttpResponseRedirect(reverse(object_list_by_status, args=[return_page]))
         

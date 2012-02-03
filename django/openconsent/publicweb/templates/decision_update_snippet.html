@@ -1,19 +1,10 @@
 {% load i18n %}
 
-<form action="#" method="post" class="edit_decision_form">{% csrf_token %}
+<form action="#" method="post" id="decision_update_form" class="{{ form.instance.status_text }}">{% csrf_token %}
 		{% for error in form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
-		<div class="decision_controls">
-			<div class="form_item watch">
-		        {{ form.watch.errors }}
-		        <label for="id_watch">{% trans "Watch" %}?</label>
-		        {{ form.watch }}
-		    </div>		
-		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
-		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
-		</div>
-		<div id="decision" class="status{{ form.instance.status }}">
+		<div id="decision" class="{{ form.instance.status_text }}">
 			<div class="decision_summary">
 				{% if form.instance.author != null %}
 					<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
@@ -57,8 +48,13 @@
 				</div>
 			</div>
 		</div>
-	<p class="decision_controls">
-		<input type="submit" name="submit" value="Submit" />
-		 <input type="submit" name="submit" value="Cancel" />
-	</p>
+		<div class="decision_controls">
+			<div class="form_item watch">
+		        {{ form.watch.errors }}
+		        <label for="id_watch">{% trans "Watch" %}?</label>
+		        {{ form.watch }}
+		    </div>		
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
+		</div>
 </form>

@@ -22,7 +22,7 @@
 
 {% block main_content %}
 	<form id="decision_add" action="" method="post">{% csrf_token %}
-		{% include 'proposal_form_snippet.html' %}
+		{% include 'proposal_update_snippet.html' %}
 		<div class="decision_controls">
 			<div class="form_item watch">
 		        {{ form.watch.errors }}

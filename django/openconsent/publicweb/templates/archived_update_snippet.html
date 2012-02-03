@@ -1,57 +1,63 @@
 {% load i18n %}
-		{% for error in decision_form.non_field_errors %}
+	<form id="decision_add" action="" method="post">{% csrf_token %}
+		{% for error in form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
 		<div class="decision_controls">
 			<div class="form_item watch">
-		        {{ decision_form.watch.errors }}
+		        {{ form.watch.errors }}
 		        <label for="id_watch">{% trans "Watch" %}?</label>
-		        {{ decision_form.watch }}
+		        {{ form.watch }}
 		    </div>		
 		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
 		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
 		</div>
-		<div id="decision" class="status{{ decision_form.instance.status }}">
+		<div id="decision" class="status{{ form.instance.status }}">
 			<div class="decision_summary">
-				{% if decision_form.instance.author != null %}
-					<div class="decision_author">{% trans "Created by" %}: {{decision_form.instance.author}}</div>
+				{% if form.instance.author != null %}
+					<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
 				{% endif %}
 			    <div class="form_item description">
-			        {{ decision_form.description.errors }}
-					<label for="id_description">{% filter capfirst %}{{ decision_form.instance.get_status_display }}{% endfilter %}</label>
-			        {{ decision_form.description }}
+			        {{ form.description.errors }}
+					<label for="id_description">{% filter capfirst %}{{ form.instance.get_status_display }}{% endfilter %}</label>
+			        {{ form.description }}
 			    </div>
 			 	<div class="form_item resources">
-			        {{ decision_form.budget.errors }}
+			        {{ form.budget.errors }}
 			        <label for="id_budget">{% trans "Resources/Budget" %}:</label>
-			        {{ decision_form.budget }}
+			        {{ form.budget }}
 			    </div>
 			 </div>
 			 <div class="decision_meta">
 			 	<div class="form_item status">
-			        {{ decision_form.status.errors }}
+			        {{ form.status.errors }}
 				    <label for="id_status">{% trans "Status" %}:</label>
-				    {{ decision_form.status }}
+				    {{ form.status }}
 				</div>
 				<div class="form_item">
-			        {{ decision_form.decided_date.errors }}
+			        {{ form.decided_date.errors }}
 			        <label for="id_decided_date">{% trans "Decided" %}:</label>
-			        {{ decision_form.decided_date }}
+			        {{ form.decided_date }}
 			    </div>
 				<div class="form_item">
-			        {{ decision_form.effective_date.errors }}
+			        {{ form.effective_date.errors }}
 			        <label for="id_effective_date">{% trans "Effective" %}:</label>
-			        {{ decision_form.effective_date }}
+			        {{ form.effective_date }}
 			    </div>
 				<div class="form_item">
-			        {{ decision_form.review_date.errors }}
+			        {{ form.review_date.errors }}
 			        <label for="id_review_date">{% trans "Review" %}:</label>
-			        {{ decision_form.review_date }}
+			        {{ form.review_date }}
 			    </div>
 				<div id="tags">
-				    {{ decision_form.tags.errors }}
+				    {{ form.tags.errors }}
 				    <label for="id_tags">{% trans "Tags" %}:</label>
-				    {{ decision_form.tags }} {{ decision_form.tags.help_text }}
+				    {{ form.tags }} {{ form.tags.help_text }}
 				</div>
 			</div>
 		</div>
+		<div class="decision_controls">	
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
+		</div>
+	</form>		
