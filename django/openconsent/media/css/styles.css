@@ -507,6 +507,7 @@ padding: 1em 15px;
 }
 
 .decision_feedback ol.feedback_list > li {
+overflow: auto;
 position:relative;
 padding:.5em 0;
 border-bottom: 1px solid #3E6EA3;
@@ -578,6 +579,14 @@ margin: 0 0 0 6em;
 	padding:8px 10px 2px 10px;
 	width:90%;
 }
+
+.edit_decision {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
+
 
 .decision_controls {
 	float: right;
@@ -751,10 +760,19 @@ margin: 0 0 0 6em;
 }
 
 /* Feedback */
-
 .formset_item {
 	margin-bottom: 8px;
 	background-color: #eee;
+	overflow: auto;
+}
+
+.formset_item .form_row .controls {
+	float: right;
+	margin: 5px;
+}
+
+.feedback_edit a {
+	float: right;
 }
 
 .formset_item .form_item.description {

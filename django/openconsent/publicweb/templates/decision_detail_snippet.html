@@ -5,9 +5,6 @@
 		<div class="decision_description">
 		{{ object.description|urlize|linebreaksbr }}
 		</div>
-		<p class="edit_decision">
-			<a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a>
-		</p>
 	</div>
 
 	<div class="decision_meta halfwidth">
@@ -50,4 +47,7 @@
 			<span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span>
 		</p>
 	</div>
+	<p class="edit_decision">
+		<a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a>
+	</p>	
 </div>
