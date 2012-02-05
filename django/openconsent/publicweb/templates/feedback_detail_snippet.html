@@ -1,13 +1,15 @@
 {% load i18n %}	
 
 <li id="id{{ object.id }}">
-	<div class="feedback_type {{ object.rating_text }}">
-		{{ object.rating_text|capfirst }}
-	</div>
-	<div class="description">
-		{{ object.description|urlize }}
-	</div>
-	<div class="feedback_edit">
-		<a href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>				
+	<div class="feedback_wrapper">
+		<div class="feedback_type {{ object.rating_text }}">
+			{{ object.rating_text|capfirst }}
+		</div>
+		<div class="description">
+			{{ object.description|urlize }}
+		</div>
+		<div class="feedback_edit">
+			<a href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>				
+		</div>
 	</div>
 </li>

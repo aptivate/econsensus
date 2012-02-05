@@ -12,6 +12,9 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 	<script type="text/javascript">
 jQuery(function ($) {
+	/*
+	 * Common functions
+	 */
 	function replaceWithRemote(url, selector) {
 		$.ajax(url,
 				{
@@ -20,6 +23,21 @@ jQuery(function ($) {
 				});
 	}
 
+	function updateAndReplace(update_url, replace_url, node) {
+		var parameters = $(node).serialize();
+
+		$.post(update_url,
+			parameters,
+			function (data) {
+				// Post successful, now fetch stored value and add it as a snippet
+				replaceWithRemote(replace_url, node);
+			}
+		);
+	}
+
+	/*
+	 * Proposal in-line editing
+	 */
 	// Override redirect to form and put it inline
 	$(".edit_decision a").live("click", function (e) {
 		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_detail");
@@ -28,40 +46,41 @@ jQuery(function ($) {
 
 	// Override redirect to view and put it inline
 	$("#decision_update_form").live("submit", function (e) {
-		var parameters = $(this).serialize();
-
-		$.post("{% url publicweb_decision_update object.id %}",
-			parameters,
-			function (data) {
-				// Post successful, now fetch stored value and add it as a snippet
-				replaceWithRemote("{% url publicweb_decision_snippet_detail object.id %}", "form#decision_update_form");
-			}
-		);
+		updateAndReplace("{% url publicweb_decision_update object.id %}",
+						"{% url publicweb_decision_snippet_detail object.id %}",
+						"form#decision_update_form");
 		e.preventDefault();
 	});
 
-{% comment %}This is a duplicate of the code above {% endcomment %}
-{% for object in object.feedback_set.all %}
+	/*
+	 * Feedback in-line editing
+	 */
+	// Fake id, DB will always start at least with 1; Error-prone (fails if URL contains 0 elsewhere)
+	var snippet_update_url_template = "{% url publicweb_feedback_snippet_update 0 %}",
+		snippet_detail_url_template = "{% url publicweb_feedback_snippet_detail 0 %}",
+		feedback_update_url_template = "{% url publicweb_feedback_update 0 %}";
+
 	// Override redirect to form and put it inline
-	$("li#id{{ object.id }} .feedback_edit a").live("click", function (e) {
-		replaceWithRemote("{% url publicweb_feedback_snippet_update object.id %}", "li#id{{ object.id }}");
+	$(".feedback_list .feedback_edit a").live("click", function (e) {
+		var wrapper = $(this).parents(".feedback_wrapper"),
+			object_id = wrapper.parent().attr("id").slice(2),
+			snippet_update_url = snippet_update_url_template.replace('0', object_id);
+
+		$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+		replaceWithRemote(snippet_update_url, wrapper);
 		e.preventDefault();
 	});
 
 	// Override redirect to view and put it inline
-	$('li#id{{ object.id }} .feedback_form').live("submit", function (e) {
-		var parameters = $(this).serialize();
+	$('.feedback_list .feedback_form').live("submit", function (e) {
+		var $this = $(this),
+			object_id = $this.parent().attr("id").slice(2),
+			feedback_update_url = feedback_update_url_template.replace('0', object_id),
+			snippet_detail_url = snippet_detail_url_template.replace('0', object_id);;
 
-		$.post("{% url publicweb_feedback_update object.id %}",
-			parameters,
-			function (data) {
-				// Post successful, now fetch stored value and add it as a snippet
-				replaceWithRemote("{% url publicweb_feedback_snippet_detail object.id %}", "li#id{{ object.id }}");
-			}
-		);
+		updateAndReplace(feedback_update_url, snippet_detail_url, $this);
 		e.preventDefault();
 	});
-{% endfor %}
 });
 	</script>
 {% endblock %}
