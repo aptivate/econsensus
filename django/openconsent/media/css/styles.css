@@ -427,13 +427,25 @@ h2.page_title strong {
 }
 
 #decision_detail {
-	border: 3px solid #FFCC00;
+	border: 3px solid #000000;
 	border-radius: 15px;
     clear: both;
     display: block;
     float: left;
     position: relative;
     width: 100%;
+}
+
+#decision_detail.proposal {
+	border-color: #FFCC00;
+}
+
+#decision_detail.decision {
+	border-color: #90AA27;
+}
+
+#decision_detail.archived {
+	border-color: #666666;
 }
 
 /* from the decision model

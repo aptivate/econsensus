@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div id="decision_detail">
+<div id="decision_detail" class="{{ object.status_text }}">
 	<div class="decision_summary halfwidth">
 		<div class="decision_description">
 		{{ object.description|urlize|linebreaksbr }}
