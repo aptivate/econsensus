@@ -441,8 +441,8 @@ h2.page_title strong {
     DECISION_STATUS = 1
     ARCHIVED_STATUS = 2
 */
-  
-#decision_update_form.proposal {
+
+#decision_update_form {
 	border: 3px solid #FFCC00; /* #993377 - I quite liked this colour */
 	-moz-border-radius: 15px;
   	-webkit-border-radius: 15px;
@@ -452,18 +452,16 @@ h2.page_title strong {
     width: 100%;	
 }
 
+#decision_update_form.proposal {
+	border-color: #FFCC00; /* #993377 - I quite liked this colour */	
+}
+
 #decision_update_form.decision {
-	border: 3px solid #90AA27;
-	-moz-border-radius: 15px;
-  	-webkit-border-radius: 15px;
-    border-radius: 15px;
+	border-color: #90AA27;
 }
 
 #decision_update_form.archived {
-	border: 3px solid #666;
-	-moz-border-radius: 15px;
-  	-webkit-border-radius: 15px;
-    border-radius: 15px;
+	border-color: #666666;
 }
 
 .decision_summary {
