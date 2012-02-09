@@ -26,6 +26,13 @@
 				    <label for="id_status">{% trans "Status" %}:</label>
 				    {{ form.status }}
 				</div>
+				{% if not form.instance or form.instance.status_text == 'proposal' %}
+				<div class="form_item">
+			        {{ form.deadline.errors }}
+			        <label for="deadline">{% trans "Deadline" %}:</label>
+			        {{ form.deadline }}
+			    </div>
+			    {% else %}{% if form.instance.status_text == 'decision' %}
 				<div class="form_item">
 			        {{ form.decided_date.errors }}
 			        <label for="id_decided_date">{% trans "Decided" %}:</label>
@@ -41,6 +48,19 @@
 			        <label for="id_review_date">{% trans "Review" %}:</label>
 			        {{ form.review_date }}
 			    </div>
+				<div class="form_item">
+			        {{ form.expiry_date.errors }}
+			        <label for="id_expiry_date">{% trans "Expiry" %}:</label>
+			        {{ form.expiry_date }}
+			    </div>
+			    {% else %}
+				<div class="form_item">
+			        {{ form.archived_date.errors }}
+			        <label for="id_archived_date">{% trans "Archived" %}:</label>
+			        {{ form.archived_date }}
+			    </div>
+			    {% endif %}{% endif %}
+			    
 				<div id="tags">
 				    {{ form.tags.errors }}
 				    <label for="id_tags">{% trans "Tags" %}:</label>
