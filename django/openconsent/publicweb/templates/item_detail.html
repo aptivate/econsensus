@@ -95,6 +95,7 @@ jQuery(function ($) {
 
 <h2 class="page_title">{% trans "Feedback" %}</h2>
 <div class="decision_feedback">
+<a href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a>
 {% if object.feedback_set.all %}
 	<ol class="feedback_list">
 {% for feedback in object.feedback_set.all %}
@@ -104,7 +105,6 @@ jQuery(function ($) {
 {% else %}
 <p>{% trans "No feedback yet." %}</p>
 {% endif %}
-<a href='{% url publicweb_feedback_create object.id %}'>Click to add feedback</a>
 </div>
 
 {% endblock %}

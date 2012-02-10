@@ -458,7 +458,7 @@ h2.page_title strong {
 
 #decision_detail .meta {
 	clear: both;
-	padding-top: 5px;
+	padding-top: 20px;
 }
 
 #decision_detail .controls {
@@ -476,6 +476,12 @@ h2.page_title strong {
 	background: #f6f6f6;
 	float: left;
 }
+
+#decision_detail .author {
+	font-size: 0.8em;
+	padding-bottom: 20px;
+}
+
 
 /* from the decision model
     PROPOSAL_STATUS = 0

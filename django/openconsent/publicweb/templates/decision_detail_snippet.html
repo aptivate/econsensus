@@ -7,8 +7,13 @@
 		<p><span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span></p>
 		<p><span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span></p>
 	</div>
-	<div class="description">
-	{{ object.description|urlize|linebreaksbr }}
+	<div class="summary">
+		<div class="author">
+		<p>Created by {{ object.author }}</p>
+		</div>
+		<div class="description">
+			<p>{{ object.description|urlize|linebreaksbr }}</p>
+		</div>
 	</div>
 	<div class="meta">
 		<div class="dates">
