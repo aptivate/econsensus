@@ -39,7 +39,7 @@ jQuery(function ($) {
 	 * Proposal in-line editing
 	 */
 	// Override redirect to form and put it inline
-	$(".edit_decision a").live("click", function (e) {
+	$(".controls .edit a").live("click", function (e) {
 		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_detail");
 		e.preventDefault();
 	});
@@ -86,7 +86,7 @@ jQuery(function ($) {
 {% endblock %}
 
 {% block heading %}
-	{% trans "Edit proposal:" %} <span>{{ object.excerpt }}</span>
+{{ object.status_text|capfirst }}
 {% endblock %}
 
 {% block main_content %}

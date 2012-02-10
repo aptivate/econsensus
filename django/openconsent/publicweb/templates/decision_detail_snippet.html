@@ -1,53 +1,55 @@
 {% load i18n %}
 
 <div id="decision_detail" class="{{ object.status_text }}">
-	<div class="decision_summary halfwidth">
-		<div class="decision_description">
-		{{ object.description|urlize|linebreaksbr }}
+	<div class="stats">
+		<p><span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span></p>
+		<p><span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span></p>
+		<p><span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span></p>
+		<p><span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span></p>
+	</div>
+	<div class="description">
+	{{ object.description|urlize|linebreaksbr }}
+	</div>
+	<div class="meta">
+		<div class="dates">
+	{% if object.status_text = 'proposal' %}
+	{% if object.deadline %}
+			<div class="date">
+				{% trans "Deadline:" %}			
+				<strong>{{ object.deadline }}</strong>
+			</div>
+	{% endif %}
+	{% endif %}
+
+	{% if object.status_text = 'decision' %}	
+	{% if object.decided_date %}
+			<div class="date">
+				{% trans "Decided" %}			
+				<strong>{{ object.decided_date }}</strong>
+			</div>
+	{% endif %}
+	{% if object.effective_date %}
+			<div class="date">
+				{% trans "Effective" %}
+				<strong>{{ object.effective_date }}</strong>
+			</div>
+	{% endif %}
+	{% if object.review_date %}
+			<div class="date">
+				{% trans "Review" %}
+				<strong>{{ object.review_date }}</strong>
+			</div>
+	{% endif %}
+	{% if object.expiry_date %}
+			<div class="date">
+				{% trans "Expiry" %}
+				<strong>{{ object.expiry_date }}</strong>
+			</div>
+	{% endif %}
+	{% endif %}
+		</div>
+		<div class="controls">
+			<p class="edit"><a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a></p>
 		</div>
 	</div>
-
-	<div class="decision_meta halfwidth">
-		<ul class="decision_dates">
-{% if object.decided_date %}
-			<li class="decided">
-				<strong>{{ object.decided_date }}</strong>
-				<br />
-				{% trans "Decided" %}
-			</li>
-{% endif %}
-{% if object.effective_date %}
-			<li class="effective">
-				<strong>{{ object.effective_date }}</strong>
-				<br />
-				{% trans "Effective" %}
-			</li>
-{% endif %}
-{% if object.review_date %}
-			<li class="review">
-				<strong>{{ object.review_date }}</strong>
-				<br />
-				{% trans "Review" %}
-			</li>
-{% endif %}
-{% if object.expiry_date %}
-			<li class="expiry">
-				<strong>{{ object.expiry_date }}</strong>
-				<br />
-				{% trans "Expiry" %}
-			</li>
-{% endif %}
-		</ul>
-		<p class="decision_stats">
-			<span class="feedback_all">{{ object.get_feedback_statistics.all }}</span>
-{% include "feedback_infographic.svg" %}
-			<span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span>
-			<span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span>
-			<span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span>
-			<span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span>
-		</p>
-	</div>
-	<p class="edit_decision">
-		<a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a>
-	</p>	
 </div>

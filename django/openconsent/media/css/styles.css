@@ -431,9 +431,9 @@ h2.page_title strong {
 	border-radius: 15px;
     clear: both;
     display: block;
-    float: left;
+    overflow: hidden;
     position: relative;
-    width: 100%;
+    padding: 10px;
 }
 
 #decision_detail.proposal {
@@ -446,6 +446,35 @@ h2.page_title strong {
 
 #decision_detail.archived {
 	border-color: #666666;
+}
+
+#decision_detail .stats {
+	float: right;
+}
+
+#decision_detail .description {
+	margin-right: 8em;
+}
+
+#decision_detail .meta {
+	clear: both;
+	padding-top: 5px;
+}
+
+#decision_detail .controls {
+	float: right;
+	padding: 5px;
+}
+
+#decision_detail .dates {
+	float: left;
+}
+
+#decision_detail .date {
+	border-radius:10px;
+	padding:5px 8px;
+	background: #f6f6f6;
+	float: left;
 }
 
 /* from the decision model
@@ -524,13 +553,13 @@ border-bottom: 1px solid #3E6EA3;
 }
 
 .decision_feedback .feedback_type {
-position:absolute;
 width:6em;
 color:#fff;
 background:#bbb;
 text-align:center;
 font-weight:bold;
 font-size:.8em;
+float: right;
 }
 
 .feedback_type.question {
@@ -541,16 +570,16 @@ background:#008080;
 background:#d81616;
 }
 
-.feedback_type.concern {
+.feedback_type.concerns {
 background:#f60;
 }
 
-.feedback_type.consensus {
+.feedback_type.consent {
 background:#aad400;
 }
 
 .decision_feedback .description {
-margin: 0 0 0 6em;
+	margin-right: 8em;
 }
 
 #decision label {
@@ -629,35 +658,6 @@ margin: 0 0 0 6em;
 	float:left;
 	margin:0 2em 0 0;
 	text-align:center;
-}
-
-.decision_dates li strong {
-	border-radius:10px;
-	padding:5px 8px;
-}
-
-.decision_dates .decided strong {
-	background: #f6f6f6;
-}
-
-.decision_dates .effective strong {
-	background: #f6f6f6;
-}
-
-.decision_dates .review strong {
-	background: #a1b8d3;
-}
-
-.decision_dates .expiry strong {
-	background: #d5ea81;
-}
-
-.decision_stats span.feedback_all {
-	padding:0;
-	color:#000;
-	font-size:26px;
-	font-weight:bold;
-	font-family:Ubuntu;
 }
 
 .decision_stats svg {
@@ -746,19 +746,19 @@ margin: 0 0 0 6em;
 	font-weight:bold;
 }
 
-.decision_stats span.question {
+.stats span.question {
 	color:#008080;
 }
 
-.decision_stats span.danger {
+.stats span.danger {
 	color:#d81616;
 }
 
-.decision_stats span.concern {
+.stats span.concern {
 	color:#f60;
 }
 
-.decision_stats span.consensus {
+.stats span.consensus {
 	color:#aad400;
 }
 
