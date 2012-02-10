@@ -118,7 +118,7 @@ textarea, input {
 
 #navigation-wrapper {
 	border-top:10px solid #ededed;
-	background-color:#483E37;
+	background-color:#655042;
 }
 
 #footer-wrapper {
@@ -190,7 +190,6 @@ textarea, input {
 }
 
 body.proposal-list ul li.navigation_proposals a {
-	display: block;
 	color:#FFCC00;
 	background-color:#161514;
 }
