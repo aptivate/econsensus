@@ -2,6 +2,7 @@ from decision_test_case import DecisionTestCase
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
@@ -46,4 +47,9 @@ class HtmlTest(DecisionTestCase):
         response = self.client.get(path)
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
-        
+    
+    def test_sitename_in_header(self):
+        path = reverse('publicweb_item_list', args=[Decision.STATUS_CHOICES[Decision.PROPOSAL_STATUS][1]])
+        response = self.client.get(path)
+        current_site = Site.objects.get_current()   
+        self.assertContains(response, current_site.name)
