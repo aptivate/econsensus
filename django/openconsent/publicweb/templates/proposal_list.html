@@ -13,8 +13,8 @@
 		<div class="summary-header {{ status_text }}">
 				<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
 				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
-				<a href="{{ request.path }}?sort=feedbackcount" class="field feedbackcount header {% if sort == 'feedbackcount' %}sort{% endif %}">Feedback</a>
-				<a href="{{ request.path }}?sort=watchercount" class="field watchercount header {% if sort == 'watchercount' %}sort{% endif %}">Watchers</a>
+				<a href="{{ request.path }}?sort=feedback" class="field feedbackcount header {% if sort == 'feedback' %}sort{% endif %}">Feedback</a>
+				<a href="{{ request.path }}?sort=watchers" class="field watchercount header {% if sort == 'watchers' %}sort{% endif %}">Watchers</a>
 				<a href="{{ request.path }}?sort=deadline" class="field deadline header {% if sort == 'deadline' %}sort{% endif %}">Deadline</a>
 		</div>
         {% for object in object_list %}
