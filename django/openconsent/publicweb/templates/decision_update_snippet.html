@@ -14,10 +14,10 @@
 					<label for="id_description">{% filter capfirst %}{{ form.instance.get_status_display }}{% endfilter %}</label>
 			        {{ form.description }}
 			    </div>
-			 	<div class="form_item resources">
-			        {{ form.budget.errors }}
-			        <label for="id_budget">{% trans "Resources/Budget" %}:</label>
-			        {{ form.budget }}
+			 	<div class="form_item people">
+			        {{ form.people.errors }}
+			        <label for="id_people">{% trans "Persons Responsible" %}</label>
+			        {{ form.people }}
 			    </div>
 			 </div>
 			 <div class="decision_meta">

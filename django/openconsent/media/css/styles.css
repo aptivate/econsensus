@@ -455,6 +455,10 @@ h2.page_title strong {
 	margin-right: 8em;
 }
 
+#decision_detail .people {
+	margin-top: 20px;
+}
+
 #decision_detail .meta {
 	clear: both;
 	padding-top: 20px;
@@ -595,7 +599,7 @@ background:#aad400;
 	float:left;
 }
 
-#id_description, #id_budget {
+#id_description, #id_budget, #id_people {
     display: block;
     padding: 15px;
     position: relative;
@@ -767,7 +771,7 @@ background:#aad400;
 	color:#aad400;
 }
 
-.form_item.description, .form_item.resources {
+.form_item.description, .form_item.people {
 	padding: 10px;
 	display: block;
 	position: relative;
