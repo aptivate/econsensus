@@ -21,9 +21,7 @@ def process_post_and_redirect(request, decision, template_name):
         form = DecisionForm(request.POST, instance=decision)
         
         if form.is_valid():
-            decision = form.save(commit=False)
-            decision.author = request.user
-            decision.save()
+            decision = form.save()
             if form.cleaned_data['watch']:
                 decision.add_watcher(request.user)
             else:
@@ -106,6 +104,7 @@ def object_list_by_status(request, status_text):
 def create_decision(request, status_id, template_name):
     
     decision = Decision(status=int(status_id))
+    decision.author = request.user
     
     if request.method == "POST":
         return process_post_and_redirect(request, decision, template_name)

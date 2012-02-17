@@ -3,22 +3,17 @@ from django.contrib.auth.models import User
 from mechanize import ParseString
 
 class OpenConsentTestCase(TestCase):
-    user = None
+    password_stump = 'password'
     
-    def login(self):
-        username = 'admin'
-        password = 'aptivate'
-        email = 'admin@aptivate.org'
+    def setUp(self):
+        User.objects.create_user('Adam', 'adam@openconsent', self.password_stump)
+        User.objects.create_user('Barry', 'barry@openconsent', self.password_stump)
+        User.objects.create_user('Charlie', 'charlie@openconsent', self.password_stump)
+        self.user = self.login('Adam')
 
-        for user in User.objects.all():
-            user.delete()
-        self.user = User.objects.create_user(username, email, password=password)
-        self.user.save()
-
-        self.client.login(username=username, password=password)
-        
-    def deleteUser(self):
-        self.user.delete()
+    def login(self, user):
+        self.client.login(username=user, password=self.password_stump)
+        return User.objects.get(username=user) 
 
     def get_form_values_from_response(self, response, number):
         forms = ParseString(response.content, '')

@@ -52,7 +52,7 @@ class ModelTest(DecisionTestCase):
 
     def test_model_feedbackcount_changes(self):
         decision = Decision(description="Decision test data")
-        decision.save(self.user)
+        decision.save()
         self.instance_attribute_has_value(decision, "feedbackcount", 0)
         feedback = Feedback(description="Feedback test data", decision=decision)
         feedback.save()
@@ -66,3 +66,4 @@ class ModelTest(DecisionTestCase):
             actual.append(unicode(name))
         
         self.assertEqual(expected, tuple(actual), "Unexptected feedback rating values!")
+        

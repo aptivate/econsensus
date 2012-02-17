@@ -2,12 +2,6 @@ from open_consent_test_case import OpenConsentTestCase
 from publicweb.models import Decision, Feedback
 
 class DecisionTestCase(OpenConsentTestCase):
-    def setUp(self):
-        self.login()
-        
-    def tearDown(self):
-        self.deleteUser()
-
     def create_decisions_with_different_statuses(self):
         self.create_and_return_decision(description='Issue Proposal')
         
@@ -39,6 +33,6 @@ class DecisionTestCase(OpenConsentTestCase):
                                    status=Decision.PROPOSAL_STATUS):
         decision = Decision(description=description, status=status)
         decision.author = self.user
-        decision.save(self.user)
+        decision.save()
         
         return decision

@@ -1,12 +1,13 @@
-from decision_test_case import DecisionTestCase
+from decision_test_case import OpenConsentTestCase
 from publicweb.models import Decision
 from publicweb.forms import DecisionForm
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
-class HtmlTest(DecisionTestCase):
+class HtmlTest(OpenConsentTestCase):
 
     def test_add_decision(self):
         """
@@ -53,3 +54,22 @@ class HtmlTest(DecisionTestCase):
         response = self.client.get(path)
         current_site = Site.objects.get_current()   
         self.assertContains(response, current_site.name)
+        
+    def test_author_only_set_once(self):
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        post_dict = {'status': Decision.PROPOSAL_STATUS,
+                     'description': 'Lorem Ipsum'}
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        decision = Decision.objects.get(description='Lorem Ipsum')
+        self.assertEqual(decision.author, self.user)
+        self.user = self.login('Barry')
+        
+        path = reverse('publicweb_decision_update', args=[decision.id])
+        post_dict = {'status': Decision.PROPOSAL_STATUS,
+                     'description': 'ullamcorper nunc'}
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        decision = Decision.objects.get(description='ullamcorper nunc')
+        self.assertNotEqual(decision.author, self.user)
+        

@@ -1,24 +1,27 @@
 from open_consent_test_case import OpenConsentTestCase
 from django.core.urlresolvers import reverse
+from publicweb.models import Decision
 
 class LoginTest(OpenConsentTestCase):       
     def test_non_login_is_redirected(self):
+        self.client.logout()
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 302)
         
     def test_non_login_directed_to_login(self):
+        self.client.logout()
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
         self.assertRedirects(response, reverse('login')+'?next='+path)
 
     def test_add_decision_loads_when_logged_in(self):
-        self.login()
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
         
     def test_can_post_through_login(self):
+        self.client.logout()
         path = reverse('login')
         page = self.client.get(path)
         
@@ -28,9 +31,8 @@ class LoginTest(OpenConsentTestCase):
         post_data['login'] = 'admin'
         post_data['password'] = 'aptivate'
                 
-        #post_data.update(feedback_formset.management_form.initial)
         self.client.post(path, post_data, follow=True)
 
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path, follow=True)
         self.assertEquals(response.status_code, 200)

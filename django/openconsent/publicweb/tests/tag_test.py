@@ -12,7 +12,6 @@ from decision_test_case import DecisionTestCase
 
 class TagsTest(DecisionTestCase):
     def test_tag_can_be_created(self):
-        self.login()
         path = reverse('publicweb_decision_create', args=[0])
 
         data = {
@@ -43,13 +42,11 @@ class TagsTest(DecisionTestCase):
                           "Decision form tags is not a TextInput widget")
         
     def test_tags_field_appears_on_page(self): 
-        self.login()
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
         self.assertContains(response, "input id=\"id_tags\"")
     
     def test_page_contains_tags_field_help_text_appears_on_page(self): 
-        self.login()
         path = reverse('publicweb_decision_create', args=[0])
         response = self.client.get(path)
         self.assertContains(response, Decision.TAGS_HELP_FIELD_TEXT)

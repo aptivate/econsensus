@@ -7,10 +7,6 @@ from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
 
 class InternationalisationTest(OpenConsentTestCase):
-
-    def setUp(self):
-        self.login()
-        
     def test_all_text_translated_when_viewing_decision_list(self):
         self.check_all_text_translated('publicweb_item_list', args=['decision'])
 
