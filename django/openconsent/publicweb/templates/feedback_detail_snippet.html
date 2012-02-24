@@ -9,7 +9,7 @@
 			{{ object.rating_text|capfirst }}
 		</div>
 		<div class="description">
-			{{ object.description|urlize }}
+			{{ object.description|urlize|linebreaksbr }}
 		</div>
 		<div class="feedback_edit">
 			<a href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>				

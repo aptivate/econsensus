@@ -41,10 +41,21 @@ class HtmlTest(OpenConsentTestCase):
         self.assertContains(response, '<a href="http://www.google.com" rel="nofollow">www.google.com</a>', 1, 
                             msg_prefix="Failed to urlize text")
         
-    def test_linebreaks(self):
+    def test_decision_linebreaks(self):
         decision = Decision(description="text\ntext")
         decision.save()
         path = reverse('publicweb_decision_detail', args=[decision.id])
+        response = self.client.get(path)
+        self.assertContains(response, 'text<br />text', 1, 
+                            msg_prefix="Failed to line break text")
+    
+    def test_feedback_linebreaks(self):
+        decision = Decision(description="Lorem")
+        decision.save()
+        feedback = Feedback(description="text\ntext")
+        feedback.decision = decision
+        feedback.save()
+        path = reverse('publicweb_feedback_detail', args=[feedback.id])
         response = self.client.get(path)
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
