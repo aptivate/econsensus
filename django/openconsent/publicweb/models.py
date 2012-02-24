@@ -213,6 +213,14 @@ class Feedback(models.Model):
     @models.permalink
     def get_parent_url(self):
         return ('publicweb_item_detail', (), {'object_id': self.decision.id})
+    
+    def get_author_name(self):
+        if hasattr(self.author, 'get_full_name') and self.author.get_full_name():
+            return self.author.get_full_name()
+        elif hasattr(self.author, 'username') and self.author.username:
+            return self.author.username
+        else:
+            return "An Anonymous Contributor"
 
     def rating_text(self):
         return self.RATING_CHOICES[self.rating][1]

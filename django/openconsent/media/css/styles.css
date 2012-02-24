@@ -480,7 +480,7 @@ h2.page_title strong {
 	float: left;
 }
 
-#decision_detail .author {
+.author {
 	font-size: 0.8em;
 	padding-bottom: 20px;
 }

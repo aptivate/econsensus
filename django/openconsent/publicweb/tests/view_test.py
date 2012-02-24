@@ -1,5 +1,6 @@
 from decision_test_case import DecisionTestCase
 from django.core.urlresolvers import reverse
+from publicweb.models import Decision
 
 #TODO: View tests should not be dependent on redirects from urls.py
 #THerefore should not use 'reverse'. Need to create request object...
@@ -44,3 +45,14 @@ class ViewTest(DecisionTestCase):
         url = reverse('publicweb_item_list', args=['archived'])        
         for dictionary in self.expected_archived_dict_tuple:
             self.assert_context_has_dict(dictionary, url)                                
+
+    def test_feedback_author_is_assigned(self):
+        decision = Decision(description="Test decision")
+        decision.save()
+        path = reverse('publicweb_feedback_create', args=[decision.id])
+        post_dict = {'description': 'Lorem Ipsum'}
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response,reverse('publicweb_item_detail', args=[decision.id]))
+        feedback = decision.feedback_set.get()
+        self.assertEqual(feedback.author, self.user)
+        

@@ -1,5 +1,5 @@
 from decision_test_case import OpenConsentTestCase
-from publicweb.models import Decision
+from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
@@ -72,4 +72,19 @@ class HtmlTest(OpenConsentTestCase):
         self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
+    
+    def test_feedback_author_shown(self):
+        self.user = self.login('Barry')
+        decision = Decision(description="Lorem Ipsum")
+        decision.save()
+        feedback = Feedback(description="Dolor sit")
+        feedback.author = self.user
+        feedback.decision = decision
+        feedback.save()
+        
+        self.user = self.login('Adam')        
+        path = reverse('publicweb_item_detail', args=[decision.id])
+        response = self.client.get(path)
+        barry = User.objects.get(username='Barry')
+        self.assertContains(response, barry.username)
         

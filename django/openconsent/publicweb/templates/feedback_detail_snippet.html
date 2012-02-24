@@ -2,6 +2,9 @@
 
 <li id="id{{ object.id }}">
 	<div class="feedback_wrapper">
+		<div class="author">
+		<p>{{ object.get_author_name }} says:</p>
+		</div>
 		<div class="feedback_type {{ object.rating_text }}">
 			{{ object.rating_text|capfirst }}
 		</div>

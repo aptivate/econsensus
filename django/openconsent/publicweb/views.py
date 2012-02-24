@@ -9,7 +9,7 @@ from django.http import HttpResponse
 
 import unicodecsv
 
-from models import Decision
+from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm, SortForm
 
 #TODO: Remove references to feedback...
@@ -128,19 +128,18 @@ def update_decision(request, object_id, template_name):
 def create_feedback(request, model, object_id, template_name):
 
     decision = get_object_or_404(model, id = object_id)
-            
+    
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
-            return_page = unicode(decision.id)            
-            return HttpResponseRedirect(reverse('publicweb_item_detail', args=[return_page]))
+            return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
         else:
             form = FeedbackForm(request.POST)
             if form.is_valid():
                 feedback = form.save(commit=False)
                 feedback.decision = decision
+                feedback.author = request.user
                 feedback.save()
-                return_page = unicode(decision.id)
-                return HttpResponseRedirect(reverse('publicweb_item_detail', args=[return_page]))
+                return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
         
         data = dict(form=form)
         context = RequestContext(request, data)
