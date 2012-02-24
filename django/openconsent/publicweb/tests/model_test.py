@@ -66,4 +66,8 @@ class ModelTest(DecisionTestCase):
             actual.append(unicode(name))
         
         self.assertEqual(expected, tuple(actual), "Unexptected feedback rating values!")
-        
+    
+    def test_feedback_has_author(self):
+        decision = Decision(description="Decision test data")
+        feedback = Feedback(description="Feedback test data", decision=decision)
+        self.model_has_attribute(feedback, "author")

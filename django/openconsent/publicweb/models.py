@@ -54,7 +54,7 @@ class Decision(models.Model):
         verbose_name=_('Budget/Resources'))
     people = models.CharField(blank=True, max_length=255,
         verbose_name=_('People'))
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name='open_consent_author')
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
     watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
@@ -197,7 +197,8 @@ class Feedback(models.Model):
                   (CONSENT_STATUS, _('consent')),
                   )
     
-    description = models.TextField(verbose_name=_('Description'), null=True, blank=True)    
+    description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")    
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES,
