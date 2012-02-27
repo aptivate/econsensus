@@ -59,13 +59,13 @@ class ModelTest(DecisionTestCase):
         self.instance_attribute_has_value(decision, "feedbackcount", 1)       
         
     def test_feedback_rating_has_values(self):
-        expected = ('question', 'danger', 'concerns', 'consent')
+        expected = ('question', 'danger', 'concerns', 'consent', 'comment')
         names = self.get_column(Feedback.RATING_CHOICES, 1)
         actual = []
         for name in names:
             actual.append(unicode(name))
         
-        self.assertEqual(expected, tuple(actual), "Unexptected feedback rating values!")
+        self.assertEqual(expected, tuple(actual), "Unexpected feedback rating values!")
     
     def test_feedback_has_author(self):
         decision = Decision(description="Decision test data")

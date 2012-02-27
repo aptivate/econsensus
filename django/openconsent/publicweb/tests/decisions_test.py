@@ -9,7 +9,7 @@ from django.forms.widgets import CheckboxInput
 
 import difflib
 
-from publicweb.models import Decision
+from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
 from publicweb.widgets import JQueryUIDateWidget
 from decision_test_case import DecisionTestCase
@@ -93,14 +93,17 @@ class DecisionsTest(DecisionTestCase):
     def test_update_feedback(self):
         decision = self.create_and_return_example_decision_with_feedback()
         feedback = decision.feedback_set.all()[0]
-        
+        text_field = "Modified"
         path = reverse('publicweb_feedback_update', args=[feedback.id])        
-        post_data = {'description': 'Modified', 'submit': 'Submit'}
+        post_data = {'description': text_field,
+                     'rating': Feedback.COMMENT_STATUS,
+                     'submit': 'Submit'}
         
-        self.client.post(path, post_data)
+        response = self.client.post(path, post_data)
+        self.assertRedirects(response, reverse('publicweb_item_detail', args=[decision.id]))
         
-        decision = Decision.objects.get(id=decision.id)
-        self.assertEquals('Modified', decision.feedback_set.all()[0].description)
+        feedback = Feedback.objects.get()
+        self.assertEquals(text_field, feedback.description)
         
     def get_edit_decision_response(self, decision):
         path = reverse('publicweb_decision_update',

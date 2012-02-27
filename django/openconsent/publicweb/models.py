@@ -141,7 +141,7 @@ class Decision(models.Model):
                 statistics['question'] += 1
             elif feedback.rating == Feedback.DANGER_STATUS:
                 statistics['danger'] += 1
-            elif feedback.rating == Feedback.SIGNIFICANT_CONCERNS_STATUS:
+            elif feedback.rating == Feedback.CONCERNS_STATUS:
                 statistics['concern'] += 1
             else:
                 statistics['consensus'] += 1
@@ -185,26 +185,23 @@ class Feedback(models.Model):
 
     QUESTION_STATUS = 0
     DANGER_STATUS = 1
-    SIGNIFICANT_CONCERNS_STATUS = 2
+    CONCERNS_STATUS = 2
     CONSENT_STATUS = 3
-    HAPPY_STATUS = 4
-    DELIGHTED_STATUS = 5
+    COMMENT_STATUS = 4
 
     RATING_CHOICES = ( 
                   (QUESTION_STATUS, _('question')),
                   (DANGER_STATUS, _('danger')),
-                  (SIGNIFICANT_CONCERNS_STATUS, _('concerns')),
+                  (CONCERNS_STATUS, _('concerns')),
                   (CONSENT_STATUS, _('consent')),
+                  (COMMENT_STATUS, _('comment')),
                   )
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")    
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
-    rating = models.IntegerField(choices=RATING_CHOICES,
-                                 verbose_name=_('Rating'),
-                                 null=True, 
-                                 blank=True )
+    rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
 
     @models.permalink
     def get_absolute_url(self):
