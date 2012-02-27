@@ -10,7 +10,7 @@ from django.http import HttpResponse
 import unicodecsv
 
 from models import Decision, Feedback
-from publicweb.forms import DecisionForm, FeedbackForm, SortForm
+from publicweb.forms import DecisionForm, FeedbackForm
 
 #TODO: Remove references to feedback...
 def process_post_and_redirect(request, decision, template_name):
@@ -80,8 +80,7 @@ context_codes = { 'proposal' : Decision.PROPOSAL_STATUS,
 
 @login_required        
 def object_list_by_status(request, status_text):
-    extra_context = { 'status_text': status_text,
-                     'sort_form': SortForm(request.GET) }
+    extra_context = { 'status_text': status_text }
     status = context_codes[status_text]
     #need to check template exists...
     template_name = status_text + '_list.html'
