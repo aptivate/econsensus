@@ -538,9 +538,7 @@ p.title {
 
 .decision_author {
 	font-size: 0.8em;
-	float: right;
 	padding: 10px;
-	margin: 0 60px 0 0;
 }
 .decision_author span {
 	font-weight: bold;
@@ -660,6 +658,10 @@ background:#aad400;
 	
 .decision_meta #tags #id_tags {
 	width:90%;
+}
+
+div#tags {
+	display: none;
 }
 
 .decision_dates {

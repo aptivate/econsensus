@@ -6,17 +6,14 @@
 		{% endfor %}
 		<div id="decision" class="{{ form.instance.status }}">
 			<div class="decision_summary">
-				{% if form.instance.author != null %}
-					<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
-				{% endif %}
 			    <div class="form_item">
 			        {{ form.description.errors }}
-					<label for="id_description">{% filter capfirst %}{{ form.instance.get_status_display }}{% endfilter %}</label>
+					<label for="id_description">{% trans "Description" %}:</label>
 			        {{ form.description }}
 			    </div>
 			 	<div class="form_item">
 			        {{ form.people.errors }}
-			        <label for="id_people">{% trans "Persons Responsible" %}</label>
+			        <label for="id_people">{% trans "Persons Responsible:" %}</label>
 			        {{ form.people }}
 			    </div>
 			 	<div class="form_item">
@@ -26,6 +23,9 @@
 			    </div>
 			 </div>
 			 <div class="decision_meta">
+				{% if form.instance.author != null %}
+				<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
+				{% endif %}
 			 	<div class="form_item status">
 			        {{ form.status.errors }}
 				    <label for="id_status">{% trans "Status" %}:</label>
