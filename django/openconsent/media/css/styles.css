@@ -455,7 +455,7 @@ h2.page_title strong {
 	margin-right: 8em;
 }
 
-#decision_detail .people {
+#decision_detail .people, #decision_detail .meeting_people {
 	margin-top: 20px;
 }
 
@@ -485,6 +485,9 @@ h2.page_title strong {
 	padding-bottom: 20px;
 }
 
+p.title {
+	font-weight: bold;
+}
 
 /* from the decision model
     PROPOSAL_STATUS = 0
@@ -599,7 +602,7 @@ background:#aad400;
 	float:left;
 }
 
-#id_description, #id_budget, #id_people {
+#id_description, #id_budget, #id_people, #id_meeting_people {
     display: block;
     padding: 15px;
     position: relative;
@@ -771,7 +774,7 @@ background:#aad400;
 	color:#aad400;
 }
 
-.form_item.description, .form_item.people {
+.form_item {
 	padding: 10px;
 	display: block;
 	position: relative;

@@ -8,7 +8,7 @@ class ModelTest(DecisionTestCase):
 #Generic test functions:
     def model_has_attribute(self, model, attr):
         self.assertTrue(hasattr(model, attr), 
-                          "Model %s does not have attribute %s" % (model,attr))
+                          "Model %s does not have attribute %s" % (model.__class__,attr))
 
     def instance_attribute_has_value(self, instance, attr, value):
         target = getattr(instance, attr)
@@ -71,3 +71,8 @@ class ModelTest(DecisionTestCase):
         decision = Decision(description="Decision test data")
         feedback = Feedback(description="Feedback test data", decision=decision)
         self.model_has_attribute(feedback, "author")
+
+    def test_decision_has_meeting_people(self):
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "meeting_people")
+        

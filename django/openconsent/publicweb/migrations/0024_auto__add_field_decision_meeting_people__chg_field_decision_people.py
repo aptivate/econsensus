@@ -1,37 +1,28 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
-
-    #based on models 
-    conversion_dict = {'0': 'proposal',
-                      '1': 'decision',
-                      '2': 'archived'}
-
-    def _convert_forwards(self, value):
-        return self.conversion_dict[value]
-
-    def convert_backwards(self, value):
-        try:
-            for k,v in self.conversion_dict.items():
-                if v==value:
-                    return k
-        except StopIteration:
-            raise KeyError
-        
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        for decision in orm.Decision.objects.all():    
-            decision.status = self._convert_forwards(decision.status)
-            decision.save()
-            
+        
+        # Adding field 'Decision.meeting_people'
+        db.add_column('publicweb_decision', 'meeting_people', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True), keep_default=False)
+
+        # Changing field 'Decision.people'
+        db.alter_column('publicweb_decision', 'people', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
+
+
     def backwards(self, orm):
-        for decision in orm.Decision.objects.all():
-            decision.status = self.convert_backwards(decision.status)
-            decision.save()
+        
+        # Deleting field 'Decision.meeting_people'
+        db.delete_column('publicweb_decision', 'meeting_people')
+
+        # Changing field 'Decision.people'
+        db.alter_column('publicweb_decision', 'people', self.gf('django.db.models.fields.CharField')(default='', max_length=255))
+
 
     models = {
         'auth.group': {
@@ -83,7 +74,8 @@ class Migration(DataMigration):
             'excerpt': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'people': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'meeting_people': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'people': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'review_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'proposal'", 'max_length': '10'}),
             'tags': ('tagging.fields.TagField', [], {'null': 'True'}),

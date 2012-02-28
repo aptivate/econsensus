@@ -14,10 +14,16 @@
 		<div class="description">
 			<p>{{ object.description|urlize|linebreaksbr }}</p>
 		</div>
+		{% if object.meeting_people %}
+		<div class="meeting_people">
+			<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
+			<strong>{{ object.meeting_people }}</strong>
+		</div>
+		{% endif %}	
 	{% if object.status = 'decision' %}
 	{% if object.people %}
 		<div class="people">
-			{% trans "Persons Responsible:" %}			
+			<p class='title'>{% trans "Persons Responsible:" %}</p>			
 			<strong>{{ object.people }}</strong>
 		</div>
 	{% endif %}

@@ -9,15 +9,20 @@
 				{% if form.instance.author != null %}
 					<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
 				{% endif %}
-			    <div class="form_item description">
+			    <div class="form_item">
 			        {{ form.description.errors }}
 					<label for="id_description">{% filter capfirst %}{{ form.instance.get_status_display }}{% endfilter %}</label>
 			        {{ form.description }}
 			    </div>
-			 	<div class="form_item people">
+			 	<div class="form_item">
 			        {{ form.people.errors }}
 			        <label for="id_people">{% trans "Persons Responsible" %}</label>
 			        {{ form.people }}
+			    </div>
+			 	<div class="form_item">
+			        {{ form.meeting_people.errors }}
+			        <label for="id_meeting_people">{% trans "What meeting/ who made this decision?" %}</label>
+			        {{ form.meeting_people }}
 			    </div>
 			 </div>
 			 <div class="decision_meta">
@@ -69,7 +74,7 @@
 			</div>
 		</div>
 		<div class="decision_controls">
-			<div class="form_item watch">
+			<div class="watch">
 		        {{ form.watch.errors }}
 		        <label for="id_watch">{% trans "Watch" %}?</label>
 		        {{ form.watch }}

@@ -99,3 +99,18 @@ class HtmlTest(OpenConsentTestCase):
         barry = User.objects.get(username='Barry')
         self.assertContains(response, barry.username)
         
+    def test_meeting_people_shown(self):
+        test_string = 'vitae aliquet tellus'
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'meeting_people')
+        post_dict = {'description': 'Quisque sapien justo', 
+                     'meeting_people': test_string, 
+                     'status': Decision.PROPOSAL_STATUS}
+        response = self.client.post(path,post_dict)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
+        decision = Decision.objects.get()
+        path = reverse('publicweb_item_detail', args=[decision.id])
+        response = self.client.get(path)  
+        self.assertContains(response, test_string)
+        
