@@ -4,6 +4,7 @@ Tests for the csv export functionality
 
 from publicweb.views import export_csv
 from open_consent_test_case import OpenConsentTestCase
+from django.core.urlresolvers import reverse
 
 class CsvTest(OpenConsentTestCase):
     def test_export_csv(self):
@@ -15,12 +16,11 @@ class CsvTest(OpenConsentTestCase):
 		TODO:
 		Check that when you add or update a decision it is reflected in the output.		      
         """
-        # run the function with any old parameter since it doesn't
-        # seem to matter
-        res = export_csv(1000)  
-        self.assertEquals( res.status_code, 200 )
-        self.assertEquals( res['Content-Disposition'], 'attachment; filename=publicweb_decision.csv' )
-        self.assertEquals( res['Content-Type'],	'text/csv' )
-        self.assertTrue( len(res.content) > 0 )
+        path = reverse('publicweb_export_csv')
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals( response['Content-Disposition'], 'attachment; filename=publicweb_decision.csv' )
+        self.assertEquals( response['Content-Type'],	'text/csv' )
+        self.assertTrue( len(response.content) > 0 )
 
 

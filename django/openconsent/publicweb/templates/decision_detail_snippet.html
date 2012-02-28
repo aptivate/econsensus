@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div id="decision_detail" class="{{ object.status_text }}">
+<div id="decision_detail" class="{{ object.status }}">
 	<div class="stats">
 		<p><span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span></p>
 		<p><span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span></p>

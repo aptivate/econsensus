@@ -5,33 +5,34 @@ from django.core.urlresolvers import reverse
 from django.utils import translation
 from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
+from publicweb.models import Decision
 
 class InternationalisationTest(OpenConsentTestCase):
     def test_all_text_translated_when_viewing_decision_list(self):
         self.check_all_text_translated('publicweb_item_list', args=['decision'])
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('publicweb_decision_create', args=[0])
+        self.check_all_text_translated('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
 
     def check_all_text_translated(self, view, args):
         old_lang = translation.get_language()
-                
+        
         self.mock_get_text_functions_for_french()
         
         translation.activate("fr")
 
         response = self.client.get(reverse(view, args=args), follow=True)
         html = response.content # pylint: disable=E1103
-                
         root = fromstring(html)        
         sel = CSSSelector('*')
-               
+
         for element in sel(root):
-            if self.has_translatable_text(element):             
-                self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element)
-                                + " with text '" + element.text + "' from view '" + view + "'")
-     
-        translation.activate(old_lang)
+            if self.has_translatable_text(element):
+                try:       
+                    self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element)
+                                    + " with text '" + element.text + "' from view '" + view + "'")
+                finally:
+                    translation.activate(old_lang)
 
     def has_translatable_text(self, element):
         if element.text is None \

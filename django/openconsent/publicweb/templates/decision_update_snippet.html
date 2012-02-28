@@ -1,10 +1,10 @@
 {% load i18n %}
 
-<form action="#" method="post" id="decision_update_form" class="{{ form.instance.status_text }}">{% csrf_token %}
+<form action="#" method="post" id="decision_update_form" class="{{ form.instance.status }}">{% csrf_token %}
 		{% for error in form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
-		<div id="decision" class="{{ form.instance.status_text }}">
+		<div id="decision" class="{{ form.instance.status }}">
 			<div class="decision_summary">
 				{% if form.instance.author != null %}
 					<div class="decision_author">{% trans "Created by" %}: {{form.instance.author}}</div>
@@ -26,13 +26,13 @@
 				    <label for="id_status">{% trans "Status" %}:</label>
 				    {{ form.status }}
 				</div>
-				{% if not form.instance or form.instance.status_text == 'proposal' %}
+				{% if not form.instance or form.instance.status == 'proposal' %}
 				<div class="form_item">
 			        {{ form.deadline.errors }}
 			        <label for="deadline">{% trans "Deadline" %}:</label>
 			        {{ form.deadline }}
 			    </div>
-			    {% else %}{% if form.instance.status_text == 'decision' %}
+			    {% else %}{% if form.instance.status == 'decision' %}
 				<div class="form_item">
 			        {{ form.decided_date.errors }}
 			        <label for="id_decided_date">{% trans "Decided" %}:</label>

@@ -29,7 +29,6 @@ class ViewDecisionTest(DecisionTestCase):
         form_fields = set(['status', 'review_date', 'description', 'tags', 'people', 'effective_date', 'csrfmiddlewaretoken', 'decided_date'])
         decision = self.create_and_return_decision(status=Decision.DECISION_STATUS)
         response = self.client.get(reverse('publicweb_decision_snippet_update', args=[decision.id]))
-        
         self.assertTrue(response.content.strip().startswith('<form action="#" method="post" id="decision_update_form" class="decision">'))
         form_data = self.get_form_values_from_response(response, 1)
          

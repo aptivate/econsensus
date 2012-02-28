@@ -179,7 +179,7 @@ class DecisionsTest(DecisionTestCase):
         post_dict.update({'description': 'Make Eggs',
                             'watch': True })
         
-        self.client.post(reverse('publicweb_decision_create', args=[0]), 
+        self.client.post(reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS]), 
                                 post_dict,
                                 follow=True )
 
@@ -232,7 +232,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})
         
-        response = self.client.post(reverse('publicweb_decision_create', args=[0]), 
+        response = self.client.post(reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS]), 
                                 post_dict,
                                 follow=True )
         self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
@@ -240,7 +240,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEqual(0, len(decision.watchers.all()), "watch was deselected!")
         
     def test_add_page_contains_cancel(self):
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
                 
         self.assertContains(response, 'type="submit" value="Cancel"', count=1)
@@ -263,7 +263,7 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})        
         
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         self.client.post(path, post_dict)
 
         self.assertEqual(0, len(Decision.objects.all()), "Hitting 'Cancel' created an object!")

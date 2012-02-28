@@ -5,18 +5,18 @@ from publicweb.models import Decision
 class LoginTest(OpenConsentTestCase):       
     def test_non_login_is_redirected(self):
         self.client.logout()
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 302)
         
     def test_non_login_directed_to_login(self):
         self.client.logout()
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertRedirects(response, reverse('login')+'?next='+path)
 
     def test_add_decision_loads_when_logged_in(self):
-        path = reverse('publicweb_decision_create', args=[0])
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
         

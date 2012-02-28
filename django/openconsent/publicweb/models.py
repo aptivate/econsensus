@@ -24,9 +24,9 @@ add_introspection_rules([], ["^tagging\.fields\.TagField"])
 class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
-    PROPOSAL_STATUS = 0
-    DECISION_STATUS = 1
-    ARCHIVED_STATUS = 2
+    PROPOSAL_STATUS = 'proposal'
+    DECISION_STATUS = 'decision'
+    ARCHIVED_STATUS = 'archived'
 
     STATUS_CHOICES = (
                   (PROPOSAL_STATUS, _('proposal')),
@@ -56,9 +56,9 @@ class Decision(models.Model):
         verbose_name=_('People'))
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
     watchers = models.ManyToManyField(User, blank=True, editable=False)
-    status = models.IntegerField(choices=STATUS_CHOICES,
+    status = models.CharField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
-                                 verbose_name=_('Status'))
+                                 max_length=10)
     tags = TagField(null=True, blank=True, editable=True, 
                     help_text=TAGS_HELP_FIELD_TEXT)
 
@@ -85,9 +85,6 @@ class Decision(models.Model):
 
     watchercount.short_description = _("Watchers")
 
-    def status_text(self):
-        return self.STATUS_CHOICES[self.status][1]
-    
     def unresolvedfeedback(self):
         answer = _("No")
         linked_feedback = self.feedback_set.all()

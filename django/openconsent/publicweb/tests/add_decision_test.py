@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from decision_test_case import DecisionTestCase
+from publicweb.models import Decision
 
 class AddDecisionTest(DecisionTestCase):
     def test_jquery_javascript_included_in_page(self):
@@ -17,5 +18,5 @@ class AddDecisionTest(DecisionTestCase):
         self.assertNotContains(response, "id_short_name")
     
     def load_add_decision_and_return_response(self):
-        return self.client.get(reverse('publicweb_decision_create', args=[0]))
+        return self.client.get(reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS]))
 
