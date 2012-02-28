@@ -11,10 +11,10 @@
 
 {% block heading %}
 <span>
-{% if object.status_text == 'proposal' %}
+{% if object.status == 'proposal' %}
 Proposal
 {% else %}
-{% if object.status_text == 'decision' %}
+{% if object.status == 'decision' %}
 Decision
 {% else %}
 Archived

@@ -7,14 +7,14 @@ from publicweb.models import Decision, Feedback
 
 class ViewTest(DecisionTestCase):
 
-    expected_proposal_key_tuple = ('status_text',)
-    expected_proposal_dict_tuple = ({'status_text':'proposal'},)
+    expected_proposal_key_tuple = ('tab',)
+    expected_proposal_dict_tuple = ({'tab':'proposal'},)
         
-    expected_consensus_key_tuple = ('status_text',)
-    expected_consensus_dict_tuple = ({'status_text':'decision'},)
+    expected_consensus_key_tuple = ('tab',)
+    expected_consensus_dict_tuple = ({'tab':'decision'},)
         
-    expected_archived_key_tuple = ('status_text',)
-    expected_archived_dict_tuple = ({'status_text':'archived'},)
+    expected_archived_key_tuple = ('tab',)
+    expected_archived_dict_tuple = ({'tab':'archived'},)
         
     def assert_context_has_key(self, key, url):
         response = self.client.get(url)
@@ -22,7 +22,7 @@ class ViewTest(DecisionTestCase):
 
     def assert_context_has_dict(self, dictionary, url):
         response = self.client.get(url)
-        self.assertDictContainsSubset(dictionary, response.context, 'warning will robinson!')
+        self.assertDictContainsSubset(dictionary, response.context)
 
     def test_expected_context_keys(self):
         url = reverse('publicweb_item_list', args=['proposal'])

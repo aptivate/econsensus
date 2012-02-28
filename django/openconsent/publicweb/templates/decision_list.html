@@ -5,12 +5,12 @@
 
 {% block heading %}{% trans "Decisions Made" %}{% endblock %}
 
-{% block body_class%}{{ status_text }}-list{% endblock %}
+{% block body_class%}{{ tab }}-list{% endblock %}
 
 {% block main_content %}
 	<ul class="summary-list">
 		{% if object_list %}
-		<div class="summary-header {{ status_text }}">
+		<div class="summary-header {{ tab }}">
 				<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
 				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
 				<a href="{{ request.path }}?sort=decided_date" class="field decided_date header {% if sort == 'decided_date' %}sort{% endif %}">Decided Date</a>

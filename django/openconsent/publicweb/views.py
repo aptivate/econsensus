@@ -47,7 +47,7 @@ def export_csv(request):
 
 @login_required        
 def object_list_by_status(request, status):
-    extra_context = { 'status_text': status }
+    extra_context = { 'tab': status }
     #need to check template exists...
     template_name = status + '_list.html'
     
