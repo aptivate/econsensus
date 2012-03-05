@@ -22,6 +22,7 @@ def load_sample_data(environment, force=False):
         # first check if it has already been loaded
         output_lines = tasklib._manage_py(['dumpdata', 'publicweb'], supress_output=True)
         if output_lines[0] != '[]':
+            print "Fixtures already loaded."
             return
 
         tasklib._manage_py(['loaddata', "sample_data.json"])
