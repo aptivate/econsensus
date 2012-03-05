@@ -16,7 +16,7 @@
             "email": "admin@localhost", 
             "date_joined": "2011-09-01 15:45:42"
         }
-    }
+    },
     {
         "pk": 2, 
         "model": "auth.user", 

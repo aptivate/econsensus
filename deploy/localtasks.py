@@ -22,7 +22,7 @@ def load_sample_data(environment, force=False):
         # first check if it has already been loaded
         output_lines = tasklib._manage_py(['dumpdata', 'publicweb'], supress_output=True)
         if output_lines[0] != '[]':
-            print "Fixtures already loaded."
+            print "Environment '", environment, "' already has sample data loaded."
             return
 
         tasklib._manage_py(['loaddata', "sample_data.json"])
@@ -45,6 +45,7 @@ def load_django_site_data(environment, force=False):
         # first check if it has already been loaded
         output_lines = tasklib._manage_py(['dumpdata', 'sites'], supress_output=True)
         if output_lines[0] != '[]':
+            print "Environment '", environment, "' already has site data loaded."
             return
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
