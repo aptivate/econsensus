@@ -10,13 +10,23 @@
 {% block main_content %}
 	<ul class="summary-list">
 		{% if object_list %}
-		<div class="summary-header {{ tab }}">
-				<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
-				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
-				<a href="{{ request.path }}?sort=feedback" class="field feedbackcount header {% if sort == 'feedback' %}sort{% endif %}">Feedback</a>
-				<a href="{{ request.path }}?sort=watchers" class="field watchercount header {% if sort == 'watchers' %}sort{% endif %}">Watchers</a>
-				<a href="{{ request.path }}?sort=deadline" class="field deadline header {% if sort == 'deadline' %}sort{% endif %}">Deadline</a>
-		</div>
+		<li class="summary-item summary-header {{ tab }}">
+				<a href="{{ request.path }}?sort=id" class="field id header">
+					<p class="{% if sort == 'id' %}sort{% endif %}">ID</p>
+				</a>
+				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header">
+					<p class="{% if sort == 'excerpt' %}sort{% endif %}">Excerpt</p>
+				</a>
+				<a href="{{ request.path }}?sort=feedback" class="field feedbackcount header">
+					<p class="{% if sort == 'feedback' %}sort{% endif %}">Feedback</p>
+				</a>
+				<a href="{{ request.path }}?sort=watchers" class="field watchercount header">
+					<p class="{% if sort == 'watchers' %}sort{% endif %}">Watchers</p>
+				</a>
+				<a href="{{ request.path }}?sort=deadline" class="field deadline header">
+					<p class="{% if sort == 'deadline' %}sort{% endif %}">Deadline</p>
+				</a>
+		</li>
         {% for object in object_list %}
 	    <li class="summary-item">
 	    <a class="urloverlay" href="{% url publicweb_item_detail object.id %}"></a>

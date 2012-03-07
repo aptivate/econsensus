@@ -10,12 +10,20 @@
 {% block main_content %}
 	<ul class="summary-list">
 		{% if object_list %}
-		<div class="summary-header {{ tab }}">
-			<a href="{{ request.path }}?sort=id" class="field id header {% if sort == 'id' %}sort{% endif %}">ID</a>
-			<a href="{{ request.path }}?sort=excerpt" class="field excerpt header {% if sort == 'excerpt' %}sort{% endif %}">Excerpt</a>
-			<a href="{{ request.path }}?sort=created_date" class="field created_date header {% if sort == 'created_date' %}sort{% endif %}">Created Date</a>
-			<a href="{{ request.path }}?sort=archived_date" class="field archived_date header {% if sort == 'archived_date' %}sort{% endif %}">Archived Date</a>
-		</div>
+		<li class="summary-item summary-header {{ tab }}">
+			<a href="{{ request.path }}?sort=id" class="field id header">
+				<p class="{% if sort == 'id' %}sort{% endif %}">ID</p>
+			</a>
+			<a href="{{ request.path }}?sort=excerpt" class="field excerpt header">
+				<p class="{% if sort == 'excerpt' %}sort{% endif %}">Excerpt</p>
+			</a>
+			<a href="{{ request.path }}?sort=created_date" class="field created_date header">
+				<p class="{% if sort == 'created_date' %}sort{% endif %}">Created Date</p>
+			</a>
+			<a href="{{ request.path }}?sort=archived_date" class="field archived_date header">
+				<p class="{% if sort == 'archived_date' %}sort{% endif %}">Archived Date</p>
+			</a>
+		</li>
         {% for object in object_list %}
 	    <li class="summary-item">
 	    <a class="urloverlay" href="{% url publicweb_item_detail object.id %}"></a>

@@ -229,6 +229,7 @@ body.archived-list ul li.navigation_archived a {
 
 #content {
 	padding-top:0.5em;
+	width: 960px;
 }
 
 #content h2.page_title {
@@ -252,7 +253,7 @@ dt {
     clear: both;
 }
 
-li.summary-item, .summary-header {
+li.summary-item {
 	border:3px solid;
 	-moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
@@ -263,23 +264,30 @@ li.summary-item, .summary-header {
 }
 
 .summary-header {
-	border: 1px solid #D3CDC6;
+	border: 3px solid #D3CDC6;
 }
 
 .summary-header.proposal {
 	background: #FFCC00;
+	border-color: #FFCC00;
 }
 
 .summary-header.decision {
 	background: #AAD400;	
+	border-color: #AAD400;
 }
 
 .summary-header a {
 	color: #000;
 }
 
-.summary-header a.sort {
-	text-decoration: underline;
+.summary-header p.sort {
+    background-image: url("../images/icon-sort.png");
+    background-position: right center;
+    background-repeat: no-repeat;
+	color: #3E6EA3;
+	padding-right: 20px;
+	float:left;
 }
 
 .summary-item a.iconified {
@@ -332,49 +340,51 @@ li.summary-item {
 }
 
 .field.id {
-    width: 3em;
+    width: 40px;
 }
 
 .field.excerpt {
-	width:60%;
+	width:520px;
 }
 
 .field.feedbackcount {
-	width: 5em;
+	width: 80px;
 	float: right;
 	text-align: center;
 }
 
 .field.decided_date {
-	width: 8em;
+    width: 130px;
 	float: right;
-	
+	text-align: center;
 }
 
 .field.watchercount {
-    width: 5em;
+    width: 80px;
     float: right;
     text-align: center;
 }
 
 .field.review_date {
-	width: 8em;
+	width: 130px;
 	float: right;
-	
+	text-align: center;
 }
 
 .field.archived_date {
     float: right;
-	width: 8em;
+	width: 130px;
+	text-align: center;
 }
 
 .field.created_date{
-	width: 8em;
+	width: 130px;
 	float: right;
+	text-align: center;
 }
 
 .field.deadline {
-	width: 8em;
+	width: 80px;
 	float: right;	
 	text-align: center;
 }
