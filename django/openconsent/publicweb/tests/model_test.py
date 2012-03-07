@@ -76,3 +76,14 @@ class ModelTest(DecisionTestCase):
         decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "meeting_people")
         
+    def test_save_when_no_author(self):
+        decision = Decision(description='Test', status=0)
+        decision.author = None
+        decision.save()
+        decision = Decision.objects.get()
+        decision.description = "A change."
+        try:
+            decision.save()
+        except:
+            self.fail("Failed to save object.")
+        
