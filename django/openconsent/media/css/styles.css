@@ -513,7 +513,8 @@ p.title {
 	border-radius: 15px;
     clear: both;
     float: left;
-    width: 100%;	
+    width: 100%;
+    padding: 10px;
 }
 
 #decision_update_form.proposal {
