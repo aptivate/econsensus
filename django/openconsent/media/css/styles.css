@@ -123,9 +123,10 @@ textarea, input {
 
 #footer-wrapper {
 	background-color:#fff;
+	padding: 30px 0px;
+	min-width: 960px;
+	
 }
-
-
 
 /* Header */
 
@@ -888,20 +889,17 @@ div#tags {
 
 /* Footer */
 
-#footer {
-	padding:0;
-}
-
 #footer p {
 	font-size:0.8em;
 	color:#666;
-	padding:5px 10px;
 }
 
-#footer div.exportcsv a {
-	font-size:0.8em;
+#footer .aptivate {
+	float: left;
+}
+
+#footer .export {
 	float: right;
-	padding:5px 10px;
 }
 
 /* login form */
