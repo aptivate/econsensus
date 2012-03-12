@@ -6,7 +6,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    #url(r'^public/', include('openconsent.publicweb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'', include('openconsent.publicweb.urls')),    
