@@ -87,7 +87,7 @@ a.button {
 }
 
 textarea, input {
-    border: 2px solid #ddd;
+    border: 8px solid #F6F6F6;
     -moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
     border-radius: 10px;
@@ -118,14 +118,13 @@ textarea, input {
 
 #navigation-wrapper {
 	border-top:10px solid #ededed;
-	background-color:#655042;
+	background-color:#483E37;
 }
 
 #footer-wrapper {
-	background-color:#fff;
-	padding: 30px 0px;
-	min-width: 960px;
-	
+    background-color: #FFFFFF;
+    min-width: 960px;
+    padding: 10px 0;
 }
 
 /* Header */
@@ -229,8 +228,7 @@ body.archived-list ul li.navigation_archived a {
 /****** Content ******/
 
 #content {
-	padding-top:0.5em;
-	width: 960px;
+	padding:20px;
 }
 
 #content h2.page_title {
@@ -436,14 +434,24 @@ h2.page_title strong {
 	font-weight:bold;
 }
 
+span.excerpt {
+    color: #483E37;
+    display: block;
+    font-weight: bold;
+    margin-left: 25px;
+    padding-top: 0.5em;
+    width: 60%;
+}
+
 #decision_detail {
 	border: 3px solid #000000;
 	border-radius: 15px;
     clear: both;
     display: block;
-    overflow: hidden;
     position: relative;
-    padding: 10px;
+    padding: 20px 0;
+    width:100%;
+    float:left;
 }
 
 #decision_detail.proposal {
@@ -459,11 +467,27 @@ h2.page_title strong {
 }
 
 #decision_detail .stats {
-	float: right;
+	float: left;
+	position:relative;
+}
+
+#decision_detail .stats dt {
+    position:absolute;
+    left:20px;
+  }
+  
+#decision_detail .stats dd {
+	padding-left:150px;
 }
 
 #decision_detail .description {
-	margin-right: 8em;
+	width:70%;
+	float:left;
+	margin-top:5px;
+}
+
+#decision_detail .description p {
+	margin:0 20px 0 20px; 
 }
 
 #decision_detail .people, #decision_detail .meeting_people {
@@ -471,30 +495,61 @@ h2.page_title strong {
 }
 
 #decision_detail .meta {
-	clear: both;
-	padding-top: 20px;
+	float:right;
+	width:30%;
 }
 
 #decision_detail .controls {
-	float: right;
-	padding: 5px;
+	position:absolute;
+	left:20px;
+	bottom:20px;
+}
+
+#decision_detail .controls a {
+	text-decoration:underline;
+	font-weight:bold;
 }
 
 #decision_detail .dates {
-	float: left;
+	float: right;
+	position:relative;
+	top:-15px;
+	margin-right:20px;
 }
 
 #decision_detail .date {
-	border-radius:10px;
-	padding:5px 8px;
-	background: #f6f6f6;
 	float: left;
+	text-align:center;
+	font-size:0.8em;
+	color:#666;
+	width:50%;
+	margin-bottom:1.5em;
+}
+
+#decision_detail .date strong {
+    background-color: #3E6EA3;
+    color:#fff;
+    border-radius: 10px 10px 10px 10px;
+    clear: both;
+    display: block;
+    font-weight: bold;
+    padding: 3px 10px;
+    margin:0 5px;
 }
 
 .author {
-	font-size: 0.8em;
 	padding-bottom: 20px;
+	position:absolute;
+	top:-50px;
+	right:0;
+	color:#666;
 }
+
+.author span {
+	font-size:0.8em;
+	color:#483E37;
+	font-weight:bold;
+	}
 
 p.title {
 	font-weight: bold;
@@ -772,19 +827,23 @@ div#tags {
 	font-weight:bold;
 }
 
-.stats span.question {
+dl.stats dt {
+	display:block;
+}
+
+.stats .question {
 	color:#008080;
 }
 
-.stats span.danger {
+.stats .danger {
 	color:#d81616;
 }
 
-.stats span.concern {
+.stats .concern {
 	color:#f60;
 }
 
-.stats span.consensus {
+.stats .consensus {
 	color:#aad400;
 }
 
@@ -822,7 +881,6 @@ div#tags {
 	color: #333;
 	width: 96%;
 	padding: 10px;
-	height: 20px;
 }
 
 .formset_item .form_item.description textarea.expanded {
@@ -896,7 +954,6 @@ div#tags {
 }
 
 #footer .aptivate {
-	float: left;
 }
 
 #footer .export {
@@ -906,23 +963,27 @@ div#tags {
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
-	width:400px;
-	display:block;
-	float:none;
-	margin:0 auto;
-	clear:both;
-	position:relative;
+    clear: both;
+    display: block;
+    float: left;
+    margin: 0 auto;
+    overflow: visible;
+    position: relative;
+    width: 100%;
 }
 
 body.login #header, body.login #content {
-	position:relative;
-	padding-top:0;
-	margin-top:0;
+    margin: 0 auto;
+    padding-top: 0;
+    position: relative;
 }
 
 body.login #header {
-    margin-bottom: 20px;
-    margin-top: 30px;
+    display: block;
+    left: -25px;
+    margin: 30px auto;
+    position: relative;
+    width: 400px;
 }
 
 body.login #header h1 {
@@ -949,10 +1010,11 @@ body.login #footer {
     -moz-border-radius: 20px;
   	-webkit-border-radius: 20px;
     border-radius: 20px;
-    display: block;
-    float: left;
+ 	display: block;
+    margin: 0 auto;
+    overflow: auto;
     padding: 20px;
-    width: 360px;
+    width: 450px;
 }
 
 #login-form p {
@@ -993,6 +1055,7 @@ body.login #footer {
     padding: 5px;
     position: relative;
     width: 215px;
+
 }
 
 /* 404 Page Styling */

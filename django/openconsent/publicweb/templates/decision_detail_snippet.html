@@ -1,16 +1,9 @@
 {% load i18n %}
-
+{% block heading %}<span class="excerpt">: {{ object.excerpt }} (#{{ object.id }})</span>{% endblock heading %}
 <div id="decision_detail" class="{{ object.status }}">
-	<div class="stats">
-		<p><span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span></p>
-		<p><span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span></p>
-		<p><span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span></p>
-		<p><span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span></p>
-	</div>
 	<div class="summary">
-		<div class="author">
-		<p>Created by {{ object.author }}</p>
-		</div>
+		<h3 class="author">Created by: <span> {{ object.author }}</span></h3>
+		
 		<div class="description">
 			<p>{{ object.description|urlize|linebreaksbr }}</p>
 		</div>
@@ -66,9 +59,20 @@
 			</div>
 	{% endif %}
 	{% endif %}
+	
 		</div>
+		<dl class="stats">
+		<dt class="question">{% trans "questions" %}
+		<dd>{{ object.get_feedback_statistics.question }}</dd>
+		<dt class="danger">{% trans "danger" %}</dt>
+		<dd>{{ object.get_feedback_statistics.danger }}</dd>
+		<dt class="concern">{% trans "concerns" %}</dt>
+		<dd>{{ object.get_feedback_statistics.concern }}</dd>
+		<dt>{% trans "consensus" %}</dt>
+		<dd>{{ object.get_feedback_statistics.consensus }}</dd>
+	</dl>
 		<div class="controls">
-			<p class="edit"><a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a></p>
+			<a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a>
 		</div>
 	</div>
 </div>
