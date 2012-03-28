@@ -1,4 +1,4 @@
-Hello from the {{ site }} OpenConsent server!
+Hello from the {{ site }} Econsensus server!
 
 This is to let you know that the following item has changed status from "{{ old }}" to "{{ new }}"
 
@@ -7,4 +7,4 @@ This is to let you know that the following item has changed status from "{{ old 
 To interact with it, click here: {{ link }}
 
 You are receiving this mail because you are signed up to the {{ site }}
-OpenConsent service.
+Econsensus service.
