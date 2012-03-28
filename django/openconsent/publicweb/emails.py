@@ -17,9 +17,9 @@ class OpenConsentEmailMessage(EmailMessage):
         #record newness before saving
         if typ == 'new':
             if obj.status == obj.DECISION_STATUS:
-                subject_template = Template("[{{ site }} Open Consent]: Consensus Reached: {{ name|safe }}")
+                subject_template = Template("[{{ site }} Econsensus]: Consensus Reached: {{ name|safe }}")
             else:
-                subject_template = Template("[{{ site }} Open Consent]: New {{ status }}: {{ name|safe }}")
+                subject_template = Template("[{{ site }} Econsensus]: New {{ status }}: {{ name|safe }}")
 
             subject_dict = {'site': current_site.name,
                             'status' : obj.status,
@@ -29,7 +29,7 @@ class OpenConsentEmailMessage(EmailMessage):
             queryset = User.objects.all()
             
         elif typ == 'status_change':
-            subject_template = Template("[{{ site }} Open Consent]: {{ name|safe }} changed status from {{ old_status }} to {{ new_status }}")
+            subject_template = Template("[{{ site }} Econsensus]: {{ name|safe }} changed status from {{ old_status }} to {{ new_status }}")
             subject_dict = {'site': current_site.name,
                             'old_status' : old_obj.status,
                             'new_status' : obj.status,
@@ -42,7 +42,7 @@ class OpenConsentEmailMessage(EmailMessage):
                           'new': obj.status}
             queryset = User.objects.all()
         elif typ == 'content_change':
-            subject_template = Template("[{{ site }} Open Consent]: Change to {{ name|safe }}")
+            subject_template = Template("[{{ site }} Econsensus]: Change to {{ name|safe }}")
             subject_dict = {'site': current_site.name,
                             'name': obj.excerpt.replace('\r\n', '') }
             email_template = get_template('email/content_change.txt')
