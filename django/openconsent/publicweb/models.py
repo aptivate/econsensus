@@ -90,6 +90,7 @@ class Decision(models.Model):
         linked_feedback = self.feedback_set.all()
         for thisfeedback in linked_feedback:
             if (not thisfeedback.resolved):
+
                 answer = _("Yes")
                 break
             
@@ -121,7 +122,7 @@ class Decision(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_decision_detail', (), {'object_id':self.id})
+        return ('publicweb_item_detail', (), {'object_id':self.id})
     
     def get_feedback_statistics(self):
         statistics = {'all': 0,
