@@ -39,7 +39,7 @@ jQuery(function ($) {
 	 * Proposal in-line editing
 	 */
 	// Override redirect to form and put it inline
-	$(".controls .edit a").live("click", function (e) {
+	$(".controls a.edit").live("click", function (e) {
 		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_detail");
 		e.preventDefault();
 	});
@@ -86,16 +86,17 @@ jQuery(function ($) {
 {% endblock %}
 
 {% block heading %}
-{{ object.status|capfirst }}
-{% endblock %}
+{{ object.status|capfirst }}: {{ object.excerpt }} (#{{ object.id }})
+{% endblock heading %}
 
 {% block main_content %}
 
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title">{% trans "Feedback" %}</h2>
+<a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a>
 <div class="decision_feedback">
-<a href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a>
+
 {% if object.feedback_set.all %}
 	<ol class="feedback_list">
 {% for feedback in object.feedback_set.all %}

@@ -87,12 +87,16 @@ a.button {
 }
 
 textarea, input {
-    border: 2px solid #ddd;
+    border: 6px solid #ddd;
     -moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
     border-radius: 10px;
-    box-shadow: inset 3px 3px 3px #CCCCCC;
+    box-shadow: 4px 4px 5px #999 inset;
     position: relative;
+}
+
+input {
+	box-shadow:none;
 }
 
 /* Main Blocks */
@@ -118,14 +122,13 @@ textarea, input {
 
 #navigation-wrapper {
 	border-top:10px solid #ededed;
-	background-color:#655042;
+	background-color:#483E37;
 }
 
 #footer-wrapper {
-	background-color:#fff;
-	padding: 30px 0px;
-	min-width: 960px;
-	
+    background-color: #FFFFFF;
+    min-width: 960px;
+    padding: 10px 0;
 }
 
 /* Header */
@@ -229,8 +232,7 @@ body.archived-list ul li.navigation_archived a {
 /****** Content ******/
 
 #content {
-	padding-top:0.5em;
-	width: 960px;
+	padding:20px;
 }
 
 #content h2.page_title {
@@ -323,8 +325,9 @@ li.summary-item {
     border-radius: 15px;
     font-size: 0.9em;
     font-weight: bold;
-	border:3px solid #EFEFEF;
+	border:5px solid #EFEFEF;
 	color: #3E6EA3;
+	padding:0 5px;
 	
 }
 
@@ -436,14 +439,24 @@ h2.page_title strong {
 	font-weight:bold;
 }
 
+span.excerpt {
+    color: #483E37;
+    display: block;
+    font-weight: bold;
+    margin-left: 25px;
+    padding-top: 0.5em;
+    width: 60%;
+}
+
 #decision_detail {
 	border: 3px solid #000000;
 	border-radius: 15px;
     clear: both;
     display: block;
-    overflow: hidden;
     position: relative;
-    padding: 10px;
+    padding: 20px 0;
+    width:100%;
+    float:left;
 }
 
 #decision_detail.proposal {
@@ -452,6 +465,8 @@ h2.page_title strong {
 
 #decision_detail.decision {
 	border-color: #90AA27;
+	margin-top:10px;
+	margin-bottom:10px;
 }
 
 #decision_detail.archived {
@@ -459,11 +474,27 @@ h2.page_title strong {
 }
 
 #decision_detail .stats {
-	float: right;
+	float: left;
+	position:relative;
+}
+
+#decision_detail .stats dt {
+    position:absolute;
+    left:20px;
+  }
+  
+#decision_detail .stats dd {
+	padding-left:8em;
 }
 
 #decision_detail .description {
-	margin-right: 8em;
+	width:70%;
+	float:left;
+	margin-top:5px;
+}
+
+#decision_detail .description p {
+	margin:0 20px 30px 20px; 
 }
 
 #decision_detail .people, #decision_detail .meeting_people {
@@ -471,30 +502,64 @@ h2.page_title strong {
 }
 
 #decision_detail .meta {
-	clear: both;
-	padding-top: 20px;
+	float:right;
+	width:30%;
 }
 
 #decision_detail .controls {
-	float: right;
-	padding: 5px;
+	position:absolute;
+	left:20px;
+	bottom:20px;
+}
+
+a.edit {
+	text-decoration:underline;
+	font-weight:bold;
+	font-size:0.8em;
 }
 
 #decision_detail .dates {
-	float: left;
+	float: right;
+	position:relative;
+	top:-15px;
+	margin-right:20px;
 }
 
 #decision_detail .date {
-	border-radius:10px;
-	padding:5px 8px;
-	background: #f6f6f6;
 	float: left;
+	text-align:center;
+	font-size:0.8em;
+	color:#666;
+	width:50%;
+	margin-bottom:1.5em;
+}
+
+#decision_detail .date strong {
+    background-color: #3E6EA3;
+    color:#fff;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    clear: both;
+    display: block;
+    font-weight: bold;
+    padding: 3px 10px;
+    margin:0 5px;
 }
 
 .author {
-	font-size: 0.8em;
 	padding-bottom: 20px;
+	position:absolute;
+	top:-50px;
+	right:0;
+	color:#666;
 }
+
+.author span {
+	font-size:0.8em;
+	color:#483E37;
+	font-weight:bold;
+	}
 
 p.title {
 	font-weight: bold;
@@ -560,32 +625,53 @@ p.title {
     display: block;
     float: left;
     position: relative;
-    width: 100%;    
+    width: 100%;
+}
+
+.button.add_feedback {
+    float: left;
+    line-height: inherit;
+    margin-left: 2em;
+    margin-top: 0.4em;
 }
 
 .decision_feedback ol.feedback_list {
-padding: 1em 15px;
+    border: 5px solid #ECECEC;
+    border-radius: 15px;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    float: left;
+    padding: 20px 0;
+    width: 100%;
 }
 
 .decision_feedback ol.feedback_list > li {
-overflow: auto;
-position:relative;
-padding:.5em 0;
-border-bottom: 1px solid #3E6EA3;
+    border-bottom: 1px solid #3E6EA3;
+    margin: 0 20px;
+    overflow: auto;
+    padding: 0.5em 0;
+    position: relative;
 }
 
 .decision_feedback .feedback_type {
-width:6em;
-color:#fff;
-background:#bbb;
-text-align:center;
-font-weight:bold;
-font-size:.8em;
-float: right;
+	width:8em;
+	color:#fff;
+	background:#bbb;
+	text-align:center;
+	font-weight:bold;
+	font-size:.8em;
+	float: left;
+	margin-top:3px;
+}
+
+.decision_feedback .author {
+	position:relative;
+	top:inherit;
+	padding-bottom:10px;
 }
 
 .feedback_type.question {
-background:#008080;
+	background:#008080;
 }
 
 .feedback_type.danger {
@@ -593,15 +679,15 @@ background:#d81616;
 }
 
 .feedback_type.concerns {
-background:#f60;
+	background:#f60;
 }
 
 .feedback_type.consent {
-background:#aad400;
+	background:#aad400;
 }
 
 .decision_feedback .description {
-	margin-right: 8em;
+	margin-left: 8em;
 }
 
 #decision label {
@@ -772,19 +858,23 @@ div#tags {
 	font-weight:bold;
 }
 
-.stats span.question {
+dl.stats dt {
+	display:block;
+}
+
+.stats .question {
 	color:#008080;
 }
 
-.stats span.danger {
+.stats .danger {
 	color:#d81616;
 }
 
-.stats span.concern {
+.stats .concern {
 	color:#f60;
 }
 
-.stats span.consensus {
+.stats .consensus {
 	color:#aad400;
 }
 
@@ -798,7 +888,6 @@ div#tags {
 /* Feedback */
 .formset_item {
 	margin-bottom: 8px;
-	background-color: #eee;
 	overflow: auto;
 }
 
@@ -822,7 +911,13 @@ div#tags {
 	color: #333;
 	width: 96%;
 	padding: 10px;
-	height: 20px;
+}
+
+.formset_item .form_item.description textarea .id_description {
+    display: block;
+    float: left;
+    position: relative;
+    top: -30px;
 }
 
 .formset_item .form_item.description textarea.expanded {
@@ -834,11 +929,11 @@ div#tags {
 }
 
 .formset_item .form_item.rating {
-	float: right;
-	padding: 4px;
-	width: 10%;
-	display: block;
-	font-size: 0.7em;
+    display: block;
+    float: left;
+    margin-left: 15px;
+    padding: 4px;
+    width: 10%;
 }
 	
 .formset_item .form_item.rating select {
@@ -847,36 +942,41 @@ div#tags {
 }
 
 .formset_item.feedback {
-	-moz-border-radius: 10px;
-  	-webkit-border-radius: 10px;
-	border-radius: 10px;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	border: 3px solid #3E6EA3;
+    border-radius: 15px 15px 15px 15px;
+    padding: 20px 0;  
 	}
-/* question */
+
+
+/* question 
 .formset_item.feedback0 {
 	border: 1px solid #cbcbcb;
 	border-top: 10px solid #cbcbcb;
 	}
-/* danger */
+/* danger 
 .formset_item.feedback1 {
 	border: 1px solid #d71515;
 	border-top: 10px solid #d71515;
 	}
-/* concerns */
+/* concerns 
 .formset_item.feedback2 {
 	border: 1px solid #d6ac04;
 	border-top: 10px solid #d6ac04;
 	}
-/* concent */
+/* consent 
 .formset_item.feedback3 {
 	border: 1px solid #a9d300;
 	border-top: 10px solid #a9d300;
 	}
-/* happy */
+/* happy 
 .formset_item.feedback4 {
 	border: 1px solid #FBEC5D;
 	border-top: 10px solid #FBEC5D;
 	}
-/* delighted */
+/* delighted 
 .formset_item.feedback5 {
 	border: 1px solid #FBEC5D;
 	border-top: 10px solid #FBEC5D;
@@ -887,6 +987,7 @@ div#tags {
 	border-top: 10px solid #EEE;
 	}
 
+*/
 
 /* Footer */
 
@@ -896,7 +997,6 @@ div#tags {
 }
 
 #footer .aptivate {
-	float: left;
 }
 
 #footer .export {
@@ -906,23 +1006,27 @@ div#tags {
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
-	width:400px;
-	display:block;
-	float:none;
-	margin:0 auto;
-	clear:both;
-	position:relative;
+    clear: both;
+    display: block;
+    float: left;
+    margin: 0 auto;
+    overflow: visible;
+    position: relative;
+    width: 100%;
 }
 
 body.login #header, body.login #content {
-	position:relative;
-	padding-top:0;
-	margin-top:0;
+    margin: 0 auto;
+    padding-top: 0;
+    position: relative;
 }
 
 body.login #header {
-    margin-bottom: 20px;
-    margin-top: 30px;
+    display: block;
+    left: -25px;
+    margin: 30px auto;
+    position: relative;
+    width: 400px;
 }
 
 body.login #header h1 {
@@ -949,10 +1053,11 @@ body.login #footer {
     -moz-border-radius: 20px;
   	-webkit-border-radius: 20px;
     border-radius: 20px;
-    display: block;
-    float: left;
+ 	display: block;
+    margin: 0 auto;
+    overflow: auto;
     padding: 20px;
-    width: 360px;
+    width: 450px;
 }
 
 #login-form p {
@@ -993,6 +1098,7 @@ body.login #footer {
     padding: 5px;
     position: relative;
     width: 215px;
+
 }
 
 /* 404 Page Styling */
