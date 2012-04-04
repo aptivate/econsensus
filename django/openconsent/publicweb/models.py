@@ -129,7 +129,8 @@ class Decision(models.Model):
                       'question': 0,
                       'danger': 0,
                       'concern': 0,
-                      'consensus': 0
+                      'comment': 0,
+                      'consent': 0
                      }
         
         #is there a better way of doing this,
@@ -141,8 +142,10 @@ class Decision(models.Model):
                 statistics['danger'] += 1
             elif feedback.rating == Feedback.CONCERNS_STATUS:
                 statistics['concern'] += 1
-            else:
-                statistics['consensus'] += 1
+            elif feedback.rating == Feedback.COMMENT_STATUS:
+                statistics['comment'] += 1
+            elif feedback.rating == Feedback.CONSENT_STATUS:
+                statistics['consent'] += 1
             statistics['all'] += 1
         
         return statistics

@@ -860,6 +860,11 @@ div#tags {
 
 dl.stats dt {
 	display:block;
+	color: #BBBBBB;
+}
+
+.stats .consent {
+	color:#aad400;
 }
 
 .stats .question {
@@ -872,10 +877,6 @@ dl.stats dt {
 
 .stats .concern {
 	color:#f60;
-}
-
-.stats .consensus {
-	color:#aad400;
 }
 
 .form_item {

@@ -86,4 +86,15 @@ class ModelTest(DecisionTestCase):
             decision.save()
         except:
             self.fail("Failed to save object.")
+    
+    def test_feedback_statistics(self):
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "get_feedback_statistics")
+        statistics = decision.get_feedback_statistics()
+        self.assertTrue("consent" in statistics)
+        self.assertTrue("concern" in statistics)
+        self.assertTrue("danger" in statistics)
+        self.assertTrue("question" in statistics)
+        self.assertTrue("comment" in statistics)
+        
         
