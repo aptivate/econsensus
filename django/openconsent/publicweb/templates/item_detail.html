@@ -61,7 +61,7 @@ jQuery(function ($) {
 		feedback_update_url_template = "{% url publicweb_feedback_update 0 %}";
 
 	// Override redirect to form and put it inline
-	$(".feedback_list .feedback_edit a").live("click", function (e) {
+	$(".feedback_list .description a").live("click", function (e) {
 		var wrapper = $(this).parents(".feedback_wrapper"),
 			object_id = wrapper.parent().attr("id").slice(2),
 			snippet_update_url = snippet_update_url_template.replace('0', object_id);
