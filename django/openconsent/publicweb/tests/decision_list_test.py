@@ -47,12 +47,20 @@ class DecisionListTest(DecisionTestCase):
     
     def assert_decisions_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order.         
+        decision = Decision(description="Decision None 1",
+                            status=Decision.DECISION_STATUS)
+        decision.save(self.user)
+        
         for i in range(5, 0, -1):
             decision = Decision(description='Decision %d' % i, 
                                 status=Decision.DECISION_STATUS)
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save(self.user)
-            
+        
+        decision = Decision(description="Decision None 2",
+                            status=Decision.DECISION_STATUS)
+        decision.save(self.user)
+
         response = self.client.get(reverse('publicweb_item_list', args=['decision']), dict(sort=column))
         
         object_list = response.context['object_list']    
@@ -60,3 +68,5 @@ class DecisionListTest(DecisionTestCase):
         for i in range(1, 6):
             self.assertEquals(datetime.date(2001, 3, i), getattr(object_list[i-1], column))
 
+        self.assertEquals(None, getattr(object_list[5], column))
+        self.assertEquals(None, getattr(object_list[6], column))

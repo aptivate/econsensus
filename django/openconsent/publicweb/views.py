@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
+import logging
 
 import unicodecsv
 
@@ -19,18 +20,18 @@ from django.db.models.aggregates import Count
 @login_required
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
-	Expected input: request (not quite sure what this is!)
-	Expected output: http containing MIME info followed by the data itself as CSV.
-	>>> res = export_csv(1000)
-	>>> res.status_code
-	200
-	>>> res['Content-Disposition']
-	'attachment; filename=publicweb_decision.csv'
-	>>> res['Content-Type']
-	'text/csv'
-	>>> len(res.content)>0
-	True
-	'''
+    Expected input: request (not quite sure what this is!)
+    Expected output: http containing MIME info followed by the data itself as CSV.
+    >>> res = export_csv(1000)
+    >>> res.status_code
+    200
+    >>> res['Content-Disposition']
+    'attachment; filename=publicweb_decision.csv'
+    >>> res['Content-Type']
+    'text/csv'
+    >>> len(res.content)>0
+    True
+    '''
 
     opts = Decision._meta #@UndefinedVariable
     field_names = set([field.name for field in opts.fields])
@@ -53,16 +54,23 @@ def object_list_by_status(request, status):
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
+        extra_context['sort'] = order
     else:
-        order = 'id'
+        order = '-id'
+        extra_context['sort'] = "id"
+        
     if order == 'watchers':
-        queryset = Decision.objects.annotate(count=Count('watchers')).order_by('count').filter(status=status)
+        queryset = Decision.objects.annotate(count=Count('watchers')).order_by('-count').filter(status=status)
     elif order == 'feedback':
-        queryset = Decision.objects.annotate(count=Count('feedback')).order_by('count').filter(status=status)
+        queryset = Decision.objects.annotate(count=Count('feedback')).order_by('-count').filter(status=status)
+    elif order == 'deadline':
+        queryset = Decision.objects\
+            .extra(select={'has_deadline': "CASE WHEN deadline IS NULL THEN 1 ELSE 0 END"})\
+            .order_by('has_deadline','deadline')\
+            .filter(status=status)
     else:
         queryset = Decision.objects.order_by(order).filter(status=status)
-    extra_context['sort'] = order
-    
+        
     return list_detail.object_list(
         request,
         queryset,

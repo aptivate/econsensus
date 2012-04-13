@@ -11,7 +11,7 @@
 	<ul class="summary-list">
 		{% if object_list %}
 		<li class="summary-item summary-header {{ tab }}">
-				<a href="{{ request.path }}?sort=id" class="field id header">
+				<a href="{{ request.path }}" class="field id header">
 					<p class="{% if sort == 'id' %}sort{% endif %}">ID</p>
 				</a>
 				<a href="{{ request.path }}?sort=excerpt" class="field excerpt header">
