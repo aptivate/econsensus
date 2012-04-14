@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from tagging.fields import TagField
 
 from emails import OpenConsentEmailMessage
+from managers import DecisionManager
+
 import re
 
 # Ideally django-tinymce should be patched
@@ -67,6 +69,8 @@ class Decision(models.Model):
     excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
     created_date = models.DateField(null=True, blank=True, editable=False,
         verbose_name=_('Created Date'))
+
+    objects = DecisionManager()
 
     #methods
     def is_watched(self, user):

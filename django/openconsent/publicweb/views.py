@@ -60,14 +60,21 @@ def object_list_by_status(request, status):
         extra_context['sort'] = "id"
         
     if order == 'watchers':
-        queryset = Decision.objects.annotate(count=Count('watchers')).order_by('-count').filter(status=status)
+        queryset = Decision.objects.order_by_count('watchers').filter(status=status)
     elif order == 'feedback':
-        queryset = Decision.objects.annotate(count=Count('feedback')).order_by('-count').filter(status=status)
+        queryset = Decision.objects.order_by_count('feedback').filter(status=status)
+    elif order == 'decided_date':
+        queryset = Decision.objects.order_null_last('decided_date').filter(status=status)
+    elif order == 'effective_date':
+        queryset = Decision.objects.order_null_last('effective_date').filter(status=status)
+    elif order == 'review_date':
+        queryset = Decision.objects.order_null_last('review_date').filter(status=status)
+    elif order == 'expiry_date':
+        queryset = Decision.objects.order_null_last('expiry_date').filter(status=status)
     elif order == 'deadline':
-        queryset = Decision.objects\
-            .extra(select={'has_deadline': "CASE WHEN deadline IS NULL THEN 1 ELSE 0 END"})\
-            .order_by('has_deadline','deadline')\
-            .filter(status=status)
+        queryset = Decision.objects.order_null_last('deadline').filter(status=status)
+    elif order == 'archived_date':
+        queryset = Decision.objects.order_null_last('archived_date').filter(status=status)
     else:
         queryset = Decision.objects.order_by(order).filter(status=status)
         
