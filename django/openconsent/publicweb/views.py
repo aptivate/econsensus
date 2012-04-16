@@ -47,6 +47,20 @@ def export_csv(request):
     return response
 
 @login_required        
+def decision_detail(request, object_id, *args, **kwargs):
+    decision = get_object_or_404(Decision, pk=object_id)    
+    extra_context = { 'tab': decision.status }
+    # Show the detail page
+    return list_detail.object_detail(
+        request,
+        queryset = Decision.objects.all(),
+        object_id = object_id,
+        extra_context = extra_context,
+        *args,
+        **kwargs
+    )
+
+@login_required        
 def object_list_by_status(request, status):
     extra_context = { 'tab': status }
     #need to check template exists...
@@ -60,24 +74,26 @@ def object_list_by_status(request, status):
         extra_context['sort'] = "id"
         
     if order == 'watchers':
-        queryset = Decision.objects.order_by_count('watchers').filter(status=status)
+        full_queryset = Decision.objects.order_by_count('watchers')
     elif order == 'feedback':
-        queryset = Decision.objects.order_by_count('feedback').filter(status=status)
+        full_queryset = Decision.objects.order_by_count('feedback')
     elif order == 'decided_date':
-        queryset = Decision.objects.order_null_last('decided_date').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('decided_date')
     elif order == 'effective_date':
-        queryset = Decision.objects.order_null_last('effective_date').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('effective_date')
     elif order == 'review_date':
-        queryset = Decision.objects.order_null_last('review_date').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('review_date')
     elif order == 'expiry_date':
-        queryset = Decision.objects.order_null_last('expiry_date').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('expiry_date')
     elif order == 'deadline':
-        queryset = Decision.objects.order_null_last('deadline').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('deadline')
     elif order == 'archived_date':
-        queryset = Decision.objects.order_null_last('archived_date').filter(status=status)
+        full_queryset = Decision.objects.order_null_last('archived_date')
     else:
-        queryset = Decision.objects.order_by(order).filter(status=status)
+        full_queryset = Decision.objects.order_by(order)
         
+    queryset = full_queryset.filter(status=status)
+    
     return list_detail.object_list(
         request,
         queryset,
@@ -87,6 +103,7 @@ def object_list_by_status(request, status):
 
 @login_required
 def create_decision(request, status, template_name):
+    extra_context = { 'tab': status }
     
     decision = Decision(status=status)
     decision.author = request.user
@@ -95,19 +112,20 @@ def create_decision(request, status, template_name):
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form)
+    data = dict(form=form,extra_context=extra_context)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 @login_required
 def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
+    extra_context = { 'tab': decision.status }
 
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form)
+    data = dict(form=form, extra_context=extra_context)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
@@ -143,6 +161,7 @@ def create_feedback(request, model, object_id, template_name):
 def update_feedback(request, model, object_id, template_name):
 
     feedback = get_object_or_404(model, id = object_id)
+    extra_context = { 'tab': feedback.decision.status }
 
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
@@ -153,18 +172,19 @@ def update_feedback(request, model, object_id, template_name):
                 form.save()
                 return HttpResponseRedirect(feedback.get_parent_url())
         
-        data = dict(form=form)
+        data = dict(form=form,extra_context=extra_context)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm(instance=feedback)
         
-    data = dict(form=form)
+    data = dict(form=form,extra_context=extra_context)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 def _process_post_and_redirect(request, decision, template_name):
+    extra_context={'tab': decision.status}
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
@@ -178,6 +198,6 @@ def _process_post_and_redirect(request, decision, template_name):
                 decision.remove_watcher(request.user)
             return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
         
-        data = dict(form=form)
+        data = dict(form=form, extra_context=extra_context)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)   

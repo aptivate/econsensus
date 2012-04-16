@@ -30,21 +30,23 @@
 			<div id="navigation-wrapper">
 				<div id="navigation">
 					<ul>
-						<li class="navigation_proposals"><a href="{% url publicweb_item_list 'proposal'%}">{% trans "Proposals" %}</a></li>
-						<li class="navigation_decisions"><a href="{% url publicweb_item_list "decision"%}">{% trans "Decisions" %}</a></li>
-						<li class="navigation_archived"><a href="{% url publicweb_item_list "archived"%}">{% trans "Archived" %}</a></li>
+						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url publicweb_item_list 'proposal'%}">{% trans "Proposals" %}</a></li>
+						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "decision"%}">{% trans "Decisions" %}</a></li>
+						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "archived"%}">{% trans "Archived" %}</a></li>
 					</ul>
+				</div>
+				<div class="search">
 					<form id="search_form" action="search" method="get">
 						<p>
 							<input id="search" type="text" maxlength="128" value="" name="search"/>
 							<input id="search_button" type="submit" value="Search"/>
 						</p>
 					</form>
-					<div class="user-actions">
-						<a class="button add_decision" href="{% url publicweb_decision_create 'decision' %}">{% trans "Add Decision" %}</a>
-						<a class="button add_proposal" href="{% url publicweb_decision_create 'proposal' %}">{% trans "Add Proposal" %}</a>
-					</div>	
 				</div>
+				<div class="user-actions">
+					<a class="button add_decision" href="{% url publicweb_decision_create 'decision' %}">{% trans "Add Decision" %}</a>
+					<a class="button add_proposal" href="{% url publicweb_decision_create 'proposal' %}">{% trans "Add Proposal" %}</a>
+				</div>	
 			</div>
 		{% endblock %}
 	</div><!-- Header end -->

@@ -1,16 +1,16 @@
 from django.conf.urls.defaults import patterns, url
 from django.views.generic.simple import redirect_to
-from django.views.generic.list_detail import object_detail
 from django.contrib.auth.decorators import login_required
+from django.views.generic import list_detail
 
-from views import create_decision, update_decision, object_list_by_status, \
-                     export_csv, create_feedback, \
-                     update_feedback
+from views import create_decision, update_decision, \
+                    decision_detail, object_list_by_status, \
+                    export_csv, create_feedback, \
+                    update_feedback
 
 from models import Decision, Feedback
 
 decision_detail_info = {
-    'queryset': Decision.objects.all(),
     'template_name': 'decision_detail_page.html'
 }
 
@@ -23,7 +23,6 @@ decision_create_info = {
 }
 
 decision_detail_snippet_info = {
-    'queryset': Decision.objects.all(),
     'template_name': 'decision_detail_snippet.html'
 }
 
@@ -36,7 +35,6 @@ decision_create_snippet_info = {
 }
 
 item__detail_info = {
-    'queryset': Decision.objects.all(),
     'template_name': 'item_detail.html'
 }
 
@@ -77,7 +75,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         feedback_update_info,
         name='publicweb_feedback_update'),
     url(r'^feedback/detail/(?P<object_id>[\d]+)/$', 
-        login_required(object_detail),
+        login_required(list_detail.object_detail),
         feedback_detail_info,
         name='publicweb_feedback_detail'),
     #snippets
@@ -90,7 +88,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         feedback_snippet_update_info,
         name='publicweb_feedback_snippet_update'),
     url(r'^feedback/detail/snippet/(?P<object_id>[\d]+)/$', 
-        login_required(object_detail),
+        login_required(list_detail.object_detail),
         feedback_snippet_detail_info,
         name='publicweb_feedback_snippet_detail'),
 
@@ -104,7 +102,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         decision_update_info,        
         name='publicweb_decision_update'),    
     url(r'^decision/detail/(?P<object_id>[\d]+)/$',
-        login_required(object_detail),
+        decision_detail,
         decision_detail_info,
         name='publicweb_decision_detail'),
     #snippets                       
@@ -117,13 +115,13 @@ urlpatterns = patterns('openconsent.publicweb.views',
         decision_update_snippet_info,
         name='publicweb_decision_snippet_update'),    
     url(r'^decision/detail/snippet/(?P<object_id>[\d]+)/$',
-        login_required(object_detail),
+        login_required(decision_detail),
         decision_detail_snippet_info,
         name='publicweb_decision_snippet_detail'),                       
 
     #item urls
     url(r'^item/detail/(?P<object_id>[\d]+)/$',
-        login_required(object_detail),
+        decision_detail,
         item__detail_info,
         name='publicweb_item_detail'),                       
     url(r'^item/list/(?P<status>[a-z]+)/$',
