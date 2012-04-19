@@ -114,3 +114,11 @@ class HtmlTest(OpenConsentTestCase):
         response = self.client.get(path)  
         self.assertContains(response, test_string)
         
+    def test_h2_header_on_form_matches_selected_status(self):
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'Proposal')
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'Decision')
+        

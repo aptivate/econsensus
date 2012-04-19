@@ -6,13 +6,11 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
-import logging
 
 import unicodecsv
 
 from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
-from django.db.models.aggregates import Count
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -102,30 +100,26 @@ def object_list_by_status(request, status):
         )
 
 @login_required
-def create_decision(request, status, template_name):
-    extra_context = { 'tab': status }
-    
+def create_decision(request, status, template_name):    
     decision = Decision(status=status)
     decision.author = request.user
-    
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form,extra_context=extra_context)
+    data = dict(form=form,tab=status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 @login_required
 def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
-    extra_context = { 'tab': decision.status }
 
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form, extra_context=extra_context)
+    data = dict(form=form, tab=decision.status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
@@ -161,7 +155,6 @@ def create_feedback(request, model, object_id, template_name):
 def update_feedback(request, model, object_id, template_name):
 
     feedback = get_object_or_404(model, id = object_id)
-    extra_context = { 'tab': feedback.decision.status }
 
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
@@ -172,19 +165,18 @@ def update_feedback(request, model, object_id, template_name):
                 form.save()
                 return HttpResponseRedirect(feedback.get_parent_url())
         
-        data = dict(form=form,extra_context=extra_context)
+        data = dict(form=form,tab=feedback.decision.status)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm(instance=feedback)
         
-    data = dict(form=form,extra_context=extra_context)
+    data = dict(form=form,tab=feedback.decision.status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 def _process_post_and_redirect(request, decision, template_name):
-    extra_context={'tab': decision.status}
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
@@ -198,6 +190,6 @@ def _process_post_and_redirect(request, decision, template_name):
                 decision.remove_watcher(request.user)
             return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
         
-        data = dict(form=form, extra_context=extra_context)
+        data = dict(form=form, tab=decision.status)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)   
