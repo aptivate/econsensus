@@ -101,7 +101,7 @@ class HtmlTest(OpenConsentTestCase):
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'meeting_people')
         post_dict = {'description': 'Quisque sapien justo', 
