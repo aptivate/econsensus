@@ -59,10 +59,8 @@ def decision_detail(request, object_id, *args, **kwargs):
     )
 
 @login_required        
-def object_list_by_status(request, status):
+def object_list_by_status(request, status, template_name):
     extra_context = { 'tab': status }
-    #need to check template exists...
-    template_name = 'decision_list.html'
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
@@ -176,6 +174,10 @@ def update_feedback(request, model, object_id, template_name):
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
+def redirect_to_proposal_list(request):
+    url = reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS])
+    return HttpResponseRedirect(url)
+    
 def _process_post_and_redirect(request, decision, template_name):
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))

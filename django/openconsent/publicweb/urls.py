@@ -2,11 +2,12 @@ from django.conf.urls.defaults import patterns, url
 from django.views.generic.simple import redirect_to
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
+from django.core.urlresolvers import reverse
 
 from views import create_decision, update_decision, \
                     decision_detail, object_list_by_status, \
                     export_csv, create_feedback, \
-                    update_feedback
+                    update_feedback, redirect_to_proposal_list
 
 from models import Decision, Feedback
 
@@ -98,7 +99,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         name='publicweb_item_detail'),                       
     url(r'^item/list/(?P<status>[a-z]+)/$',
         object_list_by_status,
+        {'template_name': 'decision_list.html'},
         name='publicweb_item_list'),
-
-    url(r'^$', redirect_to, {'url': 'item/list/proposal/'}),
+    url(r'^$', redirect_to_proposal_list)
     )
