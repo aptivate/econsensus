@@ -10,34 +10,6 @@ from views import create_decision, update_decision, \
 
 from models import Decision, Feedback
 
-decision_detail_info = {
-    'template_name': 'decision_detail_page.html'
-}
-
-decision_update_info = {
-    'template_name': 'decision_update_page.html'
-}
-
-decision_create_info = {
-    'template_name': 'decision_update_page.html'
-}
-
-decision_detail_snippet_info = {
-    'template_name': 'decision_detail_snippet.html'
-}
-
-decision_update_snippet_info = {
-    'template_name': 'decision_update_snippet.html'
-}
-
-decision_create_snippet_info = {
-    'template_name': 'decision_update_snippet.html'
-}
-
-item__detail_info = {
-    'template_name': 'item_detail.html'
-}
-
 feedback_detail_info = {'queryset': Feedback.objects.all(),
                         'template_name': 'feedback_detail_page.html'
 }
@@ -95,34 +67,34 @@ urlpatterns = patterns('openconsent.publicweb.views',
     #decision urls...
     url(r'^decision/create/(?P<status>[a-z]+)/$',
         create_decision,
-        decision_create_info,
+        { 'template_name': 'decision_update_page.html' },
         name='publicweb_decision_create'),
     url(r'^decision/update/(?P<object_id>[\d]+)/$',
         update_decision,
-        decision_update_info,        
+        { 'template_name': 'decision_update_page.html'},
         name='publicweb_decision_update'),    
     url(r'^decision/detail/(?P<object_id>[\d]+)/$',
         decision_detail,
-        decision_detail_info,
+        { 'template_name': 'decision_detail_page.html' },
         name='publicweb_decision_detail'),
     #snippets                       
     url(r'^decision/create/snippet/(?P<status>[a-z]+)/$',
         create_decision,
-        decision_create_snippet_info,
+        {'template_name': 'decision_update_snippet.html'},
         name='publicweb_decision_snippet_create'),
     url(r'^decision/update/snippet/(?P<object_id>[\d]+)/$',
         update_decision,
-        decision_update_snippet_info,
+        {'template_name': 'decision_update_snippet.html'},
         name='publicweb_decision_snippet_update'),    
     url(r'^decision/detail/snippet/(?P<object_id>[\d]+)/$',
         login_required(decision_detail),
-        decision_detail_snippet_info,
+        { 'template_name': 'decision_detail_snippet.html' },
         name='publicweb_decision_snippet_detail'),                       
 
     #item urls
     url(r'^item/detail/(?P<object_id>[\d]+)/$',
         decision_detail,
-        item__detail_info,
+        {'template_name': 'item_detail.html'},
         name='publicweb_item_detail'),                       
     url(r'^item/list/(?P<status>[a-z]+)/$',
         object_list_by_status,

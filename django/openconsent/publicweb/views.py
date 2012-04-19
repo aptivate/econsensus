@@ -62,7 +62,7 @@ def decision_detail(request, object_id, *args, **kwargs):
 def object_list_by_status(request, status):
     extra_context = { 'tab': status }
     #need to check template exists...
-    template_name = status + '_list.html'
+    template_name = 'decision_list.html'
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
