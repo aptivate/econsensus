@@ -40,7 +40,7 @@ jQuery(function ($) {
 	 */
 	// Override redirect to form and put it inline
 	$(".controls a.edit").live("click", function (e) {
-		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_detail");
+		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_snippet_envelope");
 		e.preventDefault();
 	});
 
@@ -85,9 +85,7 @@ jQuery(function ($) {
 	</script>
 {% endblock %}
 
-{% block heading %}
-{{ object.status|capfirst }}: {{ object.excerpt }} (#{{ object.id }})
-{% endblock heading %}
+{% block heading_title %}{% endblock %}
 
 {% block main_content %}
 
