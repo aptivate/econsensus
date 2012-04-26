@@ -1,79 +1,83 @@
 {% load i18n %}
-<div id="decision_detail" class="{{ object.status }}">
-	<div class="summary">
-		<h3 class="author">Created by: <span> {{ object.author }}</span></h3>
-		
-		<div class="description">
-			<p>{{ object.description|urlize|linebreaksbr }}</p>
-		</div>
-		{% if object.meeting_people %}
-		<div class="meeting_people">
-			<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
-			<strong>{{ object.meeting_people }}</strong>
-		</div>
-		{% endif %}	
-	{% if object.status = 'decision' %}
-	{% if object.people %}
-		<div class="people">
-			<p class='title'>{% trans "Persons Responsible:" %}</p>			
-			<strong>{{ object.people }}</strong>
-		</div>
-	{% endif %}
-	{% endif %}
-	</div>
-	<div class="meta">
-		<div class="dates">
-	{% if object.status = 'proposal' %}
-	{% if object.deadline %}
-			<div class="date">
-				{% trans "Deadline:" %}			
-				<strong>{{ object.deadline }}</strong>
-			</div>
-	{% endif %}
-	{% endif %}
+<div id="decision_snippet_envelope">
+	<h2 class="page_title">{{ object.status|capfirst }}: {{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</h2>
 
-	{% if object.status = 'decision' %}	
-	{% if object.decided_date %}
-			<div class="date">
-				{% trans "Decided" %}			
-				<strong>{{ object.decided_date }}</strong>
+	<div id="decision_detail" class="{{ object.status }}">
+		<div class="summary">
+			<h3 class="author">Created by: <span> {{ object.author }}</span></h3>
+			
+			<div class="description">
+				<p>{{ object.description|urlize|linebreaksbr }}</p>
 			</div>
-	{% endif %}
-	{% if object.effective_date %}
-			<div class="date">
-				{% trans "Effective" %}
-				<strong>{{ object.effective_date }}</strong>
+			{% if object.meeting_people %}
+			<div class="meeting_people">
+				<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
+				<strong>{{ object.meeting_people }}</strong>
 			</div>
-	{% endif %}
-	{% if object.review_date %}
-			<div class="date">
-				{% trans "Review" %}
-				<strong>{{ object.review_date }}</strong>
+			{% endif %}	
+		{% if object.status = 'decision' %}
+		{% if object.people %}
+			<div class="people">
+				<p class='title'>{% trans "Persons Responsible:" %}</p>			
+				<strong>{{ object.people }}</strong>
 			</div>
-	{% endif %}
-	{% if object.expiry_date %}
-			<div class="date">
-				{% trans "Expiry" %}
-				<strong>{{ object.expiry_date }}</strong>
-			</div>
-	{% endif %}
-	{% endif %}
-	
+		{% endif %}
+		{% endif %}
 		</div>
-		<dl class="stats">
-		<dt class="consent">{% trans "consent" %}</dt>
-		<dd>{{ object.get_feedback_statistics.consent }}</dd>
-		<dt class="concern">{% trans "concern" %}</dt>
-		<dd>{{ object.get_feedback_statistics.concern }}</dd>
-		<dt class="danger">{% trans "danger" %}</dt>
-		<dd>{{ object.get_feedback_statistics.danger }}</dd>
-		<dt class="question">{% trans "question" %}
-		<dd>{{ object.get_feedback_statistics.question }}</dd>
-		<dt class="comment">{% trans "comment" %}</dt>
-		<dd>{{ object.get_feedback_statistics.comment }}</dd>
-	</dl>
-		<div class="controls">
-			<a class="edit" href="{% url publicweb_decision_update object.id %}">Edit</a>
+		<div class="meta">
+			<div class="dates">
+		{% if object.status = 'proposal' %}
+		{% if object.deadline %}
+				<div class="date">
+					{% trans "Deadline:" %}			
+					<strong>{{ object.deadline }}</strong>
+				</div>
+		{% endif %}
+		{% endif %}
+
+		{% if object.status = 'decision' %}	
+		{% if object.decided_date %}
+				<div class="date">
+					{% trans "Decided" %}			
+					<strong>{{ object.decided_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.effective_date %}
+				<div class="date">
+					{% trans "Effective" %}
+					<strong>{{ object.effective_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.review_date %}
+				<div class="date">
+					{% trans "Review" %}
+					<strong>{{ object.review_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.expiry_date %}
+				<div class="date">
+					{% trans "Expiry" %}
+					<strong>{{ object.expiry_date }}</strong>
+				</div>
+		{% endif %}
+		{% endif %}
+		
+			</div>
+			<dl class="stats">
+			<dt class="consent">{% trans "consent" %}</dt>
+			<dd>{{ object.get_feedback_statistics.consent }}</dd>
+			<dt class="concern">{% trans "concern" %}</dt>
+			<dd>{{ object.get_feedback_statistics.concern }}</dd>
+			<dt class="danger">{% trans "danger" %}</dt>
+			<dd>{{ object.get_feedback_statistics.danger }}</dd>
+			<dt class="question">{% trans "question" %}
+			<dd>{{ object.get_feedback_statistics.question }}</dd>
+			<dt class="comment">{% trans "comment" %}</dt>
+			<dd>{{ object.get_feedback_statistics.comment }}</dd>
+		</dl>
+			<div class="controls">
+				<a class="edit" href="{% url publicweb_decision_update object.id %}">Edit</a>
+			</div>
 		</div>
 	</div>
 </div>

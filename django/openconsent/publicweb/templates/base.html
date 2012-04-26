@@ -53,7 +53,7 @@
 		
 		<div id="content-wrapper">
 			<div id="content">
-				<h2 class="page_title">{% block heading %}{% endblock heading %}</h2>
+				{% block heading_title %}<h2 class="page_title">{% block heading %}{% endblock heading %}</h2>{% endblock %}
 	        	{% block main_content %}{% endblock main_content %}
 			</div>
 		</div> <!-- content-wrapper end -->
