@@ -107,6 +107,10 @@ jQuery(function ($) {
 				var $feedback = $(".feedback_list");
 
 				if (data) {
+					if (!$feedback.length && $(".no_feedback").length) {
+						$(".no_feedback").replaceWith('<ol class="feedback_list"></ol>');
+						$feedback = $(".feedback_list");
+					}
 					$feedback.html($feedback.html()+data);
 				}
 				$form.replaceWith(feedback_button);
@@ -157,7 +161,7 @@ jQuery(function ($) {
 {% endfor %}
 	</ol>
 {% else %}
-<p>{% trans "No feedback yet." %}</p>
+<p class="no_feedback">{% trans "No feedback yet." %}</p>
 {% endif %}
 </div>
 
