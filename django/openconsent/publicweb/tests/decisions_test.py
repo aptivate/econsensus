@@ -140,6 +140,16 @@ class DecisionsTest(DecisionTestCase):
                                 follow=True )        
         feedback = decision.feedback_set.all()[:1].get()
         self.assertEquals('The eggs are bad', feedback.description)
+
+    def test_add_feedback_inline(self):
+        decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
+        decision.save()
+        post_dict= {'rating': '2', 'description': 'The eggs are not bad'}
+        response = self.client.post(reverse('publicweb_feedback_snippet_create', args=[decision.id]), 
+                                post_dict,
+                                follow=True )
+        self.assertTrue(response.content.strip().startswith('<li id="id'))
+        self.assertContains(response, "The eggs are not bad")
     
     def assert_decision_datepickers(self, field):
         form = DecisionForm()

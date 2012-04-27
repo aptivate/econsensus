@@ -31,6 +31,7 @@ feedback_snippet_update_info = {'model' : Feedback,
 }
 
 feedback_snippet_create_info = {'model' : Decision,
+                                'snippet_template': 'feedback_detail_snippet.html',
                                 'template_name': 'feedback_update_snippet.html'}
 
 urlpatterns = patterns('openconsent.publicweb.views',

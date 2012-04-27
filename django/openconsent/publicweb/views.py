@@ -122,10 +122,10 @@ def update_decision(request, object_id, template_name):
     return render_to_response(template_name, context)
 
 @login_required
-def create_feedback(request, model, object_id, template_name):
+def create_feedback(request, model, object_id, template_name, snippet_template=""):
 
     decision = get_object_or_404(model, id = object_id)
-    
+
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
@@ -136,15 +136,18 @@ def create_feedback(request, model, object_id, template_name):
                 feedback.decision = decision
                 feedback.author = request.user
                 feedback.save()
+                if snippet_template:
+                    context = RequestContext(request, { 'object': feedback })
+                    return render_to_response("feedback_detail_snippet.html", context)
                 return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
-        
+
         data = dict(form=form)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm()
-        
+
     data = dict(form=form)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)

@@ -15,11 +15,33 @@ jQuery(function ($) {
 	/*
 	 * Common functions
 	 */
+	function displayErrorMessage(jqXHR, textStatus, errorThrown) {
+		var msg = "";
+		switch (textStatus) {
+			case 'abort':
+				msg = "Request has been aborted.";
+				break;
+			case 'timeout':
+				msg = "Request took too long.";
+				break;
+			case 'parseerror':
+				msg = "Returned data is malformed.";
+				break;
+			default:
+				if (errorThrown) {
+					msg = "Server responded with following error: " + errorThrown;
+				}
+				break;
+		}
+		alert(msg);
+	}
+
 	function replaceWithRemote(url, selector) {
 		$.ajax(url,
 				{
 					cache: false,
-					success: function (data) { $(selector).replaceWith(data); }
+					success: function (data) { $(selector).replaceWith(data); },
+					error: displayErrorMessage
 				});
 	}
 
@@ -58,7 +80,40 @@ jQuery(function ($) {
 	// Fake id, DB will always start at least with 1; Error-prone (fails if URL contains 0 elsewhere)
 	var snippet_update_url_template = "{% url publicweb_feedback_snippet_update 0 %}",
 		snippet_detail_url_template = "{% url publicweb_feedback_snippet_detail 0 %}",
-		feedback_update_url_template = "{% url publicweb_feedback_update 0 %}";
+		feedback_update_url_template = "{% url publicweb_feedback_update 0 %}",
+		feedback_add_url = "{% url publicweb_feedback_snippet_create object.id %}",
+		// .prop("outerHTML") will work in future (.outerHTML added to FF11)
+		feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
+
+	// Handle cancel manually, because it doesn't get submitted with
+	// javascript submission
+	$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+		e.stopPropagation();e.preventDefault();
+		$("#feedback_add_anchor form").replaceWith(feedback_button);
+	});
+
+	$(".button.add_feedback").live("click", function (e) {
+		replaceWithRemote(feedback_add_url, ".button.add_feedback");
+		e.preventDefault();
+	});
+
+	$("#feedback_add_anchor form").live("submit", function (e) {
+		var $form = $(this),
+			parameters = $form.serialize();
+
+		$.post("{% url publicweb_feedback_snippet_create object.id %}",
+			parameters,
+			function (data) {
+				var $feedback = $(".feedback_list");
+
+				if (data) {
+					$feedback.html($feedback.html()+data);
+				}
+				$form.replaceWith(feedback_button);
+			}
+		);
+		e.preventDefault();
+	});
 
 	// Override redirect to form and put it inline
 	$(".feedback_list .description a").live("click", function (e) {
@@ -92,7 +147,7 @@ jQuery(function ($) {
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title">{% trans "Feedback" %}</h2>
-<a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a>
+<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a></div>
 <div class="decision_feedback">
 
 {% if object.feedback_set.all %}
