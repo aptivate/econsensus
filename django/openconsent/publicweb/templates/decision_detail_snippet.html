@@ -9,6 +9,8 @@
 			<div class="description">
 				<p>{{ object.description|urlize|linebreaksbr }}</p>
 			</div>
+		</div>
+		<div class="meta">
 			{% if object.meeting_people %}
 			<div class="meeting_people">
 				<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
@@ -23,8 +25,6 @@
 			</div>
 		{% endif %}
 		{% endif %}
-		</div>
-		<div class="meta">
 			<div class="dates">
 		{% if object.status = 'proposal' %}
 		{% if object.deadline %}
