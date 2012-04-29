@@ -232,59 +232,106 @@ input {
 
 /* list view */
 
-dt {
-	display:none;
-}
-
 .summary-list {
- 	border: 2px solid #D3CDC6;
- 	-moz-border-radius: 20px;
-  	-webkit-border-radius: 20px;
-    border-radius: 20px;
+	border-collapse: separate;
+	border-spacing: 0 2px;
+	table-layout: fixed;
+	width: 100%;
+	clear: both;
+	margin: 20px 0 0;
     padding: 10px;
-    clear: both;
-}
-
-li.summary-item {
-	border:3px solid;
-	-moz-border-radius: 10px;
-  	-webkit-border-radius: 10px;
-	border-radius:10px;	padding:10px;
-	margin:2px 0;
-	overflow:auto;
-	position:relative;
-}
-
-.summary-header {
-	border: 3px solid #D3CDC6;
-}
-
-.summary-header.proposal {
-	background: #FFCC00;
-	border-color: #FFCC00;
-}
-
-.summary-header.decision {
-	background: #AAD400;	
-	border-color: #AAD400;
+	border: 2px solid #D3CDC6;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	text-align:center;
 }
 
 .summary-header a {
 	color: #000;
 }
 
-.summary-header p.sort {
+.summary-header .sort {
     background-image: url("../images/icon-sort.png");
     background-position: right center;
     background-repeat: no-repeat;
-	color: #3E6EA3;
-	padding-right: 20px;
-	float:left;
+    color: #3E6EA3;
+    padding-right: 20px;
 }
 
 .summary-item a.iconified {
 	color: #3E6EA3;
 }
+
+.summary-list td, .summary-list th {
+	border-top: 3px solid #aad400;
+	border-bottom: 3px solid #aad400;
+}
+
+.summary-list th {
+	background-color: #aad400;
+}
+
+.summary-list td:first-child, .summary-list th:first-child {
+	border-left: 3px solid #aad400;
+	-moz-border-radius: 10px 0 0 10px;
+	-webkit-border-radius: 10px 0 0 10px;
+	-o-border-radius: 10px 0 0 10px;
+	-ms-border-radius: 10px 0 0 10px;
+	border-radius: 10px 0 0 10px;
+}
+
+.summary-list td:last-child, .summary-list th:last-child {
+	border-right: 3px solid #aad400;
+	-moz-border-radius: 0 10px 10px 0;
+	-webkit-border-radius: 0 10px 10px 0;
+	-o-border-radius: 0 10px 10px 0;
+	-ms-border-radius: 0 10px 10px 0;
+	border-radius: 0 10px 10px 0;
+}
+
+.summary-list td a, .summary-list th a {
+	display: block;
+	padding: 10px;
+	color: #000;
+}
+
+.summary-list td .iconified {
+	display:block;
+}
+
+p.no_items {
+	clear:both;
+}
+
+/* list view colors */
+.archived-list .summary-list th,
+.archived-list .summary-list td {
+	border-color: #483E37;
+}
+
+.archived-list .summary-list th {
+	background-color: #483E37;
+}
+
+.proposal-list .summary-list th,
+.proposal-list .summary-list td {
+	border-color: #FFCC00;
+}
+
+.proposal-list .summary-list th {
+	background-color: #FFCC00;
+}
+
+.decision-list .summary-list th,
+.decision-list .summary-list td {
+	border-color: #AAD400;
+}
+
+.decision-list .summary-list th {
+	background-color: #AAD400;
+}
+
 
 /* borders */
 
@@ -320,80 +367,35 @@ li.summary-item {
 	
 }
 
-#sort_form {
-	float:right;
-	padding-right:15px;
-	padding-bottom: 6px;	
-}
-
-.field {
-	float: left;
-	margin-left: 10px;
-	margin-right: 10px;
-}
-
-.field.id {
-    width: 40px;
-}
-
-.field.excerpt {
-	width:520px;
-}
-
-.field.feedbackcount {
-	width: 80px;
-	float: right;
-	text-align: center;
-}
-
-.field.decided_date {
-    width: 130px;
-	float: right;
-	text-align: center;
-}
-
-.field.watchercount {
+.id {
     width: 80px;
-    float: right;
-    text-align: center;
+}
+td.id {
+    text-align:left;
 }
 
-.field.review_date {
-	width: 130px;
-	float: right;
-	text-align: center;
+.excerpt {
+   /* Use all that is left */
+   text-align:left;
 }
 
-.field.archived_date {
-    float: right;
-	width: 130px;
-	text-align: center;
+.watchercount,
+.feedbackcount {
+    width: 6em;
 }
 
-.field.created_date{
-	width: 130px;
-	float: right;
-	text-align: center;
-}
-
-.field.deadline {
-	width: 80px;
-	float: right;	
-	text-align: center;
+.review_date,
+.archived_date,
+.created_date,
+.decided_date,
+.deadline {
+	width: 10em;
 }
 
 /* Proposal list view */
 
 #header h1 span {
 	line-height:1.5em;
-}
-
-.urloverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-	width: 100%;
 }
 
 a.button.add_decision {
