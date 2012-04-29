@@ -508,9 +508,6 @@ a.edit {
 }
 
 #decision_detail .dates {
-	float: right;
-	position:relative;
-	top:-15px;
 	margin-right:20px;
 }
 
