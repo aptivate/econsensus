@@ -1,0 +1,67 @@
+@media screen and (max-width: 640px) {
+	/*
+	 * Responsive tables (break them down into rows).
+	 * Works only on tables with FIXED CHOICE of columns AND
+	 * doesn't work on IE
+	 */
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	tr { border: none; }
+
+	.proposal-list tr:nth-of-type(even) { background-color:#ffcc00;}
+	.decision-list tr:nth-of-type(even) { background-color:#90aa27;}
+	.archived-list tr:nth-of-type(even) { background-color:#483e37;}
+
+	td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 9em;
+		text-align:left;
+	}
+
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 9px;
+		left: 6px;
+		width: 8em;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+
+	.proposal-list td, .proposal-list td:first-child, .proposal-list td:last-child,
+	.decision-list td, .decision-list td:first-child, .decision-list td:last-child,
+	.archived-list td, .archived-list td:first-child, .archived-list td:last-child {
+		border:none;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	/* Labels */
+	.proposal-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.proposal-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
+	.proposal-list td:nth-of-type(3):before { font-weight:bold;content:"Feedback"; }
+	.proposal-list td:nth-of-type(4):before { font-weight:bold;content:"Deadline"; }
+
+	.decision-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.decision-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
+	.decision-list td:nth-of-type(3):before { font-weight:bold;content:"Decided Date"; }
+	.decision-list td:nth-of-type(4):before { font-weight:bold;content:"Review Date"; }
+
+	.archived-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.archived-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
+	.archived-list td:nth-of-type(3):before { font-weight:bold;content:"Created Date"; }
+	.archived-list td:nth-of-type(4):before { font-weight:bold;content:"Archived Date"; }
+}

@@ -6,6 +6,9 @@
 	<title>{% block title %}{% trans "Home" %} | {% endblock %}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/styles.css"/>
+	<!--[if !IE]><!-->
+	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/tables.css"/>
+	<!--<![endif]-->
 	{% block head_content%}{% endblock %}
 </head>
 <body class="{% block body_class%}base{% endblock %}">
