@@ -127,7 +127,6 @@ input {
 
 #footer-wrapper {
     background-color: #FFFFFF;
-    min-width: 960px;
     padding: 10px 0;
 }
 
@@ -398,8 +397,8 @@ td.id {
 	line-height:1.5em;
 }
 
-a.button.add_decision {
-    background-color: #90AA27;
+a.button.add_decision,
+a.button.add_proposal {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -410,16 +409,12 @@ a.button.add_decision {
     padding-left: 30px;
 }
 
+a.button.add_decision {
+    background-color: #90AA27;
+}
+
 a.button.add_proposal {
     background-color: #FFCC00;
-    background-image: url("../images/icon-add_prop.png");
-    background-position: 3px center;
-    background-repeat: no-repeat;
-    color: #333333;
-    float: right;
-    line-height: 24px;
-    margin-top: 6px;
-    padding-left: 30px;
 }
 
 /* Decision View */
@@ -1110,6 +1105,10 @@ p.error404 {
   	#header h1 {
   		width:100%;
   	}
+
+	#navigation-wrapper {
+		padding:0 0 10px;
+	}
 	
   	#navigation li {
   		width:33%;
@@ -1168,12 +1167,23 @@ p.error404 {
 		background-position:2px center;
 	}
 	
+	a.button.add_decision, a.button.add_proposal {
+		top:0;
+	}
+
 	.list_view .item_description {
 		width:100%;
 		clear:both;
 		margin:10px 0;
 		padding:0;
 		display:block;
+	}
+	.review_date,
+	.archived_date,
+	.created_date,
+	.decided_date,
+	.deadline {
+		width: 8em;
 	}
 }
 
@@ -1226,6 +1236,17 @@ p.error404 {
 		font-size:1.4em;
 		top:-0.2em;	
 		width:100%;
+	}
+
+	a.button.add_decision, a.button.add_proposal {
+		float:left;
+		width:90%;
+		margin:6px 5% 1px;
+		padding:2px 0;
+	}
+
+	a.button span {
+		padding-left:30px;
 	}
 
 	.list_view .item_description {
