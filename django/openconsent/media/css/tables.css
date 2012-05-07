@@ -6,17 +6,22 @@
 	 */
 
 	/* Force table to not be like tables anymore */
-	table, thead, tbody, th, td, tr {
+	.object-list table,
+	.object-list thead,
+	.object-list tbody,
+	.object-list th,
+	.object-list td,
+	.object-list tr {
 		display: block;
 	}
 
-	tr { border: none; }
+	.object-list tr { border: none; }
 
 	.proposal-list tr:nth-of-type(even) { background-color:#ffcc00;}
 	.decision-list tr:nth-of-type(even) { background-color:#90aa27;}
 	.archived-list tr:nth-of-type(even) { background-color:#483e37;}
 
-	td {
+	.object-list td {
 		/* Behave  like a "row" */
 		border: none;
 		border-bottom: 1px solid #eee;
@@ -25,7 +30,7 @@
 		text-align:left;
 	}
 
-	td:before {
+	.object-list td:before {
 		/* Now like a table header */
 		position: absolute;
 		/* Top/left values mimic padding */
@@ -36,14 +41,12 @@
 		white-space: nowrap;
 	}
 
-	.proposal-list td, .proposal-list td:first-child, .proposal-list td:last-child,
-	.decision-list td, .decision-list td:first-child, .decision-list td:last-child,
-	.archived-list td, .archived-list td:first-child, .archived-list td:last-child {
+	.object-list td, .object-list td:first-child, .object-list td:last-child {
 		border:none;
 	}
 
 	/* Hide table headers (but not display: none;, for accessibility) */
-	thead tr {
+	.object-list thead tr {
 		position: absolute;
 		top: -9999px;
 		left: -9999px;

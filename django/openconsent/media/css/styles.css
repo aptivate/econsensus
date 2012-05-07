@@ -569,7 +569,10 @@ p.title {
     clear: both;
     float: left;
     width: 100%;
-    padding: 10px;
+}
+
+#decision_update_form #decision {
+    padding: 10px 20px 10px 5px;
 }
 
 #decision_update_form.proposal {
@@ -690,7 +693,7 @@ background:#d81616;
 
 #id_description, #id_budget, #id_people, #id_meeting_people {
     display: block;
-    padding: 15px;
+    padding: 15px 3%;
     position: relative;
     width: 94%;
 	clear:both;
@@ -870,10 +873,10 @@ dl.stats dt {
 }
 
 .form_item {
-	padding: 10px;
+	padding: 10px 3%;
 	display: block;
 	position: relative;
-	width: 98%;
+	width: 94%;
 }
 
 /* Feedback */
@@ -1178,6 +1181,10 @@ p.error404 {
 		top:0;
 	}
 
+	.summary-list {
+		width:auto;
+	}
+
 	.list_view .item_description {
 		width:100%;
 		clear:both;
@@ -1231,6 +1238,31 @@ p.error404 {
 	#decision_detail .meta .controls {
 		position: static;
 		margin: 1em 0 0 20px;
+	}
+
+	#decision_update_form {
+		float:none;
+		width:auto;
+		padding:10px 10px 3em;
+	}
+
+	#decision_update_form #decision {
+		padding: 0;
+	}
+
+	form .decision_summary,
+	form .decision_meta {
+		float:none;
+		width:100%;
+	}
+
+	.form_item, .decision_meta .form_item {
+		width:auto;
+		padding:10px;
+	}
+
+	.decision_author {
+		display: none;
 	}
 }
 

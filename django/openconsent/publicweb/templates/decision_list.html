@@ -5,7 +5,7 @@
 
 {% block heading %}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
 
-{% block body_class%}{{ tab }}-list{% endblock %}
+{% block body_class%}object-list {{ tab }}-list{% endblock %}
 
 {% block main_content %}
 		{% if object_list %}
