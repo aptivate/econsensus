@@ -227,6 +227,7 @@ input {
 	color:#666;
 	float:left;
 	padding-bottom: 6px;
+	padding-right: 180px;
 }
 
 /* list view */
@@ -536,9 +537,12 @@ a.edit {
 .author {
 	padding-bottom: 20px;
 	position:absolute;
-	top:-50px;
+	width: 180px;
+	top:-40px;
 	right:0;
 	color:#666;
+	font-size:1em;
+	text-align:right;
 }
 
 .author span {
@@ -1189,6 +1193,10 @@ p.error404 {
 		width: 8em;
 	}
 
+	#content h2.page_title {
+		padding:0 0 1em;
+	}
+
 	#decision_detail .summary .description {
 		width: auto;
 		float: none;
@@ -1268,7 +1276,7 @@ p.error404 {
 	}
 	
 	#content h2.page_title {
-		display:none;
+		font-size:1.2em;
 	}
 	
 	a.button {
