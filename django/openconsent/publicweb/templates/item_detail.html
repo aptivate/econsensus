@@ -151,7 +151,7 @@ jQuery(function ($) {
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title">{% trans "Feedback" %}</h2>
-<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'>Add new feedback</a></div>
+<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'><span>Add new feedback</span></a></div>
 <div class="decision_feedback">
 
 {% if object.feedback_set.all %}

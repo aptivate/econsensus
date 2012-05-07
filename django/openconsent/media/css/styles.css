@@ -1296,6 +1296,16 @@ p.error404 {
 		padding-left:30px;
 	}
 
+	.button.add_feedback {
+		position:relative;
+		top: -1em;
+		width:90%;
+		margin:0 5%;
+		background-image: url("../images/icon-add.png");
+		background-position: 3px center;
+		background-repeat: no-repeat;
+	}
+
 	.list_view .item_description {
 		width:100%;
 		float:none;
