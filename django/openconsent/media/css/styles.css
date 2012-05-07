@@ -462,7 +462,6 @@ span.excerpt {
 #decision_detail .stats {
 	float: left;
 	position:relative;
-	margin-top:20px;
 }
 
 #decision_detail .stats dt {
@@ -471,7 +470,7 @@ span.excerpt {
   }
   
 #decision_detail .stats dd {
-	padding-left:8em;
+	padding-left:7.5em;
 }
 
 #decision_detail .description {
@@ -483,8 +482,11 @@ span.excerpt {
 	margin:0 20px 30px 20px; 
 }
 
+#decision_detail .meeting_people {
+	margin: 0 0 20px;
+}
 #decision_detail .people {
-	margin-top: 20px;
+	margin: 0 0 20px;
 }
 
 #decision_detail .meta {
@@ -505,7 +507,8 @@ a.edit {
 }
 
 #decision_detail .dates {
-	margin-right:20px;
+	float:left;
+	margin:0 20px 20px 0;
 }
 
 #decision_detail .date {
@@ -1184,6 +1187,42 @@ p.error404 {
 	.decided_date,
 	.deadline {
 		width: 8em;
+	}
+
+	#decision_detail .summary .description {
+		width: auto;
+		float: none;
+	}
+
+	#decision_detail .meta .meeting_people,
+	#decision_detail .meta .people {
+		margin: 0 0 20px 20px;
+	}
+
+	#decision_detail .meta .dates {
+		width: 100%;
+		margin: 0 0 20px;
+	}
+
+	#decision_detail .meta,
+	#decision_detail .meta .stats {
+		float: none;
+		width: auto;
+	}
+
+	#decision_detail .meta .stats dt {
+		position: static;
+		float: left;
+		width: 7em;
+		margin: 0 0 0 20px;
+	}
+	#decision_detail .meta .stats dd {
+		clear: right;
+	}
+
+	#decision_detail .meta .controls {
+		position: static;
+		margin: 1em 0 0 20px;
 	}
 }
 

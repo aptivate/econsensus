@@ -25,7 +25,8 @@
 			</div>
 		{% endif %}
 		{% endif %}
-			<div class="dates">
+		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
+			<div class="dates">{% endif %}
 		{% if object.status = 'proposal' %}
 		{% if object.deadline %}
 				<div class="date">
@@ -61,8 +62,8 @@
 				</div>
 		{% endif %}
 		{% endif %}
-		
-			</div>
+		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
+			</div>{% endif %}
 			<dl class="stats">
 			<dt class="consent">{% trans "consent" %}</dt>
 			<dd>{{ object.get_feedback_statistics.consent }}</dd>
