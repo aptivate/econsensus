@@ -56,7 +56,13 @@ body {
 a, a:link, a:active a:visited {
 	color:#3E6EA3;
 	text-decoration:none;
+	outline:none;
+	outline-style:none;
 }
+
+a img, img {
+	border:none;
+	}
 
 p {
 	line-height:1.3em;	
@@ -91,12 +97,19 @@ textarea, input {
     -moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
     border-radius: 10px;
-    box-shadow: 4px 4px 5px #999 inset;
     position: relative;
 }
 
 input {
 	box-shadow:none;
+}
+
+.go.button {
+    background-color: #90AA27;
+    border: medium none;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 5px 10px;
 }
 
 /* Main Blocks */
@@ -122,7 +135,7 @@ input {
 
 #navigation-wrapper {
 	border-top:10px solid #ededed;
-	background-color:#483E37;
+	background-color:#5F5853;
 }
 
 #footer-wrapper {
@@ -307,11 +320,11 @@ p.no_items {
 /* list view colors */
 .archived-list .summary-list th,
 .archived-list .summary-list td {
-	border-color: #483E37;
+	border-color: #D1D7DF;
 }
 
 .archived-list .summary-list th {
-	background-color: #483E37;
+	background-color: #D1D7DF;
 }
 
 .proposal-list .summary-list th,
@@ -399,7 +412,8 @@ td.id {
 }
 
 a.button.add_decision,
-a.button.add_proposal {
+a.button.add_proposal,
+a.button.add_feedback {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -412,6 +426,7 @@ a.button.add_proposal {
 
 a.button.add_decision {
     background-color: #90AA27;
+    color:#fff;
 }
 
 a.button.add_proposal {
@@ -442,6 +457,7 @@ span.excerpt {
     display: block;
     position: relative;
     padding: 20px 0;
+    margin-bottom:10px;
     width:100%;
     float:left;
 }
@@ -467,7 +483,7 @@ span.excerpt {
 
 #decision_detail .stats dt {
     position:absolute;
-    left:20px;
+    left:10px;
   }
   
 #decision_detail .stats dd {
@@ -491,8 +507,10 @@ span.excerpt {
 }
 
 #decision_detail .meta {
-	float:left;
-	width:30%;
+    border-left: 2px dotted #DDDDDD;
+    float: left;
+    padding-left: 15px;
+    width: 28%;
 }
 
 #decision_detail .controls {
@@ -555,6 +573,17 @@ p.title {
 	font-weight: bold;
 }
 
+.meta p.title {
+	font-weight:normal;
+	font-size:0.9em;
+	color:#666;
+}
+
+.meta strong {
+	font-weight:bold;
+	color:#333;
+}
+
 /* from the decision model
     PROPOSAL_STATUS = 0
     DECISION_STATUS = 1
@@ -569,6 +598,7 @@ p.title {
     clear: both;
     float: left;
     width: 100%;
+    margin-bottom:10px;
 }
 
 #decision_update_form #decision {
@@ -590,6 +620,7 @@ p.title {
 .decision_summary {
     float: left;
     width: 80%;
+    padding-bottom:10px;
 }
 
 .decision_meta {
@@ -622,10 +653,7 @@ p.title {
 }
 
 .button.add_feedback {
-    float: left;
-    line-height: inherit;
-    margin-left: 2em;
-    margin-top: 0.4em;
+	color:#fff!important;
 }
 
 .decision_feedback ol.feedback_list {
@@ -636,6 +664,12 @@ p.title {
     float: left;
     padding: 20px 0;
     width: 100%;
+}
+
+#feedback_add_anchor {
+	float:left;
+	position:relative;
+	left:-150px;
 }
 
 .decision_feedback ol.feedback_list > li {
@@ -693,7 +727,7 @@ background:#d81616;
 
 #id_description, #id_budget, #id_people, #id_meeting_people {
     display: block;
-    padding: 15px 3%;
+    padding: 15px 10px;
     position: relative;
     width: 94%;
 	clear:both;
@@ -1042,6 +1076,14 @@ body.login #footer {
     text-align: center;
 }
 
+body.login p.message {
+    color: #333333;
+    font-size: 0.9em;
+    margin: 0 auto 10px;
+    text-align: center;
+    width: 500px;
+}
+
 #login-form {
     background: none repeat scroll 0 0 #EFEFEF;
     -moz-border-radius: 20px;
@@ -1091,7 +1133,7 @@ body.login #footer {
     margin-top: 10px;
     padding: 5px;
     position: relative;
-    width: 215px;
+    width: 230px;
 
 }
 
