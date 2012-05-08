@@ -594,6 +594,9 @@ a.edit {
 	margin-bottom:1.5em;
 }
 
+ 
+#decision_detail.proposal .date {width:100%;}
+
 #decision_detail .date strong {
     background-color: #3E6EA3;
     color:#fff;
