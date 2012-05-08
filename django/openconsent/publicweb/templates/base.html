@@ -37,6 +37,10 @@
 						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "decision"%}">{% trans "Decisions" %}</a></li>
 						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "archived"%}">{% trans "Archived" %}</a></li>
 					</ul>
+					<div id="user-actions">
+						<a class="button add_decision" href="{% url publicweb_decision_create 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
+						<a class="button add_proposal" href="{% url publicweb_decision_create 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>
+					</div>	
 				</div>
 				<div class="search">
 					<form id="search_form" action="search" method="get">
@@ -46,10 +50,7 @@
 						</p>
 					</form>
 				</div>
-				<div class="user-actions">
-					<a class="button add_decision" href="{% url publicweb_decision_create 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
-					<a class="button add_proposal" href="{% url publicweb_decision_create 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>
-				</div>	
+				
 			</div>
 		{% endblock %}
 	</div><!-- Header end -->

@@ -1,30 +1,30 @@
 {% load i18n %}
 <div id="decision_snippet_envelope">
-	<h2 class="page_title">{{ object.status|capfirst }}: {{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</h2>
+	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
 
 	<div id="decision_detail" class="{{ object.status }}">
 		<div class="summary">
-			<h3 class="author">Created by: <span> {{ object.author }}</span></h3>
-			
 			<div class="description">
 				<p>{{ object.description|urlize|linebreaksbr }}</p>
-			</div>
-		</div>
-		<div class="meta">
-			{% if object.meeting_people %}
-			<div class="meeting_people">
-				<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
-				<strong>{{ object.meeting_people }}</strong>
-			</div>
+				<dl class="meta_people">
+				{% if object.meeting_people %}
+				<dt>{% trans "Added to list by: " %}</dt>
+				<dd> {{ object.author }}</dd>
+				<dt>{% trans "Decision made by/which meeting?: " %}</dt>			
+				<dd>{{ object.meeting_people }}</dd>
 			{% endif %}	
 		{% if object.status = 'decision' %}
 		{% if object.people %}
-			<div class="people">
-				<p class='title'>{% trans "Persons Responsible:" %}</p>			
-				<strong>{{ object.people }}</strong>
+				<dt>{% trans "Persons Responsible: " %}</dt>			
+				<dd>{{ object.people }}</dd>
+		{% endif %}
+		{% endif %}
+			</dl>
+		</div>
 			</div>
-		{% endif %}
-		{% endif %}
+			
+		<div class="meta">
+			
 		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
 			<div class="dates">{% endif %}
 		{% if object.status = 'proposal' %}

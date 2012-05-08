@@ -1,7 +1,7 @@
 {% load i18n %}	
 
 <li id="id{{ object.id }}">
-	<div class="feedback_wrapper">
+	<div class="feedback_wrapper {{ object.rating_text }}">
 		<div class="feedback_type {{ object.rating_text }}">
 			{{ object.rating_text|capfirst }}
 		</div>
