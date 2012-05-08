@@ -15,11 +15,26 @@
 		display: block;
 	}
 
-	.object-list tr { border: none; }
+	.object-list tr { 
+		border: 3px solid #eee;
+		border-top:38px solid #ddd; 
+		border-radius:10px;
+		-moz-border-radius:10px;
+		-webkit-border-radius:10px;
+		margin-bottom:10px;
+		position:relative;
+		display:block;
+		
+	}
+	
+	.object-list td {display:table-row;position:relative;}
 
-	.proposal-list tr:nth-of-type(even) { background-color:#ffcc00;}
-	.decision-list tr:nth-of-type(even) { background-color:#90aa27;}
-	.archived-list tr:nth-of-type(even) { background-color:#483e37;}
+
+.proposal-list .summary-list tr {border-color: #FFCC00; }
+.decision-list .summary-list tr {border-color: #AAD400; }
+.archived-list .summary-list tr {border-color: #D1D7DF; }
+
+
 
 	.object-list td {
 		/* Behave  like a "row" */
@@ -32,14 +47,21 @@
 
 	.object-list td:before {
 		/* Now like a table header */
-		position: absolute;
+		position: relative;
 		/* Top/left values mimic padding */
 		top: 9px;
 		left: 6px;
 		width: 8em;
-		padding-right: 10px;
+		padding:10px;
 		white-space: nowrap;
+		display:table-cell;
+		font-size:0.9em;
+		color:#666;
 	}
+
+.object-list .excerpt a {font-weight:bold;}
+.object-list .excerpt a:hover {color:#3E6DA3;}
+.object-list td a {display:table-cell;width:80%;}
 
 	.object-list td, .object-list td:first-child, .object-list td:last-child {
 		border:none;
@@ -52,18 +74,36 @@
 		left: -9999px;
 	}
 
+@media screen and (max-width: 660px) {
+	
+	.object-list td.id a {
+    left: 60px;
+    position: absolute;
+    top: -33px;
+    width: 7em;
+    padding:0;
+	}
+   
+   .object-list td:nth-of-type(1):before {
+    content: "ID";
+    font-weight: bold;
+    position: absolute;
+    top: -40px;
+	}
+}
+
 	/* Labels */
-	.proposal-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.proposal-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
 	.proposal-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.proposal-list td:nth-of-type(3):before { font-weight:bold;content:"Feedback"; }
 	.proposal-list td:nth-of-type(4):before { font-weight:bold;content:"Deadline"; }
 
-	.decision-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.decision-list td:nth-of-type(1):before { font-weight:bold;content:"ID";color:#000; }
 	.decision-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.decision-list td:nth-of-type(3):before { font-weight:bold;content:"Decided Date"; }
 	.decision-list td:nth-of-type(4):before { font-weight:bold;content:"Review Date"; }
 
-	.archived-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.archived-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
 	.archived-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.archived-list td:nth-of-type(3):before { font-weight:bold;content:"Created Date"; }
 	.archived-list td:nth-of-type(4):before { font-weight:bold;content:"Archived Date"; }
