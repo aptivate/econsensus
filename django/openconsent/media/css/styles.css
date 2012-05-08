@@ -516,7 +516,7 @@ span.excerpt {
   
 #decision_detail .stats dd {
     background: none repeat scroll 0 0 #FFFFFF;
-    border-radius: 50% 50% 50% 50%;#
+    border-radius: 50% 50% 50% 50%;
     -moz-border-radius: 50% 50% 50% 50%;
     -webkit-border-radius: 50% 50% 50% 50%;
  	display: block;
@@ -1498,5 +1498,5 @@ a.button.add_feedback {
     clear: both;
     margin-left: 0;
     padding-top: 10px;
-}
+	}
 }
