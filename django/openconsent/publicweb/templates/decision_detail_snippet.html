@@ -7,9 +7,9 @@
 			<div class="description">
 				<p>{{ object.description|urlize|linebreaksbr }}</p>
 				<dl class="meta_people">
-				{% if object.meeting_people %}
 				<dt>{% trans "Added to list by: " %}</dt>
 				<dd> {{ object.author }}</dd>
+				{% if object.meeting_people %}
 				<dt>{% trans "Decision made by/which meeting?: " %}</dt>			
 				<dd>{{ object.meeting_people }}</dd>
 			{% endif %}	
