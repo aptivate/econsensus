@@ -5,7 +5,7 @@ mechanize==0.2.5
 django-floppyforms==0.4.5
 lxml==2.2.4
 BeautifulSoup==3.2.0
-South==0.7.3
+South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
 django-debug-toolbar==0.8.5
 django-tagging
