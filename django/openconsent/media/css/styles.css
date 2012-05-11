@@ -1013,7 +1013,6 @@ dl.stats dt {
 
 .formset_item .form_item.rating {
     display: block;
-    float: left;
     margin-left: 15px;
     padding: 4px;
     width: 10%;
@@ -1032,45 +1031,6 @@ dl.stats dt {
     border-radius: 15px 15px 15px 15px;
     padding: 20px 0;  
 	}
-
-
-/* question 
-.formset_item.feedback0 {
-	border: 1px solid #cbcbcb;
-	border-top: 10px solid #cbcbcb;
-	}
-/* danger 
-.formset_item.feedback1 {
-	border: 1px solid #d71515;
-	border-top: 10px solid #d71515;
-	}
-/* concerns 
-.formset_item.feedback2 {
-	border: 1px solid #d6ac04;
-	border-top: 10px solid #d6ac04;
-	}
-/* consent 
-.formset_item.feedback3 {
-	border: 1px solid #a9d300;
-	border-top: 10px solid #a9d300;
-	}
-/* happy 
-.formset_item.feedback4 {
-	border: 1px solid #FBEC5D;
-	border-top: 10px solid #FBEC5D;
-	}
-/* delighted 
-.formset_item.feedback5 {
-	border: 1px solid #FBEC5D;
-	border-top: 10px solid #FBEC5D;
-	}
-	
-.formset_item.feedbackNone {
-	border: 1px solid #EEE;
-	border-top: 10px solid #EEE;
-	}
-
-*/
 
 /* Footer */
 
