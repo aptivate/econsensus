@@ -1,8 +1,8 @@
 Hello from the {{ site }} Econsensus server!
 
-This is to let you know that the following item has changed status from "{{ old }}" to "{{ new }}"
+{{ author }} has moved an item from "{{ old_status }}" to "{{ status }}"
 
-"{{ name|safe }}"
+"{{ description|safe }}"
 
 To interact with it, click here: {{ link }}
 

@@ -1,8 +1,8 @@
 Hello from the {{ site }} Econsensus server!
 
-This is to let you know that the following item has been changed.
+This is to let you know that {{ author }} has been changed the following item.
 
-"{{ name|safe }}"
+"{{ description|safe }}"
 
 To interact with it, click here: {{ link }}
 

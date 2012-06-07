@@ -166,9 +166,9 @@ class HtmlTest(OpenConsentTestCase):
         """
         self.login('Adam')
         decision = self.create_decision_through_browser()
-        self.create_feedback_through_browser(decision.id)
+        feedback = self.create_feedback_through_browser(decision.id)
         self.assertEquals(1, decision.watchercount())
         self.login('Barry')
-        self.update_feedback_through_browser(decision.id)
+        self.update_feedback_through_browser(feedback.id)
         self.assertEquals(2, decision.watchercount())
         
