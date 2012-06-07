@@ -136,6 +136,7 @@ def create_feedback(request, model, object_id, template_name, snippet_template="
                 feedback.decision = decision
                 feedback.author = request.user
                 feedback.save()
+                decision.add_watcher(request.user)
                 if snippet_template:
                     context = RequestContext(request, { 'object': feedback })
                     return render_to_response("feedback_detail_snippet.html", context)
@@ -156,7 +157,6 @@ def create_feedback(request, model, object_id, template_name, snippet_template="
 def update_feedback(request, model, object_id, template_name):
 
     feedback = get_object_or_404(model, id = object_id)
-
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(feedback.get_parent_url())
@@ -164,6 +164,7 @@ def update_feedback(request, model, object_id, template_name):
             form = FeedbackForm(request.POST, instance=feedback)
             if form.is_valid():
                 form.save()
+                feedback.decision.add_watcher(request.user)
                 return HttpResponseRedirect(feedback.get_parent_url())
         
         data = dict(form=form,tab=feedback.decision.status)

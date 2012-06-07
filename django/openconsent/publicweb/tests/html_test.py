@@ -122,3 +122,53 @@ class HtmlTest(OpenConsentTestCase):
         response = self.client.get(path)
         self.assertContains(response, 'Decision')
         
+    def create_decision_through_browser(self):
+        description = 'Quisque sapien justo'
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        post_dict = {'description': description, 
+                     'status': Decision.PROPOSAL_STATUS,
+                     'watch': True}
+        self.client.post(path,post_dict)
+        return Decision.objects.get(description=description)
+    
+    def create_feedback_through_browser(self,id):
+        description = 'a pulvinar tortor bibendum nec'
+        path = reverse('publicweb_feedback_create', args=[id])
+        post_dict = {'description': description, 
+                     'rating': Feedback.COMMENT_STATUS }
+        self.client.post(path,post_dict)
+        return Feedback.objects.get(description=description)
+    
+    def update_feedback_through_browser(self,id):
+        description = 'nibh ut dignissim. Sed a aliquet quam'
+        path = reverse('publicweb_feedback_update', args=[id])
+        post_dict = {'description': description, 
+                     'rating': Feedback.COMMENT_STATUS }
+        self.client.post(path,post_dict)
+        return Feedback.objects.get(description=description)
+    
+    def test_user_added_to_watchers_on_feedback_create(self):
+        """
+        When a user leaves feedback on a decision that user
+        should be added to the decisions watch list
+        """
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(1, decision.watchercount())
+        self.login('Barry')
+        self.create_feedback_through_browser(decision.id)
+        self.assertEquals(2, decision.watchercount())
+
+    def test_user_added_to_watchers_on_feedback_update(self):
+        """
+        When a user leaves feedback on a decision that user
+        should be added to the decisions watch list
+        """
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        self.create_feedback_through_browser(decision.id)
+        self.assertEquals(1, decision.watchercount())
+        self.login('Barry')
+        self.update_feedback_through_browser(decision.id)
+        self.assertEquals(2, decision.watchercount())
+        
