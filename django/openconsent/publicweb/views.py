@@ -187,7 +187,6 @@ def _process_post_and_redirect(request, decision, template_name):
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
         form = DecisionForm(request.POST, instance=decision)
-        
         if form.is_valid():
             decision = form.save()
             if form.cleaned_data['watch']:

@@ -172,3 +172,7 @@ class HtmlTest(OpenConsentTestCase):
         self.update_feedback_through_browser(feedback.id)
         self.assertEquals(2, decision.watchercount())
         
+    def test_site_contains_version_number(self):
+        path = reverse('publicweb_root')
+        response = self.client.get(path, follow=True)
+        self.assertContains(response, '(v0.0.1)')

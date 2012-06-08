@@ -102,5 +102,7 @@ urlpatterns = patterns('openconsent.publicweb.views',
         object_list_by_status,
         {'template_name': 'decision_list.html'},
         name='publicweb_item_list'),
-    url(r'^$', redirect_to_proposal_list)
+    url(r'^$', 
+        redirect_to_proposal_list,
+        name='publicweb_root')
     )
