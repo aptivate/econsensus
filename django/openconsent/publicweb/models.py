@@ -56,7 +56,8 @@ class Decision(models.Model):
         verbose_name=_('Budget/Resources'))
     people = models.CharField(max_length=255, null=True, blank=True)
     meeting_people = models.CharField(max_length=255, null=True, blank=True)    
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.CharField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,

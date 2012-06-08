@@ -112,6 +112,7 @@ def create_decision(request, status, template_name):
 @login_required
 def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
+    decision.editor = request.user
 
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)

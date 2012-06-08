@@ -30,14 +30,12 @@ class ModelTest(DecisionTestCase):
         return [row[i] for row in matrix]
 
 #The real work:
-    def test_decision_has_feedbackcount(self):
+    def test_decision_has_expected_fields(self):
         decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "feedbackcount")
-    
-    def test_decision_has_archived_date(self):
-        decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "archived_date")
-
+        self.model_has_attribute(decision, "editor")
+        
     def test_watchercount_changes(self):
         decision = Decision(description="Decision test data")
         decision.save(self.user)
