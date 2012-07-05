@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 from tagging.fields import TagField
-
+import datetime
 from emails import OpenConsentEmailMessage
 from managers import DecisionManager
 
@@ -19,7 +19,6 @@ import re
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
-import datetime
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -56,20 +55,24 @@ class Decision(models.Model):
         verbose_name=_('Budget/Resources'))
     people = models.CharField(max_length=255, null=True, blank=True)
     meeting_people = models.CharField(max_length=255, null=True, blank=True)    
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
-    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
-    watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.CharField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  max_length=10)
     tags = TagField(null=True, blank=True, editable=True, 
                     help_text=TAGS_HELP_FIELD_TEXT)
 
+    #admin stuff
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
+    last_modified = models.DateTimeField(null=True, auto_now=True, verbose_name=_('Last Modified'))
+    
+    watchers = models.ManyToManyField(User, blank=True, editable=False)
+    
     #Autocompleted fields
     #should use editable=False?
     excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
-    created_date = models.DateField(null=True, blank=True, editable=False,
-        verbose_name=_('Created Date'))
+    creation = models.DateField(null=True, auto_now_add=True,
+        verbose_name=_('Creation'))
 
     objects = DecisionManager()
 
@@ -156,10 +159,7 @@ class Decision(models.Model):
         return statistics
 
     def save(self, *args, **kwargs):
-        self.excerpt = self._get_excerpt()        
-
-        if not self.id:
-            self.created_date = datetime.date.today()        
+        self.excerpt = self._get_excerpt()
 
         #-----------------------------------#
         # This is email stuff. Would be good

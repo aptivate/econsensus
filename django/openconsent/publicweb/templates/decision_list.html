@@ -35,9 +35,9 @@
 				</th>
 				{% endif %}
 				{% if tab == 'archived' %}
-				<th class="created_date">
-					<a href="{{ request.path }}?sort=created_date">
-						<span class="{% if sort == 'created_date' %}sort{% endif %}">Created Date</span>
+				<th class="creation">
+					<a href="{{ request.path }}?sort=creation">
+						<span class="{% if sort == 'creation' %}sort{% endif %}">Creation</span>
 					</a>
 				</th>
 				<th class="archived_date">
@@ -60,6 +60,11 @@
 				<th class="deadline">
 					<a href="{{ request.path }}?sort=deadline">
 						<span class="{% if sort == 'deadline' %}sort{% endif %}">Deadline</span>
+					</a>
+				</th>
+				<th class="last_modified">
+					<a href="{{ request.path }}?sort=-last_modified">
+						<span class="{% if sort == 'last_modified' %}sort{% endif %}">Last Modified</span>
 					</a>
 				</th>
 				{% endif %}
@@ -92,7 +97,7 @@
 				{% if tab == 'archived' %}
 				<td>
 					<a href="{% url publicweb_item_detail object.id %}">
-						{{ object.created_date }}
+						{{ object.creation }}
 					</a>
 				</td>
 				<td>
@@ -115,6 +120,11 @@
 				<td>
 					<a href="{% url publicweb_item_detail object.id %}">
 						{{ object.deadline }}
+					</a>
+				</td>
+				<td>
+					<a href="{% url publicweb_item_detail object.id %}">
+						{{ object.last_modified }}
 					</a>
 				</td>
 				{% endif %}

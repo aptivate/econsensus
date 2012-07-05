@@ -35,6 +35,7 @@ class ModelTest(DecisionTestCase):
         self.model_has_attribute(decision, "feedbackcount")
         self.model_has_attribute(decision, "archived_date")
         self.model_has_attribute(decision, "editor")
+        self.model_has_attribute(decision, "last_modified")
         
     def test_watchercount_changes(self):
         decision = Decision(description="Decision test data")

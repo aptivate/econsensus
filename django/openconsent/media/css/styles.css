@@ -417,10 +417,15 @@ td.id {
 
 .review_date,
 .archived_date,
-.created_date,
+.creation,
 .decided_date,
 .deadline {
 	width: 10em;
+}
+
+.last_modified {
+	width: 13em;
+
 }
 
 /* Proposal list view */
@@ -1264,8 +1269,9 @@ p.error404 {
 	}
 	.review_date,
 	.archived_date,
-	.created_date,
+	.creation,
 	.decided_date,
+	.last_modified,
 	.deadline {
 		width: 8em;
 	}

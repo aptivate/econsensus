@@ -138,7 +138,9 @@ class DecisionListTest(DecisionTestCase):
         self.assertContains(response, "Issue Decision")
         self.assertNotContains(response, "Issue Proposal")
         self.assertNotContains(response, "Issue Archived") 
-    
+        response = self.client.get(reverse('publicweb_item_list', args=['proposal']))
+        self.assertContains(response, "Last Modified") 
+        
     def assert_list_page_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order.         
         decision = Decision(description="Decision None 1",
@@ -155,7 +157,7 @@ class DecisionListTest(DecisionTestCase):
                             status=Decision.DECISION_STATUS)
         decision.save(self.user)
 
-        #note that we don't actually have to _display_ the field to sort bny it
+        #note that we don't actually have to _display_ the field to sort by it
         response = self.client.get(reverse('publicweb_item_list', args=['decision']), dict(sort=column))
         
         object_list = response.context['object_list']
