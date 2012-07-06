@@ -7,25 +7,19 @@ from django.core.mail import EmailMessage
 
 class OpenConsentEmailMessage(EmailMessage):
     
-    def __init__(self, typ, obj, old_obj=None, *args, **kwargs):  # pylint: disable=R0914
+    def __init__(self, email_type, old_status, obj, *args, **kwargs):  # pylint: disable=R0914
         super(OpenConsentEmailMessage, self).__init__(*args, **kwargs)
         current_site = Site.objects.get_current()
         item_link = 'http://%s%s' % (current_site.domain, obj.get_absolute_url())
-        try:
-            old_status = getattr(old_obj, 'status')
-        except:
-            old_status = None
         subject_dict = {'status' : obj.status,
                         'excerpt': obj.excerpt.replace('\r\n', '') }
-        body_dict = { 'site': current_site.name, 
-                     'author': obj.author, 
+        body_dict = { 'site': current_site.name,
+                     'author': obj.editor,
                      'description': obj.description,
                      'status': obj.status,
                      'old_status': old_status,
                      'link': item_link }
-
-        #record newness before saving
-        if typ == 'new':
+        if email_type == 'new':
             if obj.status == obj.DECISION_STATUS:
                 subject_template = Template("[Econsensus]: Consensus Reached: {{ excerpt|safe }}")
             else:
@@ -33,16 +27,15 @@ class OpenConsentEmailMessage(EmailMessage):
 
             body_template = get_template('email/new.txt')
             queryset = User.objects.all()
-            
-        elif typ == 'status_change':
+        elif email_type =='status':
             subject_template = Template("[Econsensus] -> {{ status }}: {{ excerpt|safe }}")
             body_template = get_template('email/status_change.txt')
             queryset = User.objects.all()
-        elif typ == 'content_change':
+        else:
             subject_template = Template("[Econsensus]: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')
             try:
-                queryset = obj.watchers.exclude(username=obj.author.username)
+                queryset = obj.watchers.exclude(username=obj.editor.username)
             except:
                 queryset = obj.watchers.all()
         subject_context = Context(subject_dict)
@@ -54,7 +47,7 @@ class OpenConsentEmailMessage(EmailMessage):
         for this_user in queryset:
             if this_user.email:
                 self.to.append(this_user.email)
-
+        
     def __str__(self) :
         return str(self.__dict__)
 

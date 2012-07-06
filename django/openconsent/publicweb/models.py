@@ -159,33 +159,8 @@ class Decision(models.Model):
         return statistics
 
     def save(self, *args, **kwargs):
-        self.excerpt = self._get_excerpt()
-
-        #-----------------------------------#
-        # This is email stuff. Would be good
-        # if it could be hived off to a signal
-        #-  --------------------------------#
-        # ||
-        # \/
-        #record newness before saving
-        if self.id:
-            typ = 'status_change'
-            old = Decision.objects.get(id=self.id)
-            if old.status != self.status:
-                typ = 'status_change'
-            else:
-                typ = 'content_change'
-        else:
-            old = None
-            typ = 'new'
-                    
+        self.excerpt = self._get_excerpt()       
         super(Decision, self).save(*args, **kwargs)
-
-        email = OpenConsentEmailMessage(typ = typ,
-                                        obj = self,
-                                        old_obj = old)  
-
-        email.send()
         
 class Feedback(models.Model):
 

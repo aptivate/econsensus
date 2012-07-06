@@ -67,7 +67,7 @@ jQuery(function ($) {
 	});
 
 	// Override redirect to view and put it inline
-	$("#decision_update_form").live("submit", function (e) {
+	$('#decision_update_form input[value="Save"]').live("click", function (e) {
 		updateAndReplace("{% url publicweb_decision_update object.id %}",
 						"{% url publicweb_decision_snippet_detail object.id %}",
 						"form#decision_update_form");

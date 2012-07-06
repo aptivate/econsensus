@@ -11,6 +11,7 @@ import unicodecsv
 
 from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
+from publicweb.emails import OpenConsentEmailMessage
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -101,6 +102,7 @@ def object_list_by_status(request, status, template_name):
 def create_decision(request, status, template_name):    
     decision = Decision(status=status)
     decision.author = request.user
+    decision.editor = request.user
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
@@ -113,7 +115,6 @@ def create_decision(request, status, template_name):
 def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
     decision.editor = request.user
-
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
@@ -184,12 +185,20 @@ def redirect_to_proposal_list(request):
     return HttpResponseRedirect(url)
     
 def _process_post_and_redirect(request, decision, template_name):
+    old_status = decision.status
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
         form = DecisionForm(request.POST, instance=decision)
         if form.is_valid():
+            if decision.id == None:
+                type = 'new'
+            elif old_status != form.cleaned_data['status']:
+                type = 'status'
+            else: type = 'content'
             decision = form.save()
+            email = OpenConsentEmailMessage(type, old_status, decision)  
+            email.send()
             if form.cleaned_data['watch']:
                 decision.add_watcher(request.user)
             else:
