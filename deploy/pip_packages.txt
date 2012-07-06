@@ -9,3 +9,4 @@ South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
 django-debug-toolbar==0.8.5
 django-tagging
+pylint
