@@ -52,7 +52,7 @@
         "model": "publicweb.feedback", 
         "fields": {
             "resolved": false, 
-            "rating": null, 
+            "rating": 0, 
             "decision": 2, 
             "description": "People from RJQ will have to travel further. Will we get extra travel allowance?"
         }
@@ -62,7 +62,7 @@
         "model": "publicweb.feedback", 
         "fields": {
             "resolved": false, 
-            "rating": null, 
+            "rating": 0, 
             "decision": 3, 
             "description": "This would let me work on expanding our core accounts. - Steve"
         }
@@ -72,7 +72,7 @@
         "model": "publicweb.feedback", 
         "fields": {
             "resolved": false, 
-            "rating": null, 
+            "rating": 0, 
             "decision": 3, 
             "description": "We don't have the money at the moment. Maybe we can put this off for 3 months."
         }

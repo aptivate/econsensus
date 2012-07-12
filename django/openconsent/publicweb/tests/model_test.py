@@ -30,14 +30,13 @@ class ModelTest(DecisionTestCase):
         return [row[i] for row in matrix]
 
 #The real work:
-    def test_decision_has_feedbackcount(self):
+    def test_decision_has_expected_fields(self):
         decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "feedbackcount")
-    
-    def test_decision_has_archived_date(self):
-        decision = Decision(description="Decision test data")
         self.model_has_attribute(decision, "archived_date")
-
+        self.model_has_attribute(decision, "editor")
+        self.model_has_attribute(decision, "last_modified")
+        
     def test_watchercount_changes(self):
         decision = Decision(description="Decision test data")
         decision.save(self.user)
@@ -86,4 +85,15 @@ class ModelTest(DecisionTestCase):
             decision.save()
         except:
             self.fail("Failed to save object.")
+    
+    def test_feedback_statistics(self):
+        decision = Decision(description="Decision test data")
+        self.model_has_attribute(decision, "get_feedback_statistics")
+        statistics = decision.get_feedback_statistics()
+        self.assertTrue("consent" in statistics)
+        self.assertTrue("concern" in statistics)
+        self.assertTrue("danger" in statistics)
+        self.assertTrue("question" in statistics)
+        self.assertTrue("comment" in statistics)
+        
         

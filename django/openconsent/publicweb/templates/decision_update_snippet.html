@@ -4,13 +4,14 @@
 		{% for error in form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}
-		<div id="decision" class="{{ form.instance.status }}">
+		<div id="decision" {% if tab %}class="{{ tab }}"{% endif %}>
 			<div class="decision_summary">
 			    <div class="form_item">
 			        {{ form.description.errors }}
 					<label for="id_description">{% trans "Description" %}:</label>
 			        {{ form.description }}
 			    </div>
+			    {% if tab == 'decision' %}
 			 	<div class="form_item">
 			        {{ form.people.errors }}
 			        <label for="id_people">{% trans "Persons Responsible:" %}</label>
@@ -21,6 +22,14 @@
 			        <label for="id_meeting_people">{% trans "What meeting/ who made this decision?" %}</label>
 			        {{ form.meeting_people }}
 			    </div>
+			    {% endif %}
+			    {% if tab == 'archived' or tab == 'proposal' %}
+			 	<div class="form_item">
+			        {{ form.budget.errors }}
+			        <label for="id_budget">{% trans "Resources/Budget" %}:</label>
+			        {{ form.budget }}
+			    </div>			    
+			    {% endif %}
 			 </div>
 			 <div class="decision_meta">
 				{% if form.instance.author != null %}
@@ -31,13 +40,7 @@
 				    <label for="id_status">{% trans "Status" %}:</label>
 				    {{ form.status }}
 				</div>
-				{% if not form.instance or form.instance.status == 'proposal' %}
-				<div class="form_item">
-			        {{ form.deadline.errors }}
-			        <label for="deadline">{% trans "Deadline" %}:</label>
-			        {{ form.deadline }}
-			    </div>
-			    {% else %}{% if form.instance.status == 'decision' %}
+			    {% if tab == 'decision' %}
 				<div class="form_item">
 			        {{ form.decided_date.errors }}
 			        <label for="id_decided_date">{% trans "Decided" %}:</label>
@@ -58,14 +61,21 @@
 			        <label for="id_expiry_date">{% trans "Expiry" %}:</label>
 			        {{ form.expiry_date }}
 			    </div>
-			    {% else %}
+				{% endif %}
+				{% if tab == 'archived' %}   	
 				<div class="form_item">
 			        {{ form.archived_date.errors }}
 			        <label for="id_archived_date">{% trans "Archived" %}:</label>
 			        {{ form.archived_date }}
 			    </div>
-			    {% endif %}{% endif %}
-			    
+				{% endif %}
+			    {% if tab == 'proposal' %}
+				<div class="form_item">
+			        {{ form.deadline.errors }}
+			        <label for="deadline">{% trans "Deadline" %}:</label>
+			        {{ form.deadline }}
+			    </div>
+			    {% endif %}
 				<div id="tags">
 				    {{ form.tags.errors }}
 				    <label for="id_tags">{% trans "Tags" %}:</label>

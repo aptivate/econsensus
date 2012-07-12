@@ -38,12 +38,11 @@ class EmailTest(DecisionTestCase):
         User.objects.create_user("Chris", "chris@example.com", password='password')
 
         #add a decision
-        decision = self.create_and_return_decision()
-
+        decision = self.create_decision_through_browser()
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
-        mymail = OpenConsentEmailMessage('new', decision, old_obj=None)
+        mymail = OpenConsentEmailMessage('new', decision.status, decision)
 
         self.assertEqual(mymail, outbox[0])
 
@@ -55,21 +54,21 @@ class EmailTest(DecisionTestCase):
         
         All plaintext emails should be marked 'safe' in the Django template.
         """
-        decision = Decision(description='&', status=0)
+        decision = Decision(description='&', status=Decision.DECISION_STATUS)
         decision.author = self.user
         decision.save()
 
-        mymail = OpenConsentEmailMessage('new', decision)
+        mymail = OpenConsentEmailMessage('new', decision.status, decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
 
-        mymail = OpenConsentEmailMessage('status_change', decision, old_obj=decision)
+        mymail = OpenConsentEmailMessage('status', Decision.ARCHIVED_STATUS, decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
         
-        mymail = OpenConsentEmailMessage('content_change', decision)
+        mymail = OpenConsentEmailMessage('content', Decision.ARCHIVED_STATUS, decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
@@ -84,7 +83,7 @@ class EmailTest(DecisionTestCase):
         billy = User.objects.create_user("Billy", "billy@example.com", password='password')
         chris = User.objects.create_user("Chris", "chris@example.com", password='password')
         
-        decision = Decision(description='Test', status=0)
+        decision = Decision(description='Test', status=Decision.PROPOSAL_STATUS)
         decision.author = andy
         decision.save()
         
@@ -92,8 +91,7 @@ class EmailTest(DecisionTestCase):
         decision.watchers = [billy]
 
         #andy changes the content
-        mymail = OpenConsentEmailMessage('content_change', decision)
-        
+        mymail = OpenConsentEmailMessage('content', Decision.PROPOSAL_STATUS, decision)
         #only watchers get mail, not the author
         self.assertNotIn(andy.email, mymail.to)
         self.assertIn(billy.email, mymail.to)         

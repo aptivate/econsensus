@@ -55,4 +55,37 @@ class ViewTest(DecisionTestCase):
         self.assertRedirects(response,reverse('publicweb_item_detail', args=[decision.id]))
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, self.user)
+
+    def test_user_added_to_watchers_on_feedback_create(self):
+        """
+        When a user leaves feedback on a decision that user
+        should be added to the decisions watch list
+        """
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(1, decision.watchercount())
+        self.login('Barry')
+        self.create_feedback_through_browser(decision.id)
+        self.assertEquals(2, decision.watchercount())
+
+    def test_user_added_to_watchers_on_feedback_update(self):
+        """
+        When a user leaves feedback on a decision that user
+        should be added to the decisions watch list
+        """
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        feedback = self.create_feedback_through_browser(decision.id)
+        self.assertEquals(1, decision.watchercount())
+        self.login('Barry')
+        self.update_feedback_through_browser(feedback.id)
+        self.assertEquals(2, decision.watchercount())
+                
+    def test_decison_editor_set_on_update(self):
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        self.login('Barry')
+        decision = self.update_decision_through_browser(decision.id)
+        self.assertEquals(self.user, decision.editor)
+
         

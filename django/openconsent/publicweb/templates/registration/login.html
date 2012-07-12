@@ -26,7 +26,7 @@ Login
 {% block main_content %}
 
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+<p class="message">Your username and password didn't match. Please try again.</p>
 {% endif %}
 
 <form id="login-form" method="post" action="{% url 'django.contrib.auth.views.login' %}">

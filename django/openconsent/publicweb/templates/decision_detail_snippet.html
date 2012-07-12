@@ -1,74 +1,88 @@
 {% load i18n %}
+<div id="decision_snippet_envelope">
+	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
 
-<div id="decision_detail" class="{{ object.status }}">
-	<div class="stats">
-		<p><span class="question"><em>{{ object.get_feedback_statistics.question }}</em> {% trans "questions" %}</span></p>
-		<p><span class="danger"><em>{{ object.get_feedback_statistics.danger }}</em> {% trans "danger" %}</span></p>
-		<p><span class="concern"><em>{{ object.get_feedback_statistics.concern }}</em> {% trans "concerns" %}</span></p>
-		<p><span class="consensus"><em>{{ object.get_feedback_statistics.consensus }}</em> {% trans "consensus" %}</span></p>
-	</div>
-	<div class="summary">
-		<div class="author">
-		<p>Created by {{ object.author }}</p>
-		</div>
-		<div class="description">
-			<p>{{ object.description|urlize|linebreaksbr }}</p>
-		</div>
-		{% if object.meeting_people %}
-		<div class="meeting_people">
-			<p class='title'>{% trans "What meeting/ who made this decision" %}</p>			
-			<strong>{{ object.meeting_people }}</strong>
-		</div>
-		{% endif %}	
-	{% if object.status = 'decision' %}
-	{% if object.people %}
-		<div class="people">
-			<p class='title'>{% trans "Persons Responsible:" %}</p>			
-			<strong>{{ object.people }}</strong>
-		</div>
-	{% endif %}
-	{% endif %}
-	</div>
-	<div class="meta">
-		<div class="dates">
-	{% if object.status = 'proposal' %}
-	{% if object.deadline %}
-			<div class="date">
-				{% trans "Deadline:" %}			
-				<strong>{{ object.deadline }}</strong>
+	<div id="decision_detail" class="{{ object.status }}">
+		<div class="summary">
+			<div class="description">
+				<p>{{ object.description|urlize|linebreaksbr }}</p>
+				<dl class="meta_people">
+					<dt>{% trans "Added to list by: " %}</dt>
+					<dd> {{ object.author }}</dd>
+					{% if object.editor %}
+					<dt>{% trans "Last edited by: " %}</dt>
+					<dd> {{ object.editor }}</dd>
+					{% endif %}
+					{% if object.meeting_people %}
+					<dt>{% trans "Decision made by/which meeting?: " %}</dt>			
+					<dd>{{ object.meeting_people }}</dd>
+					{% endif %}	
+					{% if object.status = 'decision' %}
+					{% if object.people %}
+					<dt>{% trans "Persons Responsible: " %}</dt>			
+					<dd>{{ object.people }}</dd>
+					{% endif %}
+					{% endif %}
+				</dl>
 			</div>
-	{% endif %}
-	{% endif %}
+		</div>
+			
+		<div class="meta">
+			
+		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
+			<div class="dates">{% endif %}
+		{% if object.status = 'proposal' %}
+		{% if object.deadline %}
+				<div class="date">
+					{% trans "Deadline:" %}			
+					<strong>{{ object.deadline }}</strong>
+				</div>
+		{% endif %}
+		{% endif %}
 
-	{% if object.status = 'decision' %}	
-	{% if object.decided_date %}
-			<div class="date">
-				{% trans "Decided" %}			
-				<strong>{{ object.decided_date }}</strong>
+		{% if object.status = 'decision' %}	
+		{% if object.decided_date %}
+				<div class="date">
+					{% trans "Decided" %}			
+					<strong>{{ object.decided_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.effective_date %}
+				<div class="date">
+					{% trans "Effective" %}
+					<strong>{{ object.effective_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.review_date %}
+				<div class="date">
+					{% trans "Review" %}
+					<strong>{{ object.review_date }}</strong>
+				</div>
+		{% endif %}
+		{% if object.expiry_date %}
+				<div class="date">
+					{% trans "Expiry" %}
+					<strong>{{ object.expiry_date }}</strong>
+				</div>
+		{% endif %}
+		{% endif %}
+		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
+			</div>{% endif %}
+			<dl class="stats">
+			<dt class="consent">{% trans "consent" %}</dt>
+			<dd>{{ object.get_feedback_statistics.consent }}</dd>
+			<dt class="concern">{% trans "concern" %}</dt>
+			<dd>{{ object.get_feedback_statistics.concern }}</dd>
+			<dt class="danger">{% trans "danger" %}</dt>
+			<dd>{{ object.get_feedback_statistics.danger }}</dd>
+			<dt class="question">{% trans "question" %}
+			<dd>{{ object.get_feedback_statistics.question }}</dd>
+			<dt class="comment">{% trans "comment" %}</dt>
+			<dd>{{ object.get_feedback_statistics.comment }}</dd>
+		</dl>
+			<div class="controls">
+				<a class="edit" href="{% url publicweb_decision_update object.id %}">Edit</a>
 			</div>
-	{% endif %}
-	{% if object.effective_date %}
-			<div class="date">
-				{% trans "Effective" %}
-				<strong>{{ object.effective_date }}</strong>
-			</div>
-	{% endif %}
-	{% if object.review_date %}
-			<div class="date">
-				{% trans "Review" %}
-				<strong>{{ object.review_date }}</strong>
-			</div>
-	{% endif %}
-	{% if object.expiry_date %}
-			<div class="date">
-				{% trans "Expiry" %}
-				<strong>{{ object.expiry_date }}</strong>
-			</div>
-	{% endif %}
-	{% endif %}
-		</div>
-		<div class="controls">
-			<p class="edit"><a href="{% url publicweb_decision_snippet_update object.id %}">Edit</a></p>
 		</div>
 	</div>
 </div>

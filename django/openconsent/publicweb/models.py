@@ -6,8 +6,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 from tagging.fields import TagField
-
+import datetime
 from emails import OpenConsentEmailMessage
+from managers import DecisionManager
+
 import re
 
 # Ideally django-tinymce should be patched
@@ -17,7 +19,6 @@ import re
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
-import datetime
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -54,19 +55,26 @@ class Decision(models.Model):
         verbose_name=_('Budget/Resources'))
     people = models.CharField(max_length=255, null=True, blank=True)
     meeting_people = models.CharField(max_length=255, null=True, blank=True)    
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
-    watchers = models.ManyToManyField(User, blank=True, editable=False)
     status = models.CharField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  max_length=10)
     tags = TagField(null=True, blank=True, editable=True, 
                     help_text=TAGS_HELP_FIELD_TEXT)
 
+    #admin stuff
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
+    last_modified = models.DateTimeField(null=True, auto_now=True, verbose_name=_('Last Modified'))
+    
+    watchers = models.ManyToManyField(User, blank=True, editable=False)
+    
     #Autocompleted fields
     #should use editable=False?
     excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
-    created_date = models.DateField(null=True, blank=True, editable=False,
-        verbose_name=_('Created Date'))
+    creation = models.DateField(null=True, auto_now_add=True,
+        verbose_name=_('Creation'))
+
+    objects = DecisionManager()
 
     #methods
     def is_watched(self, user):
@@ -129,7 +137,8 @@ class Decision(models.Model):
                       'question': 0,
                       'danger': 0,
                       'concern': 0,
-                      'consensus': 0
+                      'comment': 0,
+                      'consent': 0
                      }
         
         #is there a better way of doing this,
@@ -141,43 +150,17 @@ class Decision(models.Model):
                 statistics['danger'] += 1
             elif feedback.rating == Feedback.CONCERNS_STATUS:
                 statistics['concern'] += 1
-            else:
-                statistics['consensus'] += 1
+            elif feedback.rating == Feedback.COMMENT_STATUS:
+                statistics['comment'] += 1
+            elif feedback.rating == Feedback.CONSENT_STATUS:
+                statistics['consent'] += 1
             statistics['all'] += 1
         
         return statistics
 
     def save(self, *args, **kwargs):
-        self.excerpt = self._get_excerpt()        
-
-        if not self.id:
-            self.created_date = datetime.date.today()        
-
-        #-----------------------------------#
-        # This is email stuff. Would be good
-        # if it could be hived off to a signal
-        #-  --------------------------------#
-        # ||
-        # \/
-        #record newness before saving
-        if self.id:
-            typ = 'status_change'
-            old = Decision.objects.get(id=self.id)
-            if old.status != self.status:
-                typ = 'status_change'
-            else:
-                typ = 'content_change'
-        else:
-            old = None
-            typ = 'new'
-                    
+        self.excerpt = self._get_excerpt()       
         super(Decision, self).save(*args, **kwargs)
-
-        email = OpenConsentEmailMessage(typ = typ,
-                                        obj = self,
-                                        old_obj = old)  
-
-        email.send()
         
 class Feedback(models.Model):
 

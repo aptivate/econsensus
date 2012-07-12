@@ -112,6 +112,7 @@ TEMPLATE_DIRS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "publicweb.context_processors.current_site.current_site",
+    "publicweb.context_processors.version.version",
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",

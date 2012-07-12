@@ -1,8 +1,8 @@
 Hello from the {{ site }} Econsensus server!
 
-This is to let you know that the following item has been created.
+{{ author }} made a new {{ status }} item.
 
-"{{ name|safe }}"
+"{{ description|safe }}"
 
 To interact with it, click here: {{ link }}
 

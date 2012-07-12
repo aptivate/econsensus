@@ -11,7 +11,7 @@ import unicodecsv
 
 from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
-from django.db.models.aggregates import Count
+from publicweb.emails import OpenConsentEmailMessage
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -19,18 +19,18 @@ from django.db.models.aggregates import Count
 @login_required
 def export_csv(request):
     ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
-	Expected input: request (not quite sure what this is!)
-	Expected output: http containing MIME info followed by the data itself as CSV.
-	>>> res = export_csv(1000)
-	>>> res.status_code
-	200
-	>>> res['Content-Disposition']
-	'attachment; filename=publicweb_decision.csv'
-	>>> res['Content-Type']
-	'text/csv'
-	>>> len(res.content)>0
-	True
-	'''
+    Expected input: request (not quite sure what this is!)
+    Expected output: http containing MIME info followed by the data itself as CSV.
+    >>> res = export_csv(1000)
+    >>> res.status_code
+    200
+    >>> res['Content-Disposition']
+    'attachment; filename=publicweb_decision.csv'
+    >>> res['Content-Type']
+    'text/csv'
+    >>> len(res.content)>0
+    True
+    '''
 
     opts = Decision._meta #@UndefinedVariable
     field_names = set([field.name for field in opts.fields])
@@ -46,22 +46,50 @@ def export_csv(request):
     return response
 
 @login_required        
-def object_list_by_status(request, status):
+def decision_detail(request, object_id, *args, **kwargs):
+    decision = get_object_or_404(Decision, pk=object_id)    
+    extra_context = { 'tab': decision.status }
+    # Show the detail page
+    return list_detail.object_detail(
+        request,
+        queryset = Decision.objects.all(),
+        object_id = object_id,
+        extra_context = extra_context,
+        *args,
+        **kwargs
+    )
+
+@login_required        
+def object_list_by_status(request, status, template_name):
     extra_context = { 'tab': status }
-    #need to check template exists...
-    template_name = status + '_list.html'
     
     if 'sort' in request.GET:
         order = str(request.GET['sort'])
+        extra_context['sort'] = order
     else:
-        order = 'id'
+        order = '-id'
+        extra_context['sort'] = "id"
+        
     if order == 'watchers':
-        queryset = Decision.objects.annotate(count=Count('watchers')).order_by('count').filter(status=status)
+        full_queryset = Decision.objects.order_by_count('watchers')
     elif order == 'feedback':
-        queryset = Decision.objects.annotate(count=Count('feedback')).order_by('count').filter(status=status)
+        full_queryset = Decision.objects.order_by_count('feedback')
+    elif order == 'decided_date':
+        full_queryset = Decision.objects.order_null_last('decided_date')
+    elif order == 'effective_date':
+        full_queryset = Decision.objects.order_null_last('effective_date')
+    elif order == 'review_date':
+        full_queryset = Decision.objects.order_null_last('review_date')
+    elif order == 'expiry_date':
+        full_queryset = Decision.objects.order_null_last('expiry_date')
+    elif order == 'deadline':
+        full_queryset = Decision.objects.order_null_last('deadline')
+    elif order == 'archived_date':
+        full_queryset = Decision.objects.order_null_last('archived_date')
     else:
-        queryset = Decision.objects.order_by(order).filter(status=status)
-    extra_context['sort'] = order
+        full_queryset = Decision.objects.order_by(order)
+        
+    queryset = full_queryset.filter(status=status)
     
     return list_detail.object_list(
         request,
@@ -71,36 +99,35 @@ def object_list_by_status(request, status):
         )
 
 @login_required
-def create_decision(request, status, template_name):
-    
+def create_decision(request, status, template_name):    
     decision = Decision(status=status)
     decision.author = request.user
-    
+    decision.editor = request.user
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form)
+    data = dict(form=form,tab=status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 @login_required
 def update_decision(request, object_id, template_name):
     decision = get_object_or_404(Decision, id = object_id)
-
+    decision.editor = request.user
     if request.method == "POST":
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form)
+    data = dict(form=form, tab=decision.status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
 @login_required
-def create_feedback(request, model, object_id, template_name):
+def create_feedback(request, model, object_id, template_name, snippet_template=""):
 
     decision = get_object_or_404(model, id = object_id)
-    
+
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
@@ -111,15 +138,19 @@ def create_feedback(request, model, object_id, template_name):
                 feedback.decision = decision
                 feedback.author = request.user
                 feedback.save()
+                decision.add_watcher(request.user)
+                if snippet_template:
+                    context = RequestContext(request, { 'object': feedback })
+                    return render_to_response("feedback_detail_snippet.html", context)
                 return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
-        
+
         data = dict(form=form)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm()
-        
+
     data = dict(form=form)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
@@ -128,7 +159,6 @@ def create_feedback(request, model, object_id, template_name):
 def update_feedback(request, model, object_id, template_name):
 
     feedback = get_object_or_404(model, id = object_id)
-
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(feedback.get_parent_url())
@@ -136,33 +166,45 @@ def update_feedback(request, model, object_id, template_name):
             form = FeedbackForm(request.POST, instance=feedback)
             if form.is_valid():
                 form.save()
+                feedback.decision.add_watcher(request.user)
                 return HttpResponseRedirect(feedback.get_parent_url())
         
-        data = dict(form=form)
+        data = dict(form=form,tab=feedback.decision.status)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm(instance=feedback)
         
-    data = dict(form=form)
+    data = dict(form=form,tab=feedback.decision.status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
+def redirect_to_proposal_list(request):
+    url = reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS])
+    return HttpResponseRedirect(url)
+    
 def _process_post_and_redirect(request, decision, template_name):
+    old_status = decision.status
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
         form = DecisionForm(request.POST, instance=decision)
-        
         if form.is_valid():
+            if decision.id == None:
+                type = 'new'
+            elif old_status != form.cleaned_data['status']:
+                type = 'status'
+            else: type = 'content'
             decision = form.save()
+            email = OpenConsentEmailMessage(type, old_status, decision)  
+            email.send()
             if form.cleaned_data['watch']:
                 decision.add_watcher(request.user)
             else:
                 decision.remove_watcher(request.user)
             return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
         
-        data = dict(form=form)
+        data = dict(form=form, tab=decision.status)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)   

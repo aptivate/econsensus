@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from mechanize import ParseString
+from publicweb.models import Decision, Feedback
 
 class OpenConsentTestCase(TestCase):
     password_stump = 'password'
@@ -13,7 +15,8 @@ class OpenConsentTestCase(TestCase):
 
     def login(self, user):
         self.client.login(username=user, password=self.password_stump)
-        return User.objects.get(username=user) 
+        self.user = User.objects.get(username=user) 
+        return self.user
 
     def get_form_values_from_response(self, response, number):
         forms = ParseString(response.content, '')
@@ -24,3 +27,37 @@ class OpenConsentTestCase(TestCase):
             form_data[name] = control.value
         
         return form_data
+
+    def create_decision_through_browser(self):
+        description = 'Quisque sapien justo'
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        post_dict = {'description': description, 
+                     'status': Decision.PROPOSAL_STATUS,
+                     'watch': True}
+        self.client.post(path,post_dict)
+        return Decision.objects.get(description=description)
+    
+    def update_decision_through_browser(self,id):
+        description = 'Aenean eros nibh'
+        path = reverse('publicweb_decision_update', args=[id])
+        post_dict = {'description': description, 
+                     'status': Decision.PROPOSAL_STATUS,
+                     'watch': True}
+        self.client.post(path,post_dict)
+        return Decision.objects.get(description=description)
+    
+    def create_feedback_through_browser(self,id):
+        description = 'a pulvinar tortor bibendum nec'
+        path = reverse('publicweb_feedback_create', args=[id])
+        post_dict = {'description': description, 
+                     'rating': Feedback.COMMENT_STATUS }
+        self.client.post(path,post_dict)
+        return Feedback.objects.get(description=description)
+    
+    def update_feedback_through_browser(self,id):
+        description = 'nibh ut dignissim. Sed a aliquet quam'
+        path = reverse('publicweb_feedback_update', args=[id])
+        post_dict = {'description': description, 
+                     'rating': Feedback.COMMENT_STATUS }
+        self.client.post(path,post_dict)
+        return Feedback.objects.get(description=description)

@@ -101,7 +101,7 @@ class HtmlTest(OpenConsentTestCase):
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'meeting_people')
         post_dict = {'description': 'Quisque sapien justo', 
@@ -113,4 +113,27 @@ class HtmlTest(OpenConsentTestCase):
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)  
         self.assertContains(response, test_string)
+        
+    def test_h2_header_on_form_matches_selected_status(self):
+        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'Proposal')
+        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'Decision')
+        
+    def test_site_contains_version_number(self):
+        path = reverse('publicweb_root')
+        response = self.client.get(path, follow=True)
+        self.assertContains(response, '(v0.0.1)')
+        
+    def test_editor_shown(self):
+        self.login('Adam')
+        decision = self.create_decision_through_browser()
+        self.login('Barry')
+        decision = self.update_decision_through_browser(decision.id)
+        path = reverse('publicweb_decision_detail', args=[decision.id])
+        response = self.client.get(path, follow=True)
+        self.assertContains(response, 'Last edited by')
+        self.assertContains(response, 'Barry')
         
