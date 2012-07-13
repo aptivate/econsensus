@@ -11,6 +11,7 @@ from emails import OpenConsentEmailMessage
 from managers import DecisionManager
 
 import re
+import config
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork

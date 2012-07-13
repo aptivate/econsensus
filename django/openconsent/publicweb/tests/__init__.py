@@ -15,3 +15,4 @@ from view_test import ViewTest
 from url_test import URLTest
 from form_test import FormTest
 from html_test import HtmlTest
+from command_test import CommandTest
