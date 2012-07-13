@@ -3,9 +3,6 @@
 import os
 import private_settings #@UnresolvedImport
 
-import logging
-logging.basicConfig()
-
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -178,8 +175,8 @@ DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
 
 #Requirements for django-keyedcache, which is a requirement of django-livesettings.
 
-CACHE_PREFIX = SITE_ID
-CACHE_TIMEOUT = 0
+#CACHE_PREFIX = SITE_ID
+#CACHE_TIMEOUT = 0
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
