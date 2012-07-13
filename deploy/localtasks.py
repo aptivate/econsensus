@@ -68,8 +68,7 @@ def update_ve():
 def add_cron_email(environment):
     """sets up a cron job for the email checking"""
 
-    project_name = project_settings.django_dir.split('/')[-1]
-    cron_file = os.path.join('/etc', 'cron.d', 'cron_email_'+project_name)
+    cron_file = os.path.join('/etc', 'cron.d', 'cron_email_econsensus')
     if os.path.exists(cron_file):
         return
 
