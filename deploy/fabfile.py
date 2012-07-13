@@ -186,3 +186,9 @@ def link_apache_conf(apache_conf_name=None):
     if not files.exists(apache_conf):
         sudo('ln -s %s %s' % (conf_file, apache_conf))
     configtest()
+
+def add_cron_email():
+    require('tasks_bin', provided_by=env.valid_envs)
+    with settings(warn_only=True):    
+        sudo(env.tasks_bin + ' add_cron_email:' + env.environment)
+    

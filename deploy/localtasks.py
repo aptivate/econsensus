@@ -64,3 +64,28 @@ def create_ve():
 def update_ve():
     """ Update the virtualenv """
     create_ve()
+
+def add_cron_email(environment):
+    """sets up a cron job for the email checking"""
+
+    project_name = project_settings.django_dir.split('/')[-1]
+    cron_file = os.path.join('/etc', 'cron.d', 'cron_email_'+project_name)
+    if os.path.exists(cron_file):
+        return
+
+    # has it been set up already?
+    cron_grep = _call_wrapper('sudo crontab -l | grep process_email', shell=True)
+    if cron_grep == 0:
+        return
+
+    # write something like:
+    # */5 * * * * /usr/bin/python26 /var/django/openconsent/dev/django/openconsent/manage.py process_mail
+    f = open(cron_file, 'w')
+    try:
+        f.write('*/5 * * * * /usr/bin/python26 %s/manage.py process_mail' % tasklib.env['django_dir'])
+        f.write('\n')
+    finally:
+        f.close()
+    
+    os.chmod(cron_file, 0755)
+    
