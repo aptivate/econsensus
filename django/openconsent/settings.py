@@ -173,6 +173,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
 
+#Requirements for django-keyedcache, which is a requirement of django-livesettings.
+
+#CACHE_PREFIX = SITE_ID
+#CACHE_TIMEOUT = 0
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/

@@ -10,4 +10,5 @@ git+git://github.com/jdunck/python-unicodecsv.git
 django-debug-toolbar==0.8.5
 django-tagging
 django-livesettings
+django-keyedcache
 pylint
