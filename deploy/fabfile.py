@@ -7,6 +7,8 @@ from fabric.decorators import hosts
 # provides as fabric commands
 from fablib import *
 import fablib
+
+# project_settings - try not to repeat ourselves so much ...
 import project_settings
 
 env.home = '/var/django/'
@@ -19,12 +21,9 @@ env.repo_type = "git"
 env.repository = 'git://github.com/aptivate/openconsent.git'
 
 env.django_dir = os.path.join('django', env.project)
-env.django_apps = ['publicweb', ]
-env.test_cmd = ' manage.py test -v0 ' + ' '.join(env.django_apps)
+env.test_cmd = ' manage.py test -v0 ' + ' '.join(project_settings.django_apps)
 
-# put "django" here if you want django specific stuff to run
-# put "plain" here for a basic apache app
-env.project_type = "django"
+env.project_type = project_settings.project_type
 
 # does this virtualenv for python packages
 env.use_virtualenv = True
@@ -35,6 +34,7 @@ env.valid_envs = ('dev_server', 'staging_test', 'staging', 'production')
 
 # does this use apache - mostly for staging_test
 env.use_apache = True
+
 
 # this function can just call the fablib _setup_path function
 # or you can use it to override the defaults
