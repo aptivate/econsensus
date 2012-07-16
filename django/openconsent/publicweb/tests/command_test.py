@@ -19,7 +19,7 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_new_proposal(self):
         #Tests that process_email picks up mails from mailbox
         #and creates objects in the db
-        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: Proposal gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
         try:
             management.call_command('process_email')
         except:

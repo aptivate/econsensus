@@ -53,6 +53,7 @@ class Command(BaseCommand):
             except:
                 pass
         id_found = re.search('#(\d+)', mail['Subject'])
+        proposal_found = re.search('proposal', mail['Subject'], re.IGNORECASE)
         if id_found:
             try:               
                 decision = Decision.objects.get(pk=id_found.group(1))
@@ -66,7 +67,7 @@ class Command(BaseCommand):
             if object_found:
                 feedback = Feedback(author=user, decision=decision,rating=Feedback.COMMENT_STATUS, description=msg_string)
                 feedback.save()
-            else:
+            elif proposal_found:
                 decision = Decision(author=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
                 decision.save()
                 
