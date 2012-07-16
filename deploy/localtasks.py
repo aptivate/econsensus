@@ -85,5 +85,5 @@ def add_cron_email(environment):
     finally:
         f.close()
     
-    os.chmod(cron_file, 0755)
+    os.chmod(cron_file, 0644)
     
