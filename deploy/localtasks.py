@@ -68,20 +68,19 @@ def update_ve():
 def add_cron_email(environment):
     """sets up a cron job for the email checking"""
 
-    cron_file = os.path.join('/etc', 'cron.d', 'cron_email_econsensus')
+    cron_file = os.path.join('/etc', 'cron.d', 'cron_email_%s' % environment)
     if os.path.exists(cron_file):
         return
-
     # has it been set up already?
-    cron_grep = _call_wrapper('sudo crontab -l | grep process_email', shell=True)
+    cron_grep = tasklib._call_wrapper('sudo crontab -l | grep %s' % tasklib.env['django_dir'], shell=True)
     if cron_grep == 0:
         return
 
     # write something like:
-    # */5 * * * * /usr/bin/python26 /var/django/openconsent/dev/django/openconsent/manage.py process_mail
+    # */5 * * * * /usr/bin/python26 /var/django/openconsent/dev/django/openconsent/manage.py process_email
     f = open(cron_file, 'w')
     try:
-        f.write('*/5 * * * * /usr/bin/python26 %s/manage.py process_mail' % tasklib.env['django_dir'])
+        f.write('*/5 * * * * /usr/bin/python26 %s/manage.py process_email' % tasklib.env['django_dir'])
         f.write('\n')
     finally:
         f.close()
