@@ -16,11 +16,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         verbosity = int(options.get('verbosity', 1))
-        user = config_value('PostByEmail', 'USERNAME')
-        password = config_value('PostByEmail', 'PASSWORD')
-        server = config_value('PostByEmail', 'SERVER')
-        port = config_value('PostByEmail', 'PORT')
-        ssl = config_value('PostByEmail', 'SSL_ENABLED')
+        user = config_value('ReceiveMail', 'USERNAME')
+        password = config_value('ReceiveMail', 'PASSWORD')
+        server = config_value('ReceiveMail', 'SERVER')
+        port = config_value('ReceiveMail', 'PORT')
+        ssl = config_value('ReceiveMail', 'SSL_ENABLED')
 
         try:
             if ssl==True: 
