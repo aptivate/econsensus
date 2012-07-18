@@ -45,10 +45,10 @@ class OpenConsentEmailMessage(EmailMessage):
 
         body_context = Context(body_dict)            
         self.body = body_template.render(body_context)
-        self.to = []        #pylint: disable-msg=C0103
+        self.bcc = []        #pylint: disable-msg=C0103
         for this_user in queryset:
             if this_user.email:
-                self.to.append(this_user.email)
+                self.bcc.append(this_user.email)
         live_default = config_value('SendMail','DEFAULT_FROM_EMAIL')
         if live_default:
             self.from_email = live_default

@@ -96,3 +96,17 @@ class EmailTest(DecisionTestCase):
         self.assertNotIn(andy.email, mymail.to)
         self.assertIn(billy.email, mymail.to)         
         self.assertNotIn(chris.email, mymail.to)
+
+    def test_emails_are_bcced(self):        
+        decision = self.create_decision_through_browser()
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        
+        adam = User.objects.get(username='adam')
+        barry = User.objects.get(username='barry')
+        charlie = User.objects.get(username='charlie')
+        
+        bcc_list = [adam.email, barry.email, charlie.email]
+        self.assertEqual(bcc_list, outbox[0].bcc)
+        self.assertEqual(list(), outbox[0].to)
+        
