@@ -77,8 +77,12 @@ try:
 except ImportError:
     # the Error does not exist in python 2.4
     class CalledProcessError(Exception):
-        def __init__(self, returncode):
+        """This exception is raised when a process run by check_call() returns
+        a non-zero exit status.  The exit status will be stored in the
+        returncode attribute."""
+        def __init__(self, returncode, cmd):
             self.returncode = returncode
+            self.cmd = cmd
 
 
 def _call_wrapper(argv, **kwargs):
@@ -90,11 +94,11 @@ def _call_wrapper(argv, **kwargs):
         print "Executing command: %s" % command
     return _call_command(argv, **kwargs)
 
-def _check_call_wrapper(argv, **kwargs):
+def _check_call_wrapper(argv, accepted_returncode_list=[0], **kwargs):
     try:
         returncode = _call_wrapper(argv, **kwargs)
 
-        if returncode != 0:
+        if returncode not in accepted_returncode_list:
             raise CalledProcessError(returncode, argv)
     except WindowsError:
         raise CalledProcessError("Unknown", argv)
@@ -653,4 +657,4 @@ def patch_south():
                 'lib/python2.6/site-packages/south/db/__init__.py')
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
     cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
-    _check_call_wrapper(cmd)
+    _check_call_wrapper(cmd, [0,1])
