@@ -19,7 +19,7 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_new_proposal(self):
         #Tests that process_email picks up mails from mailbox
         #and creates objects in the db
-        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: Proposal gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
         try:
             management.call_command('process_email')
         except:
@@ -30,9 +30,9 @@ class CommandTest(OpenConsentTestCase):
             self.fail("Email failed to appear in database as a decision.")
         self.assertEqual(decision.status, Decision.PROPOSAL_STATUS)
         
-    def test_process_email_new_feedback(self):
-        #Tests that process_email picks up mails from mailbox
-        #and creates objects in the db
+    def test_process_email_basic_feedback(self):
+        #Tests that if # tag is in the header, but no feedback type is
+        #identified then the payload becomes comment feedback
         parent = Decision(status=Decision.PROPOSAL_STATUS)
         parent.save()
         poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored #%s' % parent.id,'','Mnogi programi za stolno izdavatvo',''],[''])
@@ -45,7 +45,39 @@ class CommandTest(OpenConsentTestCase):
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
-        
+
+    def test_process_email_defined_feedback(self):
+        #Tests that if a defined feedback type is passed it is transformed
+        #into the rating field.
+        parent = Decision(status=Decision.PROPOSAL_STATUS)
+        parent.save()
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored #%s' % parent.id,'','Danger: Mnogi programi za stolno izdavatvo',''],[''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+        try:
+            feedback = Feedback.objects.get(description="Mnogi programi za stolno izdavatvo")
+        except:
+            self.fail("Email failed to appear in database as feedback.")
+        self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)
+
+    def test_process_email_unrecognised_feedback(self):
+        #Tests that if the user mistypes the feedback type it is ignored
+        #and the feedback defaults to comment
+        parent = Decision(status=Decision.PROPOSAL_STATUS)
+        parent.save()
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored #%s' % parent.id,'','Dager: Mnogi programi za stolno izdavatvo',''],[''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+        try:
+            feedback = Feedback.objects.get(description="Mnogi programi za stolno izdavatvo")
+        except:
+            self.fail("Email failed to appear in database as feedback.")
+        self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
+
     def test_process_email_bad_content(self):
         #Test that an unknown email address is rejected.
         poplib.POP3.mailbox = ([''],['From: Adam <youdontknowme@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])

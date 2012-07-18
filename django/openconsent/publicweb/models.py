@@ -203,3 +203,11 @@ class Feedback(models.Model):
 
     def rating_text(self):
         return self.RATING_CHOICES[self.rating][1]
+
+def rating_int(x):
+    try:
+        index = [y[1] for y in Feedback.RATING_CHOICES].index(x)
+    except ValueError:
+        return None
+    
+    return Feedback.RATING_CHOICES[index][0]

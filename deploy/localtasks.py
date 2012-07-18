@@ -20,7 +20,7 @@ def load_sample_data(environment, force=False):
     """load sample data if required."""
     if force == False:
         # first check if it has already been loaded
-        output_lines = tasklib._manage_py(['dumpdata', 'publicweb'], supress_output=True)
+        output_lines = tasklib._manage_py(['dumpdata', 'publicweb'])
         if output_lines[0] != '[]':
             print "Environment '", environment, "' already has sample data loaded."
             return
@@ -43,7 +43,7 @@ def load_django_site_data(environment, force=False):
     """load data for django sites framework. """
     if force == False:
         # first check if it has already been loaded
-        output_lines = tasklib._manage_py(['dumpdata', 'sites'], supress_output=True)
+        output_lines = tasklib._manage_py(['dumpdata', 'sites'])
         if output_lines[0] != '[]':
             print "Environment '", environment, "' already has site data loaded."
             return

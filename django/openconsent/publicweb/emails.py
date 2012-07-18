@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.template import Context
 from django.template import Template
 from django.core.mail import EmailMessage
+from livesettings import config_value
 
 class OpenConsentEmailMessage(EmailMessage):
     
@@ -11,7 +12,8 @@ class OpenConsentEmailMessage(EmailMessage):
         super(OpenConsentEmailMessage, self).__init__(*args, **kwargs)
         current_site = Site.objects.get_current()
         item_link = 'http://%s%s' % (current_site.domain, obj.get_absolute_url())
-        subject_dict = {'status' : obj.status,
+        subject_dict = {'id' : obj.id,
+                        'status' : obj.status,
                         'excerpt': obj.excerpt.replace('\r\n', '') }
         body_dict = { 'site': current_site.name,
                      'author': obj.editor,
@@ -21,18 +23,18 @@ class OpenConsentEmailMessage(EmailMessage):
                      'link': item_link }
         if email_type == 'new':
             if obj.status == obj.DECISION_STATUS:
-                subject_template = Template("[Econsensus]: Consensus Reached: {{ excerpt|safe }}")
+                subject_template = Template("[Econsensus]: Consensus Reached #{{ id }}: '{{ excerpt|safe }}'")
             else:
-                subject_template = Template("[Econsensus]: New {{ status }}: {{ excerpt|safe }}")
+                subject_template = Template("[Econsensus]: New {{ status }} #{{ id }}: {{ excerpt|safe }}")
 
             body_template = get_template('email/new.txt')
             queryset = User.objects.all()
         elif email_type =='status':
-            subject_template = Template("[Econsensus] -> {{ status }}: {{ excerpt|safe }}")
+            subject_template = Template("[Econsensus] -> {{ status }} #{{ id }}: {{ excerpt|safe }}")
             body_template = get_template('email/status_change.txt')
             queryset = User.objects.all()
         else:
-            subject_template = Template("[Econsensus]: Change to {{ excerpt|safe }}")
+            subject_template = Template("[Econsensus] {{ status }} #{{ id }}: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')
             try:
                 queryset = obj.watchers.exclude(username=obj.editor.username)
@@ -47,6 +49,9 @@ class OpenConsentEmailMessage(EmailMessage):
         for this_user in queryset:
             if this_user.email:
                 self.to.append(this_user.email)
+        live_default = config_value('SendMail','DEFAULT_FROM_EMAIL')
+        if live_default:
+            self.from_email = live_default
         
     def __str__(self) :
         return str(self.__dict__)
