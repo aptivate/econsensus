@@ -6,5 +6,15 @@ Hello from the {{ site }} Econsensus server!
 
 To interact with it, click here: {{ link }}
 
+To leave a feedback comment via email just reply to this email.
+
+To indicate the type of feedback you're leaving put
+Question:
+Danger:
+Concerns:
+Consent:
+Comment:
+at the start of your email.
+
 You are receiving this mail because you are signed up to the {{ site }}
 Econsensus service.
