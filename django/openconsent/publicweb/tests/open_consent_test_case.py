@@ -8,9 +8,9 @@ class OpenConsentTestCase(TestCase):
     password_stump = 'password'
     
     def setUp(self):
-        User.objects.create_user('Adam', 'adam@econsensus.com', self.password_stump)
-        User.objects.create_user('Barry', 'barry@econsensus.com', self.password_stump)
-        User.objects.create_user('Charlie', 'charlie@econsensus.com', self.password_stump)
+        self.adam = User.objects.create_user('Adam', 'adam@econsensus.com', self.password_stump)
+        self.barry = User.objects.create_user('Barry', 'barry@econsensus.com', self.password_stump)
+        self.charlie = User.objects.create_user('Charlie', 'charlie@econsensus.com', self.password_stump)
         self.user = self.login('Adam')
 
     def login(self, user):

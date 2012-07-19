@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 import unicodecsv
 
@@ -186,6 +187,7 @@ def redirect_to_proposal_list(request):
     
 def _process_post_and_redirect(request, decision, template_name):
     old_status = decision.status
+    users = ()
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
@@ -193,10 +195,12 @@ def _process_post_and_redirect(request, decision, template_name):
         if form.is_valid():
             if decision.id == None:
                 type = 'new'
+                users = tuple(User.objects.all())
             elif old_status != form.cleaned_data['status']:
                 type = 'status'
             else: type = 'content'
             decision = form.save()
+            decision.watchers.add(*users)            
             email = OpenConsentEmailMessage(type, old_status, decision)  
             email.send()
             if form.cleaned_data['watch']:
