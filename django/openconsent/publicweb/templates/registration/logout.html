@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body_class%}
+login
+{% endblock %}
+
+{% block title %}
+OpenConsent Login
+{% endblock %}
+
+{% block user_access %}
+{% endblock %}
+
+{% block topbar%}
+{% endblock %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block heading %}
+Login
+{% endblock %}
+
+{% block main_content %}
+<p>{% trans "You are now logged out" %}</p>
+{% endblock %}

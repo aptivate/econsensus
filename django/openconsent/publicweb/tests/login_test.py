@@ -13,7 +13,7 @@ class LoginTest(OpenConsentTestCase):
         self.client.logout()
         path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
-        self.assertRedirects(response, reverse('login')+'?next='+path)
+        self.assertRedirects(response, reverse('auth_login')+'?next='+path)
 
     def test_add_decision_loads_when_logged_in(self):
         path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
@@ -22,7 +22,7 @@ class LoginTest(OpenConsentTestCase):
         
     def test_can_post_through_login(self):
         self.client.logout()
-        path = reverse('login')
+        path = reverse('auth_login')
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page, 1)
