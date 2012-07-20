@@ -37,7 +37,7 @@ class OpenConsentEmailMessage(EmailMessage):
             subject_template = Template("[Econsensus] {{ status }} #{{ id }}: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')
             try:
-                queryset = obj.watchers.exclude(username=obj.editor.username, is_active=False)
+                queryset = obj.watchers.exclude(username=obj.editor.username).exclude(is_active=False)
             except:
                 queryset = obj.watchers.filter(is_active=True)
         subject_context = Context(subject_dict)
