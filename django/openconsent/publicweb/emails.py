@@ -28,18 +28,18 @@ class OpenConsentEmailMessage(EmailMessage):
                 subject_template = Template("[Econsensus]: New {{ status }} #{{ id }}: {{ excerpt|safe }}")
 
             body_template = get_template('email/new.txt')
-            queryset = User.objects.all()
+            queryset = User.objects.filter(is_active=True)
         elif email_type =='status':
             subject_template = Template("[Econsensus] -> {{ status }} #{{ id }}: {{ excerpt|safe }}")
             body_template = get_template('email/status_change.txt')
-            queryset = User.objects.all()
+            queryset = User.objects.filter(is_active=True)
         else:
             subject_template = Template("[Econsensus] {{ status }} #{{ id }}: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')
             try:
-                queryset = obj.watchers.exclude(username=obj.editor.username)
+                queryset = obj.watchers.exclude(username=obj.editor.username, is_active=False)
             except:
-                queryset = obj.watchers.all()
+                queryset = obj.watchers.filter(is_active=True)
         subject_context = Context(subject_dict)
         self.subject = subject_template.render(subject_context)
 

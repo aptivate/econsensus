@@ -91,15 +91,18 @@ class EmailTest(DecisionTestCase):
         self.assertIn(self.charlie.email, mymail.bcc)
 
     def test_emails_are_bcced(self):        
-        decision = self.create_decision_through_browser()
+        self.create_decision_through_browser()
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         
-        adam = User.objects.get(username='adam')
-        barry = User.objects.get(username='barry')
-        charlie = User.objects.get(username='charlie')
-        
-        bcc_list = [adam.email, barry.email, charlie.email]
+        bcc_list = [self.adam.email, self.barry.email, self.charlie.email]
         self.assertEqual(bcc_list, outbox[0].bcc)
         self.assertEqual(list(), outbox[0].to)
+        
+    def test_emails_not_sent_to_inactive_users(self):
+        self.barry.is_active = False
+        self.barry.save()
+        self.create_decision_through_browser()
+        outbox = getattr(mail, 'outbox')
+        self.assertNotIn(self.barry.email, outbox[0].bcc)
         
