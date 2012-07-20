@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django import forms
+from django.contrib.auth.models import User
 
 from models import Decision, Feedback
 
@@ -42,6 +43,22 @@ class DecisionAdmin(admin.ModelAdmin):
 
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('description','resolved')
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email already used")
+        return email
+
+class UserAdmin(admin.ModelAdmin):
+    form = UserForm
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
         
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Decision, DecisionAdmin)
