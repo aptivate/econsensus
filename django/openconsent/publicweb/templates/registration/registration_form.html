@@ -6,7 +6,7 @@ login
 {% endblock %}
 
 {% block title %}
-OpenConsent Login
+Registration
 {% endblock %}
 
 {% block user_access %}
@@ -20,19 +20,16 @@ OpenConsent Login
 {% endblock %}
 
 {% block heading %}
-Login
+Registration
 {% endblock %}
 
 {% block main_content %}
 <form id="login-form" method="post" action=".">
-  {% csrf_token %} 
+  {% csrf_token %}
   {{ form.as_p }}
 
 <div class="button_group">
-  <input class="button" type="submit" value="{% trans 'Log in' %}" />
-  <input type="hidden" name="next" value="{{ next }}" />
+  <input class="button" type="submit" value="{% trans 'Submit' %}" />
 </div>
 </form>
-
-<p class="message"><a href="{% url auth_password_reset %}">{% trans "Reset" %}</a>{% trans " your password." %}</p>
 {% endblock %}

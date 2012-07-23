@@ -28,27 +28,27 @@ class OpenConsentEmailMessage(EmailMessage):
                 subject_template = Template("[Econsensus]: New {{ status }} #{{ id }}: {{ excerpt|safe }}")
 
             body_template = get_template('email/new.txt')
-            queryset = User.objects.all()
+            queryset = User.objects.filter(is_active=True)
         elif email_type =='status':
             subject_template = Template("[Econsensus] -> {{ status }} #{{ id }}: {{ excerpt|safe }}")
             body_template = get_template('email/status_change.txt')
-            queryset = User.objects.all()
+            queryset = User.objects.filter(is_active=True)
         else:
             subject_template = Template("[Econsensus] {{ status }} #{{ id }}: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')
             try:
-                queryset = obj.watchers.exclude(username=obj.editor.username)
+                queryset = obj.watchers.exclude(username=obj.editor.username).exclude(is_active=False)
             except:
-                queryset = obj.watchers.all()
+                queryset = obj.watchers.filter(is_active=True)
         subject_context = Context(subject_dict)
         self.subject = subject_template.render(subject_context)
 
         body_context = Context(body_dict)            
         self.body = body_template.render(body_context)
-        self.to = []        #pylint: disable-msg=C0103
+        self.bcc = []        #pylint: disable-msg=C0103
         for this_user in queryset:
             if this_user.email:
-                self.to.append(this_user.email)
+                self.bcc.append(this_user.email)
         live_default = config_value('SendMail','DEFAULT_FROM_EMAIL')
         if live_default:
             self.from_email = live_default

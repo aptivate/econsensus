@@ -12,7 +12,7 @@ LOGIN_REDIRECT_URL = '/sandbox/item/list/proposal/'
 MEDIA_URL = '/sandbox/site_media/'
 ADMIN_MEDIA_PREFIX = '/sandbox/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 DATABASES = {
     'default': {

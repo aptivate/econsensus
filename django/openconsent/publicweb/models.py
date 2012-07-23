@@ -67,7 +67,7 @@ class Decision(models.Model):
     editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     last_modified = models.DateTimeField(null=True, auto_now=True, verbose_name=_('Last Modified'))
     
-    watchers = models.ManyToManyField(User, blank=True, editable=False)
+    watchers = models.ManyToManyField(User, blank=True)
     
     #Autocompleted fields
     #should use editable=False?

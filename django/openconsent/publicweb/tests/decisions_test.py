@@ -183,19 +183,6 @@ class DecisionsTest(DecisionTestCase):
         decision_form = DecisionForm()
         self.assertTrue("watcher" not in decision_form.fields,
                           "Decision form should not contain watchers")
-
-    def test_add_decision_web_post_updates_watchers(self):
-        post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'description': 'Make Eggs',
-                            'watch': True })
-        
-        self.client.post(reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS]), 
-                                post_dict,
-                                follow=True )
-
-        decision = Decision.objects.all()[0]
-        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")        
-        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watcher list during add")
         
     def test_edit_decision_web_post_updates_watchers(self):
         decision = self.create_and_return_decision()
@@ -230,24 +217,6 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals(CheckboxInput,
                           type(decision_form.fields["watch"].widget),
                           "Decision form watch is not a CheckboxInput widget")
-
-
-    def test_unwatch(self):
-        post_dict = self.get_default_decision_form_dict()
-        post_dict.update({  'description': 'Make Eggs',
-                            'watch': False,
-                            'feedback_set-TOTAL_FORMS': '3',
-                            'feedback_set-INITIAL_FORMS': '0',
-                            'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-description': 'The eggs are bad',
-                            'feedback_set-1-description': 'No one wants them'})
-        
-        response = self.client.post(reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS]), 
-                                post_dict,
-                                follow=True )
-        self.assertEqual(1, len(Decision.objects.all()), "Failed to create object" + response.content)
-        decision = Decision.objects.all()[0]
-        self.assertEqual(0, len(decision.watchers.all()), "watch was deselected!")
         
     def test_add_page_contains_cancel(self):
         path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])

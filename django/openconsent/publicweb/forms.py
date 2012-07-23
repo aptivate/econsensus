@@ -16,9 +16,10 @@ class FeedbackForm(forms.ModelForm):
 class DecisionForm(forms.ModelForm):
     
     watch = forms.BooleanField(required=False, initial=True)
-       
     class Meta:
         model = Decision
+        exclude = ('watchers',)
+
         widgets = {
                    'decided_date': JQueryUIDateWidget,
                    'effective_date': JQueryUIDateWidget,

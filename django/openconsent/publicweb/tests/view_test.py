@@ -1,5 +1,6 @@
-from decision_test_case import DecisionTestCase
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from decision_test_case import DecisionTestCase
 from publicweb.models import Decision, Feedback
 
 #TODO: View tests should not be dependent on redirects from urls.py
@@ -56,31 +57,6 @@ class ViewTest(DecisionTestCase):
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, self.user)
 
-    def test_user_added_to_watchers_on_feedback_create(self):
-        """
-        When a user leaves feedback on a decision that user
-        should be added to the decisions watch list
-        """
-        self.login('Adam')
-        decision = self.create_decision_through_browser()
-        self.assertEquals(1, decision.watchercount())
-        self.login('Barry')
-        self.create_feedback_through_browser(decision.id)
-        self.assertEquals(2, decision.watchercount())
-
-    def test_user_added_to_watchers_on_feedback_update(self):
-        """
-        When a user leaves feedback on a decision that user
-        should be added to the decisions watch list
-        """
-        self.login('Adam')
-        decision = self.create_decision_through_browser()
-        feedback = self.create_feedback_through_browser(decision.id)
-        self.assertEquals(1, decision.watchercount())
-        self.login('Barry')
-        self.update_feedback_through_browser(feedback.id)
-        self.assertEquals(2, decision.watchercount())
-                
     def test_decison_editor_set_on_update(self):
         self.login('Adam')
         decision = self.create_decision_through_browser()
@@ -88,4 +64,18 @@ class ViewTest(DecisionTestCase):
         decision = self.update_decision_through_browser(decision.id)
         self.assertEquals(self.user, decision.editor)
 
+    def test_all_users_added_to_watchers(self):
+        decision = self.create_decision_through_browser()
+        all_users = tuple(User.objects.all())
+        self.assertEqual(all_users,tuple(decision.watchers.all()))
+
+    def test_user_can_unwatch(self):
+        decision = self.create_decision_through_browser()
+        path = reverse('publicweb_decision_update', args=[decision.id])
+        post_dict = {'description': decision.description,'status': decision.status, 'watch':False }
+        response = self.client.post(path,post_dict)
+        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        decision = Decision.objects.get(id=decision.id)
+        self.assertNotIn(self.user, tuple(decision.watchers.all()))
+        
         

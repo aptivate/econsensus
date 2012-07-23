@@ -78,21 +78,31 @@ class EmailTest(DecisionTestCase):
         We want to make sure that when a user creates or changes an 
         item they are not sent an email. The email goes to those
         that do not already know the item has changed!
-        """
-        andy = User.objects.create_user("Andy", "andy@example.com", password='password')
-        billy = User.objects.create_user("Billy", "billy@example.com", password='password')
-        chris = User.objects.create_user("Chris", "chris@example.com", password='password')
-        
-        decision = Decision(description='Test', status=Decision.PROPOSAL_STATUS)
-        decision.author = andy
+        """        
+        decision = self.create_decision_through_browser()
+        decision.author = self.adam
         decision.save()
-        
-        #billy decides he wants to watch...
-        decision.watchers = [billy]
 
         #andy changes the content
         mymail = OpenConsentEmailMessage('content', Decision.PROPOSAL_STATUS, decision)
         #only watchers get mail, not the author
-        self.assertNotIn(andy.email, mymail.to)
-        self.assertIn(billy.email, mymail.to)         
-        self.assertNotIn(chris.email, mymail.to)
+        self.assertNotIn(self.adam.email, mymail.bcc)
+        self.assertIn(self.barry.email, mymail.bcc)         
+        self.assertIn(self.charlie.email, mymail.bcc)
+
+    def test_emails_are_bcced(self):        
+        self.create_decision_through_browser()
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        
+        bcc_list = [self.adam.email, self.barry.email, self.charlie.email]
+        self.assertEqual(bcc_list, outbox[0].bcc)
+        self.assertEqual(list(), outbox[0].to)
+        
+    def test_emails_not_sent_to_inactive_users(self):
+        self.barry.is_active = False
+        self.barry.save()
+        self.create_decision_through_browser()
+        outbox = getattr(mail, 'outbox')
+        self.assertNotIn(self.barry.email, outbox[0].bcc)
+        
