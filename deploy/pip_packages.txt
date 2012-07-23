@@ -11,4 +11,5 @@ django-debug-toolbar==0.8.5
 django-tagging
 django-livesettings
 django-keyedcache
+django-registration
 pylint
