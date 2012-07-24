@@ -186,7 +186,6 @@ def redirect_to_proposal_list(request):
     return HttpResponseRedirect(url)
     
 def _process_post_and_redirect(request, decision, template_name):
-    old_status = decision.status
     users = ()
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
@@ -194,19 +193,19 @@ def _process_post_and_redirect(request, decision, template_name):
         form = DecisionForm(request.POST, instance=decision)
         if form.is_valid():
             if decision.id == None:
-                type = 'new'
                 users = tuple(User.objects.all())
-            elif old_status != form.cleaned_data['status']:
-                type = 'status'
-            else: type = 'content'
+            else:
+                decision.last_status = decision.status
             decision = form.save()
             decision.watchers.add(*users)            
-            email = OpenConsentEmailMessage(type, old_status, decision)  
-            email.send()
+
             if form.cleaned_data['watch']:
                 decision.add_watcher(request.user)
             else:
                 decision.remove_watcher(request.user)
+            email = OpenConsentEmailMessage(decision)
+            email.send()
+                
             return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
         
         data = dict(form=form, tab=decision.status)

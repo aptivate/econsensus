@@ -4,13 +4,16 @@ from django.db import models
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.mail import send_mail
 
 from tagging.fields import TagField
 import datetime
-from emails import OpenConsentEmailMessage
 from managers import DecisionManager
-
 import re
+
+#config import is unused but required here for livesettings
 import config
 
 # Ideally django-tinymce should be patched
@@ -20,6 +23,7 @@ import config
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from publicweb.emails import OpenConsentEmailMessage
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -66,6 +70,9 @@ class Decision(models.Model):
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
     editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     last_modified = models.DateTimeField(null=True, auto_now=True, verbose_name=_('Last Modified'))
+    last_status = models.CharField(choices=STATUS_CHOICES,
+                                 default="new",
+                                 max_length=10, editable=False)
     
     watchers = models.ManyToManyField(User, blank=True)
     
@@ -137,30 +144,21 @@ class Decision(models.Model):
         statistics = {'all': 0,
                       'question': 0,
                       'danger': 0,
-                      'concern': 0,
+                      'concerns': 0,
                       'comment': 0,
                       'consent': 0
                      }
         
-        #is there a better way of doing this,
-        #using object/filter/count? - pcb
-        for feedback in self.feedback_set.all():
-            if feedback.rating == Feedback.QUESTION_STATUS:
-                statistics['question'] += 1
-            elif feedback.rating == Feedback.DANGER_STATUS:
-                statistics['danger'] += 1
-            elif feedback.rating == Feedback.CONCERNS_STATUS:
-                statistics['concern'] += 1
-            elif feedback.rating == Feedback.COMMENT_STATUS:
-                statistics['comment'] += 1
-            elif feedback.rating == Feedback.CONSENT_STATUS:
-                statistics['consent'] += 1
-            statistics['all'] += 1
-        
+        statistics['question'] = self.feedback_set.filter(rating=Feedback.QUESTION_STATUS).count()
+        statistics['danger'] = self.feedback_set.filter(rating=Feedback.DANGER_STATUS).count()
+        statistics['concerns'] = self.feedback_set.filter(rating=Feedback.CONCERNS_STATUS).count()
+        statistics['comment'] = self.feedback_set.filter(rating=Feedback.COMMENT_STATUS).count()
+        statistics['consent'] = self.feedback_set.filter(rating=Feedback.CONSENT_STATUS).count()
+        statistics['all'] = self.feedback_set.count()
         return statistics
 
     def save(self, *args, **kwargs):
-        self.excerpt = self._get_excerpt()       
+        self.excerpt = self._get_excerpt()
         super(Decision, self).save(*args, **kwargs)
         
 class Feedback(models.Model):
@@ -211,3 +209,12 @@ def rating_int(x):
         return None
     
     return Feedback.RATING_CHOICES[index][0]
+
+#Any econsensus signal handling goes here.
+#@receiver(post_save, sender=Decision, dispatch_uid="some.unique.string.id")
+#def send_email(sender, **kwargs):
+#    instance = kwargs['instance']
+#
+#    email = OpenConsentEmailMessage(instance)  
+#    email.send()
+    

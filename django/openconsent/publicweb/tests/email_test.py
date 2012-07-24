@@ -42,7 +42,7 @@ class EmailTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
-        mymail = OpenConsentEmailMessage('new', decision.status, decision)
+        mymail = OpenConsentEmailMessage(decision)
 
         self.assertEqual(mymail, outbox[0])
 
@@ -56,19 +56,20 @@ class EmailTest(DecisionTestCase):
         """
         decision = Decision(description='&', status=Decision.DECISION_STATUS)
         decision.author = self.user
+        decision.editor = self.user
         decision.save()
 
-        mymail = OpenConsentEmailMessage('new', decision.status, decision)
+        mymail = OpenConsentEmailMessage(decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
 
-        mymail = OpenConsentEmailMessage('status', Decision.ARCHIVED_STATUS, decision)
+        mymail = OpenConsentEmailMessage(decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
         
-        mymail = OpenConsentEmailMessage('content', Decision.ARCHIVED_STATUS, decision)
+        mymail = OpenConsentEmailMessage(decision)
         
         self.assertNotIn('&amp', mymail.subject)
         self.assertNotIn('&amp', mymail.body)
@@ -80,11 +81,9 @@ class EmailTest(DecisionTestCase):
         that do not already know the item has changed!
         """        
         decision = self.create_decision_through_browser()
-        decision.author = self.adam
-        decision.save()
 
         #andy changes the content
-        mymail = OpenConsentEmailMessage('content', Decision.PROPOSAL_STATUS, decision)
+        mymail = OpenConsentEmailMessage(decision)
         #only watchers get mail, not the author
         self.assertNotIn(self.adam.email, mymail.bcc)
         self.assertIn(self.barry.email, mymail.bcc)         
@@ -95,7 +94,7 @@ class EmailTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         
-        bcc_list = [self.adam.email, self.barry.email, self.charlie.email]
+        bcc_list = [self.barry.email, self.charlie.email]
         self.assertEqual(bcc_list, outbox[0].bcc)
         self.assertEqual(list(), outbox[0].to)
         

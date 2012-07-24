@@ -9,6 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 from publicweb.models import Decision, Feedback, rating_int
+from publicweb.emails import OpenConsentEmailMessage
 
 class Command(BaseCommand):
     args = ''
@@ -30,8 +31,8 @@ class Command(BaseCommand):
 
             Mailbox.user(user)
             Mailbox.pass_(password)
-        except:
-            raise CommandError("Error accessing email. Check your mail settings.")
+        except Exception, e:
+            raise CommandError(e)
         
         (numMsgs, totalSize) = Mailbox.stat()
         all_msgs = range(1, numMsgs + 1)
@@ -76,7 +77,10 @@ class Command(BaseCommand):
         msg_string = mail.get_payload().strip('\n')
         if not msg_string:
             self._print_if_verbose(verbosity, "Email message payload was empty!")
-#        ___Useful functionality but shoudln't be called every time as its mostly static___
+#        Here's a way to generate the match list dynamically from the Feedback class itself,
+#        rather than having to guess what types have been defined.
+#        Useful functionality but shoudln't be called every time as its mostly static.
+#        Put it in Feedback class? 
 #        feedback_match_list = []
 #        for x in Feedback.RATING_CHOICES:
 #            feedback_match_list.append(x(1))
@@ -107,8 +111,10 @@ class Command(BaseCommand):
                 feedback.save()
             elif proposal_found:
                 self._print_if_verbose(verbosity, "No matching object, creating proposal")
-                decision = Decision(author=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
+                decision = Decision(author=user,editor=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
                 decision.save()
+                email = OpenConsentEmailMessage(decision)
+                email.send()
         
     def _print_if_verbose(self, verbosity, message):
         if verbosity > 1:

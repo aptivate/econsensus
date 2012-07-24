@@ -8,7 +8,7 @@ from livesettings import config_value
 
 class OpenConsentEmailMessage(EmailMessage):
     
-    def __init__(self, email_type, old_status, obj, *args, **kwargs):  # pylint: disable=R0914
+    def __init__(self, obj, *args, **kwargs):  # pylint: disable=R0914
         super(OpenConsentEmailMessage, self).__init__(*args, **kwargs)
         current_site = Site.objects.get_current()
         item_link = 'http://%s%s' % (current_site.domain, obj.get_absolute_url())
@@ -19,20 +19,20 @@ class OpenConsentEmailMessage(EmailMessage):
                      'author': obj.editor,
                      'description': obj.description,
                      'status': obj.status,
-                     'old_status': old_status,
+                     'old_status': obj.last_status,
                      'link': item_link }
-        if email_type == 'new':
+        if obj.last_status=="new":
             if obj.status == obj.DECISION_STATUS:
                 subject_template = Template("[Econsensus]: Consensus Reached #{{ id }}: '{{ excerpt|safe }}'")
             else:
                 subject_template = Template("[Econsensus]: New {{ status }} #{{ id }}: {{ excerpt|safe }}")
 
             body_template = get_template('email/new.txt')
-            queryset = User.objects.filter(is_active=True)
-        elif email_type =='status':
+            queryset = User.objects.exclude(username=obj.editor.username).exclude(is_active=False)
+        elif obj.status != obj.last_status:
             subject_template = Template("[Econsensus] -> {{ status }} #{{ id }}: {{ excerpt|safe }}")
             body_template = get_template('email/status_change.txt')
-            queryset = User.objects.filter(is_active=True)
+            queryset = User.objects.exclude(username=obj.editor.username).exclude(is_active=False)
         else:
             subject_template = Template("[Econsensus] {{ status }} #{{ id }}: Change to {{ excerpt|safe }}")
             body_template = get_template('email/content_change.txt')

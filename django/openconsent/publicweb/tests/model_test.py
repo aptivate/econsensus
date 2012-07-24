@@ -91,7 +91,7 @@ class ModelTest(DecisionTestCase):
         self.model_has_attribute(decision, "get_feedback_statistics")
         statistics = decision.get_feedback_statistics()
         self.assertTrue("consent" in statistics)
-        self.assertTrue("concern" in statistics)
+        self.assertTrue("concerns" in statistics)
         self.assertTrue("danger" in statistics)
         self.assertTrue("question" in statistics)
         self.assertTrue("comment" in statistics)

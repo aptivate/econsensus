@@ -4,7 +4,7 @@ import poplib
 import email
 import settings
 import livesettings
-from django.core import management
+from django.core import management, mail
 from publicweb.tests.decision_test_case import OpenConsentTestCase
 from publicweb.tests.dummy_poplib import POP3
 from publicweb.tests import dummy_poplib
@@ -86,3 +86,13 @@ class CommandTest(OpenConsentTestCase):
         #Test that a corrupt from field is rejected.
         poplib.POP3.mailbox = ([''],['From: Donald <spam>','To: Admin <admin@econsensus.com>','Subject: gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
         self.assertFalse(Decision.objects.count())
+
+    def test_email_sent_out_on_email_decision(self):
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: Proposal gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
