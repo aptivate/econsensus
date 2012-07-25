@@ -4,7 +4,9 @@ Hello from the {{ site }} Econsensus server!
 
 "{{ description|safe }}"
 
-To interact with it, click here: {{ link }}
+   =================================================================
+
+To view this on the website: {{ link }}
 
 To leave a feedback comment via email just reply to this email, making sure to remove any quoted reply text.
 
