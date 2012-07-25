@@ -10,6 +10,7 @@ from publicweb.tests.dummy_poplib import POP3
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from django.core.management.base import CommandError
+from email.mime.text import MIMEText
 
 class CommandTest(OpenConsentTestCase):
 
@@ -96,3 +97,60 @@ class CommandTest(OpenConsentTestCase):
         
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
+
+    def test_email_replies_are_chevron_stripped(self):
+        """
+        Replies should have any quotes, marked with '>' removed.
+        """
+        payload = """
+        Unquoted text.
+        >
+        >Some quoted text.
+        >
+        """
+        msg = MIMEText(payload)
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = 'adam@econsensus.com'
+        msg['To'] = 'admin@econsensus.com'
+        poplib.POP3.mailbox = ([''],[msg.as_string()],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        try:
+            decision = Decision.objects.get()
+        except:
+            self.fail("Email failed to appear in database as a decision.")
+        self.assertNotIn("Some quoted text.", decision.description)
+        self.assertIn("Unquoted text.", decision.description)
+        
+    def test_email_replies_are_quote_header_stripped(self):
+        """
+        Replies should have the 'header' of a quote removed.
+        Ie 'On Thursday Tom wrote:'
+        """
+        payload = """
+        Proposal XYZ
+        On 24/07/12 18:14, Mark Skipper wrote:
+        >
+        >Some quoted text.
+        >
+        """
+        msg = MIMEText(payload)
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = 'adam@econsensus.com'
+        msg['To'] = 'admin@econsensus.com'
+        poplib.POP3.mailbox = ([''],[msg.as_string()],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        try:
+            decision = Decision.objects.get()
+        except:
+            self.fail("Email failed to appear in database as a decision.")
+        self.assertNotIn("On 24/07/12 18:14, Mark Skipper wrote:", decision.description)
+        self.assertIn("Proposal XYZ", decision.description)
+           

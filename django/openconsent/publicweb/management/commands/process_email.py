@@ -52,7 +52,7 @@ class Command(BaseCommand):
         decision = None
         user_found = False
         object_found = False
-        email_found = re.search('<([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)>', mail['From'])
+        email_found = re.search('([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)', mail['From'])
         if email_found:
             self._print_if_verbose(verbosity, "Found email address '%s'" % email_found.group(1))
             try:
@@ -73,8 +73,10 @@ class Command(BaseCommand):
                 self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
             except:
                 pass
-
         msg_string = mail.get_payload().strip('\n')
+        msg_string = re.sub('\s*>.*', '', msg_string)
+        msg_string = re.sub("On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)", '', msg_string)
+
         if not msg_string:
             self._print_if_verbose(verbosity, "Email message payload was empty!")
 #        Here's a way to generate the match list dynamically from the Feedback class itself,
