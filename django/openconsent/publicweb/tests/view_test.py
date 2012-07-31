@@ -66,8 +66,8 @@ class ViewTest(DecisionTestCase):
 
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()
-        all_users = tuple(User.objects.all())
-        self.assertEqual(all_users,tuple(decision.watchers.all()))
+        all_users = User.objects.all().count()
+        self.assertEqual(all_users,decision.watchers.all().count())
 
     def test_user_can_unwatch(self):
         decision = self.create_decision_through_browser()

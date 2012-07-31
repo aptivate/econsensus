@@ -50,12 +50,7 @@
 				<th class="feedbackcount">
 					<a href="{{ request.path }}?sort=feedback">
 						<span class="{% if sort == 'feedback' %}sort{% endif %}">Feedback</span>
-					</a>{% comment %}
-				</th>
-				<th class="watchercount">
-				<a href="{{ request.path }}?sort=watchers">
-					<span class="{% if sort == 'watchers' %}sort{% endif %}">Watchers</span>
-				</a>{% endcomment %}
+					</a>
 				</th>
 				<th class="deadline">
 					<a href="{{ request.path }}?sort=deadline">

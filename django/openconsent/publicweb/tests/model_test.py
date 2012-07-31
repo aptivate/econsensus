@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 
 from publicweb.models import Decision, Feedback
 from decision_test_case import DecisionTestCase
+from django.contrib.auth.models import User
 
 class ModelTest(DecisionTestCase):
 
@@ -37,11 +38,10 @@ class ModelTest(DecisionTestCase):
         self.model_has_attribute(decision, "editor")
         self.model_has_attribute(decision, "last_modified")
         
-    def test_watchercount_changes(self):
+    def test_watchers_changes(self):
         decision = Decision(description="Decision test data")
         decision.save(self.user)
-        decision.add_watcher(self.user)
-        self.assertEqual(1, decision.watchercount())
+        self.assertEqual(User.objects.count(), decision.watchers.count())
 
     def test_feedback_can_have_empty_description(self):
         decision = Decision(description='Test', status=Decision.DECISION_STATUS)

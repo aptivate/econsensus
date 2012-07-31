@@ -13,6 +13,7 @@ from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
 from publicweb.widgets import JQueryUIDateWidget
 from decision_test_case import DecisionTestCase
+from django.contrib.auth.models import User
 
 ### As a general note, I can see our tests are evolving into...
 ### 1 - model tests (does the model have x property?)
@@ -184,12 +185,16 @@ class DecisionsTest(DecisionTestCase):
         self.assertTrue("watcher" not in decision_form.fields,
                           "Decision form should not contain watchers")
         
-    def test_edit_decision_web_post_updates_watchers(self):
+    def test_unwatch(self):
+        """
+        Test that the user can unwatch an item by deselecting 
+        the 'watch' checkbox.
+        """
         decision = self.create_and_return_decision()
         
         post_dict = self.get_default_decision_form_dict()
         post_dict.update({'description': 'Make Eggs',
-                            'watch': True,
+                            'watch': False,
                             'feedback_set-TOTAL_FORMS': '3',
                             'feedback_set-INITIAL_FORMS': '0',
                             'feedback_set-MAX_NUM_FORMS': '',
@@ -199,11 +204,11 @@ class DecisionsTest(DecisionTestCase):
         self.client.post(reverse('publicweb_decision_update', args=[decision.id]), 
                                 post_dict,
                                 follow=True )
-
-        decision = Decision.objects.all()[0]
-        self.assertEqual(1, len(decision.watchers.all()), "Expected one watcher only.")
         
-        self.assertEqual(self.user, decision.watchers.all()[0], "User not added to watcher list during edit")
+        count_all_but_author = User.objects.exclude(username=decision.author).count()
+        self.assertEqual(count_all_but_author, decision.watchers.all().count())
+        
+        self.assertNotIn(self.user, decision.watchers.all())
 
     def test_form_has_watch(self):
         decision_form = DecisionForm()

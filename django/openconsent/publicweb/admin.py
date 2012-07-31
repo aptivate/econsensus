@@ -21,12 +21,11 @@ class DecisionAdmin(admin.ModelAdmin):
 #    fields = [('effective_date','decided_date','review_date')]
 
     change_list_template = 'admin/decision_change_list.html'
-    filter_horizontal = ('watchers',)
     fieldsets = [
         (None, {'fields': ('description', 
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
-                           'budget','people', 'status','watchers')}),
+                           'budget','people', 'status',)}),
     ]
 
     list_display = ('description', 'unresolvedfeedback', 'decided_date', 'effective_date', 'review_date', 'expiry_date', 'budget', 'people')

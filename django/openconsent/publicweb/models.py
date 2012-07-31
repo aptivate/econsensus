@@ -1,20 +1,22 @@
 #pylint: disable-msg=E1102
+#config import is unused but required here for livesettings
+import config
+import re
+
+from notification import models as notification
 
 from django.db import models
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.contrib.contenttypes import generic
 from django.dispatch import receiver
-from django.core.mail import send_mail
+from django.forms.models import model_to_dict
+from django.core import serializers
 
 from tagging.fields import TagField
-import datetime
-from managers import DecisionManager
-import re
 
-#config import is unused but required here for livesettings
-import config
+from managers import DecisionManager
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -23,7 +25,8 @@ import config
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
-from publicweb.emails import OpenConsentEmailMessage
+import settings
+from django.contrib.sites.models import Site
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -73,9 +76,9 @@ class Decision(models.Model):
     last_status = models.CharField(choices=STATUS_CHOICES,
                                  default="new",
                                  max_length=10, editable=False)
-    
-    watchers = models.ManyToManyField(User, blank=True)
-    
+
+    watchers = generic.GenericRelation(notification.ObservedItem)
+
     #Autocompleted fields
     #should use editable=False?
     excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
@@ -85,22 +88,6 @@ class Decision(models.Model):
     objects = DecisionManager()
 
     #methods
-    def is_watched(self, user):
-        return user in self.watchers.all()
-                        
-    def add_watcher(self, user):
-        if user not in self.watchers.all():
-            self.watchers.add(user)
-    
-    def remove_watcher(self, user):
-        if user in self.watchers.all():
-            self.watchers.remove(user)
-
-    def watchercount(self):
-        return self.watchers.count()
-
-    watchercount.short_description = _("Watchers")
-
     def unresolvedfeedback(self):
         answer = _("No")
         linked_feedback = self.feedback_set.all()
@@ -210,11 +197,18 @@ def rating_int(x):
     
     return Feedback.RATING_CHOICES[index][0]
 
-#Any econsensus signal handling goes here.
-#@receiver(post_save, sender=Decision, dispatch_uid="some.unique.string.id")
-#def send_email(sender, **kwargs):
-#    instance = kwargs['instance']
-#
-#    email = OpenConsentEmailMessage(instance)  
-#    email.send()
-    
+if notification is not None:
+    models.signals.post_save.connect(notification.handle_observations, sender=Decision, dispatch_uid="publicweb.models.handle_observations")
+
+@receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.new_decision_signal_handler")
+def new_decision_signal_handler(sender, **kwargs):
+    if kwargs.get('created', True):
+        instance = kwargs.get('instance')
+        all_users = User.objects.all()
+        all_but_author = all_users.exclude(username=instance.author)
+        for user in all_users:
+            notification.observe(instance, user, 'decision_change')
+        extra_context = {}
+        extra_context.update({"observed": instance})
+
+        notification.send(all_but_author, "decision_new", extra_context)
