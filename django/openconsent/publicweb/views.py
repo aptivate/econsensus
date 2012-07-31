@@ -14,8 +14,6 @@ import unicodecsv
 
 from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
-from publicweb.emails import OpenConsentEmailMessage
-from django.contrib.contenttypes.models import ContentType
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.

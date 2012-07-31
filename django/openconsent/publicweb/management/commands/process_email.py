@@ -9,7 +9,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 from publicweb.models import Decision, Feedback, rating_int
-from publicweb.emails import OpenConsentEmailMessage
 
 class Command(BaseCommand):
     args = ''
@@ -115,8 +114,6 @@ class Command(BaseCommand):
                 self._print_if_verbose(verbosity, "No matching object, creating proposal")
                 decision = Decision(author=user,editor=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
                 decision.save()
-                email = OpenConsentEmailMessage(decision)
-                email.send()
         
     def _print_if_verbose(self, verbosity, message):
         if verbosity > 1:
