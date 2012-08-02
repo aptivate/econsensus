@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.db import models
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserCreationForm
 
 from models import Decision, Feedback
 
@@ -21,12 +23,11 @@ class DecisionAdmin(admin.ModelAdmin):
 #    fields = [('effective_date','decided_date','review_date')]
 
     change_list_template = 'admin/decision_change_list.html'
-    filter_horizontal = ('watchers',)
     fieldsets = [
         (None, {'fields': ('description', 
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
-                           'budget','people', 'status','watchers')}),
+                           'budget','people', 'status',)}),
     ]
 
     list_display = ('description', 'unresolvedfeedback', 'decided_date', 'effective_date', 'review_date', 'expiry_date', 'budget', 'people')
@@ -44,21 +45,18 @@ class DecisionAdmin(admin.ModelAdmin):
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('description','resolved')
 
-class UserForm(forms.ModelForm):
-    class Meta:
-        model = User
-
+class CustomUserCreationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("This email already used")
         return email
 
-class UserAdmin(admin.ModelAdmin):
-    form = UserForm
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
 
 admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
-        
+admin.site.register(User, CustomUserAdmin)
+
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Decision, DecisionAdmin)

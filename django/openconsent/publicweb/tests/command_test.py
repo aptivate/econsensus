@@ -4,12 +4,13 @@ import poplib
 import email
 import settings
 import livesettings
-from django.core import management
+from django.core import management, mail
 from publicweb.tests.decision_test_case import OpenConsentTestCase
 from publicweb.tests.dummy_poplib import POP3
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from django.core.management.base import CommandError
+from email.mime.text import MIMEText
 
 class CommandTest(OpenConsentTestCase):
 
@@ -86,3 +87,70 @@ class CommandTest(OpenConsentTestCase):
         #Test that a corrupt from field is rejected.
         poplib.POP3.mailbox = ([''],['From: Donald <spam>','To: Admin <admin@econsensus.com>','Subject: gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
         self.assertFalse(Decision.objects.count())
+
+    def test_email_sent_out_on_email_decision(self):
+        poplib.POP3.mailbox = ([''],['From: Adam <adam@econsensus.com>','To: Admin <admin@econsensus.com>','Subject: Proposal gleda raspored','','Mnogi programi za stolno izdavatvo',''],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+
+    def test_email_replies_are_chevron_stripped(self):
+        """
+        Replies should have any quotes, marked with '>' removed.
+        """
+        payload = """
+        Unquoted text.
+        >
+        >Some quoted text.
+        >
+        """
+        msg = MIMEText(payload)
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = 'adam@econsensus.com'
+        msg['To'] = 'admin@econsensus.com'
+        poplib.POP3.mailbox = ([''],[msg.as_string()],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        try:
+            decision = Decision.objects.get()
+        except:
+            self.fail("Email failed to appear in database as a decision.")
+        self.assertNotIn("Some quoted text.", decision.description)
+        self.assertIn("Unquoted text.", decision.description)
+        
+    def test_email_replies_are_quote_header_stripped(self):
+        """
+        Replies should have the 'header' of a quote removed.
+        Ie 'On Thursday Tom wrote:'
+        """
+        payload = """
+        Proposal XYZ
+        On 24/07/12 18:14, Mark Skipper wrote:
+        >
+        >Some quoted text.
+        >
+        """
+        msg = MIMEText(payload)
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = 'adam@econsensus.com'
+        msg['To'] = 'admin@econsensus.com'
+        poplib.POP3.mailbox = ([''],[msg.as_string()],[''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        try:
+            decision = Decision.objects.get()
+        except:
+            self.fail("Email failed to appear in database as a decision.")
+        self.assertNotIn("On 24/07/12 18:14, Mark Skipper wrote:", decision.description)
+        self.assertIn("Proposal XYZ", decision.description)
+           

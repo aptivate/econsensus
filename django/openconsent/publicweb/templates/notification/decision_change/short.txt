@@ -1,0 +1,5 @@
+{% if observed.last_status == observed.status %}
+{{ observed.status|capfirst }} #{{ observed.id }}: Change to {{ observed.excerpt|safe }}
+{% else %}
+-> {{ observed.status|capfirst }} #{{ observed.id }}: {{ observed.excerpt|safe }}
+{% endif %}

@@ -1,8 +1,7 @@
 #management command to update the site with any mail
 import poplib
 import re
-import sys
-import email
+from email import message_from_string
 
 from livesettings import config_value
 from django.core.management.base import BaseCommand, CommandError
@@ -30,8 +29,8 @@ class Command(BaseCommand):
 
             Mailbox.user(user)
             Mailbox.pass_(password)
-        except:
-            raise CommandError("Error accessing email. Check your mail settings.")
+        except Exception, e:
+            raise CommandError(e)
         
         (numMsgs, totalSize) = Mailbox.stat()
         all_msgs = range(1, numMsgs + 1)
@@ -39,7 +38,7 @@ class Command(BaseCommand):
             self._print_if_verbose(verbosity, "Processing contents of mailbox.")  
             for i in all_msgs:
                 (header, msg, octets) = Mailbox.retr(i)
-                mail = email.message_from_string("\n".join(msg))
+                mail = message_from_string("\n".join(msg))
                 self._process_email(mail,verbosity)
                 Mailbox.dele(i)
         else: self._print_if_verbose(verbosity, "Nothing to do!")  
@@ -51,7 +50,7 @@ class Command(BaseCommand):
         decision = None
         user_found = False
         object_found = False
-        email_found = re.search('<([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)>', mail['From'])
+        email_found = re.search('([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)', mail['From'])
         if email_found:
             self._print_if_verbose(verbosity, "Found email address '%s'" % email_found.group(1))
             try:
@@ -72,11 +71,16 @@ class Command(BaseCommand):
                 self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
             except:
                 pass
-
         msg_string = mail.get_payload().strip('\n')
+        msg_string = re.sub('\s*>.*', '', msg_string)
+        msg_string = re.sub("On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)", '', msg_string)
+
         if not msg_string:
             self._print_if_verbose(verbosity, "Email message payload was empty!")
-#        ___Useful functionality but shoudln't be called every time as its mostly static___
+#        Here's a way to generate the match list dynamically from the Feedback class itself,
+#        rather than having to guess what types have been defined.
+#        Useful functionality but shoudln't be called every time as its mostly static.
+#        Put it in Feedback class? 
 #        feedback_match_list = []
 #        for x in Feedback.RATING_CHOICES:
 #            feedback_match_list.append(x(1))
@@ -107,7 +111,7 @@ class Command(BaseCommand):
                 feedback.save()
             elif proposal_found:
                 self._print_if_verbose(verbosity, "No matching object, creating proposal")
-                decision = Decision(author=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
+                decision = Decision(author=user,editor=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
                 decision.save()
         
     def _print_if_verbose(self, verbosity, message):

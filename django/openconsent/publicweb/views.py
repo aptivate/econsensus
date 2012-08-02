@@ -1,4 +1,6 @@
 # Create your views here.
+from notification import models as notification
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -12,7 +14,6 @@ import unicodecsv
 
 from models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
-from publicweb.emails import OpenConsentEmailMessage
 
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
@@ -71,9 +72,7 @@ def object_list_by_status(request, status, template_name):
         order = '-id'
         extra_context['sort'] = "id"
         
-    if order == 'watchers':
-        full_queryset = Decision.objects.order_by_count('watchers')
-    elif order == 'feedback':
+    if order == 'feedback':
         full_queryset = Decision.objects.order_by_count('feedback')
     elif order == 'decided_date':
         full_queryset = Decision.objects.order_null_last('decided_date')
@@ -110,6 +109,7 @@ def create_decision(request, status, template_name):
     form = DecisionForm(instance=decision)    
     data = dict(form=form,tab=status)
     context = RequestContext(request, data)
+
     return render_to_response(template_name, context)
 
 @login_required
@@ -128,7 +128,6 @@ def update_decision(request, object_id, template_name):
 def create_feedback(request, model, object_id, template_name, snippet_template=""):
 
     decision = get_object_or_404(model, id = object_id)
-
     if request.method == "POST":
         if request.POST.get('submit', None) == "Cancel":
             return HttpResponseRedirect(reverse('publicweb_item_detail', args=[unicode(decision.id)]))
@@ -139,7 +138,6 @@ def create_feedback(request, model, object_id, template_name, snippet_template="
                 feedback.decision = decision
                 feedback.author = request.user
                 feedback.save()
-                decision.add_watcher(request.user)
                 if snippet_template:
                     context = RequestContext(request, { 'object': feedback })
                     return render_to_response("feedback_detail_snippet.html", context)
@@ -167,7 +165,8 @@ def update_feedback(request, model, object_id, template_name):
             form = FeedbackForm(request.POST, instance=feedback)
             if form.is_valid():
                 form.save()
-                feedback.decision.add_watcher(request.user)
+                if not notification.is_observing(feedback.decision, request.user):
+                    notification.observe(feedback.decision, request.user, 'decision_change')
                 return HttpResponseRedirect(feedback.get_parent_url())
         
         data = dict(form=form,tab=feedback.decision.status)
@@ -186,29 +185,21 @@ def redirect_to_proposal_list(request):
     return HttpResponseRedirect(url)
     
 def _process_post_and_redirect(request, decision, template_name):
-    old_status = decision.status
-    users = ()
     if request.POST.get('submit', None) == "Cancel":
         return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
     else:
         form = DecisionForm(request.POST, instance=decision)
+        if decision.id:
+            decision.last_status = decision.status
         if form.is_valid():
-            if decision.id == None:
-                type = 'new'
-                users = tuple(User.objects.all())
-            elif old_status != form.cleaned_data['status']:
-                type = 'status'
-            else: type = 'content'
             decision = form.save()
-            decision.watchers.add(*users)            
-            email = OpenConsentEmailMessage(type, old_status, decision)  
-            email.send()
-            if form.cleaned_data['watch']:
-                decision.add_watcher(request.user)
-            else:
-                decision.remove_watcher(request.user)
+            if not form.cleaned_data['watch'] and notification.is_observing(decision, request.user):
+                notification.stop_observing(decision, request.user)
+            elif form.cleaned_data['watch'] and not notification.is_observing(decision, request.user):
+                notification.observe(decision, request.user, 'decision_change')
             return HttpResponseRedirect(reverse(object_list_by_status, args=[decision.status]))
         
         data = dict(form=form, tab=decision.status)
         context = RequestContext(request, data)
+
         return render_to_response(template_name, context)   

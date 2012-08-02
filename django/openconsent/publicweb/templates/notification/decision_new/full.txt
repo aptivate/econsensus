@@ -1,12 +1,10 @@
-Hello from the {{ site }} Econsensus server!
+{{ observed.author }} made a new {{ observed.status }} item.
 
-This is to let you know that {{ author }} has changed the following item.
+"{{ observed.description|safe }}"
 
-"{{ description|safe }}"
-   
-   =================================================================
-   
-To view this on the website: {{ link }}
+   -----------------------------------------------------------------
+
+To view this on the website: http://{{ current_site }}{{ observed.get_absolute_url }}
 
 To leave a feedback comment via email just reply to this email, making sure to remove any quoted reply text.
 
@@ -18,5 +16,5 @@ Consent:
 Comment:
 at the start of your email.
 
-You are receiving this mail because you are signed up to the {{ site }} 
+You are receiving this mail because you are signed up to the {{ current_site.name }} 
 Econsensus service and you are subscribed to this item. To change your subscription, use the link above.

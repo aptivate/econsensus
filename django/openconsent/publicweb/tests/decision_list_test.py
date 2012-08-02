@@ -76,11 +76,11 @@ class DecisionListTest(DecisionTestCase):
         decision1 = Decision(description="Apple",
                             status=Decision.DECISION_STATUS)
         decision1.save(self.user)
-        feedback = Feedback(description="One", decision=decision1)
+        feedback = Feedback(description="One", decision=decision1, author=self.user)
         feedback.save()
-        feedback = Feedback(description="Two", decision=decision1)
+        feedback = Feedback(description="Two", decision=decision1, author=self.user)
         feedback.save()
-        feedback = Feedback(description="Three", decision=decision1)
+        feedback = Feedback(description="Three", decision=decision1, author=self.user)
         feedback.save()
 
         decision2 = Decision(description="Coconut",
@@ -90,9 +90,9 @@ class DecisionListTest(DecisionTestCase):
         decision3 = Decision(description="Blackberry",
                             status=Decision.DECISION_STATUS)
         decision3.save(self.user)
-        feedback = Feedback(description="One", decision=decision3)
+        feedback = Feedback(description="One", decision=decision3, author=self.user)
         feedback.save()
-        feedback = Feedback(description="Two", decision=decision3)
+        feedback = Feedback(description="Two", decision=decision3, author=self.user)
         feedback.save()
 
         response = self.client.get(reverse('publicweb_item_list', args=['decision']), dict(sort='feedback'))
@@ -102,35 +102,6 @@ class DecisionListTest(DecisionTestCase):
         self.assertEquals(decision1.id, getattr(object_list[0], 'id'))
         self.assertEquals(decision3.id, getattr(object_list[1], 'id'))
         self.assertEquals(decision2.id, getattr(object_list[2], 'id')) 
-
-    def test_list_page_sorted_by_watchers(self):
-        adam = User.objects.get(username='Adam')
-        barry = User.objects.get(username='Barry')
-        charlie = User.objects.get(username='Charlie')
-        
-        decision1 = Decision(description="Apple",
-                            status=Decision.DECISION_STATUS)
-        decision1.save(self.user)
-        decision1.watchers.add(barry)
-        decision1.watchers.add(charlie)
-
-        decision2 = Decision(description="Coconut",
-                            status=Decision.DECISION_STATUS)
-        decision2.save()
-
-        decision3 = Decision(description="Blackberry",
-                            status=Decision.DECISION_STATUS)
-        decision3.save(self.user)
-        decision3.watchers.add(barry)
-        
-        response = self.client.get(reverse('publicweb_item_list', args=['decision']), dict(sort='watchers'))
-
-        object_list = response.context['object_list']
-                        
-        self.assertEquals(decision1.id, getattr(object_list[0], 'id'))
-        self.assertEquals(decision3.id, getattr(object_list[1], 'id'))
-        self.assertEquals(decision2.id, getattr(object_list[2], 'id')) 
-
 
     def test_decision_list_can_be_filtered_by_status(self):
         self.create_decisions_with_different_statuses()

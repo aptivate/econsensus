@@ -7,7 +7,7 @@ from internationalisation_test import InternationalisationTest
 from add_decision_test import AddDecisionTest
 from decision_list_test import DecisionListTest
 from feedback_test import FeedbackTest
-from email_test import EmailTest
+from notification_test import NotificationTest
 from csv_test import CsvTest
 from tag_test import TagsTest
 from model_test import ModelTest

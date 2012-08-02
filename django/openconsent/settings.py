@@ -132,9 +132,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'registration',
+    'notification',
     'keyedcache',
     'livesettings',
     'publicweb',
+    'signals',
     'tinymce',
     'south',
     'tagging'
@@ -179,9 +181,11 @@ DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
 ACCOUNT_ACTIVATION_DAYS = 7
 
 #Requirements for django-keyedcache, which is a requirement of django-livesettings.
+CACHE_PREFIX = str(SITE_ID)
+CACHE_TIMEOUT = 0
+import logging
+logging.getLogger('keyedcache').setLevel(logging.INFO)
 
-#CACHE_PREFIX = SITE_ID
-#CACHE_TIMEOUT = 0
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
