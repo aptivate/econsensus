@@ -1,4 +1,5 @@
 import private_settings
+import os
 
 DEBUG = False
 TEMPLATE_DEBUG = False
@@ -12,7 +13,10 @@ LOGIN_REDIRECT_URL = '/sandbox/item/list/proposal/'
 MEDIA_URL = '/sandbox/site_media/'
 ADMIN_MEDIA_PREFIX = '/sandbox/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(PROJECT_HOME,'econsensus-messages')
 
 DATABASES = {
     'default': {
