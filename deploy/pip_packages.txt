@@ -13,4 +13,3 @@ django-livesettings
 django-keyedcache
 django-registration
 django-notification
-pylint
