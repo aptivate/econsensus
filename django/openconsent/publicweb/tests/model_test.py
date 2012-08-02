@@ -53,7 +53,7 @@ class ModelTest(DecisionTestCase):
         decision = Decision(description="Decision test data")
         decision.save()
         self.instance_attribute_has_value(decision, "feedbackcount", 0)
-        feedback = Feedback(description="Feedback test data", decision=decision)
+        feedback = Feedback(description="Feedback test data", decision=decision, author=self.user)
         feedback.save()
         self.instance_attribute_has_value(decision, "feedbackcount", 1)       
         

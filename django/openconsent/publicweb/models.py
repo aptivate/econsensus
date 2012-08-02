@@ -11,8 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.dispatch import receiver
-from django.forms.models import model_to_dict
-from django.core import serializers
 
 from tagging.fields import TagField
 
@@ -25,9 +23,6 @@ from managers import DecisionManager
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
-import settings
-from django.contrib.sites.models import Site
-
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
 class Decision(models.Model):
@@ -198,17 +193,40 @@ def rating_int(x):
     return Feedback.RATING_CHOICES[index][0]
 
 if notification is not None:
-    models.signals.post_save.connect(notification.handle_observations, sender=Decision, dispatch_uid="publicweb.models.handle_observations")
+    models.signals.post_save.connect(notification.handle_observations, sender=Decision, dispatch_uid="publicweb.models.decision_observations")
+    models.signals.post_save.connect(notification.handle_observations, sender=Feedback, dispatch_uid="publicweb.models.feedback_observations")
 
-@receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.new_decision_signal_handler")
-def new_decision_signal_handler(sender, **kwargs):
-    if kwargs.get('created', True):
-        instance = kwargs.get('instance')
-        all_users = User.objects.all()
-        all_but_author = all_users.exclude(username=instance.author)
-        for user in all_users:
-            notification.observe(instance, user, 'decision_change')
-        extra_context = {}
-        extra_context.update({"observed": instance})
+    @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.new_decision_signal_handler")
+    def new_decision_signal_handler(sender, **kwargs):
+        """
+        All users except the author will get a notification informing them of 
+        new content.
+        All users are made observers of the decision.
+        """
+        if kwargs.get('created', True):
+            instance = kwargs.get('instance')
+            all_users = User.objects.all()
+            all_but_author = all_users.exclude(username=instance.author)
+            for user in all_users:
+                notification.observe(instance, user, 'decision_change')
+            extra_context = {}
+            extra_context.update({"observed": instance})
+            notification.send(all_but_author, "decision_new", extra_context)
+    
+    @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.new_feedback_signal_handler")
+    def new_feedback_signal_handler(sender, **kwargs):
+        """
+        All watchers of a decision will get a notification informing them of
+        new feedback.
+        All watchers become observers of the feedback.
+        """
+        if kwargs.get('created', True):
+            instance = kwargs.get('instance')
+            #author gets notified if the feedback is edited.
+            notification.observe(instance, instance.author, 'feedback_change')
 
-        notification.send(all_but_author, "decision_new", extra_context)
+            #All watchers of parent get notified of new feedback.
+            all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
+            observer_list = [x.user for x in all_observed_items_but_authors]
+            extra_context = dict({"observed": instance})
+            notification.send(observer_list, "feedback_new", extra_context)

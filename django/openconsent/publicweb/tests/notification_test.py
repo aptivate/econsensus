@@ -5,6 +5,7 @@ from django.core import mail
 
 from decision_test_case import DecisionTestCase
 from publicweb.models import Decision
+from django.core.urlresolvers import reverse
 
 class NotificationTest(DecisionTestCase):
     """
@@ -101,5 +102,48 @@ class NotificationTest(DecisionTestCase):
         self.barry.save()
         self.create_decision_through_browser()
         outbox = getattr(mail, 'outbox')
-        self.assertNotIn(self.barry.email, outbox[0].to)
+        outbox_to = [x.to for x in outbox]
+        self.assertNotIn(self.barry.email, outbox_to)
 
+    def test_new_feedback_notification(self):
+        """
+        When new feedback is added to a decision notifcations
+        should be sent to all users watching the decision
+        minus the author of the new feedback.
+        """
+        decision = self.create_decision_through_browser()
+        #Barry decides to unwatch...
+        self.login('barry')
+        path = reverse('publicweb_decision_update', args=[decision.id])
+        post_dict = {'description': decision.description,'status': decision.status, 'watch':False }
+        response = self.client.post(path,post_dict)
+        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        decision = Decision.objects.get(id=decision.id)
+        mail.outbox = []
+        #Charlie adds feedback...
+        self.login('charlie')
+        self.create_feedback_through_browser(decision.id)
+        outbox = getattr(mail, 'outbox')
+        outbox_to = [to for to_list in outbox for to in to_list.to]
+        user_list = [user_object.email for user_object in User.objects.exclude(username='barry').exclude(username=self.user)]
+        self.assertNotIn(self.barry.email, outbox_to)
+        self.assertItemsEqual(user_list, outbox_to)
+        
+    def test_changed_feedback_notification(self):
+        """
+        When feedback is changed only the original author of the feedback
+        should be notified.
+        """
+        decision = self.create_decision_through_browser()
+        #Barry adds feedback
+        self.login('barry')
+        feedback = self.create_feedback_through_browser(decision.id)
+        mail.outbox = []
+        #Charlie changes the feedback...
+        self.login('charlie')
+        self.update_feedback_through_browser(feedback.id)
+        outbox = getattr(mail, 'outbox')
+        outbox_to = [to for to_list in outbox for to in to_list.to]
+        user_list = [self.barry.email]
+        self.assertItemsEqual(user_list, outbox_to)
+        

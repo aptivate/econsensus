@@ -15,7 +15,8 @@ class DecisionTestCase(OpenConsentTestCase):
         decision = self.create_and_return_decision()
         
         feedback = Feedback(description='No time to decide',
-                          decision=decision)
+                          decision=decision,
+                          author=self.user)
         feedback.save()
         
         return decision
@@ -24,7 +25,8 @@ class DecisionTestCase(OpenConsentTestCase):
         decision = self.create_and_return_decision(status=Decision.DECISION_STATUS)
         
         feedback = Feedback(description='No time to decide',
-                          decision=decision)
+                          decision=decision,
+                          author=self.user)
         feedback.save()
         
         return decision

@@ -13,7 +13,8 @@ class ViewDecisionTest(DecisionTestCase):
     def test_view_feedback(self):
         decision = self.create_and_return_decision()
         feedback = Feedback(description='test feedback',
-                          decision=decision)
+                          decision=decision,
+                          author=self.user)
         feedback.save()
         response = self.client.get(reverse('publicweb_feedback_detail', args=[feedback.id]))
         self.assertContains(response, u"Feedback")

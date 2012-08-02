@@ -1,8 +1,7 @@
 #management command to update the site with any mail
 import poplib
 import re
-import sys
-import email
+from email import message_from_string
 
 from livesettings import config_value
 from django.core.management.base import BaseCommand, CommandError
@@ -39,7 +38,7 @@ class Command(BaseCommand):
             self._print_if_verbose(verbosity, "Processing contents of mailbox.")  
             for i in all_msgs:
                 (header, msg, octets) = Mailbox.retr(i)
-                mail = email.message_from_string("\n".join(msg))
+                mail = message_from_string("\n".join(msg))
                 self._process_email(mail,verbosity)
                 Mailbox.dele(i)
         else: self._print_if_verbose(verbosity, "Nothing to do!")  

@@ -54,6 +54,7 @@ class HtmlTest(OpenConsentTestCase):
         decision.save()
         feedback = Feedback(description="text\ntext")
         feedback.decision = decision
+        feedback.author=self.user
         feedback.save()
         path = reverse('publicweb_feedback_detail', args=[feedback.id])
         response = self.client.get(path)
