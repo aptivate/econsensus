@@ -36,7 +36,7 @@ def _setup_path():
     else:
         _set_dict_if_not_set(env, 'python_bin', os.path.join('/', 'usr', 'bin', 'python'))
 
-    _set_dict_if_not_set(env, 'tasks_bin', 
+    _set_dict_if_not_set(env, 'tasks_bin',
             env.python_bin + ' ' + os.path.join(env.deploy_root, 'tasks.py'))
     _set_dict_if_not_set(env, 'local_tasks_bin',
             env.python_bin + ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
@@ -112,6 +112,7 @@ def deploy(revision=None, keep=None):
 
     update_db()
 
+
     if env.project_type == "django":
         rm_pyc_files()
         if env.environment == 'production':
@@ -120,17 +121,38 @@ def deploy(revision=None, keep=None):
     link_apache_conf()
     apache_cmd('start')
 
+def set_up_celery_daemon():
+    require('vcs_root', provided_by=env)
+    for command in ('celerybeat', 'celeryd'):
+        celery_run_script_location = os.path.join(env['vcs_root'],
+                                                  'celery', 'init', command)
+        celery_run_script_destination = os.path.join('/etc', 'init.d')
+        celery_run_script = os.path.join(celery_run_script_destination,
+                                         command)
+        celery_configuration_location = os.path.join(env['vcs_root'],
+                                                  'celery', 'config', command)
+        celery_configuration_destination = os.path.join('/etc', 'default')
+
+        sudo_or_run(" ".join(['cp', celery_run_script_location,
+                               celery_run_script_destination]))
+
+        sudo_or_run(" ".join(['chmod', '+x', celery_run_script]))
+
+        sudo_or_run(" ".join(['cp', celery_configuration_location,
+                               celery_configuration_destination]))
+        sudo_or_run('/etc/init.d/%s restart' % command)
 
 def create_copy_for_rollback(keep):
     """Copy the current version out of the way so we can rollback to it if required."""
-    require('prev_root', 'vcs_root', 'django_root', provided_by=env.valid_envs)
+    require('prev_root', 'vcs_root', provided_by=env.valid_envs)
     # create directory for it
     prev_dir = os.path.join(env.prev_root, time.strftime("%Y-%m-%d_%H-%M-%S"))
     _create_dir_if_not_exists(prev_dir)
     # cp -a
     sudo_or_run('cp -a %s %s' % (env.vcs_root, prev_dir))
-    # dump database (provided local_settings has been set up properly)
-    if files.exists(os.path.join(env.django_root, 'local_settings.py')):
+    if (env.project_type == 'django' and
+            files.exists(os.path.join(env.django_root, 'local_settings.py'))):
+        # dump database (provided local_settings has been set up properly)
         with cd(prev_dir):
             # just in case there is some other reason why the dump fails
             with settings(warn_only=True):
@@ -152,7 +174,7 @@ def delete_old_versions(keep=None):
     versions_to_keep = -1 * int(keep)
     prev_versions_to_delete = prev_versions[:versions_to_keep]
     for version_to_delete in prev_versions_to_delete:
-        sudo_or_run('rm -rf ' + os.path.join(env.prev_root, 
+        sudo_or_run('rm -rf ' + os.path.join(env.prev_root,
                                              version_to_delete.strip()))
 
 
@@ -292,8 +314,8 @@ def _checkout_or_update_svn(revision=None):
             with hide('running'):
                 sudo_or_run(cmd)
     else:
-        cmd = cmd + " %s"
-        cmd = cmd % ('checkout', env.svnuser, env.svnpass, env.repository)
+        cmd = cmd + " %s %s"
+        cmd = cmd % ('checkout', env.svnuser, env.svnpass, env.repository, env.vcs_root)
         if revision:
             cmd += "@" + revision
         with cd(env.project_root):
@@ -305,15 +327,44 @@ def _checkout_or_update_git(revision=None):
     # a clone
     if files.exists(os.path.join(env.vcs_root, ".git")):
         with cd(env.vcs_root):
-            sudo('git remote rm origin')
-            sudo('git remote add origin %s' % env.repository)
-            sudo('git pull -u origin %s' % env.branch)
+            sudo_or_run('git remote rm origin')
+            sudo_or_run('git remote add origin %s' % env.repository)
+            # fetch now, merge later (if on branch)
+            sudo_or_run('git fetch origin')
     else:
         with cd(env.project_root):
-            sudo('git clone -b %s %s dev' % (env.branch, env.repository))
-    if revision:
+            sudo_or_run('git clone -b %s %s %s' %
+                    (env.branch, env.repository, env.vcs_root))
+    if revision == None:
+        # no revision
+        # if on branch then merge, otherwise just print a warning
         with cd(env.vcs_root):
+            with settings(warn_only=True):
+                branch = sudo_or_run('git rev-parse --abbrev-ref HEAD')
+            if branch != 'HEAD':
+                # we are on a branch
+                stash_result = sudo_or_run('git stash')
+                sudo_or_run('git merge origin/%s' % branch)
+                # if we did a stash, now undo it
+                if not stash_result.startswith("No local changes"):
+                    sudo_or_run('git stash pop')
+            else:
+                # not on a branch - just print a warning
+                warn('The server git repository is not on a branch')
+                warn('No checkout or merge has been done - you should probably')
+                warn('redeploy and specify a branch or revision to checkout.')
+    else:
+        with cd(env.vcs_root):
+            stash_result = sudo_or_run('git stash')
             sudo_or_run('git checkout %s' % revision)
+            # check if revision is a branch, and do a merge if it is
+            with settings(warn_only=True):
+                rev_is_branch = sudo_or_run('git branch -r | grep %s' % revision)
+            if rev_is_branch.succeeded:
+                sudo_or_run('git merge origin/%s' % branch)
+            # if we did a stash, now undo it
+            if not stash_result.startswith("No local changes"):
+                sudo_or_run('git stash pop')
     if files.exists(os.path.join(env.vcs_root, ".gitmodules")):
         with cd(env.vcs_root):
             sudo_or_run('git submodule update --init')
@@ -333,7 +384,7 @@ def _checkout_or_update_cvs(revision):
                                              user_spec,
                                              env.repository,
                                              env.repo_path)
-            command_options = '-d dev'
+            command_options = '-d %s' % env.vcs_root
 
             if revision is not None:
                 command_options += ' -r ' + revision
@@ -353,6 +404,10 @@ def update_requirements():
     """ update external dependencies on remote host """
     _tasks('update_ve')
 
+def collect_static_files():
+    """ coolect static files in the 'static' directory """
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' collect_static')
 
 def clean_db(revision=None):
     """ delete the entire database """
@@ -369,7 +424,7 @@ def get_remote_dump(filename='/tmp/db_dump.sql', local_filename='./db_dump.sql',
     require('user', 'host', provided_by=env.valid_envs)
     if rsync:
         _tasks('dump_db:' + filename + ',for_rsync=true')
-        local("rsync -vz -e 'ssh -p %s' %s@%s:%s %s" % (env.port, 
+        local("rsync -vz -e 'ssh -p %s' %s@%s:%s %s" % (env.port,
             env.user, env.host, filename, local_filename))
     else:
         _tasks('dump_db:' + filename)
@@ -435,7 +490,7 @@ def link_apache_conf():
     if not files.exists(conf_file):
         utils.abort('No apache conf file found - expected %s' % conf_file)
     if not files.exists(apache_conf):
-        sudo('ln -s %s %s' % (conf_file, apache_conf))
+        sudo_or_run('ln -s %s %s' % (conf_file, apache_conf))
     configtest()
 
 

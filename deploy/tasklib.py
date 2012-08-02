@@ -83,6 +83,8 @@ except ImportError:
         def __init__(self, returncode, cmd):
             self.returncode = returncode
             self.cmd = cmd
+        def __str__(self):
+            return "Command '%s' returned non-zero exit status %d" % (self.cmd, self.returncode)
 
 
 def _call_wrapper(argv, **kwargs):
@@ -232,9 +234,13 @@ def _get_django_db_settings(database='default'):
     return (db_engine, db_name, db_user, db_pw, db_port, db_host)
 
 
-def _mysql_exec_as_root(mysql_cmd):
+def _mysql_exec_as_root(mysql_cmd, root_password=None):
     """ execute a SQL statement using MySQL as the root MySQL user"""
-    mysql_call = ['mysql', '-u', 'root', '-p'+_get_mysql_root_password()]
+    # do this so that _test_mysql_root_password() can run without
+    # getting stuck in a loop
+    if not root_password:
+        root_password = _get_mysql_root_password()
+    mysql_call = ['mysql', '-u', 'root', '-p'+root_password]
     mysql_call += ['--host=%s' % env['db_host']]
 
     if env['db_port'] != None:
@@ -243,21 +249,46 @@ def _mysql_exec_as_root(mysql_cmd):
     _check_call_wrapper(mysql_call + [mysql_cmd])
 
 
+def _test_mysql_root_password(password):
+    """Try a no-op with the root password"""
+    try:
+        _mysql_exec_as_root('select 1', password)
+    except CalledProcessError:
+        return False
+    return True
+
 def _get_mysql_root_password():
     # first try to read the root password from a file
     # otherwise ask the user
     if not env.has_key('root_pw'):
+        root_pw = None
+        # first try and get password from file
+        root_pw_file = '/root/mysql_root_password'
         try:
-            file_exists = _call_wrapper(['sudo', 'test', '-f', '/root/mysql_root_password'])
+            file_exists = _call_wrapper(['sudo', 'test', '-f', root_pw_file])
         except (WindowsError, CalledProcessError):
             file_exists = 1
-
         if file_exists == 0:
             # note this requires sudoers to work with this - jenkins particularly ...
-            root_pw = _capture_command(["sudo", "cat", "/root/mysql_root_password"])
-            env['root_pw'] = root_pw.rstrip()
-        else:
-            env['root_pw'] = getpass.getpass('Enter MySQL root password:')
+            root_pw = _capture_command(["sudo", "cat", root_pw_file])
+            root_pw = root_pw.rstrip()
+            # maybe it is wrong (on developer machine) - check it
+            if not _test_mysql_root_password(root_pw):
+                if not env['verbose']:
+                    print "mysql root password in %s doesn't work" % root_pw_file
+                root_pw = None
+
+        # still haven't got it, ask the user
+        while not root_pw:
+            print "about to ask user for password"
+            root_pw = getpass.getpass('Enter MySQL root password:')
+            if not _test_mysql_root_password(root_pw):
+                if not env['quiet']:
+                    print "Sorry, invalid password"
+                root_pw = None
+
+        # now we have root password that works
+        env['root_pw'] = root_pw
 
     return env['root_pw']
 
@@ -398,6 +429,12 @@ def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, databa
     #print 'syncdb: %s' % type(syncdb)
     use_migrations = force_use_migrations
     if env['project_type'] == "django" and syncdb:
+        # if we are using the database cache we need to create the table
+        # and we need to do it before syncdb
+        cache_table = _get_cache_table()
+        if cache_table and not db_table_exists(cache_table,
+                db_user, db_pw, db_name, db_port, db_host):
+            _manage_py(['createcachetable', cache_table])
         # if we are using South we need to do the migrations aswell
         for app in project_settings.django_apps:
             if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
@@ -405,11 +442,6 @@ def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, databa
         _manage_py(['syncdb', '--noinput'])
         if use_migrations:
             _manage_py(['migrate', '--noinput'])
-        # if we are using the database cache we need to create the table
-        cache_table = _get_cache_table()
-        if cache_table and not db_table_exists(cache_table,
-                db_user, db_pw, db_name, db_port, db_host):
-            _manage_py(['createcachetable', cache_table])
 
 def db_exists(db_user, db_pw, db_name, db_port, db_host):
     db_exist_call = ['mysql', '-u', db_user, '-p'+db_pw]
@@ -657,4 +689,4 @@ def patch_south():
                 'lib/python2.6/site-packages/south/db/__init__.py')
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
     cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
-    _check_call_wrapper(cmd, [0,1])
+    _check_call_wrapper(cmd)
