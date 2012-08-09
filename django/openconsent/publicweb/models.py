@@ -1,4 +1,4 @@
-#pylint: disable-msg=E1102
+#pylint: disable=E1102
 #config import is unused but required here for livesettings
 import config
 import re

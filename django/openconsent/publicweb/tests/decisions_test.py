@@ -63,7 +63,7 @@ class DecisionsTest(DecisionTestCase):
     def get_default_decision_form_dict(self):
         return {'status': Decision.DECISION_STATUS}
 
-    def get_diff(self, s1, s2): #pylint: disable-msg=C0103
+    def get_diff(self, s1, s2): #pylint: disable=C0103
         diff = difflib.context_diff(s1, s2)
         rope = ''
         for line in diff:
