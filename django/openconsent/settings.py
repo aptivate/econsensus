@@ -131,8 +131,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.comments',
     'registration',
     'notification',
+    'custom_comments',
     'keyedcache',
     'livesettings',
     'publicweb',
@@ -179,6 +181,9 @@ DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
 
 #Required for djangoregistration:
 ACCOUNT_ACTIVATION_DAYS = 7
+
+#using custom comments app
+COMMENTS_APP = 'custom_comments'
 
 #Requirements for django-keyedcache, which is a requirement of django-livesettings.
 CACHE_PREFIX = str(SITE_ID)

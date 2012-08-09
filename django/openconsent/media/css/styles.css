@@ -578,7 +578,7 @@ span.excerpt {
 	bottom:10px;
 }
 
-a.edit {
+a.edit, a.show {
 	text-decoration:underline;
 	font-weight:bold;
 	font-size:0.8em;
@@ -952,7 +952,7 @@ dl.stats dt {
 	color:#fff;
 }
 
-.stats .concern {
+.stats .concerns {
 	background-color:#f60;
 	color:#fff;
 }
@@ -1036,6 +1036,28 @@ dl.stats dt {
     border-radius: 15px 15px 15px 15px;
     padding: 20px 0;  
 	}
+
+.contrib_comment_container {
+	margin-left: 10em;
+	margin-right: 10em;
+}
+
+.contrib_comment_list {
+	margin-top: 1em;
+	}
+
+.form_comment {
+	display :none;
+	}
+
+.form_comment textarea {
+	width: 100%;
+    border-width: 2px;
+}
+
+.contrib_comment p, .contrib_comment span {
+	font-size: 0.9em;
+}
 
 /* Footer */
 
