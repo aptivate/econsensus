@@ -135,8 +135,8 @@ class DecisionsTest(DecisionTestCase):
     def test_add_feedback(self):
         decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
         decision.save()
-        post_dict= {'rating': '2', 'description': 'The eggs are bad'}
-        response = self.client.post(reverse('publicweb_feedback_create', args=[decision.id]), 
+        post_dict = {'rating': '2', 'description': 'The eggs are bad'}
+        self.client.post(reverse('publicweb_feedback_create', args=[decision.id]), 
                                 post_dict,
                                 follow=True )        
         feedback = decision.feedback_set.all()[:1].get()
@@ -145,7 +145,7 @@ class DecisionsTest(DecisionTestCase):
     def test_add_feedback_inline(self):
         decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
         decision.save()
-        post_dict= {'rating': '2', 'description': 'The eggs are not bad'}
+        post_dict = {'rating': '2', 'description': 'The eggs are not bad'}
         response = self.client.post(reverse('publicweb_feedback_snippet_create', args=[decision.id]), 
                                 post_dict,
                                 follow=True )

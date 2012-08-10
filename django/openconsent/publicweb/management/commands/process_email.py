@@ -13,7 +13,7 @@ class Command(BaseCommand):
     args = ''
     help = 'Checks for emails and posts content to site.'
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options): # pylint: disable=R0914
         verbosity = int(options.get('verbosity', 1))
         user = config_value('ReceiveMail', 'USERNAME')
         password = config_value('ReceiveMail', 'PASSWORD')
@@ -22,30 +22,30 @@ class Command(BaseCommand):
         ssl = config_value('ReceiveMail', 'SSL_ENABLED')
 
         try:
-            if ssl==True: 
-                Mailbox = poplib.POP3_SSL(server, port)
+            if ssl == True: 
+                mailbox = poplib.POP3_SSL(server, port)
             else: 
-                Mailbox = poplib.POP3(server, port)
+                mailbox = poplib.POP3(server, port)
 
-            Mailbox.user(user)
-            Mailbox.pass_(password)
+            mailbox.user(user)
+            mailbox.pass_(password)
         except Exception, e:
             raise CommandError(e)
         
-        (numMsgs, totalSize) = Mailbox.stat()
-        all_msgs = range(1, numMsgs + 1)
+        num_msgs = mailbox.stat()[0]
+        all_msgs = range(1, num_msgs + 1)
         if all_msgs:
             self._print_if_verbose(verbosity, "Processing contents of mailbox.")  
             for i in all_msgs:
-                (header, msg, octets) = Mailbox.retr(i)
+                msg = mailbox.retr(i)[1]
                 mail = message_from_string("\n".join(msg))
-                self._process_email(mail,verbosity)
-                Mailbox.dele(i)
+                self._process_email(mail, verbosity)
+                mailbox.dele(i)
         else: self._print_if_verbose(verbosity, "Nothing to do!")  
 
-        Mailbox.quit()
+        mailbox.quit()
         
-    def _process_email(self,mail,verbosity):
+    def _process_email(self, mail, verbosity):
         user = None
         decision = None
         user_found = False
@@ -107,11 +107,11 @@ class Command(BaseCommand):
                     rating = Feedback.COMMENT_STATUS
 
                 self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
-                feedback = Feedback(author=user, decision=decision,rating=rating, description=description)
+                feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
                 feedback.save()
             elif proposal_found:
                 self._print_if_verbose(verbosity, "No matching object, creating proposal")
-                decision = Decision(author=user,editor=user,status=Decision.PROPOSAL_STATUS, description=msg_string)
+                decision = Decision(author=user, editor=user, status=Decision.PROPOSAL_STATUS, description=msg_string)
                 decision.save()
         
     def _print_if_verbose(self, verbosity, message):

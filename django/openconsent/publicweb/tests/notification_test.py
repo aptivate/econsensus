@@ -115,9 +115,9 @@ class NotificationTest(DecisionTestCase):
         #Barry decides to unwatch...
         self.login('barry')
         path = reverse('publicweb_decision_update', args=[decision.id])
-        post_dict = {'description': decision.description,'status': decision.status, 'watch':False }
-        response = self.client.post(path,post_dict)
-        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        post_dict = {'description': decision.description, 'status': decision.status, 'watch':False }
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
         decision = Decision.objects.get(id=decision.id)
         mail.outbox = []
         #Charlie adds feedback...

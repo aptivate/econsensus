@@ -1,8 +1,6 @@
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.simple import redirect_to
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
-from django.core.urlresolvers import reverse
 
 from views import create_decision, update_decision, \
                     decision_detail, object_list_by_status, \

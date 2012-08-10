@@ -4,5 +4,4 @@ def version(request):
     '''
     A context processor to add the version number to the context.
     '''
-    version = '(v' + get_version() + ')'
-    return {'version': version}
+    return {'version': '(v' + get_version() + ')'}

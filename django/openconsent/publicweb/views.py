@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.http import HttpResponse
-from django.contrib.auth.models import User
 
 import unicodecsv
 
@@ -107,7 +106,7 @@ def create_decision(request, status, template_name):
         return _process_post_and_redirect(request, decision, template_name)
 
     form = DecisionForm(instance=decision)    
-    data = dict(form=form,tab=status)
+    data = dict(form=form, tab=status)
     context = RequestContext(request, data)
 
     return render_to_response(template_name, context)
@@ -169,14 +168,14 @@ def update_feedback(request, model, object_id, template_name):
                     notification.observe(feedback.decision, request.user, 'decision_change')
                 return HttpResponseRedirect(feedback.get_parent_url())
         
-        data = dict(form=form,tab=feedback.decision.status)
+        data = dict(form=form, tab=feedback.decision.status)
         context = RequestContext(request, data)
         return render_to_response(template_name, context)
 
     else:
         form = FeedbackForm(instance=feedback)
         
-    data = dict(form=form,tab=feedback.decision.status)
+    data = dict(form=form, tab=feedback.decision.status)
     context = RequestContext(request, data)
     return render_to_response(template_name, context)
 
