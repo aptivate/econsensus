@@ -46,12 +46,12 @@ class OpenConsentTestCase(TestCase):
         self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def create_feedback_through_browser(self,idd):
+    def create_feedback_through_browser(self, idd):
         description = 'a pulvinar tortor bibendum nec'
         path = reverse('publicweb_feedback_create', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
-        self.client.post(path,post_dict)
+        self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
     
     def update_feedback_through_browser(self, idd):

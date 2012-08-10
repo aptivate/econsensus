@@ -16,7 +16,11 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_new_proposal(self):
         #Tests that process_email picks up mails from mailbox
         #and creates objects in the db
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: Proposal gleda raspored', '', 'Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: Proposal gleda raspored',
+                                      '',
+                                      'Mnogi programi za stolno izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
@@ -32,7 +36,11 @@ class CommandTest(OpenConsentTestCase):
         #identified then the payload becomes comment feedback
         parent = Decision(status=Decision.PROPOSAL_STATUS)
         parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: gleda raspored #%s' % parent.id,'', 'Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: gleda raspored #%s' % parent.id,
+                                      '',
+                                      'Mnogi programi za stolno izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
@@ -48,7 +56,11 @@ class CommandTest(OpenConsentTestCase):
         #into the rating field.
         parent = Decision(status=Decision.PROPOSAL_STATUS)
         parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: gleda raspored #%s' % parent.id, '', 'Danger: Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: gleda raspored #%s' % parent.id,
+                                      '',
+                                      'Danger: Mnogi programi za stolno izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
@@ -64,7 +76,11 @@ class CommandTest(OpenConsentTestCase):
         #and the feedback defaults to comment
         parent = Decision(status=Decision.PROPOSAL_STATUS)
         parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: gleda raspored #%s' % parent.id, '', 'Dager: Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: gleda raspored #%s' % parent.id,
+                                      '',
+                                      'Dager: Mnogi programi za stolno izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
@@ -77,15 +93,27 @@ class CommandTest(OpenConsentTestCase):
 
     def test_process_email_bad_content(self):
         #Test that an unknown email address is rejected.
-        poplib.POP3.mailbox = ([''], ['From: Adam <youdontknowme@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: gleda raspored', '', 'Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <youdontknowme@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: gleda raspored',
+                                      '',
+                                      'Mnogi programi za stolno izdavatvo', ''], [''])
         self.assertFalse(Decision.objects.count())
         
         #Test that a corrupt from field is rejected.
-        poplib.POP3.mailbox = ([''], ['From: Donald <spam>', 'To: Admin <admin@econsensus.com>', 'Subject: gleda raspored', '', 'Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Donald <spam>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: gleda raspored',
+                                      '',
+                                      'Mnogi programi za stolno izdavatvo', ''], [''])
         self.assertFalse(Decision.objects.count())
 
     def test_email_sent_out_on_email_decision(self):
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>', 'To: Admin <admin@econsensus.com>', 'Subject: Proposal gleda raspored', '', 'Mnogi programi za stolno izdavatvo', ''], [''])
+        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
+                                      'To: Admin <admin@econsensus.com>',
+                                      'Subject: Proposal gleda raspored',
+                                      '',
+                                      'Mnogi programi za stolno izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except Exception, e:

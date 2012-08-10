@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         mailbox.quit()
         
-    def _process_email(self, mail, verbosity):
+    def _process_email(self, mail, verbosity): # pylint: disable=R0914
         user = None
         decision = None
         user_found = False
