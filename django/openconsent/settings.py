@@ -149,14 +149,42 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
+LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'error.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s: %(asctime)s [%(module)s] %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s: %(message)s',
+        },
+    },
+    'filters': {
+         'require_debug_false': {
+             '()': 'utils.log.RequireDebugFalse',
+         }
+     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'file':{
+            'level':'ERROR',
+            'filters': ['require_debug_false'],
+            'class':'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE
+        },
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
     },
     'loggers': {
         'django.request': {
@@ -164,6 +192,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'econsensus': {
+            'handlers': ['file','console'],
+            'level': 'ERROR',
+            'propagate': True,
+        }
     }
 }
 

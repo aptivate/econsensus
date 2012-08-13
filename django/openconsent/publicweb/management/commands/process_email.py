@@ -1,10 +1,11 @@
 #management command to update the site with any mail
 import poplib
 import re
+import logging
 from email import message_from_string
-
 from livesettings import config_value
-from django.core.management.base import BaseCommand, CommandError
+
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
 from publicweb.models import Decision, Feedback, rating_int
@@ -30,7 +31,9 @@ class Command(BaseCommand):
             mailbox.user(user)
             mailbox.pass_(password)
         except Exception, e:
-            raise CommandError(e)
+            logger = logging.getLogger('econsensus')
+            logger.error(e)
+            return
         
         num_msgs = mailbox.stat()[0]
         all_msgs = range(1, num_msgs + 1)
