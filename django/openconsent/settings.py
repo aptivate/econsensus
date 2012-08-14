@@ -181,7 +181,7 @@ LOGGING = {
             'filename': LOG_FILE
         },
         'console':{
-            'level':'DEBUG',
+            'level':'INFO',
             'class':'logging.StreamHandler',
             'formatter': 'simple'
         },
@@ -194,7 +194,7 @@ LOGGING = {
         },
         'econsensus': {
             'handlers': ['file','console'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
         }
     }
