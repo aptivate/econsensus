@@ -1,1 +1,1 @@
-Feedback added to {{ observed.decision.status|capfirst }} #{{ observed.decision.id }}
+{{ observed.rating_text|capfirst }} added to #{{ observed.decision.id }} {{ observed.decision.excerpt }}

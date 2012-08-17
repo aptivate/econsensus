@@ -10,7 +10,8 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^settings/', include('livesettings.urls')),
-    (r'^notification/', include('notification.urls')),
+    url(r'^notification/', include('notification.urls')),
+    url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'', include('openconsent.publicweb.urls')),    
     )
 

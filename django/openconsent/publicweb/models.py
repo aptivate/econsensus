@@ -1,6 +1,6 @@
-#pylint: disable-msg=E1102
+#pylint: disable=E1102
 #config import is unused but required here for livesettings
-import config
+import config #pylint: disable=W0611
 import re
 
 from notification import models as notification
@@ -120,7 +120,7 @@ class Decision(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_item_detail', (), {'object_id':self.id})
+        return ('publicweb_item_detail', [self.id])
     
     def get_feedback_statistics(self):
         statistics = {'all': 0,
@@ -167,11 +167,11 @@ class Feedback(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_feedback_detail', (), {'object_id':self.id})
+        return ('publicweb_feedback_detail', [self.id])
 
     @models.permalink
     def get_parent_url(self):
-        return ('publicweb_item_detail', (), {'object_id': self.decision.id})
+        return ('publicweb_item_detail', [self.decision.id])
     
     def get_author_name(self):
         if hasattr(self.author, 'get_full_name') and self.author.get_full_name():
@@ -184,9 +184,9 @@ class Feedback(models.Model):
     def rating_text(self):
         return self.RATING_CHOICES[self.rating][1]
 
-def rating_int(x):
+def rating_int(string):
     try:
-        index = [y[1] for y in Feedback.RATING_CHOICES].index(x)
+        index = [y[1] for y in Feedback.RATING_CHOICES].index(string)
     except ValueError:
         return None
     

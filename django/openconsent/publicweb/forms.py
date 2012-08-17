@@ -28,7 +28,7 @@ class DecisionForm(forms.ModelForm):
                    'deadline': JQueryUIDateWidget
                    }
 
-EXTRA_CHOICE = (3, _('All')) #pylint: disable-msg=E1102
+EXTRA_CHOICE = (3, _('All')) #pylint: disable=E1102
 
 #TODO: Sort and filter forms have nothing to do with the app itself.
 #Move to site when site and app are split.
@@ -39,7 +39,7 @@ class FilterForm(forms.Form):
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
     filtar = ChoiceField(choices=FILTER_CHOICES,
-                         label = _('Status'), #pylint: disable-msg=E1102
+                         label = _('Status'), #pylint: disable=E1102
                          initial=EXTRA_CHOICE[0],
                          required=False,
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))

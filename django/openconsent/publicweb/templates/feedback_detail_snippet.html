@@ -1,14 +1,32 @@
+{% load url from future %}
 {% load i18n %}	
-
+{% load comments %}
+{% get_comment_list for object as comment_list %}
 <li id="id{{ object.id }}">
-	<div class="feedback_wrapper {{ object.rating_text }}">
-		<div class="feedback_type {{ object.rating_text }}">
-			{{ object.rating_text|capfirst }}
-		</div>
-		<div class="description">
-			<span class="author">{{ object.get_author_name }} says:</span>
-			{{ object.description|urlize|linebreaksbr }}
-			<a class="edit" href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>
-		</div>
+  <div class="feedback_wrapper {{ object.rating_text }}">
+    <div class="feedback_type {{ object.rating_text }}">
+      {{ object.rating_text|capfirst }}
+    </div>
+	<div class="description">
+	  <span class="author">{{ object.get_author_name }} says:</span>
+	  <p>{{ object.description|urlize|linebreaksbr }}</p>
+	  <a class="edit" href='{% url 'publicweb_feedback_update' object.id %}'>{% trans "Edit" %}</a>
+	  <a class="show" href='#'>Comment</a>
 	</div>
+		
+	<div class="contrib_comment_container">
+	  <ul class="contrib_comment_list">
+	  {% for comment in comment_list %}
+		<li class = "contrib_comment" id="c{{ comment.object_pk }}_{{ comment.pk }}">
+		  <span class="author">{{ comment.user_name }} says:</span>
+		  <p>{{ comment.comment }}</p>
+		</li>
+		  {% endfor %}
+	  </ul>
+
+      {% with object.get_parent_url as next %}
+	  {% render_comment_form for object %}
+	  {% endwith %}
+    </div>
+  </div>
 </li>

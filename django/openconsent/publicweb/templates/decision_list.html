@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}{{ block.super }}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
@@ -68,57 +69,57 @@
 		<tbody>{% for object in object_list %}
 			<tr>
 				<td class="id">
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						<span class="iconified">{{ object.id }}</span>
 					</a>
 				</td>
 				<td class="excerpt">
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.excerpt }}
 					</a>
 				</td>
 				{% if tab == 'decision' %}
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.decided_date }}
 					</a>
 				</td>
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 					{{ object.review_date }}
 					</a>
 				</td>
 				{% endif %}
 				{% if tab == 'archived' %}
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.creation }}
 					</a>
 				</td>
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.archived_date }}
 					</a>
 				</td>
 				{% endif %}
 				{% if tab == 'proposal' %}
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.feedbackcount }}
 					</a>
 				</td>{% comment %}
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.watchercount }}
 					</a>
 				</td>{% endcomment %}
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.deadline }}
 					</a>
 				</td>
 				<td>
-					<a href="{% url publicweb_item_detail object.id %}">
+					<a href="{% url 'publicweb_item_detail' object.id %}">
 						{{ object.last_modified }}
 					</a>
 				</td>
@@ -132,5 +133,5 @@
 {% endblock %}
 
 {% block footer_content %}
-	<p class="export"><a title="Export as CSV file" href="{% url publicweb_export_csv %}">{% trans "Export as CSV file" %}</a></p>
+	<p class="export"><a title="Export as CSV file" href="{% url 'publicweb_export_csv' %}">{% trans "Export as CSV file" %}</a></p>
 {% endblock %}

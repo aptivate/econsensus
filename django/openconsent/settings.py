@@ -62,11 +62,6 @@ STATIC_ROOT = os.path.join(PROJECT_HOME, 'static')
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# URL prefix for admin static files -- CSS, JavaScript and images.
-# Make sure to use a trailing slash.
-# Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/media/'
-
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -131,8 +126,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.comments',
     'registration',
     'notification',
+    'custom_comments',
     'keyedcache',
     'livesettings',
     'publicweb',
@@ -147,14 +144,42 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
+LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'error.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s: %(asctime)s [%(module)s] %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s: %(message)s',
+        },
+    },
+    'filters': {
+         'require_debug_false': {
+             '()': 'utils.log.RequireDebugFalse',
+         }
+     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'file':{
+            'level':'ERROR',
+            'filters': ['require_debug_false'],
+            'class':'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
     },
     'loggers': {
         'django.request': {
@@ -162,6 +187,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'econsensus': {
+            'handlers': ['file','console'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     }
 }
 
@@ -179,6 +209,9 @@ DEFAULT_FROM_EMAIL = 'openconsent@aptivate.org'
 
 #Required for djangoregistration:
 ACCOUNT_ACTIVATION_DAYS = 7
+
+#using custom comments app
+COMMENTS_APP = 'custom_comments'
 
 #Requirements for django-keyedcache, which is a requirement of django-livesettings.
 CACHE_PREFIX = str(SITE_ID)

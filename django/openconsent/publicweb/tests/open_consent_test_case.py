@@ -34,30 +34,30 @@ class OpenConsentTestCase(TestCase):
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
-        self.client.post(path,post_dict)
+        self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def update_decision_through_browser(self,id):
+    def update_decision_through_browser(self, idd):
         description = 'Aenean eros nibh'
-        path = reverse('publicweb_decision_update', args=[id])
+        path = reverse('publicweb_decision_update', args=[idd])
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
-        self.client.post(path,post_dict)
+        self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def create_feedback_through_browser(self,id):
+    def create_feedback_through_browser(self, idd):
         description = 'a pulvinar tortor bibendum nec'
-        path = reverse('publicweb_feedback_create', args=[id])
+        path = reverse('publicweb_feedback_create', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
-        self.client.post(path,post_dict)
+        self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
     
-    def update_feedback_through_browser(self,id):
+    def update_feedback_through_browser(self, idd):
         description = 'nibh ut dignissim. Sed a aliquet quam'
-        path = reverse('publicweb_feedback_update', args=[id])
+        path = reverse('publicweb_feedback_update', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
-        self.client.post(path,post_dict)
+        self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)

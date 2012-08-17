@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block main_content %}
 
@@ -7,7 +8,7 @@
 
 <p>{% trans "Account successfully activated" %}</p>
 
-<p><a href="{% url auth_login %}">{% trans "Log in" %}</a></p>
+<p><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></p>
 
 {% else %}
 

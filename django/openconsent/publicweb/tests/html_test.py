@@ -54,7 +54,7 @@ class HtmlTest(OpenConsentTestCase):
         decision.save()
         feedback = Feedback(description="text\ntext")
         feedback.decision = decision
-        feedback.author=self.user
+        feedback.author = self.user
         feedback.save()
         path = reverse('publicweb_feedback_detail', args=[feedback.id])
         response = self.client.get(path)
@@ -72,7 +72,7 @@ class HtmlTest(OpenConsentTestCase):
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'Lorem Ipsum'}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
         decision = Decision.objects.get(description='Lorem Ipsum')
         self.assertEqual(decision.author, self.user)
         self.user = self.login('Barry')
@@ -81,7 +81,7 @@ class HtmlTest(OpenConsentTestCase):
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
     
@@ -108,8 +108,8 @@ class HtmlTest(OpenConsentTestCase):
         post_dict = {'description': 'Quisque sapien justo', 
                      'meeting_people': test_string, 
                      'status': Decision.PROPOSAL_STATUS}
-        response = self.client.post(path,post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.DECISION_STATUS]))
         decision = Decision.objects.get()
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)  

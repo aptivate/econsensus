@@ -6,10 +6,7 @@ def current_site(request):
     http://bradmontgomery.blogspot.com/2009/01/add-context-processor-for-your-django.html
     '''
     try:
-        current_site = Site.objects.get_current()
-        return {
-            'current_site': current_site,
-        }
+        return {'current_site': Site.objects.get_current()}
     except Site.DoesNotExist:
         # always return a dict, no matter what!
         return {'current_site':''} # an empty string

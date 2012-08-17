@@ -1,4 +1,4 @@
-Django==1.3
+Django==1.4
 mysql-python==1.2.3
 django-tinymce==1.5.1a2
 mechanize==0.2.5
@@ -7,9 +7,9 @@ lxml==2.2.4
 BeautifulSoup==3.2.0
 South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
-django-debug-toolbar==0.8.5
+django-debug-toolbar
 django-tagging
 django-livesettings
 django-keyedcache
 django-registration
-django-notification
+git+git://github.com/aptivate/django-notification.git

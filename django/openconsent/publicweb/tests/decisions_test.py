@@ -56,14 +56,12 @@ class DecisionsTest(DecisionTestCase):
                                     follow=True)
         
         
-        self.assertRedirects(response,
-            reverse('publicweb_item_list', args=['decision']),
-            msg_prefix=response.content)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
 
     def get_default_decision_form_dict(self):
         return {'status': Decision.DECISION_STATUS}
 
-    def get_diff(self, s1, s2): #pylint: disable-msg=C0103
+    def get_diff(self, s1, s2): #pylint: disable=C0103
         diff = difflib.context_diff(s1, s2)
         rope = ''
         for line in diff:
@@ -129,14 +127,14 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['decision']),
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]),
             msg_prefix=response.content)
             
     def test_add_feedback(self):
         decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
         decision.save()
-        post_dict= {'rating': '2', 'description': 'The eggs are bad'}
-        response = self.client.post(reverse('publicweb_feedback_create', args=[decision.id]), 
+        post_dict = {'rating': '2', 'description': 'The eggs are bad'}
+        self.client.post(reverse('publicweb_feedback_create', args=[decision.id]), 
                                 post_dict,
                                 follow=True )        
         feedback = decision.feedback_set.all()[:1].get()
@@ -145,7 +143,7 @@ class DecisionsTest(DecisionTestCase):
     def test_add_feedback_inline(self):
         decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
         decision.save()
-        post_dict= {'rating': '2', 'description': 'The eggs are not bad'}
+        post_dict = {'rating': '2', 'description': 'The eggs are not bad'}
         response = self.client.post(reverse('publicweb_feedback_snippet_create', args=[decision.id]), 
                                 post_dict,
                                 follow=True )

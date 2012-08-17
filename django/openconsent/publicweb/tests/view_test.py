@@ -51,9 +51,9 @@ class ViewTest(DecisionTestCase):
         decision = Decision(description="Test decision")
         decision.save()
         path = reverse('publicweb_feedback_create', args=[decision.id])
-        post_dict = {'description': 'Lorem Ipsum','rating': Feedback.COMMENT_STATUS }
+        post_dict = {'description': 'Lorem Ipsum', 'rating': Feedback.COMMENT_STATUS }
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response,reverse('publicweb_item_detail', args=[decision.id]))
+        self.assertRedirects(response, reverse('publicweb_item_detail', args=[decision.id]))
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, self.user)
 
@@ -67,14 +67,14 @@ class ViewTest(DecisionTestCase):
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()
         all_users = User.objects.all().count()
-        self.assertEqual(all_users,decision.watchers.all().count())
+        self.assertEqual(all_users, decision.watchers.all().count())
 
     def test_user_can_unwatch(self):
         decision = self.create_decision_through_browser()
         path = reverse('publicweb_decision_update', args=[decision.id])
-        post_dict = {'description': decision.description,'status': decision.status, 'watch':False }
-        response = self.client.post(path,post_dict)
-        self.assertRedirects(response,reverse('publicweb_item_list', args=['proposal']))
+        post_dict = {'description': decision.description, 'status': decision.status, 'watch':False }
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
         decision = Decision.objects.get(id=decision.id)
         self.assertNotIn(self.user, tuple(decision.watchers.all()))
         

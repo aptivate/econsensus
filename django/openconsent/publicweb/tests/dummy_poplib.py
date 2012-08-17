@@ -7,18 +7,20 @@ class POP3(object):
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.username = None
+        self.password = None 
 
-    def user(self,username):
+    def user(self, username):
         self.username = username
 
-    def pass_(self,password):
+    def pass_(self, password):
         self.password = password
     
     def retr(self, num):
         return self.mailbox
     
     def stat(self):
-        return (1,0)
+        return (1, 0)
     
     def dele(self, num):
         pass

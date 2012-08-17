@@ -1,6 +1,7 @@
 #Configuration for django-livesettings.
 #http://django-livesettings.readthedocs.org
-
+#pylint: disable=E1102
+#        '_ is not callable'
 from livesettings import config_register, ConfigurationGroup, StringValue, \
     BooleanValue, PasswordValue, IntegerValue
 from django.utils.translation import ugettext_lazy as _

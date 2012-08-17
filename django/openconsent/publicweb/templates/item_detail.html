@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}
@@ -10,137 +11,141 @@
 	<link href="{{ MEDIA_URL }}jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/showhide.js"></script>
+
 	<script type="text/javascript">
-jQuery(function ($) {
-	/*
-	 * Common functions
-	 */
-	function displayErrorMessage(jqXHR, textStatus, errorThrown) {
-		var msg = "";
-		switch (textStatus) {
-			case 'abort':
-				msg = "Request has been aborted.";
-				break;
-			case 'timeout':
-				msg = "Request took too long.";
-				break;
-			case 'parseerror':
-				msg = "Returned data is malformed.";
-				break;
-			default:
-				if (errorThrown) {
-					msg = "Server responded with following error: " + errorThrown;
-				}
-				break;
-		}
-		alert(msg);
-	}
-
-	function replaceWithRemote(url, selector) {
-		$.ajax(url,
-				{
-					cache: false,
-					success: function (data) { $(selector).replaceWith(data); },
-					error: displayErrorMessage
-				});
-	}
-
-	function updateAndReplace(update_url, replace_url, node) {
-		var parameters = $(node).serialize();
-
-		$.post(update_url,
-			parameters,
-			function (data) {
-				// Post successful, now fetch stored value and add it as a snippet
-				replaceWithRemote(replace_url, node);
-			}
-		);
-	}
-
-	/*
-	 * Proposal in-line editing
-	 */
-	// Override redirect to form and put it inline
-	$(".controls a.edit").live("click", function (e) {
-		replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_snippet_envelope");
-		e.preventDefault();
-	});
-
-	// Override redirect to view and put it inline
-	$('#decision_update_form input[value="Save"]').live("click", function (e) {
-		updateAndReplace("{% url publicweb_decision_update object.id %}",
-						"{% url publicweb_decision_snippet_detail object.id %}",
-						"form#decision_update_form");
-		e.preventDefault();
-	});
-
-	/*
-	 * Feedback in-line editing
-	 */
-	// Fake id, DB will always start at least with 1; Error-prone (fails if URL contains 0 elsewhere)
-	var snippet_update_url_template = "{% url publicweb_feedback_snippet_update 0 %}",
-		snippet_detail_url_template = "{% url publicweb_feedback_snippet_detail 0 %}",
-		feedback_update_url_template = "{% url publicweb_feedback_update 0 %}",
-		feedback_add_url = "{% url publicweb_feedback_snippet_create object.id %}",
-		// .prop("outerHTML") will work in future (.outerHTML added to FF11)
-		feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
-
-	// Handle cancel manually, because it doesn't get submitted with
-	// javascript submission
-	$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
-		e.stopPropagation();e.preventDefault();
-		$("#feedback_add_anchor form").replaceWith(feedback_button);
-	});
-
-	$(".button.add_feedback").live("click", function (e) {
-		replaceWithRemote(feedback_add_url, ".button.add_feedback");
-		e.preventDefault();
-	});
-
-	$("#feedback_add_anchor form").live("submit", function (e) {
-		var $form = $(this),
-			parameters = $form.serialize();
-
-		$.post("{% url publicweb_feedback_snippet_create object.id %}",
-			parameters,
-			function (data) {
-				var $feedback = $(".feedback_list");
-
-				if (data) {
-					if (!$feedback.length && $(".no_feedback").length) {
-						$(".no_feedback").replaceWith('<ol class="feedback_list"></ol>');
-						$feedback = $(".feedback_list");
+	<!--
+	jQuery(function ($) {
+		/*
+		 * Common functions
+		 */
+		function displayErrorMessage(jqXHR, textStatus, errorThrown) {
+			var msg = "";
+			switch (textStatus) {
+				case 'abort':
+					msg = "Request has been aborted.";
+					break;
+				case 'timeout':
+					msg = "Request took too long.";
+					break;
+				case 'parseerror':
+					msg = "Returned data is malformed.";
+					break;
+				default:
+					if (errorThrown) {
+						msg = "Server responded with following error: " + errorThrown;
 					}
-					$feedback.html($feedback.html()+data);
-				}
-				$form.replaceWith(feedback_button);
+					break;
 			}
-		);
-		e.preventDefault();
+			alert(msg);
+		}
+	
+		function replaceWithRemote(url, selector) {
+			$.ajax(url,
+					{
+						cache: false,
+						success: function (data) { $(selector).replaceWith(data); },
+						error: displayErrorMessage
+					});
+		}
+	
+		function updateAndReplace(update_url, replace_url, node) {
+			var parameters = $(node).serialize();
+	
+			$.post(update_url,
+				parameters,
+				function (data) {
+					// Post successful, now fetch stored value and add it as a snippet
+					replaceWithRemote(replace_url, node);
+				}
+			);
+		}
+	
+		/*
+		 * Proposal in-line editing
+		 */
+		// Override redirect to form and put it inline
+		$(".controls a.edit").live("click", function (e) {
+			replaceWithRemote("{% url 'publicweb_decision_snippet_update' object.id %}", "#decision_snippet_envelope");
+			e.preventDefault();
+		});
+	
+		// Override redirect to view and put it inline
+		$('#decision_update_form input[value="Save"]').live("click", function (e) {
+			updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
+							"{% url 'publicweb_decision_snippet_detail' object.id %}",
+							"form#decision_update_form");
+			e.preventDefault();
+		});
+	
+		/*
+		 * Feedback in-line editing
+		 */
+		// Fake id, DB will always start at least with 1; Error-prone (fails if URL contains 0 elsewhere)
+		var snippet_update_url_template = "{% url 'publicweb_feedback_snippet_update' 0 %}",
+			snippet_detail_url_template = "{% url 'publicweb_feedback_snippet_detail' 0 %}",
+			feedback_update_url_template = "{% url 'publicweb_feedback_update' 0 %}",
+			feedback_add_url = "{% url 'publicweb_feedback_snippet_create' object.id %}",
+			// .prop("outerHTML") will work in future (.outerHTML added to FF11)
+			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
+	
+		// Handle cancel manually, because it doesn't get submitted with
+		// javascript submission
+		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+			e.stopPropagation();e.preventDefault();
+			$("#feedback_add_anchor form").replaceWith(feedback_button);
+		});
+	
+		$(".button.add_feedback").live("click", function (e) {
+			replaceWithRemote(feedback_add_url, ".button.add_feedback");
+			e.preventDefault();
+		});
+	
+		$("#feedback_add_anchor form").live("submit", function (e) {
+			var $form = $(this),
+				parameters = $form.serialize();
+	
+			$.post("{% url 'publicweb_feedback_snippet_create' object.id %}",
+				parameters,
+				function (data) {
+					var $feedback = $(".feedback_list");
+	
+					if (data) {
+						if (!$feedback.length && $(".no_feedback").length) {
+							$(".no_feedback").replaceWith('<ol class="feedback_list"></ol>');
+							$feedback = $(".feedback_list");
+						}
+						$feedback.html($feedback.html()+data);
+					}
+					$form.replaceWith(feedback_button);
+				}
+			);
+			e.preventDefault();
+		});
+	
+		// Override redirect to form and put it inline
+		$(".feedback_list .description .edit").live("click", function (e) {
+			var wrapper = $(this).parents(".feedback_wrapper"),
+				object_id = wrapper.parent().attr("id").slice(2),
+				snippet_update_url = snippet_update_url_template.replace('0', object_id);
+	
+			$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+			replaceWithRemote(snippet_update_url, wrapper);
+			e.preventDefault();
+		});
+	
+		// Override redirect to view and put it inline
+		$('.feedback_list .feedback_form').live("submit", function (e) {
+			var $this = $(this),
+				object_id = $this.parent().attr("id").slice(2),
+				feedback_update_url = feedback_update_url_template.replace('0', object_id),
+				snippet_detail_url = snippet_detail_url_template.replace('0', object_id);;
+	
+			updateAndReplace(feedback_update_url, snippet_detail_url, $this);
+			e.preventDefault();
+		});
 	});
-
-	// Override redirect to form and put it inline
-	$(".feedback_list .description a").live("click", function (e) {
-		var wrapper = $(this).parents(".feedback_wrapper"),
-			object_id = wrapper.parent().attr("id").slice(2),
-			snippet_update_url = snippet_update_url_template.replace('0', object_id);
-
-		$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
-		replaceWithRemote(snippet_update_url, wrapper);
-		e.preventDefault();
-	});
-
-	// Override redirect to view and put it inline
-	$('.feedback_list .feedback_form').live("submit", function (e) {
-		var $this = $(this),
-			object_id = $this.parent().attr("id").slice(2),
-			feedback_update_url = feedback_update_url_template.replace('0', object_id),
-			snippet_detail_url = snippet_detail_url_template.replace('0', object_id);;
-
-		updateAndReplace(feedback_update_url, snippet_detail_url, $this);
-		e.preventDefault();
-	});
-});
+	//-->
 	</script>
 {% endblock %}
 
@@ -151,18 +156,16 @@ jQuery(function ($) {
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title feedback">{% trans "Feedback" %}</h2>
-<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'><span>Add new feedback</span></a></div>
+<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
 <div class="decision_feedback">
 
-{% if object.feedback_set.all %}
-	<ol class="feedback_list">
+  <ol class="feedback_list">
 {% for feedback in object.feedback_set.all %}
 {% include "feedback_detail_snippet.html" with object=feedback %}
+{% empty %}
+	<li class="no_feedback">{% trans "No feedback yet." %}</li>
 {% endfor %}
-	</ol>
-{% else %}
-<p class="no_feedback">{% trans "No feedback yet." %}</p>
-{% endif %}
+  </ol>
 </div>
 
 {% endblock %}

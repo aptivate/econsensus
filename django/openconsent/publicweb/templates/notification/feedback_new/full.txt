@@ -1,6 +1,4 @@
-{{ observed.author }} gave the following feedback.
-
-{{ observed.rating_text|capfirst }}
+{{ observed.author }} added a {{ observed.rating_text|capfirst }} to {{ observed.decision.excerpt }}
 
 "{{ observed.description|safe }}"
 
