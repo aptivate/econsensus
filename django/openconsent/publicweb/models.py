@@ -120,7 +120,7 @@ class Decision(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_item_detail', (), {'object_id':self.id})
+        return ('publicweb_item_detail', [self.id])
     
     def get_feedback_statistics(self):
         statistics = {'all': 0,
@@ -167,11 +167,11 @@ class Feedback(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('publicweb_feedback_detail', (), {'object_id':self.id})
+        return ('publicweb_feedback_detail', [self.id])
 
     @models.permalink
     def get_parent_url(self):
-        return ('publicweb_item_detail', (), {'object_id': self.decision.id})
+        return ('publicweb_item_detail', [self.decision.id])
     
     def get_author_name(self):
         if hasattr(self.author, 'get_full_name') and self.author.get_full_name():

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}
@@ -65,14 +66,14 @@
 		 */
 		// Override redirect to form and put it inline
 		$(".controls a.edit").live("click", function (e) {
-			replaceWithRemote("{% url publicweb_decision_snippet_update object.id %}", "#decision_snippet_envelope");
+			replaceWithRemote("{% url 'publicweb_decision_snippet_update' object.id %}", "#decision_snippet_envelope");
 			e.preventDefault();
 		});
 	
 		// Override redirect to view and put it inline
 		$('#decision_update_form input[value="Save"]').live("click", function (e) {
-			updateAndReplace("{% url publicweb_decision_update object.id %}",
-							"{% url publicweb_decision_snippet_detail object.id %}",
+			updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
+							"{% url 'publicweb_decision_snippet_detail' object.id %}",
 							"form#decision_update_form");
 			e.preventDefault();
 		});
@@ -81,10 +82,10 @@
 		 * Feedback in-line editing
 		 */
 		// Fake id, DB will always start at least with 1; Error-prone (fails if URL contains 0 elsewhere)
-		var snippet_update_url_template = "{% url publicweb_feedback_snippet_update 0 %}",
-			snippet_detail_url_template = "{% url publicweb_feedback_snippet_detail 0 %}",
-			feedback_update_url_template = "{% url publicweb_feedback_update 0 %}",
-			feedback_add_url = "{% url publicweb_feedback_snippet_create object.id %}",
+		var snippet_update_url_template = "{% url 'publicweb_feedback_snippet_update' 0 %}",
+			snippet_detail_url_template = "{% url 'publicweb_feedback_snippet_detail' 0 %}",
+			feedback_update_url_template = "{% url 'publicweb_feedback_update' 0 %}",
+			feedback_add_url = "{% url 'publicweb_feedback_snippet_create' object.id %}",
 			// .prop("outerHTML") will work in future (.outerHTML added to FF11)
 			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
 	
@@ -104,7 +105,7 @@
 			var $form = $(this),
 				parameters = $form.serialize();
 	
-			$.post("{% url publicweb_feedback_snippet_create object.id %}",
+			$.post("{% url 'publicweb_feedback_snippet_create' object.id %}",
 				parameters,
 				function (data) {
 					var $feedback = $(".feedback_list");
@@ -155,7 +156,7 @@
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title feedback">{% trans "Feedback" %}</h2>
-<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url publicweb_feedback_create object.id %}'><span>Add new feedback</span></a></div>
+<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
 <div class="decision_feedback">
 
   <ol class="feedback_list">

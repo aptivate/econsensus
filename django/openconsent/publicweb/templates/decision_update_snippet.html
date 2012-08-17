@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form action="#" method="post" id="decision_update_form" class="{{ form.instance.status }}">{% csrf_token %}
+<form action="#" method="post" id="decision_update_form" class="{{ tab }}">{% csrf_token %}
 		{% for error in form.non_field_errors %}
 		    <p class="error" >{{ error }}</p>
 		{% endfor %}

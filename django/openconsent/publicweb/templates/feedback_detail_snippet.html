@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}	
 {% load comments %}
 {% get_comment_list for object as comment_list %}
@@ -9,7 +10,7 @@
 	<div class="description">
 	  <span class="author">{{ object.get_author_name }} says:</span>
 	  <p>{{ object.description|urlize|linebreaksbr }}</p>
-	  <a class="edit" href='{% url publicweb_feedback_update object.id %}'>{% trans "Edit" %}</a>
+	  <a class="edit" href='{% url 'publicweb_feedback_update' object.id %}'>{% trans "Edit" %}</a>
 	  <a class="show" href='#'>Comment</a>
 	</div>
 		

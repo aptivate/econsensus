@@ -56,9 +56,7 @@ class DecisionsTest(DecisionTestCase):
                                     follow=True)
         
         
-        self.assertRedirects(response,
-            reverse('publicweb_item_list', args=['decision']),
-            msg_prefix=response.content)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
 
     def get_default_decision_form_dict(self):
         return {'status': Decision.DECISION_STATUS}
@@ -129,7 +127,7 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['decision']),
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]),
             msg_prefix=response.content)
             
     def test_add_feedback(self):

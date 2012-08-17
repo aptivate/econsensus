@@ -109,7 +109,7 @@ class HtmlTest(OpenConsentTestCase):
                      'meeting_people': test_string, 
                      'status': Decision.PROPOSAL_STATUS}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.DECISION_STATUS]))
         decision = Decision.objects.get()
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)  

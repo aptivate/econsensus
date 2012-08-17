@@ -1,3 +1,4 @@
+{% load url from future %}
 {% autoescape on %}
 {% load i18n %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -16,15 +17,15 @@
 	<div id="header-wrapper">		
 		<div id="header">
 		
-			<h1><a href="{% url publicweb_item_list 'proposal'%}"><img alt="Econsensus" src="{{MEDIA_URL}}/images/econsensus-logo-header.png"/></a><span class="user-org not_translated">: {{ current_site.name }}</span></h1>
+			<h1><a href="{% url 'publicweb_item_list' 'proposal'%}"><img alt="Econsensus" src="{{MEDIA_URL}}/images/econsensus-logo-header.png"/></a><span class="user-org not_translated">: {{ current_site.name }}</span></h1>
 
 			{% block user_access %}
 				<div id="user_access">
-					<a href='{% url admin:index %}'>{% trans "Settings" %}</a> |
+					<a href='{% url 'admin:index' %}'>{% trans "Settings" %}</a> |
 					{% if user.is_authenticated %}
-						<a href='{% url auth_logout %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
+						<a href='{% url 'auth_logout' %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 					{% else %}
-						<a href='{% url auth_login %}'> {%trans "Login" %}</a>
+						<a href='{% url 'auth_login' %}'> {%trans "Login" %}</a>
 					{% endif %}
 				</div>
 			{% endblock user_access%}
@@ -34,13 +35,13 @@
 			<div id="navigation-wrapper">
 				<div id="navigation">
 					<ul>
-						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url publicweb_item_list 'proposal'%}">{% trans "Proposals" %}</a></li>
-						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "decision"%}">{% trans "Decisions" %}</a></li>
-						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url publicweb_item_list "archived"%}">{% trans "Archived" %}</a></li>
+						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' 'proposal'%}">{% trans "Proposals" %}</a></li>
+						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' "decision"%}">{% trans "Decisions" %}</a></li>
+						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' "archived"%}">{% trans "Archived" %}</a></li>
 					</ul>
 					<div id="user-actions">
-						<a class="button add_decision" href="{% url publicweb_decision_create 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
-						<a class="button add_proposal" href="{% url publicweb_decision_create 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>
+						<a class="button add_decision" href="{% url 'publicweb_decision_create' 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
+						<a class="button add_proposal" href="{% url 'publicweb_decision_create' 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>
 					</div>	
 				</div>
 				<div class="search">

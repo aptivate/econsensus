@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 <div id="decision_snippet_envelope">
 	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
@@ -81,7 +82,7 @@
 			<dd>{{ object.get_feedback_statistics.comment }}</dd>
 		</dl>
 			<div class="controls">
-				<a class="edit" href="{% url publicweb_decision_update object.id %}">Edit</a>
+				<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
 			</div>
 		</div>
 	</div>
