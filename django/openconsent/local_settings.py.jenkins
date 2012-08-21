@@ -10,11 +10,7 @@ TEMPLATE_DEBUG = DEBUG
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/list/proposal/'
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/site_media/'
-ADMIN_MEDIA_PREFIX = '/media/'
+STATIC_URL = '/jenkins/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 

@@ -6,11 +6,7 @@ TEMPLATE_DEBUG = False
 LOGIN_URL = '/seedltd/accounts/login/'
 LOGIN_REDIRECT_URL = '/seedltd/item/list/proposal/'
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/seedltd/site_media/'
-ADMIN_MEDIA_PREFIX = '/seedltd/media/'
+STATIC_URL = '/seedltd/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

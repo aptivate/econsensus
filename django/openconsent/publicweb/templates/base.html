@@ -7,9 +7,9 @@
 	<title>{% block title %}{% trans "Home" %} | {% endblock %}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport"/>
-	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/styles.css"/>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/css/styles.css"/>
 	<!--[if !IE]><!-->
-	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/tables.css"/>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/css/tables.css"/>
 	<!--<![endif]-->
 	{% block head_content%}{% endblock %}
 </head>
@@ -17,7 +17,7 @@
 	<div id="header-wrapper">		
 		<div id="header">
 		
-			<h1><a href="{% url 'publicweb_item_list' 'proposal'%}"><img alt="Econsensus" src="{{MEDIA_URL}}/images/econsensus-logo-header.png"/></a><span class="user-org not_translated">: {{ current_site.name }}</span></h1>
+			<h1><a href="{% url 'publicweb_item_list' 'proposal'%}"><img alt="Econsensus" src="{{ STATIC_URL }}/images/econsensus-logo-header.png"/></a><span class="user-org not_translated">: {{ current_site.name }}</span></h1>
 
 			{% block user_access %}
 				<div id="user_access">

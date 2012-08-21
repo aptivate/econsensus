@@ -7,8 +7,6 @@ TEMPLATE_DEBUG = True
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/item/list/proposal/'
 
-MEDIA_URL = '/site_media/'
-
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

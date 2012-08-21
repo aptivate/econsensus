@@ -6,11 +6,7 @@ TEMPLATE_DEBUG = False
 LOGIN_URL = '/oos/accounts/login/'
 LOGIN_REDIRECT_URL = '/oos/item/list/proposal/'
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/oos/site_media/'
-ADMIN_MEDIA_PREFIX = '/oos/media/'
+STATIC_URL = '/oos/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
