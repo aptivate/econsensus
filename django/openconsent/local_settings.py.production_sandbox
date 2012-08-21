@@ -10,8 +10,7 @@ LOGIN_REDIRECT_URL = '/sandbox/item/list/proposal/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/sandbox/site_media/'
-ADMIN_MEDIA_PREFIX = '/sandbox/media/'
+STATIC_URL = '/sandbox/static/'
 
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 
