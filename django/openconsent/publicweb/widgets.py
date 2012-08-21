@@ -12,7 +12,7 @@ class JQueryUIDateWidget(forms.DateInput):
 
         css = {
             'all': (
-                settings.STATIC_URL + '/jquery/jquery-ui.css',
+                settings.STATIC_URL + 'jquery/jquery-ui.css',
             )
         }
 
