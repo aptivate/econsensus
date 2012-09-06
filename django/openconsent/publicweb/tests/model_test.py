@@ -32,25 +32,26 @@ class ModelTest(DecisionTestCase):
 
 #The real work:
     def test_decision_has_expected_fields(self):
-        decision = Decision(description="Decision test data")
+        decision = Decision(description="Decision test data", organization=self.bettysorg)
         self.model_has_attribute(decision, "feedbackcount")
         self.model_has_attribute(decision, "archived_date")
         self.model_has_attribute(decision, "editor")
         self.model_has_attribute(decision, "last_modified")
+        self.model_has_attribute(decision, "organization")
         
     def test_watchers_changes(self):
-        decision = Decision(description="Decision test data")
+        decision = Decision(description="Decision test data", organization=self.bettysorg)
         decision.save(self.user)
         self.assertEqual(User.objects.count(), decision.watchers.count())
 
     def test_feedback_can_have_empty_description(self):
-        decision = Decision(description='Test', status=Decision.DECISION_STATUS)
+        decision = Decision(description='Test', organization=self.bettysorg, status=Decision.DECISION_STATUS)
         decision.save(self.user)
         feedback = Feedback(rating=Feedback.CONSENT_STATUS, decision=decision)
         self.instance_validates(feedback)
 
     def test_model_feedbackcount_changes(self):
-        decision = Decision(description="Decision test data")
+        decision = Decision(description="Decision test data", organization=self.bettysorg)
         decision.save()
         self.instance_attribute_has_value(decision, "feedbackcount", 0)
         feedback = Feedback(description="Feedback test data", decision=decision, author=self.user)
@@ -67,7 +68,7 @@ class ModelTest(DecisionTestCase):
         self.assertEqual(expected, tuple(actual), "Unexpected feedback rating values!")
     
     def test_feedback_has_author(self):
-        decision = Decision(description="Decision test data")
+        decision = Decision(description="Decision test data", organization=self.bettysorg)
         feedback = Feedback(description="Feedback test data", decision=decision)
         self.model_has_attribute(feedback, "author")
 
@@ -76,10 +77,10 @@ class ModelTest(DecisionTestCase):
         self.model_has_attribute(decision, "meeting_people")
         
     def test_save_when_no_author(self):
-        decision = Decision(description='Test', status=0)
+        decision = Decision(description='Test', organization=self.bettysorg, status=0)
         decision.author = None
         decision.save()
-        decision = Decision.objects.get()
+        decision = Decision.objects.get(description='Test')
         decision.description = "A change."
         try:
             decision.save()
@@ -87,7 +88,7 @@ class ModelTest(DecisionTestCase):
             self.fail("Failed to save object.")
     
     def test_feedback_statistics(self):
-        decision = Decision(description="Decision test data")
+        decision = Decision(description="Decision test data", organization=self.bettysorg)
         self.model_has_attribute(decision, "get_feedback_statistics")
         statistics = decision.get_feedback_statistics()
         self.assertTrue("consent" in statistics)

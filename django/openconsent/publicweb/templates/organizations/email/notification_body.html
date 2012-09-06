@@ -1,0 +1,7 @@
+You have been made a member of {{ organization }} on {{ site.name }}{% if sender %} by {{ sender.first_name }} {{ sender.last_name }}{% endif %}.
+
+Follow this link to see all your organizations.
+
+http://{{ site.domain }}{% url organization_list %}
+
+If you are unsure about this link please contact the sender.

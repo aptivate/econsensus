@@ -28,7 +28,7 @@ class DecisionsTest(DecisionTestCase):
         """
         Test error conditions for the add decision page. 
         """
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         # Test that the decision add view returns an empty form
         actual = self.client.get(path).context['form'].as_p().splitlines()
         
@@ -56,7 +56,7 @@ class DecisionsTest(DecisionTestCase):
                                     follow=True)
         
         
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS]))
 
     def get_default_decision_form_dict(self):
         return {'status': Decision.DECISION_STATUS}
@@ -107,12 +107,12 @@ class DecisionsTest(DecisionTestCase):
     def get_edit_decision_response(self, decision):
         path = reverse('publicweb_decision_update',
                        args=[decision.id])
-        post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'description': 'Feed the cat',
+        post_dict = {'description': 'Feed the cat',
+                          'status': decision.status,
                            'feedback_set-TOTAL_FORMS': '3',
                            'feedback_set-INITIAL_FORMS': '0',
                            'feedback_set-MAX_NUM_FORMS': '',
-                           })
+                           }
         response = self.client.post(path, post_dict)
         return response
     
@@ -127,12 +127,11 @@ class DecisionsTest(DecisionTestCase):
     def test_redirect_after_edit_decision(self):       
         decision = self.create_and_return_example_decision_with_feedback()
         response = self.get_edit_decision_response(decision)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS]),
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, decision.status]),
             msg_prefix=response.content)
             
     def test_add_feedback(self):
-        decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
-        decision.save()
+        decision = self.bettysdecision
         post_dict = {'rating': '2', 'description': 'The eggs are bad'}
         self.client.post(reverse('publicweb_feedback_create', args=[decision.id]), 
                                 post_dict,
@@ -141,8 +140,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertEquals('The eggs are bad', feedback.description)
 
     def test_add_feedback_inline(self):
-        decision = Decision(status=Decision.PROPOSAL_STATUS, description='Make Eggs')
-        decision.save()
+        decision = self.bettysdecision
         post_dict = {'rating': '2', 'description': 'The eggs are not bad'}
         response = self.client.post(reverse('publicweb_feedback_snippet_create', args=[decision.id]), 
                                 post_dict,
@@ -222,7 +220,7 @@ class DecisionsTest(DecisionTestCase):
                           "Decision form watch is not a CheckboxInput widget")
         
     def test_add_page_contains_cancel(self):
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
                 
         self.assertContains(response, 'type="submit" value="Cancel"', count=1)
@@ -245,10 +243,9 @@ class DecisionsTest(DecisionTestCase):
                             'feedback_set-0-description': 'The eggs are bad',
                             'feedback_set-1-description': 'No one wants them'})        
         
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         self.client.post(path, post_dict)
-
-        self.assertEqual(0, len(Decision.objects.all()), "Hitting 'Cancel' created an object!")
+        self.assertRaises(Decision.DoesNotExist, Decision.objects.get, description='Make Eggs')
 
     def test_cancel_does_not_edit_changes(self):
         decision = self.create_and_return_decision()
@@ -268,7 +265,6 @@ class DecisionsTest(DecisionTestCase):
                                 post_dict,
                                 follow=True )
 
-        decision = Decision.objects.all()[0]
         self.assertEqual("Decision Time", decision.description, "Hitting 'Cancel' created an object!")
 
     def test_excerpts_is_first_sentence(self):

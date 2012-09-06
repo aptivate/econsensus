@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
 from django.core import mail
-
-from decision_test_case import DecisionTestCase
-from publicweb.models import Decision
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
+
+from publicweb.models import Decision
+from decision_test_case import DecisionTestCase
 
 class NotificationTest(DecisionTestCase):
     """
@@ -44,7 +45,7 @@ class NotificationTest(DecisionTestCase):
         self.create_decision_through_browser()
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
-        all_but_author = User.objects.exclude(username=self.user)
+        all_but_author = User.objects.exclude(username=self.user).exclude(is_active=False)
         self.assertEqual(all_but_author.count(), len(outbox))
         mail_list = self.get_addresses_from_queryset(all_but_author)
         mailed_users = self.get_addresses_from_outbox(outbox)
@@ -52,18 +53,18 @@ class NotificationTest(DecisionTestCase):
 
     def test_change_triggers_notification(self):
         """
-        Check that Adam gets a mail when Barry makes a change.
+        Check that betty gets a mail when charlie makes a change.
         """
         decision = self.create_decision_through_browser()
         mail.outbox = []
-        self.login('barry')
+        self.login('charlie')
         self.update_decision_through_browser(decision.id)
 
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
         mailed_users = self.get_addresses_from_outbox(outbox)
-        self.assertIn(self.adam.email, mailed_users)
+        self.assertIn(self.betty.email, mailed_users)
         
     def test_notifications_dont_contain_amp(self):
         """
@@ -73,7 +74,7 @@ class NotificationTest(DecisionTestCase):
         
         All plaintext emails should be marked 'safe' in the Django template.
         """
-        decision = Decision(description='&', status=Decision.DECISION_STATUS)
+        decision = Decision(description='&', status=Decision.DECISION_STATUS, organization=self.bettysorg)
         decision.author = self.user
         decision.editor = self.user
         decision.save()
@@ -98,12 +99,12 @@ class NotificationTest(DecisionTestCase):
         self.assertNotIn(self.user, self.get_addresses_from_outbox(outbox))
         
     def test_emails_not_sent_to_inactive_users(self):
-        self.barry.is_active = False
-        self.barry.save()
+        self.charlie.is_active = False
+        self.charlie.save()
         self.create_decision_through_browser()
         outbox = getattr(mail, 'outbox')
         outbox_to = [x.to for x in outbox]
-        self.assertNotIn(self.barry.email, outbox_to)
+        self.assertNotIn(self.charlie.email, outbox_to)
 
     def test_new_feedback_notification(self):
         """
@@ -112,12 +113,12 @@ class NotificationTest(DecisionTestCase):
         minus the author of the new feedback.
         """
         decision = self.create_decision_through_browser()
-        #Barry decides to unwatch...
-        self.login('barry')
+        #charlie decides to unwatch...
+        self.login('charlie')
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'description': decision.description, 'status': decision.status, 'watch':False }
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(id=decision.id)
         mail.outbox = []
         #Charlie adds feedback...
@@ -125,8 +126,8 @@ class NotificationTest(DecisionTestCase):
         self.create_feedback_through_browser(decision.id)
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [user_object.email for user_object in User.objects.exclude(username='barry').exclude(username=self.user)]
-        self.assertNotIn(self.barry.email, outbox_to)
+        user_list = [user_object.email for user_object in User.objects.exclude(username='charlie').exclude(username=self.user).exclude(is_active=False)]
+        self.assertNotIn(self.charlie.email, outbox_to)
         self.assertItemsEqual(user_list, outbox_to)
         
     def test_changed_feedback_notification(self):
@@ -135,8 +136,8 @@ class NotificationTest(DecisionTestCase):
         should be notified.
         """
         decision = self.create_decision_through_browser()
-        #Barry adds feedback
-        self.login('barry')
+        #charlie adds feedback
+        self.login('charlie')
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
         #Charlie changes the feedback...
@@ -144,6 +145,6 @@ class NotificationTest(DecisionTestCase):
         self.update_feedback_through_browser(feedback.id)
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [self.barry.email]
+        user_list = [self.charlie.email]
         self.assertItemsEqual(user_list, outbox_to)
         

@@ -1,9 +1,10 @@
-from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
-
-# Uncomment the next two lines to enable the admin:
+from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -12,8 +13,10 @@ urlpatterns = patterns('',
     url(r'^settings/', include('livesettings.urls')),
     url(r'^notification/', include('notification.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
-    url(r'', include('openconsent.publicweb.urls')),    
-    )
+    url(r'^accounts/', include('organizations.urls')),
+    url(r'^invitations/', include(invitation_backend().get_urls())),
+    url(r'', include('openconsent.publicweb.urls')),
+)
 
 urlpatterns += patterns('',
     url(r'^accounts/register/$', 'registration.views.register',
@@ -21,14 +24,8 @@ urlpatterns += patterns('',
         'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),                        
     )
 
-urlpatterns += patterns('django.contrib.auth.views',
+urlpatterns += patterns('',
     url(r'^accounts/', include('registration.backends.default.urls')),
 )
 
-if settings.DEBUG == True:
-    urlpatterns += patterns('',
-    
-        url(r'^site_media/(?P<path>.*)$',
-            'django.views.static.serve',
-            { 'document_root' : settings.MEDIA_ROOT })
-    )
+urlpatterns += staticfiles_urlpatterns()

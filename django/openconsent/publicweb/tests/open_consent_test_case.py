@@ -1,20 +1,25 @@
 from django.test import TestCase
+from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from mechanize import ParseString
 from publicweb.models import Decision, Feedback
+from organizations.models import Organization
 
 class OpenConsentTestCase(TestCase):
-    password_stump = 'password'
-    
+    fixtures = ['organizations.json', 'users.json', 'decisions.json']
+
     def setUp(self):
-        self.adam = User.objects.create_user('Adam', 'adam@econsensus.com', self.password_stump)
-        self.barry = User.objects.create_user('Barry', 'barry@econsensus.com', self.password_stump)
-        self.charlie = User.objects.create_user('Charlie', 'charlie@econsensus.com', self.password_stump)
-        self.user = self.login('Adam')
+        self.betty = User.objects.get(username="betty")
+        self.charlie = User.objects.get(username="charlie")
+        self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
+        self.bettysdecision = Decision.objects.filter(author=self.betty)[0]
+        self.factory = RequestFactory()
+        self.login('betty')
 
     def login(self, user):
-        self.client.login(username=user, password=self.password_stump)
+        user = User.objects.get(username=user)
+        self.client.login(username=user, password=user)
         self.user = User.objects.get(username=user) 
         return self.user
 
@@ -30,7 +35,7 @@ class OpenConsentTestCase(TestCase):
 
     def create_decision_through_browser(self):
         description = 'Quisque sapien justo'
-        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
@@ -43,7 +48,7 @@ class OpenConsentTestCase(TestCase):
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
-        self.client.post(path, post_dict)
+        response = self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
     def create_feedback_through_browser(self, idd):

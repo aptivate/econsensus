@@ -13,7 +13,7 @@ from django.contrib.contenttypes import generic
 from django.dispatch import receiver
 
 from tagging.fields import TagField
-
+from organizations.models import Organization
 from managers import DecisionManager
 
 # Ideally django-tinymce should be patched
@@ -63,7 +63,7 @@ class Decision(models.Model):
                                  max_length=10)
     tags = TagField(null=True, blank=True, editable=True, 
                     help_text=TAGS_HELP_FIELD_TEXT)
-
+    organization = models.ForeignKey(Organization)
     #admin stuff
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
     editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")

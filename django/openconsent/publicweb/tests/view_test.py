@@ -7,7 +7,7 @@ from publicweb.models import Decision, Feedback
 #THerefore should not use 'reverse'. Need to create request object...
 
 class ViewTest(DecisionTestCase):
-
+    
     expected_proposal_key_tuple = ('tab',)
     expected_proposal_dict_tuple = ({'tab':'proposal'},)
         
@@ -26,30 +26,29 @@ class ViewTest(DecisionTestCase):
         self.assertDictContainsSubset(dictionary, response.context)
 
     def test_expected_context_keys(self):
-        url = reverse('publicweb_item_list', args=['proposal'])
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal'])
         for key in self.expected_proposal_key_tuple:
             self.assert_context_has_key(key, url)
-        url = reverse('publicweb_item_list', args=['decision'])
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'decision'])
         for key in self.expected_consensus_key_tuple:
             self.assert_context_has_key(key, url)
-        url = reverse('publicweb_item_list', args=['archived'])
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'archived'])
         for key in self.expected_archived_key_tuple:
             self.assert_context_has_key(key, url)
         
     def test_expected_context_dict(self):
-        url = reverse('publicweb_item_list', args=['proposal'])        
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal'])        
         for dictionary in self.expected_proposal_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
-        url = reverse('publicweb_item_list', args=['decision'])        
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'decision'])        
         for dictionary in self.expected_consensus_dict_tuple:
             self.assert_context_has_dict(dictionary, url)        
-        url = reverse('publicweb_item_list', args=['archived'])        
+        url = reverse('publicweb_item_list', args=[self.bettysorg.slug, 'archived'])        
         for dictionary in self.expected_archived_dict_tuple:
             self.assert_context_has_dict(dictionary, url)                                
 
     def test_feedback_author_is_assigned(self):
-        decision = Decision(description="Test decision")
-        decision.save()
+        decision = Decision.objects.latest('id')
         path = reverse('publicweb_feedback_create', args=[decision.id])
         post_dict = {'description': 'Lorem Ipsum', 'rating': Feedback.COMMENT_STATUS }
         response = self.client.post(path, post_dict)
@@ -58,9 +57,9 @@ class ViewTest(DecisionTestCase):
         self.assertEqual(feedback.author, self.user)
 
     def test_decison_editor_set_on_update(self):
-        self.login('Adam')
+        self.login('andy')
         decision = self.create_decision_through_browser()
-        self.login('Barry')
+        self.login('betty')
         decision = self.update_decision_through_browser(decision.id)
         self.assertEquals(self.user, decision.editor)
 
@@ -74,7 +73,7 @@ class ViewTest(DecisionTestCase):
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'description': decision.description, 'status': decision.status, 'watch':False }
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(id=decision.id)
         self.assertNotIn(self.user, tuple(decision.watchers.all()))
         

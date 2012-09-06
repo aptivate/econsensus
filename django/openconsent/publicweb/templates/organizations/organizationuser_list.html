@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load org_tags %}
+
+{% block title %}
+{{ organization }}'s Members
+{% endblock %}
+
+{% block heading %}
+{{ organization }}'s Members
+{% endblock %}
+
+{% block main_content %}
+<ul>
+    <li><a href="{% url organization_user_add organization.pk %}">Add a member</a></li>
+</ul>
+{% organization_users organization %}
+{% endblock %}

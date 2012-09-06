@@ -8,11 +8,13 @@ from lxml.cssselect import CSSSelector
 from publicweb.models import Decision
 
 class InternationalisationTest(OpenConsentTestCase):
+    
     def test_all_text_translated_when_viewing_decision_list(self):
-        self.check_all_text_translated('publicweb_item_list', args=['decision'])
+        Decision.objects.all().delete()
+        self.check_all_text_translated('publicweb_item_list', args=[self.bettysorg.slug, 'decision'])
 
     def test_all_text_translated_when_adding_decision(self):
-        self.check_all_text_translated('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        self.check_all_text_translated('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
 
     def check_all_text_translated(self, view, args):
         old_lang = translation.get_language()
@@ -28,8 +30,8 @@ class InternationalisationTest(OpenConsentTestCase):
 
         for element in sel(root):
             if self.has_translatable_text(element):
-                try:       
-                    self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + str(element)
+                try:
+                    self.assertTrue(self.contains(element.text, "XXX "), "No translation for element " + element.tag
                                     + " with text '" + element.text + "' from view '" + view + "'")
                 finally:
                     translation.activate(old_lang)

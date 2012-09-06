@@ -4,7 +4,9 @@ from publicweb.forms import DecisionForm
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-
+from django.test.client import RequestFactory
+from organizations.models import Organization
+from organizations.views import OrganizationDetail
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
 class HtmlTest(OpenConsentTestCase):
@@ -13,19 +15,19 @@ class HtmlTest(OpenConsentTestCase):
         """
         Test error conditions for the add decision page. 
         """
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         # Test that the decision add view returns an empty form
         site_form = self.client.get(path).context['form']
         code_form = DecisionForm()
         self.assertEqual(type(site_form).__name__, type(code_form).__name__, "Unexpected form!")
 
-        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
         # Test that the decision add view returns an empty form
         site_form = self.client.get(path).context['form']
         code_form = DecisionForm()
         self.assertEqual(type(site_form).__name__, type(code_form).__name__, "Unexpected form!")
 
-        path = reverse('publicweb_decision_create', args=[Decision.ARCHIVED_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.ARCHIVED_STATUS])
         # Test that the decision add view returns an empty form
         site_form = self.client.get(path).context['form']
         code_form = DecisionForm()
@@ -34,7 +36,7 @@ class HtmlTest(OpenConsentTestCase):
     #test that the detail view of a decision includes the 
     #urlize filter, converting text urls to anchors.
     def test_urlize(self):
-        decision = Decision(description="text www.google.com text")
+        decision = Decision(organization=self.bettysorg, description="text www.google.com text")
         decision.save()
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path)
@@ -42,7 +44,7 @@ class HtmlTest(OpenConsentTestCase):
                             msg_prefix="Failed to urlize text")
         
     def test_decision_linebreaks(self):
-        decision = Decision(description="text\ntext")
+        decision = Decision(organization=self.bettysorg, description="text\ntext")
         decision.save()
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path)
@@ -50,7 +52,7 @@ class HtmlTest(OpenConsentTestCase):
                             msg_prefix="Failed to line break text")
     
     def test_feedback_linebreaks(self):
-        decision = Decision(description="Lorem")
+        decision = Decision(organization=self.bettysorg, description="Lorem")
         decision.save()
         feedback = Feedback(description="text\ntext")
         feedback.decision = decision
@@ -61,65 +63,63 @@ class HtmlTest(OpenConsentTestCase):
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
     
-    def test_sitename_in_header(self):
-        path = reverse('publicweb_item_list', args=[Decision.PROPOSAL_STATUS])
+    def test_organization_name_in_header(self):
+        path = reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
-        current_site = Site.objects.get_current()   
-        self.assertContains(response, current_site.name)
+        self.assertContains(response, self.bettysorg.name)
         
     def test_author_only_set_once(self):
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'Lorem Ipsum'}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(description='Lorem Ipsum')
         self.assertEqual(decision.author, self.user)
-        self.user = self.login('Barry')
+        self.user = self.login('charlie')
         
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=['proposal']))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
     
     def test_feedback_author_shown(self):
-        self.user = self.login('Barry')
-        decision = Decision(description="Lorem Ipsum")
+        decision = Decision(organization=self.bettysorg, description="Lorem Ipsum")
         decision.save()
         feedback = Feedback(description="Dolor sit")
         feedback.author = self.user
         feedback.decision = decision
         feedback.save()
         
-        self.user = self.login('Adam')        
+        self.user = self.login('charlie')        
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
-        barry = User.objects.get(username='Barry')
-        self.assertContains(response, barry.username)
+        betty = User.objects.get(username='betty')
+        self.assertContains(response, betty.first_name)
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
-        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'meeting_people')
         post_dict = {'description': 'Quisque sapien justo', 
                      'meeting_people': test_string, 
                      'status': Decision.PROPOSAL_STATUS}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[Decision.DECISION_STATUS]))
-        decision = Decision.objects.get()
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.DECISION_STATUS]))
+        decision = Decision.objects.get(meeting_people=test_string)
         path = reverse('publicweb_item_detail', args=[decision.id])
-        response = self.client.get(path)  
+        response = self.client.get(path)
         self.assertContains(response, test_string)
         
     def test_h2_header_on_form_matches_selected_status(self):
-        path = reverse('publicweb_decision_create', args=[Decision.PROPOSAL_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'Proposal')
-        path = reverse('publicweb_decision_create', args=[Decision.DECISION_STATUS])
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'Decision')
         
@@ -129,12 +129,18 @@ class HtmlTest(OpenConsentTestCase):
         self.assertContains(response, '(v0.0.1)')
         
     def test_editor_shown(self):
-        self.login('Adam')
         decision = self.create_decision_through_browser()
-        self.login('Barry')
+        self.login('charlie')
         decision = self.update_decision_through_browser(decision.id)
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path, follow=True)
         self.assertContains(response, 'Last edited by')
-        self.assertContains(response, 'Barry')
-        
+        self.assertContains(response, 'charlie')
+    
+    def test_organization_shown_in_header(self):
+        request = self.factory.request()
+        request.user = self.betty
+        kwargs = {'organization_pk':self.bettysorg.id}
+        response = OrganizationDetail(request=request, kwargs=kwargs).get(request, **kwargs)
+        rendered_response = response.render() 
+        self.assertRegexpMatches(rendered_response.content, "<h1>[\s\S]*%s[\s\S]*</h1>" % self.bettysorg)

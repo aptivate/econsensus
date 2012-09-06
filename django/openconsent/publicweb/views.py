@@ -1,5 +1,6 @@
 # Create your views here.
 from notification import models as notification
+from organizations.models import Organization
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -70,8 +71,10 @@ class DecisionDetail(DetailView):
 class DecisionList(ListView):
     model = Decision
 
-    @method_decorator(login_required)
+    #@method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        slug = kwargs.get('org_slug', None)
+        self.organization = Organization.active.get(slug=slug)
         return super(DecisionList, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -81,25 +84,26 @@ class DecisionList(ListView):
 
     def get_queryset(self):
         if self.order == 'feedback':
-            qs = Decision.objects.order_by_count('feedback').filter(status=self.status)
+            qs = Decision.objects.order_by_count('feedback').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'decided_date':
-            qs = Decision.objects.order_null_last('decided_date').filter(status=self.status)
+            qs = Decision.objects.order_null_last('decided_date').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'effective_date':
-            qs = Decision.objects.order_null_last('effective_date').filter(status=self.status)
+            qs = Decision.objects.order_null_last('effective_date').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'review_date':
-            qs = Decision.objects.order_null_last('review_date').filter(status=self.status)
+            qs = Decision.objects.order_null_last('review_date').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'expiry_date':
-            qs = Decision.objects.order_null_last('expiry_date').filter(status=self.status)
+            qs = Decision.objects.order_null_last('expiry_date').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'deadline':
-            qs = Decision.objects.order_null_last('deadline').filter(status=self.status)
+            qs = Decision.objects.order_null_last('deadline').filter(status=self.status).filter(organization=self.organization)
         elif self.order == 'archived_date':
-            qs = Decision.objects.order_null_last('archived_date').filter(status=self.status)
+            qs = Decision.objects.order_null_last('archived_date').filter(status=self.status).filter(organization=self.organization)
         else:
-            qs = Decision.objects.order_by(self.order).filter(status=self.status)
+            qs = Decision.objects.order_by(self.order).filter(status=self.status).filter(organization=self.organization)
         return qs
     
     def get_context_data(self, *args, **kwargs):
         context = super(DecisionList, self).get_context_data(**kwargs)
+        context['organization'] = self.organization
         context['tab'] = self.status
         context['sort'] = self.order
         return context
@@ -112,8 +116,13 @@ class DecisionCreate(CreateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        slug = kwargs.get('org_slug', None)
+        self.organization = Organization.active.get(slug=slug)
         return super(DecisionCreate, self).dispatch(*args, **kwargs)
 
+    def get(self, *args, **kwargs):
+        return super(DecisionCreate, self).get(*args, **kwargs)
+        
     def get_form(self, form):
         form = super(DecisionCreate, self).get_form(form)
         form.fields['status'].initial = self.status
@@ -123,15 +132,17 @@ class DecisionCreate(CreateView):
         form.instance.author = self.request.user
         form.instance.editor = self.request.user
         form.instance.last_status = 'new'
+        form.instance.organization = self.organization
         return super(DecisionCreate, self).form_valid(form)
     
     def get_context_data(self, *args, **kwargs):
         context = super(DecisionCreate, self).get_context_data(**kwargs)
+        context['organization'] = self.organization
         context['tab'] = self.status
         return context
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_list', args=[self.status])
+        return reverse('publicweb_item_list', args=[self.organization.slug, self.status])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -162,8 +173,10 @@ class DecisionUpdate(UpdateView):
         return context
 
     def get_success_url(self, *args, **kwargs):
-        status = kwargs.get('status', Decision.PROPOSAL_STATUS)
-        return reverse('publicweb_item_list', args=[status])
+        object = self.get_object()
+        status = object.status
+        slug = object.organization.slug
+        return reverse('publicweb_item_list', args=[slug, status])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -219,28 +232,3 @@ class FeedbackUpdate(UpdateView):
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
 
-@login_required
-def update_feedback(request, model, object_id, template_name):
-
-    feedback = get_object_or_404(model, id = object_id)
-    if request.method == "POST":
-        if request.POST.get('submit', None) == "Cancel":
-            return HttpResponseRedirect(feedback.get_parent_url())
-        else:
-            form = FeedbackForm(request.POST, instance=feedback)
-            if form.is_valid():
-                form.save()
-                if not notification.is_observing(feedback.decision, request.user):
-                    notification.observe(feedback.decision, request.user, 'decision_change')
-                return HttpResponseRedirect(feedback.get_parent_url())
-        
-        data = dict(form=form, tab=feedback.decision.status)
-        context = RequestContext(request, data)
-        return render_to_response(template_name, context)
-
-    else:
-        form = FeedbackForm(instance=feedback)
-        
-    data = dict(form=form, tab=feedback.decision.status)
-    context = RequestContext(request, data)
-    return render_to_response(template_name, context)

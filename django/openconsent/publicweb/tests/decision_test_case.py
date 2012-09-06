@@ -1,5 +1,7 @@
 from open_consent_test_case import OpenConsentTestCase
 from publicweb.models import Decision, Feedback
+from django.utils.timezone import now
+from datetime import date
 
 class DecisionTestCase(OpenConsentTestCase):
     def create_decisions_with_different_statuses(self):
@@ -32,8 +34,8 @@ class DecisionTestCase(OpenConsentTestCase):
         return decision
 
     def create_and_return_decision(self, description='Decision Time',
-                                   status=Decision.PROPOSAL_STATUS):
-        decision = Decision(description=description, status=status)
+                                   status=Decision.PROPOSAL_STATUS, deadline=now().date()):
+        decision = Decision(description=description, status=status, organization=self.bettysorg, deadline=deadline)
         decision.author = self.user
         decision.save()
         

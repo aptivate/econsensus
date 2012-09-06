@@ -1,0 +1,186 @@
+[
+  {
+    "pk": 1, 
+    "model": "organizations.organization", 
+    "fields": {
+      "slug": "country-critters", 
+      "is_active": true, 
+      "modified": "2012-08-24T15:23:52Z", 
+      "name": "Country Critters", 
+      "created": "2012-08-24T15:23:52Z"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "organizations.organization", 
+    "fields": {
+      "slug": "fluffy-and-proud", 
+      "is_active": true, 
+      "modified": "2012-08-24T15:28:23Z", 
+      "name": "Fluffy And Proud", 
+      "created": "2012-08-24T15:28:23Z"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "organizations.organization", 
+    "fields": {
+      "slug": "friends-forest", 
+      "is_active": true, 
+      "modified": "2012-08-24T15:21:21Z", 
+      "name": "Friends of the Forest", 
+      "created": "2012-08-24T15:21:21Z"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "organizations.organization", 
+    "fields": {
+      "slug": "riverfolk", 
+      "is_active": true, 
+      "modified": "2012-08-24T15:26:39Z", 
+      "name": "Riverfolk", 
+      "created": "2012-08-24T15:26:39Z"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "organizations.organization", 
+    "fields": {
+      "slug": "wild-about-town", 
+      "is_active": false, 
+      "modified": "2012-08-24T15:27:21Z", 
+      "name": "Wild about Town", 
+      "created": "2012-08-24T15:27:21Z"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 1, 
+      "user": 2, 
+      "is_admin": true, 
+      "modified": "2012-08-24T15:24:24Z", 
+      "created": "2012-08-24T15:24:24Z"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 1, 
+      "user": 3, 
+      "is_admin": true, 
+      "modified": "2012-08-24T15:24:43Z", 
+      "created": "2012-08-24T15:24:43Z"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 1, 
+      "user": 5, 
+      "is_admin": false, 
+      "modified": "2012-08-24T15:24:58Z", 
+      "created": "2012-08-24T15:24:58Z"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 1, 
+      "user": 6, 
+      "is_admin": false, 
+      "modified": "2012-08-24T15:25:15Z", 
+      "created": "2012-08-24T15:25:15Z"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 2, 
+      "user": 3, 
+      "is_admin": true, 
+      "modified": "2012-08-24T15:29:08Z", 
+      "created": "2012-08-24T15:29:08Z"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 3, 
+      "user": 4, 
+      "is_admin": true, 
+      "modified": "2012-08-24T15:21:57Z", 
+      "created": "2012-08-24T15:21:57Z"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 3, 
+      "user": 5, 
+      "is_admin": false, 
+      "modified": "2012-08-24T15:22:13Z", 
+      "created": "2012-08-24T15:22:13Z"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 4, 
+      "user": 6, 
+      "is_admin": false, 
+      "modified": "2012-08-24T15:22:28Z", 
+      "created": "2012-08-24T15:22:28Z"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 4, 
+      "user": 7, 
+      "is_admin": false, 
+      "modified": "2012-08-24T15:22:45Z", 
+      "created": "2012-08-24T15:22:45Z"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 2, 
+      "organization": 1, 
+      "modified": "2012-08-24T15:23:18Z", 
+      "created": "2012-08-24T15:23:18Z"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 5, 
+      "organization": 2, 
+      "modified": "2012-08-24T15:25:49Z", 
+      "created": "2012-08-24T15:25:49Z"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 7, 
+      "organization": 3, 
+      "modified": "2012-08-24T15:30:05Z", 
+      "created": "2012-08-24T15:30:05Z"
+    }
+  }
+]
