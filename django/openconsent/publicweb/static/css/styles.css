@@ -150,7 +150,7 @@ input {
 	float:left;
 	padding-bottom:10px;
 	position:relative;
-	width:12em;
+	width:20em;
 	margin:0;
 }
 
@@ -192,6 +192,7 @@ input {
 #navigation ul li {
 	float:left;
 	border-right:1px solid #333;
+	min-height: 2.5em;
 }
 
 #navigation ul li a {
@@ -242,7 +243,6 @@ input {
 
 #content h2.page_title {
 	color:#666;
-	float:left;
 	padding-bottom: 6px;
 	margin-bottom:0;
 }

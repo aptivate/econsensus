@@ -15,52 +15,52 @@
 			<tr class="summary-header">
 				<th class="id">
 					<a href="{{ request.path }}">
-						<span class="{% if sort == 'id' %}sort{% endif %}">ID</span>
+						<span class="{% if sort == 'id' %}sort{% endif %}">{% trans "ID" %}</span>
 					</a>
 				</th>
 				<th class="excerpt">
 					<a href="{{ request.path }}?sort=excerpt">
-						<span class="{% if sort == 'excerpt' %}sort{% endif %}">Excerpt</span>
+						<span class="{% if sort == 'excerpt' %}sort{% endif %}">{% trans "Excerpt" %}</span>
 					</a>
 				</th>
 				{% if tab == 'decision' %}
 				<th class="decided_date">
 					<a href="{{ request.path }}?sort=decided_date" class="{% if sort == 'decided_date' %}sort{% endif %}">
-						<span class="{% if sort == 'decided_date' %}sort{% endif %}">Decided Date</span>
+						<span class="{% if sort == 'decided_date' %}sort{% endif %}">{% trans "Decided Date" %}</span>
 					</a>
 				</th>
 				<th class="review_date">
 					<a href="{{ request.path }}?sort=review_date" class="{% if sort == 'review_date' %}sort{% endif %}">
-						<span class="{% if sort == 'review_date' %}sort{% endif %}">Review Date</span>
+						<span class="{% if sort == 'review_date' %}sort{% endif %}">{% trans "Review Date" %}</span>
 					</a>
 				</th>
 				{% endif %}
 				{% if tab == 'archived' %}
 				<th class="creation">
 					<a href="{{ request.path }}?sort=creation">
-						<span class="{% if sort == 'creation' %}sort{% endif %}">Creation</span>
+						<span class="{% if sort == 'creation' %}sort{% endif %}">{% trans "Creation" %}</span>
 					</a>
 				</th>
 				<th class="archived_date">
 					<a href="{{ request.path }}?sort=archived_date">
-						<span class="{% if sort == 'archived_date' %}sort{% endif %}">Archived Date</span>
+						<span class="{% if sort == 'archived_date' %}sort{% endif %}">{% trans "Archived Date" %}</span>
 					</a>			
 				</th>
 				{% endif %}
 				{% if tab == 'proposal' %}
 				<th class="feedbackcount">
 					<a href="{{ request.path }}?sort=feedback">
-						<span class="{% if sort == 'feedback' %}sort{% endif %}">Feedback</span>
+						<span class="{% if sort == 'feedback' %}sort{% endif %}">{% trans "Feedback" %}</span>
 					</a>
 				</th>
 				<th class="deadline">
 					<a href="{{ request.path }}?sort=deadline">
-						<span class="{% if sort == 'deadline' %}sort{% endif %}">Deadline</span>
+						<span class="{% if sort == 'deadline' %}sort{% endif %}">{% trans "Deadline" %}</span>
 					</a>
 				</th>
 				<th class="last_modified">
 					<a href="{{ request.path }}?sort=-last_modified">
-						<span class="{% if sort == 'last_modified' %}sort{% endif %}">Last Modified</span>
+						<span class="{% if sort == 'last_modified' %}sort{% endif %}">{% trans "Last Modified" %}</span>
 					</a>
 				</th>
 				{% endif %}
