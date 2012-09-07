@@ -1,7 +1,6 @@
 from open_consent_test_case import OpenConsentTestCase
 from publicweb.models import Decision, Feedback
 from django.utils.timezone import now
-from datetime import date
 
 class DecisionTestCase(OpenConsentTestCase):
     def create_decisions_with_different_statuses(self):

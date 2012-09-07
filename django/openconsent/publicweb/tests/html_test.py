@@ -36,24 +36,21 @@ class HtmlTest(OpenConsentTestCase):
     #test that the detail view of a decision includes the 
     #urlize filter, converting text urls to anchors.
     def test_urlize(self):
-        decision = Decision(organization=self.bettysorg, description="text www.google.com text")
-        decision.save()
+        decision = self.make_decision(description="text www.google.com text")
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path)
         self.assertContains(response, '<a href="http://www.google.com" rel="nofollow">www.google.com</a>', 1, 
                             msg_prefix="Failed to urlize text")
         
     def test_decision_linebreaks(self):
-        decision = Decision(organization=self.bettysorg, description="text\ntext")
-        decision.save()
+        decision = self.make_decision(description="text\ntext")
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path)
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
     
     def test_feedback_linebreaks(self):
-        decision = Decision(organization=self.bettysorg, description="Lorem")
-        decision.save()
+        decision = self.make_decision(description="Lorem")
         feedback = Feedback(description="text\ntext")
         feedback.decision = decision
         feedback.author = self.user
@@ -87,8 +84,7 @@ class HtmlTest(OpenConsentTestCase):
         self.assertNotEqual(decision.author, self.user)
     
     def test_feedback_author_shown(self):
-        decision = Decision(organization=self.bettysorg, description="Lorem Ipsum")
-        decision.save()
+        decision = self.make_decision(description="Lorem Ipsum")
         feedback = Feedback(description="Dolor sit")
         feedback.author = self.user
         feedback.decision = decision

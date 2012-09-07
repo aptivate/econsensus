@@ -74,11 +74,7 @@ class NotificationTest(DecisionTestCase):
         
         All plaintext emails should be marked 'safe' in the Django template.
         """
-        decision = Decision(description='&', status=Decision.DECISION_STATUS, organization=self.bettysorg)
-        decision.author = self.user
-        decision.editor = self.user
-        decision.save()
-
+        self.make_decision(description='&', author=self.user, editor=self.user)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
                 

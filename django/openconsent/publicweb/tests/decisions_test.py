@@ -19,8 +19,14 @@ from django.contrib.auth.models import User
 ### 1 - model tests (does the model have x property?)
 ### 2 - form tests (does the form have x field?)
 ### 3 - browser tests (does page respond correct? does submission work OK?)
-
+### 4 - view tests
 class DecisionsTest(DecisionTestCase):
+    fixtures = ['organizations.json', 'users.json','decisions.json']
+
+    def setUp(self):
+        super(DecisionsTest, self).setUp()
+        self.bettysdecision = Decision.objects.filter(author=self.betty)[0]
+            
     def get(self, view_function, **view_args):
         return self.client.get(reverse(view_function, kwargs=view_args))
             

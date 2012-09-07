@@ -5,15 +5,15 @@ from django.core.urlresolvers import reverse
 from mechanize import ParseString
 from publicweb.models import Decision, Feedback
 from organizations.models import Organization
+from django.db.models.fields import FieldDoesNotExist
 
 class OpenConsentTestCase(TestCase):
-    fixtures = ['organizations.json', 'users.json', 'decisions.json']
+    fixtures = ['organizations.json', 'users.json']
 
     def setUp(self):
         self.betty = User.objects.get(username="betty")
         self.charlie = User.objects.get(username="charlie")
         self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
-        self.bettysdecision = Decision.objects.filter(author=self.betty)[0]
         self.factory = RequestFactory()
         self.login('betty')
 
@@ -33,6 +33,27 @@ class OpenConsentTestCase(TestCase):
         
         return form_data
 
+    def make_decision(self, **kwargs):
+        required = {'description': 'Default description text',
+                    'organization': Organization.active.get_for_user(self.user).latest('id'),
+                    'status': Decision.PROPOSAL_STATUS}    
+        for (key,value) in required.items():
+            if key not in kwargs.keys():
+                kwargs[key] = value
+        return self.make_model_instance(Decision, **kwargs)
+        
+    def make_model_instance(self, model, **kwargs):
+        instance = model()
+        for (key,value) in kwargs.items():
+            try:
+                instance._meta.get_field(key)
+                setattr(instance,key,value)
+            except FieldDoesNotExist:
+                pass
+        instance.full_clean()
+        instance.save()
+        return instance
+                  
     def create_decision_through_browser(self):
         description = 'Quisque sapien justo'
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])

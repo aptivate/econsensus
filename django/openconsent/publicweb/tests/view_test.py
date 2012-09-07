@@ -7,6 +7,7 @@ from publicweb.models import Decision, Feedback
 #THerefore should not use 'reverse'. Need to create request object...
 
 class ViewTest(DecisionTestCase):
+    fixtures = ['organizations.json', 'users.json','decisions.json']
     
     expected_proposal_key_tuple = ('tab',)
     expected_proposal_dict_tuple = ({'tab':'proposal'},)
