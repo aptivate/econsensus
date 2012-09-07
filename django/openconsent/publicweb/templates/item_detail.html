@@ -77,7 +77,14 @@
 							"form#decision_update_form");
 			e.preventDefault();
 		});
-	
+
+        $('#decision_update_form input[value="Cancel"]').live("click", function (e) {
+            e.stopPropagation();
+            replaceWithRemote("{% url 'publicweb_decision_snippet_detail' object.id %}", 
+                                "form#decision_update_form");
+            e.preventDefault();
+        });
+        	
 		/*
 		 * Feedback in-line editing
 		 */
