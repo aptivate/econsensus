@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 {% load i18n %}
 {% load org_tags %}
 
@@ -14,9 +15,9 @@
 
 {% block main_content %}
 <ul>
-    <li><a href="{% url organization_edit organization.pk %}">Edit</a></li>
-    <li><a href="{% url organization_delete organization.pk %}">Delete</a></li>
-    <li><a href="{% url organization_user_add organization.pk %}">Add a member</a></li>
+    <li><a href="{% url 'organization_edit' organization.pk %}">Edit</a></li>
+    <li><a href="{% url 'organization_delete' organization.pk %}">Delete</a></li>
+    <li><a href="{% url 'organization_user_add' organization.pk %}">Add a member</a></li>
 </ul>
 {% organization_users organization %}
 {% endblock %}
