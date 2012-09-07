@@ -3,11 +3,11 @@ import poplib
 import re
 import logging
 from email import message_from_string
-from livesettings import config_value
-
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
+from livesettings import config_value
+from organizations.models import Organization
 from publicweb.models import Decision, Feedback, rating_int
 
 class Command(BaseCommand):
@@ -33,7 +33,6 @@ class Command(BaseCommand):
         except Exception, e:
             logger = logging.getLogger('econsensus')
             logger.error(e)
-            return
         
         num_msgs = mailbox.stat()[0]
         all_msgs = range(1, num_msgs + 1)
@@ -49,31 +48,50 @@ class Command(BaseCommand):
         mailbox.quit()
         
     def _process_email(self, mail, verbosity): # pylint: disable=R0914
+
         user = None
         decision = None
         user_found = False
         object_found = False
-        email_found = re.search('([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)', mail['From'])
-        if email_found:
-            self._print_if_verbose(verbosity, "Found email address '%s'" % email_found.group(1))
+        org_found = False
+        
+        #match email 'from' address to user
+        from_match = re.search('([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)', mail['From'])
+        if from_match:
+            self._print_if_verbose(verbosity, "Found email 'from' '%s'" % from_match.group(1))
             try:
-                user = User.objects.get(email=email_found.group(1))
+                user = User.objects.get(email=from_match.group(1))
                 user_found = True
-                self._print_if_verbose(verbosity, "Matched address to user '%s'" % user)
+                self._print_if_verbose(verbosity, "Matched email to user '%s'" % user)
             except:
                 pass
-        id_found = re.search('#(\d+)', mail['Subject'])
-        proposal_found = re.search('proposal', mail['Subject'], re.IGNORECASE)
-        #decision_found = re.search('decision', mail['Subject'], re.IGNORECASE)
-        #archive_found = re.search('archive', mail['Subject'], re.IGNORECASE)
-        if id_found:
-            self._print_if_verbose(verbosity, "Found '%s' in Subject" % id_found.group())
+
+        #match id to object
+        id_match = re.search('#(\d+)', mail['Subject'])        
+        if id_match:
+            self._print_if_verbose(verbosity, "Found '%s' in Subject" % id_match.group())
             try:
-                decision = Decision.objects.get(pk=id_found.group(1))
+                decision = Decision.objects.get(pk=id_match.group(1))
                 object_found = True
                 self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
             except:
                 pass
+        
+        #match email 'to' address to organization
+        to_match = re.search('([\w\-\.]+)@\w[\w\-]+\.+[\w\-]+', mail['To'])
+        if to_match:
+            self._print_if_verbose(verbosity, "Found email 'to' '%s'" % to_match.group(1))
+            try:
+                organization = Organization.objects.get(slug=to_match.group(1))
+                org_found = True
+                self._print_if_verbose(verbosity, "Matched email to organization '%s'" % organization.name)
+            except:
+                pass
+        
+        proposal_found = re.search('proposal', mail['Subject'], re.IGNORECASE)
+        #decision_found = re.search('decision', mail['Subject'], re.IGNORECASE)
+        #archive_found = re.search('archive', mail['Subject'], re.IGNORECASE)
+        
         msg_string = mail.get_payload().strip('\n')
         msg_string = re.sub('\s*>.*', '', msg_string)
         msg_string = re.sub("On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)", '', msg_string)
@@ -112,10 +130,13 @@ class Command(BaseCommand):
                 self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
                 feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
                 feedback.save()
-            elif proposal_found:
+            elif proposal_found and org_found:
                 self._print_if_verbose(verbosity, "No matching object, creating proposal")
-                decision = Decision(author=user, editor=user, status=Decision.PROPOSAL_STATUS, description=msg_string)
-                decision.save()
+                if organization in Organization.active.get_for_user(user):
+                    decision = Decision(author=user, editor=user, status=Decision.PROPOSAL_STATUS, organization=organization, description=msg_string)
+                    decision.save()
+                else:
+                    self._print_if_verbose(verbosity, "User %s is not a member of Organization %s" % (user.username, organization.name))
         
     def _print_if_verbose(self, verbosity, message):
         if verbosity > 1:

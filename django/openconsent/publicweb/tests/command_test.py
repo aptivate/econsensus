@@ -16,17 +16,18 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_new_proposal(self):
         #Tests that process_email picks up mails from mailbox
         #and creates objects in the db
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: Proposal gleda raspored',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
+
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            decision = Decision.objects.get(description="Mnogi programi za stolno izdavatvo")
+            decision = Decision.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertEqual(decision.status, Decision.PROPOSAL_STATUS)
@@ -34,10 +35,9 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_basic_feedback(self):
         #Tests that if # tag is in the header, but no feedback type is
         #identified then the payload becomes comment feedback
-        parent = Decision(status=Decision.PROPOSAL_STATUS)
-        parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        parent = self.make_decision()
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored #%s' % parent.id,
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
@@ -46,7 +46,7 @@ class CommandTest(OpenConsentTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
@@ -54,10 +54,9 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_defined_feedback(self):
         #Tests that if a defined feedback type is passed it is transformed
         #into the rating field.
-        parent = Decision(status=Decision.PROPOSAL_STATUS)
-        parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        parent = self.make_decision()
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored #%s' % parent.id,
                                       '',
                                       'Danger: Mnogi programi za stolno izdavatvo', ''], [''])
@@ -66,7 +65,7 @@ class CommandTest(OpenConsentTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)
@@ -74,10 +73,9 @@ class CommandTest(OpenConsentTestCase):
     def test_process_email_unrecognised_feedback(self):
         #Tests that if the user mistypes the feedback type it is ignored
         #and the feedback defaults to comment
-        parent = Decision(status=Decision.PROPOSAL_STATUS)
-        parent.save()
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        parent = self.make_decision()
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored #%s' % parent.id,
                                       '',
                                       'Dager: Mnogi programi za stolno izdavatvo', ''], [''])
@@ -86,31 +84,32 @@ class CommandTest(OpenConsentTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
 
     def test_process_email_bad_content(self):
+        initial_count = Decision.objects.count()
         #Test that an unknown email address is rejected.
-        poplib.POP3.mailbox = ([''], ['From: Adam <youdontknowme@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        poplib.POP3.mailbox = ([''], ['From: Secret <youdont@knowme.com>',
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
-        self.assertFalse(Decision.objects.count())
+        self.assertFalse(Decision.objects.count() - initial_count)
         
         #Test that a corrupt from field is rejected.
         poplib.POP3.mailbox = ([''], ['From: Donald <spam>',
-                                      'To: Admin <admin@econsensus.com>',
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
-        self.assertFalse(Decision.objects.count())
+        self.assertFalse(Decision.objects.count() - initial_count)
 
     def test_email_sent_out_on_email_decision(self):
-        poplib.POP3.mailbox = ([''], ['From: Adam <adam@econsensus.com>',
-                                      'To: Admin <admin@econsensus.com>',
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: self.bettysorg.name <%s@econsensus.com>' % self.bettysorg.slug),
                                       'Subject: Proposal gleda raspored',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
@@ -134,8 +133,10 @@ class CommandTest(OpenConsentTestCase):
         """
         msg = MIMEText(payload)
         msg['Subject'] = 'Proposal gleda raspored'
-        msg['From'] = 'adam@econsensus.com'
-        msg['To'] = 'admin@econsensus.com'
+        
+        msg['From'] = self.betty.email
+        msg['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+     
         poplib.POP3.mailbox = ([''], [msg.as_string()], [''])
         try:
             management.call_command('process_email')
@@ -143,7 +144,7 @@ class CommandTest(OpenConsentTestCase):
             self.fail("Exception: %s" % e)
         
         try:
-            decision = Decision.objects.get()
+            decision = Decision.objects.get(description__contains="Unquoted text.")
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertNotIn("Some quoted text.", decision.description)
@@ -163,8 +164,8 @@ class CommandTest(OpenConsentTestCase):
         """
         msg = MIMEText(payload)
         msg['Subject'] = 'Proposal gleda raspored'
-        msg['From'] = 'adam@econsensus.com'
-        msg['To'] = 'admin@econsensus.com'
+        msg['From'] = self.betty.email
+        msg['To'] = '%s@econsensus.com>' % self.bettysorg.slug
         poplib.POP3.mailbox = ([''], [msg.as_string()], [''])
         try:
             management.call_command('process_email')
@@ -172,7 +173,7 @@ class CommandTest(OpenConsentTestCase):
             self.fail("Exception: %s" % e)
         
         try:
-            decision = Decision.objects.get()
+            decision = Decision.objects.get(description__contains="Proposal XYZ")
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertNotIn("On 24/07/12 18:14, Mark Skipper wrote:", decision.description)
