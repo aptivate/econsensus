@@ -9,7 +9,7 @@ South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
 django-debug-toolbar
 django-tagging
-django-livesettings
+hg+https://bitbucket.org/bkroeze/django-livesettings
 django-keyedcache
 django-registration
 git+git://github.com/aptivate/django-organizations.git
