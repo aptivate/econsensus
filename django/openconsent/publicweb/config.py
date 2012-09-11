@@ -53,17 +53,3 @@ config_register(BooleanValue(
         default=False,
         ordering = 4
     ))
-
-SENDMAIL_GROUP = ConfigurationGroup(
-    'SendMail',               
-    _('Sending Email Settings'),
-    ordering=0
-    )
-
-config_register(StringValue(
-    SENDMAIL_GROUP,
-        'DEFAULT_FROM_EMAIL',
-        description=_("Default From Email"),
-        help_text=_("Enter the email address that mails shall appear to be from."),
-        ordering = 0
-    ))
