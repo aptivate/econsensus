@@ -1,7 +1,7 @@
-{{ observed.author }} added a {{ observed.rating_text|capfirst }} to {{ observed.decision.excerpt }}
+Feedback from {{ observed.author }}: {{ observed.rating_text|capfirst }} on issue #{{ observed.decision.id }}:
 
-"{{ observed.description|safe }}"
-
+   -----------------------------------------------------------------
+{{ observed.description|safe }}
    -----------------------------------------------------------------
 
 To view this on the website: http://{{ current_site }}{{ observed.decision.get_absolute_url }}
