@@ -24,7 +24,7 @@ class DecisionAdmin(admin.ModelAdmin):
 
     change_list_template = 'admin/decision_change_list.html'
     fieldsets = [
-        (None, {'fields': ('description', 
+        (None, {'fields': ('description', 'organization',
                            ('effective_date','decided_date'),
                            ('review_date','expiry_date'),
                            'budget','people', 'status',)}),
