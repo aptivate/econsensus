@@ -59,13 +59,13 @@ class CommandTest(OpenConsentTestCase):
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored #%s' % parent.id,
                                       '',
-                                      'Danger: Mnogi programi za stolno izdavatvo', ''], [''])
+                                      'Danger: Mnogi programi \nza stolno\n izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.get(description="Mnogi programi \nza stolno\n izdavatvo")
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)

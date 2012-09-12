@@ -48,7 +48,6 @@ class Command(BaseCommand):
         mailbox.quit()
         
     def _process_email(self, mail, verbosity): # pylint: disable=R0914
-
         user = None
         decision = None
         user_found = False
@@ -113,7 +112,7 @@ class Command(BaseCommand):
         
         if user_found and msg_string:
             if object_found:
-                parse_feedback = re.match('(\w+)\s*:\s*(\w+.*)', msg_string, re.IGNORECASE)
+                parse_feedback = re.match('(\w+)\s*:\s*(\w+[\s\w]*)', msg_string, re.IGNORECASE)
                 if parse_feedback:
                     description = parse_feedback.group(2)
                     rating_match = re.match('question|danger|concerns|consent|comment', parse_feedback.group(1), re.IGNORECASE)
