@@ -210,6 +210,7 @@ TINYMCE_DEFAULT_CONFIG = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
+#Emails from organizations will be built around this address 
 DEFAULT_FROM_EMAIL = 'econsensus@aptivate.org'
 
 #Required for djangoregistration:

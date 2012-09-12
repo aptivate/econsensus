@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
-from django.test.utils import override_settings
+
+from organizations.models import Organization
 
 from publicweb.models import Decision
 from decision_test_case import DecisionTestCase
@@ -143,4 +144,17 @@ class NotificationTest(DecisionTestCase):
         outbox_to = [to for to_list in outbox for to in to_list.to]
         user_list = [self.charlie.email]
         self.assertItemsEqual(user_list, outbox_to)
+        
+    def test_emails_come_from_organization(self):
+        users_orgs = Organization.active.get_for_user(self.user)
+        self.assertGreaterEqual(len(users_orgs), 2)
+        decision = self.make_decision(organization=users_orgs[0])
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, decision.get_email())
+        mail.outbox = []
+        decision = self.make_decision(organization=users_orgs[1])
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, decision.get_email())
         

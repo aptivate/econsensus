@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.dispatch import receiver
-
+from django.conf import settings
 from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
@@ -122,6 +122,14 @@ class Decision(models.Model):
     def get_absolute_url(self):
         return ('publicweb_item_detail', [self.id])
     
+    def get_email(self):
+        """
+        Generates an email address based on the Decision's organization
+        and settings.DEFAULT_FROM_EMAIL
+        """
+        default_from_email = settings.DEFAULT_FROM_EMAIL
+        return re.sub('\w+@', "%s@" % self.organization.slug, default_from_email)
+    
     def get_feedback_statistics(self):
         statistics = {'all': 0,
                       'question': 0,
@@ -211,7 +219,7 @@ if notification is not None:
                 notification.observe(instance, user, 'decision_change')
             extra_context = {}
             extra_context.update({"observed": instance})
-            notification.send(all_but_author, "decision_new", extra_context)
+            notification.send(all_but_author, "decision_new", extra_context, from_email=instance.get_email())
     
     @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.new_feedback_signal_handler")
     def new_feedback_signal_handler(sender, **kwargs):
@@ -229,4 +237,4 @@ if notification is not None:
             all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
             observer_list = [x.user for x in all_observed_items_but_authors]
             extra_context = dict({"observed": instance})
-            notification.send(observer_list, "feedback_new", extra_context)
+            notification.send(observer_list, "feedback_new", extra_context, from_email=instance.decision.get_email())
