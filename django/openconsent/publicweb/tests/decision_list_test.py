@@ -21,7 +21,6 @@ class DecisionListTest(DecisionTestCase):
         self.assertEquals(db_list, site_list)
 
     def test_list_pages_can_be_sorted_by_date(self):
-        Decision.objects.all().delete()   
         self.assert_list_page_sorted_by_date_column('decided_date')
         self.assert_list_page_sorted_by_date_column('effective_date')
         self.assert_list_page_sorted_by_date_column('review_date')
@@ -31,11 +30,10 @@ class DecisionListTest(DecisionTestCase):
 
     def test_list_page_sorted_by_description(self):
         # Create test decisions in reverse date order.
-        Decision.objects.all().delete()
-        self.make_decision(description="Apple")
-        self.make_decision(description="Dandelion")
-        self.make_decision(description="Blackberry")
-        self.make_decision(description="Coconut")
+        self.make_decision(description="Apple", organization=self.bettysorg)
+        self.make_decision(description="Dandelion", organization=self.bettysorg)
+        self.make_decision(description="Blackberry", organization=self.bettysorg)
+        self.make_decision(description="Coconut", organization=self.bettysorg)
 
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), dict(sort='description'))
         
@@ -50,9 +48,9 @@ class DecisionListTest(DecisionTestCase):
     def test_list_page_sorted_by_feedback(self):
         # Create test decisions in reverse date order.         
         Decision.objects.all().delete()  
-        decision1 = self.make_decision(description="Apple")
-        decision2 = self.make_decision(description="Coconut")
-        decision3 = self.make_decision(description="Blackberry")
+        decision1 = self.make_decision(description="Apple", organization=self.bettysorg)
+        decision2 = self.make_decision(description="Coconut", organization=self.bettysorg)
+        decision3 = self.make_decision(description="Blackberry", organization=self.bettysorg)
         Feedback(description="One", decision=decision1, author=self.user).save()
         Feedback(description="Two", decision=decision1, author=self.user).save()
         Feedback(description="Three", decision=decision1, author=self.user).save()
@@ -78,14 +76,14 @@ class DecisionListTest(DecisionTestCase):
         
     def assert_list_page_sorted_by_date_column(self, column):
         # Create test decisions in reverse date order.         
-        self.make_decision(description="Decision None 1")
+        self.make_decision(description="Decision None 1", organization=self.bettysorg)
         
         for i in range(5, 0, -1):
-            decision = self.make_decision(description='Decision %d' % i)
+            decision = self.make_decision(description='Decision %d' % i, organization=self.bettysorg)
             setattr(decision, column, datetime.date(2001, 3, i))
             decision.save()
 
-        self.make_decision(description="Decision None 2")
+        self.make_decision(description="Decision None 2", organization=self.bettysorg)
 
         #note that we don't actually have to _display_ the field to sort by it
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), dict(sort=column))

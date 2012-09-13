@@ -43,10 +43,10 @@ class NotificationTest(DecisionTestCase):
                 
     def test_create_triggers_notification(self):
         #add a decision
-        self.create_decision_through_browser()
+        decision = self.make_decision()
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
-        all_but_author = User.objects.exclude(username=self.user).exclude(is_active=False)
+        all_but_author = decision.organization.users.all()
         self.assertEqual(all_but_author.count(), len(outbox))
         mail_list = self.get_addresses_from_queryset(all_but_author)
         mailed_users = self.get_addresses_from_outbox(outbox)
@@ -109,22 +109,16 @@ class NotificationTest(DecisionTestCase):
         should be sent to all users watching the decision
         minus the author of the new feedback.
         """
-        decision = self.create_decision_through_browser()
-        #charlie decides to unwatch...
-        self.login('charlie')
-        path = reverse('publicweb_decision_update', args=[decision.id])
-        post_dict = {'description': decision.description, 'status': decision.status, 'watch':False }
-        response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
-        decision = Decision.objects.get(id=decision.id)
-        mail.outbox = []
-        #Charlie adds feedback...
-        self.login('charlie')
+        org = self.bettysorg
+        decision = self.make_decision(organization=org)
+        mail.outbox = []        
+        all_members = decision.organization.users.all().exclude(username=self.user.username)
+        self.login(all_members[0].username)
         self.create_feedback_through_browser(decision.id)
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [user_object.email for user_object in User.objects.exclude(username='charlie').exclude(username=self.user).exclude(is_active=False)]
-        self.assertNotIn(self.charlie.email, outbox_to)
+        user_list = [user_object.email for user_object in decision.organization.users.exclude(username=self.user)]
+        self.assertNotIn(self.user.email, outbox_to)
         self.assertItemsEqual(user_list, outbox_to)
         
     def test_changed_feedback_notification(self):

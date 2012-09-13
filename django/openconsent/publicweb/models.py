@@ -213,7 +213,7 @@ if notification is not None:
         """
         if kwargs.get('created', True):
             instance = kwargs.get('instance')
-            all_users = User.objects.all()
+            all_users = instance.organization.users.all()
             all_but_author = all_users.exclude(username=instance.author)
             for user in all_users:
                 notification.observe(instance, user, 'decision_change')
