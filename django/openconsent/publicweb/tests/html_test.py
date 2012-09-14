@@ -1,12 +1,13 @@
-from decision_test_case import OpenConsentTestCase
-from publicweb.models import Decision, Feedback
-from publicweb.forms import DecisionForm
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
 from organizations.models import Organization
 from organizations.views import OrganizationDetail
+from publicweb.views import DecisionDetail, DecisionList
+from publicweb.models import Decision, Feedback
+from publicweb.forms import DecisionForm
+from decision_test_case import OpenConsentTestCase
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
 class HtmlTest(OpenConsentTestCase):
@@ -140,3 +141,33 @@ class HtmlTest(OpenConsentTestCase):
         response = OrganizationDetail(request=request, kwargs=kwargs).get(request, **kwargs)
         rendered_response = response.render() 
         self.assertRegexpMatches(rendered_response.content, "<h1>[\s\S]*%s[\s\S]*</h1>" % self.bettysorg)
+        
+    def test_cannot_view_decisions_when_not_member(self):
+        request = self.factory.request()
+        request.user = self.betty
+        decision = self.make_decision()
+        kwargs = {'org_slug' : decision.organization.slug,
+                  'status': decision.status}
+        response = DecisionList(template_name='decision_list.html').dispatch(request, **kwargs)
+        self.assertContains(response, decision.description)
+        
+        kwargs = {'pk' : decision.pk}
+        response = DecisionDetail(template_name = 'item_detail.html').dispatch(request, **kwargs)
+        self.assertContains(response, decision.description)
+        
+        members = [x.username for x in decision.organization.users.all()]
+        non_members = User.objects.exclude(username__in=members)
+        self.assertTrue(non_members)
+        
+        self.login(non_members[0].username)
+        request.user = self.user
+        kwargs = {'org_slug' : decision.organization.slug,
+                  'status': decision.status}
+        response = DecisionList(template_name='decision_list.html').dispatch(request, **kwargs)
+        self.assertNotContains(response, decision.description)
+        
+        kwargs = { 'pk' : decision.pk }
+        response = DecisionDetail(template_name = 'item_detail.html').dispatch(request, **kwargs)
+        self.assertNotContains(response, decision.description)
+        
+        

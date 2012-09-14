@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load i18n %}
+{% load org_filters %}
 
 {% block title %}{{ block.super }}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
 
@@ -9,6 +10,9 @@
 {% block body_class%}object-list {{ tab }}-list{% endblock %}
 
 {% block main_content %}
+		{% if not organization|is_member:user %}
+			<p>{% trans "You are not a member of this organization." %}<p>
+		{% else %}
 		{% if object_list %}
 	<table class="summary-list">
 		<thead>
@@ -129,7 +133,7 @@
 	</table> <!-- list_view proposal -->
 		{% else %}
 			<p class="no_items">{% trans "There are no decisions made." %}.<p>
-		{% endif %}				
+		{% endif %}{% endif %}			
 {% endblock %}
 
 {% block footer_content %}

@@ -2,14 +2,12 @@
 from notification import models as notification
 from organizations.models import Organization
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.views.generic.base import View, RedirectView
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template.response import SimpleTemplateResponse
 from django.utils.decorators import method_decorator
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -64,7 +62,8 @@ class DecisionDetail(DetailView):
         return super(DecisionDetail, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(DecisionDetail, self).get_context_data(**kwargs)
+        context = super(DecisionDetail, self).get_context_data(*args, **kwargs)
+        context['organization'] = self.object.organization
         context['tab'] = self.object.status
         return context
 
@@ -72,10 +71,10 @@ class DecisionList(ListView):
     model = Decision
 
     #@method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get('org_slug', None)
         self.organization = Organization.active.get(slug=slug)
-        return super(DecisionList, self).dispatch(*args, **kwargs)
+        return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)

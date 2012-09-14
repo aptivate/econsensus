@@ -56,9 +56,10 @@ class NotificationTest(DecisionTestCase):
         """
         Check that betty gets a mail when charlie makes a change.
         """
-        decision = self.create_decision_through_browser()
+        decision = self.make_decision()
         mail.outbox = []
-        self.login('charlie')
+        other_members = decision.organization.users.exclude(username=self.user.username)
+        self.login(other_members[0].username)
         self.update_decision_through_browser(decision.id)
 
         outbox = getattr(mail, 'outbox')
@@ -117,7 +118,7 @@ class NotificationTest(DecisionTestCase):
         self.create_feedback_through_browser(decision.id)
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [user_object.email for user_object in decision.organization.users.exclude(username=self.user)]
+        user_list = [user_object.email for user_object in decision.organization.users.exclude(username=self.user).exclude(is_active=False)]
         self.assertNotIn(self.user.email, outbox_to)
         self.assertItemsEqual(user_list, outbox_to)
         

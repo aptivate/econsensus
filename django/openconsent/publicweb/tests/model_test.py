@@ -41,7 +41,7 @@ class ModelTest(DecisionTestCase):
         
     def test_watchers_changes(self):
         decision = self.make_decision()
-        self.assertEqual(User.objects.count(), decision.watchers.count())
+        self.assertEqual(decision.organization.users.count(), decision.watchers.count())
 
     def test_feedback_can_have_empty_description(self):
         decision = self.make_decision()

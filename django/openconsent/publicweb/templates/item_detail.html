@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load i18n %}
+{% load org_filters %}
 
 {% block title %}
+{% if organization|is_member:user %}
 	{{ object.excerpt}}
+{% endif %}
 {% endblock %}
 
 {% block head_content %}
@@ -160,6 +163,9 @@
 
 {% block main_content %}
 
+{% if not organization|is_member:user %}
+	<p>{% trans "You are not a member of this organization." %}<p>
+{% else %}
 {% include "decision_detail_snippet.html" %}
 
 <h2 class="page_title feedback">{% trans "Feedback" %}</h2>
@@ -174,5 +180,5 @@
 {% endfor %}
   </ol>
 </div>
-
+{% endif %}
 {% endblock %}
