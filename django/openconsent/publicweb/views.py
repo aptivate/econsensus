@@ -11,6 +11,7 @@ from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
+from django.shortcuts import get_object_or_404
 
 import unicodecsv
 
@@ -73,7 +74,7 @@ class DecisionList(ListView):
     #@method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get('org_slug', None)
-        self.organization = Organization.active.get(slug=slug)
+        self.organization = get_object_or_404(Organization, slug=slug)
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
