@@ -1135,18 +1135,36 @@ body.login p.message {
     width: 450px;
 }
 
+#login-form .helptext {
+    display: none;
+}
+
+#login-form .errorlist {
+    font-size: 0.8em;
+    float: left;
+}
+
+#login-form .field {
+    float: left;
+    width: inherit;
+    padding: 2px;
+}
+
+#login-form .field_value {
+    float: right;
+    
+}#login-form .label {
+    float: left;
+}
+
 #login-form p {
-    display: block;
-	overflow:auto;
-    padding: 5px;
-	margin:0;
+    float: left;
 }
 
 #login-form label {
     display: block;
     float: left;
     font-size: 1.3em;
-    line-height: 1.5em;
 	color:#333;
 }
 
