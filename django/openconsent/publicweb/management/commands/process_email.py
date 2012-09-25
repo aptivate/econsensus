@@ -21,6 +21,7 @@ class Command(BaseCommand):
         server = config_value('ReceiveMail', 'SERVER')
         port = config_value('ReceiveMail', 'PORT')
         ssl = config_value('ReceiveMail', 'SSL_ENABLED')
+        logger = logging.getLogger('econsensus')
 
         try:
             if ssl == True: 
@@ -31,7 +32,6 @@ class Command(BaseCommand):
             mailbox.user(user)
             mailbox.pass_(password)
         except Exception, e:
-            logger = logging.getLogger('econsensus')
             logger.error(e)
         
         num_msgs = mailbox.stat()[0]
@@ -41,18 +41,31 @@ class Command(BaseCommand):
             for i in all_msgs:
                 msg = mailbox.retr(i)[1]
                 mail = message_from_string("\n".join(msg))
-                self._process_email(mail, verbosity)
-                mailbox.dele(i)
+                try:
+                    self._process_email(mail, verbosity)
+                except Exception, e:
+                    logger.error(e)
+                finally:                    
+                    mailbox.dele(i)
         else: self._print_if_verbose(verbosity, "Nothing to do!")  
 
         mailbox.quit()
-        
+
+    def _strip_string(self, payload, verbosity):
+        msg_string = payload.strip('\n')
+        msg_string = re.sub('\s*>.*', '', msg_string)
+        msg_string = re.sub("On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)", '', msg_string)
+        if not msg_string:
+            self._print_if_verbose(verbosity, "Email message payload was empty!")
+        return msg_string
+
     def _process_email(self, mail, verbosity): # pylint: disable=R0914
         user = None
         decision = None
         user_found = False
         object_found = False
         org_found = False
+        msg_string = ''
         
         #match email 'from' address to user
         from_match = re.search('([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)', mail['From'])
@@ -88,28 +101,18 @@ class Command(BaseCommand):
                 pass
         
         proposal_found = re.search('proposal', mail['Subject'], re.IGNORECASE)
-        #decision_found = re.search('decision', mail['Subject'], re.IGNORECASE)
-        #archive_found = re.search('archive', mail['Subject'], re.IGNORECASE)
-        
-        msg_string = mail.get_payload().strip('\n')
-        msg_string = re.sub('\s*>.*', '', msg_string)
-        msg_string = re.sub("On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)", '', msg_string)
 
-        if not msg_string:
-            self._print_if_verbose(verbosity, "Email message payload was empty!")
-#        Here's a way to generate the match list dynamically from the Feedback class itself,
-#        rather than having to guess what types have been defined.
-#        Useful functionality but shoudln't be called every time as its mostly static.
-#        Put it in Feedback class? 
-#        feedback_match_list = []
-#        for x in Feedback.RATING_CHOICES:
-#            feedback_match_list.append(x(1))
-#        
-#        feedback_match_string = ""
-#        for x in feedback_match_list[:-1]:
-#            feedback_match_string += x + "|";
-#        feedback_match_string += feedback_match_list[-1]
-        
+        #handle multipart mails, cycle through mail 
+        #until find text type with a full payload.
+        if mail.is_multipart():
+            for message in mail.get_payload():
+                if message.get_content_maintype() == 'text':
+                    msg_string = self._strip_string(message.get_payload(), verbosity)
+                    if msg_string:
+                        break
+        else:
+            msg_string = self._strip_string(mail.get_payload(), verbosity)       
+
         if user_found and msg_string:
             if object_found:
                 parse_feedback = re.match('(\w+)\s*:\s*(\w+[\s\w]*)', msg_string, re.IGNORECASE)

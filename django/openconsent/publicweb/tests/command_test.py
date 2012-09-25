@@ -7,7 +7,7 @@ from publicweb.tests.decision_test_case import OpenConsentTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
-
+from email.mime.multipart import MIMEMultipart
 class CommandTest(OpenConsentTestCase):
 
     poplib.POP3 = dummy_poplib.POP3
@@ -178,4 +178,26 @@ class CommandTest(OpenConsentTestCase):
             self.fail("Email failed to appear in database as a decision.")
         self.assertNotIn("On 24/07/12 18:14, Mark Skipper wrote:", decision.description)
         self.assertIn("Proposal XYZ", decision.description)
-           
+    
+    def test_multipart_mail(self):
+        """Ensure that the command can process multipart emails."""
+        msg = MIMEMultipart()
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = self.betty.email
+        msg['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+        payload = "Sample payload"
+        sub_msg = MIMEText(payload)
+        msg.attach(sub_msg)
+        payload = "Another payload"
+        sub_msg = MIMEText(payload)
+        msg.attach(sub_msg)
+        poplib.POP3.mailbox = ([''], [msg.as_string()], [''])
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+        
+        try:
+            Decision.objects.get(description__contains="Sample payload")
+        except:
+            self.fail("Email failed to appear in database as a decision.")
