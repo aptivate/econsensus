@@ -318,16 +318,19 @@ def clean_db(database='default'):
         _mysql_exec_as_root('DROP DATABASE IF EXISTS %s' % test_db_name)
 
 
-def create_ve():
+def create_ve(force=False):
     """Create the virtualenv"""
     if not env['quiet']:
         print "### Creating/updating virtualenv - this could take some time"
-    _manage_py("update_ve")
+    cmd = ['update_ve']
+    if force:
+        cmd = ['update_ve', '--force']
+    _manage_py(cmd)
 
 
-def update_ve():
+def update_ve(force=False):
     """ Update the virtualenv """
-    create_ve()
+    create_ve(force)
 
 def create_private_settings():
     """ create private settings file
@@ -646,7 +649,7 @@ def _manage_py_jenkins():
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
-    update_ve()
+    update_ve(force=True)
     _install_django_jenkins()
     create_private_settings()
     link_local_settings('jenkins')
