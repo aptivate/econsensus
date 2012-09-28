@@ -19,7 +19,7 @@ feedback_snippet_update_info = {'model' : Feedback,
                                 'template_name': 'feedback_update_snippet.html'
 }
 
-urlpatterns = patterns('openconsent.publicweb.views',
+urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^export_csv/$',
         ExportCSV.as_view(),
         name='publicweb_export_csv'),

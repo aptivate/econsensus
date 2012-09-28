@@ -1,4 +1,4 @@
-# Django settings for openconsent project.
+# Django settings for Econsensus project.
 
 import os
 import private_settings #@UnresolvedImport
@@ -99,7 +99,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'openconsent.urls'
+ROOT_URLCONF = 'econsensus.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
