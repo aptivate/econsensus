@@ -8,7 +8,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Open Consent Project', 'openconsent-info@aptivate.org'),
+    ('Econsensus Project', 'info@econsensus.org'),
 )
 
 MANAGERS = ADMINS
