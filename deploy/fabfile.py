@@ -60,7 +60,6 @@ def dev_server():
     env.hosts = ['fen-vz-' + project_settings.project_name + '-dev']
     _local_setup()
 
-
 def staging_test():
     """ use staging environment on remote host to run tests"""
     # this is on the same server as the customer facing stage site
@@ -71,41 +70,12 @@ def staging_test():
     env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
-
 def staging():
     """ use staging environment on remote host to demo to client"""
+    env.project_dir = env.project + '_test'
     env.environment = 'staging'
-    env.hosts = ['fen-vz-' + project_settings.project_name]
-    _local_setup()
-
-
-def production_sandbox():
-    """ use staging environment on remote host to run tests"""
-    # this is on the same server as the customer facing stage site
-    # so we need project_root to be different ...
-    env.project_dir = env.project + '_sandbox'
-    env.environment = 'production_sandbox'
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
-
-def production_oos():
-    """ use staging environment on remote host to run tests"""
-    # this is on the same server as the customer facing stage site
-    # so we need project_root to be different ...
-    env.project_dir = env.project + '_oos'
-    env.environment = 'production_oos'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    _local_setup()
-
-def production_sociocracyuk():
-    """ use staging environment on remote host to run tests"""
-    # this is on the same server as the customer facing stage site
-    # so we need project_root to be different ...
-    env.project_dir = env.project + '_sociocracyuk'
-    env.environment = 'production_sociocracyuk'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    _local_setup()
-
 
 def production():
     """ use production environment on remote host"""
@@ -113,34 +83,6 @@ def production():
     env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
     _local_setup()
     
-def production_houseofawesome():
-    """ use production environment on remote host"""
-    env.project_dir = env.project + '_houseofawesome'
-    env.environment = 'production_houseofawesome'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    _local_setup()
-
-def production_seedltd():
-    """ use production environment on remote host"""
-    env.project_dir = env.project + '_seedltd'
-    env.environment = 'production_seedltd'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    _local_setup()
-
-def production_goodgovernment():
-    """ use production environment on remote host"""
-    env.project_dir = env.project + '_goodgovernment'
-    env.environment = 'production_goodgovernment'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    _local_setup()
-
-def production_test1():
-    """ use production environment on remote host"""
-    env.project_dir = env.project + '_test1'
-    env.environment = 'production_test1'
-    env.hosts = ['lin-openconsent.aptivate.org:48001']
-    _local_setup()
-
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
