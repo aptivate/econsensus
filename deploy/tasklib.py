@@ -450,7 +450,7 @@ def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, databa
                 db_user, db_pw, db_name, db_port, db_host):
             _manage_py(['createcachetable', cache_table])
         # if we are using South we need to do the migrations aswell
-        for app in env.django_apps:
+        for app in env['django_apps']:
             if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
                 use_migrations = True
         _manage_py(['syncdb', '--noinput'])
@@ -550,7 +550,7 @@ def setup_db_dumps(dump_dir):
     if not os.path.isabs(dump_dir):
         print 'dump_dir must be an absolute path, you gave %s' % dump_dir
         sys.exit(1)
-    project_name = env.django_dir.split('/')[-1]
+    project_name = env['django_dir'].split('/')[-1]
     cron_file = os.path.join('/etc', 'cron.daily', 'dump_'+project_name)
 
     db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
@@ -604,7 +604,7 @@ def run_tests(*extra_args):
         args += extra_args
     else:
         # default to running all tests
-        args += env.django_apps
+        args += env['django_apps']
 
     _manage_py(args)
 
@@ -652,7 +652,7 @@ def _manage_py_jenkins():
     coveragerc_filepath = os.path.join(env['project_dir'], 'jenkins', 'coverage.rc')
     if os.path.exists(coveragerc_filepath):
         args += ['--coverage-rcfile', coveragerc_filepath]
-    args += env.django_apps
+    args += env['django_apps']
     if not env['quiet']:
         print "### Running django-jenkins, with args; %s" % args
     _manage_py(args, cwd=env['project_dir'])
