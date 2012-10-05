@@ -143,12 +143,17 @@ if 'IGNORE_DOTVE' not in os.environ:
     go_to_ve()
 
 # run django - the usual manage.py stuff
-from django.core.management import execute_manager
-try:
-    import settings # Assumed to be in the same directory.
-except ImportError, e:
-    sys.stderr.write("Error: Can't find the file 'settings.py' in the directory containing %r. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n%s\n" % (__file__, e))
-    sys.exit(1)
-
 if __name__ == "__main__":
-    execute_manager(settings)
+    sys.path.append(DEPLOY_DIR)
+    from project_settings import project_name
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+
+    try:
+        import settings
+    except ImportError as e:
+        raise ImportError("%s\n\nFailed to import settings module: "
+            "does it contain errors? Did you run tasks.py deploy:dev?"
+            % e)
+
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(sys.argv)
