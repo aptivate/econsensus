@@ -1,9 +1,9 @@
 *.pyc
 .*.swp
 *~
-django/openconsent/local_settings.py
-django/openconsent/.ve
-django/openconsent/distribute-*.tar.gz
+django/econsensus/local_settings.py
+django/econsensus/.ve
+django/econsensus/distribute-*.tar.gz
 reports/*
 .settings/*
 .pydevproject
