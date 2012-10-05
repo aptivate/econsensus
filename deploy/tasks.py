@@ -66,24 +66,20 @@ def invalid_command(cmd):
     print "For help use --help"
     sys.exit(2)
 
+def get_public_callables(mod):
+    callables = []
+    if mod:
+        for task in dir(mod):
+            if callable(getattr(mod, task)):
+                if not task.startswith('_') and not task.endswith('Error'):
+                    callables.append(task)
+    return callables
 
 def tasklib_list():
-    tasks = []
-    for task in dir(tasklib):
-        if callable(getattr(tasklib, task)):
-            if not task.startswith('_'):
-                tasks.append(task)
-    return tasks
-
+    return get_public_callables(tasklib)
 
 def localtasks_list():
-    tasklist = []
-    if localtasklist:
-        for task in dir(localtasklist):
-            if callable(getattr(localtasklist, task)):
-                if not task.startswith('_'):
-                    tasklist.append(task)
-    return tasklist
+    return get_public_callables(localtasks)
 
 
 def tasks_available():
