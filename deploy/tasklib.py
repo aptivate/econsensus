@@ -28,14 +28,6 @@ if not hasattr(__builtin__, 'WindowsError'):
     class WindowsError(OSError):
         pass
 
-# import per-project settings
-import project_settings
-
-if os.path.exists(os.path.join(os.path.dirname(__file__), 'localtasks.py')):
-    import localtasks
-else:
-    localtasks = None
-
 try:
     # For testing replacement routines for older python compatibility
     # raise ImportError()
@@ -107,16 +99,20 @@ def _check_call_wrapper(argv, accepted_returncode_list=[0], **kwargs):
 
 env = {}
 
-def _setup_paths():
+def _setup_paths(project_settings, localtasks):
     """Set up the paths used by other tasks"""
+    # first merge in variables from project_settings - but ignore __doc__ etc
+    user_settings = [x for x in vars(project_settings).keys() if not x.startswith('__')]
+    for setting in user_settings:
+        env[setting] = project_settings[setting]
+
+    env['localtasks']   = localtasks
     env['deploy_dir']   = os.path.dirname(__file__)
     # what is the root of the project - one up from this directory
     env['project_dir']  = os.path.abspath(os.path.join(env['deploy_dir'], '..'))
-    env['django_dir']   = os.path.join(env['project_dir'], project_settings.django_dir)
+    env['django_dir']   = os.path.join(env['project_dir'], project_settings.django_relative_dir)
     env['ve_dir']       = os.path.join(env['django_dir'], '.ve')
     env['manage_py']    = os.path.join(env['django_dir'], 'manage.py')
-    env['project_name'] = project_settings.project_name
-    env['project_type'] = project_settings.project_type
 
     python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
     python27 = os.path.join('/', 'usr', 'bin', 'python2.7')
@@ -353,6 +349,19 @@ def create_private_settings():
 
 def link_local_settings(environment):
     """ link local_settings.py.environment as local_settings.py """
+
+    # check that settings imports local_settings, as it always should,
+    # and if we forget to add that to our project, it could cause mysterious
+    # failures
+    settings_file = os.path.join(env['django_dir'], 'settings.py')
+    with open(settings_file) as settings_file:
+        matching_lines = [line for line in settings_file
+            if line.find('local_settings')]
+    if not matching_lines:
+        print "Fatal error: settings.py doesn't seem to import " \
+            "local_settings.*: %s" % settings_file
+        sys.exit(1)
+
     # die if the correct local settings does not exist
     if not env['quiet']:
         print "### creating link to local_settings.py"
@@ -390,6 +399,8 @@ def link_local_settings(environment):
         import shutil
         shutil.copy2(source, target)
 
+def collect_static():
+    return _manage_py(["collectstatic", "--noinput"])
 
 
 def _get_cache_table():
@@ -439,7 +450,7 @@ def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, databa
                 db_user, db_pw, db_name, db_port, db_host):
             _manage_py(['createcachetable', cache_table])
         # if we are using South we need to do the migrations aswell
-        for app in project_settings.django_apps:
+        for app in env.django_apps:
             if os.path.exists(os.path.join(env['django_dir'], app, 'migrations')):
                 use_migrations = True
         _manage_py(['syncdb', '--noinput'])
@@ -539,7 +550,7 @@ def setup_db_dumps(dump_dir):
     if not os.path.isabs(dump_dir):
         print 'dump_dir must be an absolute path, you gave %s' % dump_dir
         sys.exit(1)
-    project_name = project_settings.django_dir.split('/')[-1]
+    project_name = env.django_dir.split('/')[-1]
     cron_file = os.path.join('/etc', 'cron.daily', 'dump_'+project_name)
 
     db_engine, db_name, db_user, db_pw, db_port, db_host = _get_django_db_settings()
@@ -593,7 +604,7 @@ def run_tests(*extra_args):
         args += extra_args
     else:
         # default to running all tests
-        args += project_settings.django_apps
+        args += env.django_apps
 
     _manage_py(args)
 
@@ -641,7 +652,7 @@ def _manage_py_jenkins():
     coveragerc_filepath = os.path.join(env['project_dir'], 'jenkins', 'coverage.rc')
     if os.path.exists(coveragerc_filepath):
         args += ['--coverage-rcfile', coveragerc_filepath]
-    args += project_settings.django_apps
+    args += env.django_apps
     if not env['quiet']:
         print "### Running django-jenkins, with args; %s" % args
     _manage_py(args, cwd=env['project_dir'])
@@ -649,6 +660,7 @@ def _manage_py_jenkins():
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
+    # do this to ensure we delete the old virtualenv
     update_ve(force=True)
     _install_django_jenkins()
     create_private_settings()
@@ -680,8 +692,10 @@ def deploy(environment=None):
     create_ve()
     update_db()
 
-    if hasattr(localtasks, 'post_deploy'):
-        localtasks.post_deploy(environment)
+    collect_static()
+
+    if hasattr(env['localtasks'], 'post_deploy'):
+        env['localtasks'].post_deploy(environment)
 
     print "\n*** Finished deploying %s for %s." % (
             env['project_name'], environment)

@@ -20,9 +20,12 @@
 
 General arguments are:
 
-    -h, --help      Print this help text
-    -q, --quiet     Print less output while executing (note: not none)
-    -v, --verbose   Print extra output while executing
+    -h, --help       Print this help text
+    -p, --projectdir Set the project dir (where to find project_settings.py
+                     and, optionally, localtasks.py) Defaults to the directory
+                     that contains tasks.py
+    -q, --quiet      Print less output while executing (note: not none)
+    -v, --verbose    Print extra output while executing
 
 You can pass arguments to the tasks listed below, by adding the argument after a
 colon. So to call deploy and set the environment to staging you could do:
@@ -47,17 +50,13 @@ function in tasklib.py (or localtasks.py) to see what arguments the
 function accepts.
 """
 
-import sys
+import os, sys
 import getopt
 import inspect
 
 import tasklib
 
-# are there any local tasks for this project?
-try:
-    import localtasks
-except ImportError:
-    localtasks = None
+localtasks = None
 
 def invalid_command(cmd):
     print "Tasks.py:"
@@ -78,14 +77,13 @@ def tasklib_list():
 
 
 def localtasks_list():
-    if localtasks == None:
-        return []
-    tasks = []
-    for task in dir(localtasks):
-        if callable(getattr(localtasks, task)):
-            if not task.startswith('_'):
-                tasks.append(task)
-    return tasks
+    tasklist = []
+    if localtasklist:
+        for task in dir(localtasklist):
+            if callable(getattr(localtasklist, task)):
+                if not task.startswith('_'):
+                    tasklist.append(task)
+    return tasklist
 
 
 def tasks_available():
@@ -155,12 +153,14 @@ def convert_args(value):
         return value
 
 def main():
-    # parse command line options
+    global localtasks
     verbose = False
     quiet = False
+    project_dir = os.path.dirname(__file__)
+    # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "dhqv", 
-                ["description", "help", "quiet", "verbose"])
+        opts, args = getopt.getopt(sys.argv[1:], "dhpqv", 
+                ["description", "help", "projectdir", "quiet", "verbose"])
     except getopt.error, msg:
         print msg
         print "for help use --help"
@@ -175,14 +175,26 @@ def main():
             quiet = True
         if o in ("-d", "--description"):
             describe_task(args)
+        if o in ("-p", "--projectdir"):
+            project_dir = a
     if verbose and quiet:
         print "Cannot set both verbose and quiet"
         sys.exit(2)
     tasklib.env['verbose'] = verbose
     tasklib.env['quiet'] = quiet
-    tasklib._setup_paths()
-    if (hasattr(localtasks, '_setup_paths')):
-        localtasks._setup_paths()
+
+    sys.path.append(project_dir)
+    import project_settings
+    # now see if we can find localtasks
+    # We deliberately don't surround the import by try/except. If there
+    # is an error in localfab, you want it to blow up immediately, rather
+    # than silently fail.
+    if os.path.isfile(os.path.join(project_dir, 'localtasks.py')):
+        import localtasks
+        if (hasattr(localtasks, '_setup_paths')):
+            localtasks._setup_paths()
+    # now set up the various paths required
+    tasklib._setup_paths(project_settings, localtasks)
     if len(args) == 0:
         print_help_text()
     # process arguments - just call the function with that name
@@ -214,3 +226,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

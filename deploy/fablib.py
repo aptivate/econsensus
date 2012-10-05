@@ -2,44 +2,52 @@ import os
 import getpass
 import time
 
-from fabric.api import *
+from fabric.context_managers import cd, hide, settings
+from fabric.operations import require, prompt, get, run, sudo, local
+from fabric.state import env
 from fabric.contrib import files
 from fabric import utils
 
-def _set_dict_if_not_set(thedict, key, value):
-    if key not in thedict:
-        thedict[key] = value
+import helper as h
 
-def _setup_path():
-    # allow for the fabfile having set up some of these differently
-    _set_dict_if_not_set(env, 'verbose',      False)
-    _set_dict_if_not_set(env, 'use_sudo',     True)
-    _set_dict_if_not_set(env, 'cvs_rsh',      'CVS_RSH="ssh"')
-    _set_dict_if_not_set(env, 'branch',       'master')
-    _set_dict_if_not_set(env, 'project_root', os.path.join(env.home, env.project_dir))
-    _set_dict_if_not_set(env, 'vcs_root',     os.path.join(env.project_root, 'dev'))
-    _set_dict_if_not_set(env, 'prev_root',    os.path.join(env.project_root, 'previous'))
-    _set_dict_if_not_set(env, 'dump_dir',     os.path.join(env.project_root, 'dbdumps'))
-    _set_dict_if_not_set(env, 'deploy_root',  os.path.join(env.vcs_root, 'deploy'))
-    _set_dict_if_not_set(env, 'settings',     '%(project)s.settings' % env)
+def _setup_paths(project_settings):
+    # first merge in variables from project_settings - but ignore __doc__ etc
+    user_settings = [x for x in vars(project_settings).keys() if not x.startswith('__')]
+    for setting in user_settings:
+        env[setting] = vars(project_settings)[setting]
+
+    # allow for project_settings having set up some of these differently
+    h.set_dict_if_not_set(env, 'verbose',      False)
+    h.set_dict_if_not_set(env, 'use_sudo',     True)
+    h.set_dict_if_not_set(env, 'cvs_rsh',      'CVS_RSH="ssh"')
+    h.set_dict_if_not_set(env, 'branch',       'master')
+    h.set_dict_if_not_set(env, 'project_root', os.path.join(env.server_home, env.project_dir))
+    h.set_dict_if_not_set(env, 'vcs_root',     os.path.join(env.project_root, 'dev'))
+    h.set_dict_if_not_set(env, 'prev_root',    os.path.join(env.project_root, 'previous'))
+    h.set_dict_if_not_set(env, 'dump_dir',     os.path.join(env.project_root, 'dbdumps'))
+    h.set_dict_if_not_set(env, 'deploy_root',  os.path.join(env.vcs_root, 'deploy'))
+    h.set_dict_if_not_set(env, 'settings',     '%(project_name)s.settings' % env)
 
     if env.project_type == "django":
-        _set_dict_if_not_set(env, 'django_dir', env.project)
-        _set_dict_if_not_set(env, 'django_root', os.path.join(env.vcs_root, env.django_dir))
+        h.set_dict_if_not_set(env, 'django_relative_dir', env.project_name)
+        h.set_dict_if_not_set(env, 'django_root', os.path.join(env.vcs_root, env.django_relative_dir))
 
     if env.use_virtualenv:
-        _set_dict_if_not_set(env, 'virtualenv_root', os.path.join(env.django_root, '.ve'))
+        h.set_dict_if_not_set(env, 'virtualenv_root', os.path.join(env.django_root, '.ve'))
 
     python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
     if os.path.exists(python26):
-        _set_dict_if_not_set(env, 'python_bin', python26)
+        h.set_dict_if_not_set(env, 'python_bin', python26)
     else:
-        _set_dict_if_not_set(env, 'python_bin', os.path.join('/', 'usr', 'bin', 'python'))
+        h.set_dict_if_not_set(env, 'python_bin', os.path.join('/', 'usr', 'bin', 'python'))
 
-    _set_dict_if_not_set(env, 'tasks_bin',
+    h.set_dict_if_not_set(env, 'tasks_bin',
             env.python_bin + ' ' + os.path.join(env.deploy_root, 'tasks.py'))
-    _set_dict_if_not_set(env, 'local_tasks_bin',
+    h.set_dict_if_not_set(env, 'local_tasks_bin',
             env.python_bin + ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
+
+    # valid environments - used for require statements in fablib
+    env.valid_envs = env.host_list.keys()
 
 
 def _tasks(tasks_args, verbose=False):
@@ -67,7 +75,7 @@ def deploy_clean(revision=None):
     """ delete the entire install and do a clean install """
     if env.environment == 'production':
         utils.abort('do not delete the production environment!!!')
-    require('project_root', provided_by=env.valid_non_prod_envs)
+    require('project_root', provided_by=env.valid_envs)
     # TODO: dump before cleaning database?
     with settings(warn_only=True):
         apache_cmd('stop')
@@ -103,15 +111,11 @@ def deploy(revision=None, keep=None):
     with settings(warn_only=True):
         apache_cmd('stop')
     checkout_or_update(revision)
-    if env.use_virtualenv:
-        update_requirements()
 
-    # if we're going to call tasks.py then this has to be done first:
-    create_private_settings()
-    link_local_settings()
-
-    update_db()
-
+    # Use tasks.py deploy:env to actually do the deployment, including
+    # creating the virtualenv if it thinks it necessary, ignoring
+    # env.use_virtualenv as tasks.py knows nothing about it.
+    _tasks('deploy:' + env.environment)
 
     if env.project_type == "django":
         rm_pyc_files()
@@ -236,14 +240,16 @@ def rollback(version='last', migrate=False, restore_db=False):
 
 def local_test():
     """ run the django tests on the local machine """
-    require('project')
-    with cd(os.path.join("..", env.project)):
+    require('project_name')
+    with cd(os.path.join("..", env.project_name)):
         local("python " + env.test_cmd, capture=False)
 
 
 def remote_test():
     """ run the django tests remotely - staging only """
-    require('django_root', 'python_bin', 'test_cmd', provided_by=env.valid_non_prod_envs)
+    require('django_root', 'python_bin', provided_by=env.valid_envs)
+    if env.environment == 'production':
+        utils.abort('do not run tests on the production environment')
     with cd(env.django_root):
         sudo_or_run(env.python_bin + env.test_cmd)
 
@@ -350,9 +356,9 @@ def _checkout_or_update_git(revision=None):
                     sudo_or_run('git stash pop')
             else:
                 # not on a branch - just print a warning
-                warn('The server git repository is not on a branch')
-                warn('No checkout or merge has been done - you should probably')
-                warn('redeploy and specify a branch or revision to checkout.')
+                utils.warn('The server git repository is not on a branch')
+                utils.warn('No checkout or merge has been done - you should probably')
+                utils.warn('redeploy and specify a branch or revision to checkout.')
     else:
         with cd(env.vcs_root):
             stash_result = sudo_or_run('git stash')
@@ -455,24 +461,6 @@ def touch():
     wsgi_dir = os.path.join(env.vcs_root, 'wsgi')
     sudo_or_run('touch ' + os.path.join(wsgi_dir, 'wsgi_handler.py'))
 
-def create_private_settings():
-    _tasks('create_private_settings')
-
-def link_local_settings():
-    """link the local_settings.py file for this environment"""
-    _tasks('link_local_settings:' + env.environment)
-
-    # check that settings imports local_settings, as it always should,
-    # and if we forget to add that to our project, it could cause mysterious
-    # failures
-    if env.project_type == "django":
-        run('grep -q "local_settings" %s' %
-            os.path.join(env.django_root, 'settings.py'))
-
-        # touch the wsgi file to reload apache
-        touch()
-
-
 def rm_pyc_files():
     """Remove all the old pyc files to prevent stale files being used"""
     require('django_root', provided_by=env.valid_envs)
@@ -486,7 +474,7 @@ def link_apache_conf():
     if env.use_apache == False:
         return
     conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
-    apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
+    apache_conf = os.path.join('/etc/httpd/conf.d', env.project_name+'_'+env.environment+'.conf')
     if not files.exists(conf_file):
         utils.abort('No apache conf file found - expected %s' % conf_file)
     if not files.exists(apache_conf):
