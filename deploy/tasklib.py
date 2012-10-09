@@ -657,9 +657,15 @@ def _manage_py_jenkins():
         print "### Running django-jenkins, with args; %s" % args
     _manage_py(args, cwd=env['project_dir'])
 
+def _rm_all_pyc():
+    """Remove all pyc files, to be sure"""
+    _call_wrapper('find . -name \*.pyc | xargs rm', shell=True, cwd=env['project_dir'])
+
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
+    # don't want any stray pyc files causing trouble
+    _rm_all_pyc()
     # do this to ensure we delete the old virtualenv
     update_ve(force=True)
     _install_django_jenkins()
