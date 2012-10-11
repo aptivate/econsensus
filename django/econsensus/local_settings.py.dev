@@ -5,7 +5,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/item/list/proposal/'
+LOGIN_REDIRECT_URL = '/'
 
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 
