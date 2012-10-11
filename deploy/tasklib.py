@@ -353,6 +353,19 @@ def create_private_settings():
 
 def link_local_settings(environment):
     """ link local_settings.py.environment as local_settings.py """
+
+    # check that settings imports local_settings, as it always should,
+    # and if we forget to add that to our project, it could cause mysterious
+    # failures
+    settings_file = os.path.join(env['django_dir'], 'settings.py')
+    with open(settings_file) as settings_file:
+        matching_lines = [line for line in settings_file
+            if line.find('local_settings')]
+    if not matching_lines:
+        print "Fatal error: settings.py doesn't seem to import " \
+            "local_settings.*: %s" % settings_file
+        sys.exit(1)
+    
     # die if the correct local settings does not exist
     if not env['quiet']:
         print "### creating link to local_settings.py"
@@ -390,6 +403,8 @@ def link_local_settings(environment):
         import shutil
         shutil.copy2(source, target)
 
+def collect_static():
+    return _manage_py(["collectstatic", "--noinput"])
 
 
 def _get_cache_table():
@@ -649,6 +664,7 @@ def _manage_py_jenkins():
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
+    # do this to ensure we delete the old virtualenv
     update_ve(force=True)
     _install_django_jenkins()
     create_private_settings()
@@ -679,6 +695,8 @@ def deploy(environment=None):
     update_git_submodules()
     create_ve()
     update_db()
+
+    collect_static()
 
     if hasattr(localtasks, 'post_deploy'):
         localtasks.post_deploy(environment)
