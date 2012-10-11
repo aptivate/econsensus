@@ -688,8 +688,11 @@ def deploy(environment=None):
 
 def patch_south():
     """ patch south to fix pydev errors """
+    python = 'python2.6'
+    if '2.7' in env['python_bin']:
+        python = 'python2.7'
     south_db_init = os.path.join(env['ve_dir'],
-                'lib/python2.6/site-packages/south/db/__init__.py')
+                'lib/%s/site-packages/south/db/__init__.py' % python)
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
     # check if patch already applied - patch will fail if it is
     patch_applied = _call_wrapper(['grep', '-q', 'pydev', south_db_init])
