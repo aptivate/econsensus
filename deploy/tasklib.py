@@ -691,5 +691,8 @@ def patch_south():
     south_db_init = os.path.join(env['ve_dir'],
                 'lib/python2.6/site-packages/south/db/__init__.py')
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
-    cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
-    _check_call_wrapper(cmd)
+    # check if patch already applied - patch will fail if it is
+    patch_applied = _call_wrapper(['grep', '-q', 'pydev', south_db_init])
+    if patch_applied != 0:
+        cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
+        _check_call_wrapper(cmd)
