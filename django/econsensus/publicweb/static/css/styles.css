@@ -697,6 +697,7 @@ p.title {
     float: left;
     position: relative;
     width: 100%;
+    margin-top: 10px;
 }
 
 .button.add_feedback {
