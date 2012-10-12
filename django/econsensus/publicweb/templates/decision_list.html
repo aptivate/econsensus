@@ -137,5 +137,7 @@
 {% endblock %}
 
 {% block footer_content %}
+    {% comment %}
 	<p class="export"><a title="Export as CSV file" href="{% url 'publicweb_export_csv' %}">{% trans "Export as CSV file" %}</a></p>
+    {% endcomment %}
 {% endblock %}
