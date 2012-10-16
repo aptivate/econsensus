@@ -24,7 +24,7 @@ This should set up the database you need, install the python packages
 required and a few other details. You should now be able to run the 
 development server:
 
-    $ cd django/openconsent/
+    $ cd django/econsensus/
     $ ./manage.py runserver
 
 You should now be able to access the application at:
