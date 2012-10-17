@@ -99,17 +99,21 @@ class DecisionList(ListView):
         context['tab'] = self.status
         context['sort'] = self.order
         context['num'] = self.paginate_by
+        context['prevstring'] = self.get_query_string(context, context['page_obj'].previous_page_number())
+        context['nextstring'] = self.get_query_string(context, context['page_obj'].next_page_number())
         return context
 
     def set_paginate_by(self, request):
-        if 'num' in request.GET:
-            self.paginate_by = request.GET.get('num')
-        elif 'num' in request.session:
-            self.paginate_by = request.session['num']
-        else:
-            #set a default
-            self.paginate_by = 5
+        self.paginate_by = request.GET.get('num', request.session.get('num', 10))  # Default is defined here
         request.session['num'] = self.paginate_by
+
+    def get_query_string(self, context, page_string):
+        page_query = 'page=' + str(page_string)
+        if context['sort'] == '-id':
+            return '?' + page_query
+        else:
+            return '?sort=' + context['sort'] + '&' + page_query
+
 
 class DecisionCreate(CreateView):
     model = Decision

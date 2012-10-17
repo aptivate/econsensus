@@ -14,27 +14,7 @@
 			<p>{% trans "You are not a member of this organization." %}<p>
 		{% else %}
 		{% if object_list %}
-		<div id="pagination">
-			<select id="pagination-num-items" onchange="document.location.search = document.location.search.replace(/\&num\=\d.*/,'').replace(/\&page\=\d.*/,'') + '&num=' + this.value">
-				<option value="1" {% if num == '1' %}selected{% endif %}>1</option>
-				<option value="2" {% if num == '2' %}selected{% endif %}>2</option>
-				<option value="3" {% if num == '3' %}selected{% endif %}>3</option>
-				<option value="5" {% if num == '5' %}selected{% endif %}>5</option>
-			</select>
-			{% if page_obj.has_previous %}
-	             <a href="?sort={{ sort }}&page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a>
-	        {% else %}
-			    {% trans "previous" %}
-			{% endif %}
-
-			<span class="page-current"> {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </span>
-
-			{% if page_obj.has_next %}
-				<a href="?sort={{ sort }}&page={{ page_obj.next_page_number }}">{% trans "next" %}</a>
-			{% else %}
-				{% trans "next" %}
-			{% endif %}
-		</div>
+		{% include "pagination.html" %}
 	<table class="summary-list">
 		<thead>
 			<tr class="summary-header">
