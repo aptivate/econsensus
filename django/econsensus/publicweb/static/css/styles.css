@@ -245,6 +245,7 @@ input {
 	color:#666;
 	padding-bottom: 6px;
 	margin-bottom:0;
+	float: left;
 }
 
 #content h2.page_title span {
@@ -259,6 +260,23 @@ input {
 #content h2.page_title.feedback {
 	margin-bottom:10px;
 	width:inherit;
+}
+
+/* pagination */
+#pagination {
+	float: right;
+	padding: 15px 35px 0px 0px;
+	font-weight: bold;
+	font-size: 0.9em;
+	text-transform: uppercase;
+}
+
+#pagination-num-items { 
+	border: 3px solid #999; 
+	margin-right: 5px;
+	padding: 0px;
+	text-align:center;
+	 
 }
 
 /* list view */

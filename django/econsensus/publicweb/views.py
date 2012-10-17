@@ -80,6 +80,7 @@ class DecisionList(ListView):
     def get(self, request, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
         self.order = request.GET.get('sort', '-id')
+        self.set_paginate_by(request)
         return super(DecisionList, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -97,7 +98,18 @@ class DecisionList(ListView):
         context['organization'] = self.organization
         context['tab'] = self.status
         context['sort'] = self.order
+        context['num'] = self.paginate_by
         return context
+
+    def set_paginate_by(self, request):
+        if 'num' in request.GET:
+            self.paginate_by = request.GET.get('num')
+        elif 'num' in request.session:
+            self.paginate_by = request.session['num']
+        else:
+            #set a default
+            self.paginate_by = 5
+        request.session['num'] = self.paginate_by
 
 class DecisionCreate(CreateView):
     model = Decision
