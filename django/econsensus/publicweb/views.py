@@ -84,23 +84,14 @@ class DecisionList(ListView):
 
     def get_queryset(self):
         if self.order == 'feedback':
-            qs = Decision.objects.order_by_count('feedback').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'decided_date':
-            qs = Decision.objects.order_null_last('decided_date').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'effective_date':
-            qs = Decision.objects.order_null_last('effective_date').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'review_date':
-            qs = Decision.objects.order_null_last('review_date').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'expiry_date':
-            qs = Decision.objects.order_null_last('expiry_date').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'deadline':
-            qs = Decision.objects.order_null_last('deadline').filter(status=self.status).filter(organization=self.organization)
-        elif self.order == 'archived_date':
-            qs = Decision.objects.order_null_last('archived_date').filter(status=self.status).filter(organization=self.organization)
+            qs = Decision.objects.order_by_count(self.order)
+        elif self.order in ['decided_date', 'effective_date', 'review_date', 'expiry_date', 'deadline', 'archived_date']:
+            qs = Decision.objects.order_null_last(self.order)
         else:
-            qs = Decision.objects.order_by(self.order).filter(status=self.status).filter(organization=self.organization)
+            qs = Decision.objects.order_by(self.order)
+        qs = qs.filter(status=self.status).filter(organization=self.organization)
         return qs
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super(DecisionList, self).get_context_data(**kwargs)
         context['organization'] = self.organization
