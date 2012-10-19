@@ -10,6 +10,7 @@ from lxml.cssselect import CSSSelector
 
 
 
+
 class DecisionListTest(DecisionTestCase):
 
     def test_decisions_can_be_sorted_by_id(self):
@@ -130,3 +131,5 @@ class DecisionListTest(DecisionTestCase):
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         self.assertContains(response, "Last Modified")
 
+=======
+>>>>>>> Refactor decision_list_test
