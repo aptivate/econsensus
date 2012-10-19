@@ -1,11 +1,13 @@
 from django.core.urlresolvers import reverse
 
 import datetime
+import random
 
 from decision_test_case import DecisionTestCase
 from publicweb.models import Decision, Feedback
 from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
+
 
 
 class DecisionListTest(DecisionTestCase):
@@ -41,12 +43,47 @@ class DecisionListTest(DecisionTestCase):
                                                  + ' for page=' + page + ' sort_query=' + sort_query)
 
     def test_list_pages_can_be_sorted_by_date(self):
-        self.assert_list_page_sorted_by_date_column('decided_date')
-        self.assert_list_page_sorted_by_date_column('effective_date')
-        self.assert_list_page_sorted_by_date_column('review_date')
-        self.assert_list_page_sorted_by_date_column('expiry_date')
-        self.assert_list_page_sorted_by_date_column('deadline')
-        self.assert_list_page_sorted_by_date_column('archived_date')
+        Decision.objects.all().delete()
+        # these are the dates we'll set in the test (also defines number of decisions that get made)
+        random_dates = [datetime.date.fromordinal(random.randint(500000, 800000)) for i in range(3)]
+        # set all the columns you want to test sorting on
+        columns = ['decided_date', 'effective_date', 'review_date', 'expiry_date', 'deadline', 'archived_date']
+
+        # make an initial empty decision
+        self.make_decision(description="Decision None 1", organization=self.bettysorg)
+
+        # create decisions with dates - add the same date to all the columns
+        for random_date in random_dates:
+            d = self.make_decision(description='Decision %s' % random_date, organization=self.bettysorg)
+            for column in columns:
+                setattr(d, column, random_date)
+            d.save()
+
+        # make a final empty decision
+        self.make_decision(description="Decision None 2", organization=self.bettysorg)
+
+        # we need sorted dates to compare the return values against
+        sorted_dates_forward = sorted(random_dates)
+        sorted_dates_reverse = sorted_dates_forward[::-1]
+
+        for column in columns:
+            response_forward = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), dict(sort=column))
+            object_list_forward = response_forward.context['object_list']
+
+            response_reverse = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), dict(sort='-' + column))
+            object_list_reverse = response_reverse.context['object_list']
+
+            object_list_length = len(object_list_forward)
+            self.assertEquals(len(object_list_forward), len(object_list_reverse))
+
+            #Test everything
+            for index, sorted_date_forward in enumerate(sorted_dates_forward):
+                self.assertEquals(sorted_date_forward, getattr(object_list_forward[index], column))
+                self.assertEquals(sorted_dates_reverse[index], getattr(object_list_reverse[index], column))
+            self.assertEquals(None, getattr(object_list_forward[object_list_length - 2], column))
+            self.assertEquals(None, getattr(object_list_forward[object_list_length - 1], column))
+            self.assertEquals(None, getattr(object_list_reverse[object_list_length - 2], column))
+            self.assertEquals(None, getattr(object_list_reverse[object_list_length - 1], column))
 
     def test_list_page_sorted_by_description(self):
         # Create test decisions in reverse date order.
@@ -93,25 +130,3 @@ class DecisionListTest(DecisionTestCase):
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         self.assertContains(response, "Last Modified")
 
-    def assert_list_page_sorted_by_date_column(self, column):
-        # Create test decisions in reverse date order.
-        self.make_decision(description="Decision None 1", organization=self.bettysorg)
-
-        for i in range(5, 0, -1):
-            decision = self.make_decision(description='Decision %d' % i, organization=self.bettysorg)
-            setattr(decision, column, datetime.date(2001, 3, i))
-            decision.save()
-
-        self.make_decision(description="Decision None 2", organization=self.bettysorg)
-
-        #note that we don't actually have to _display_ the field to sort by it
-        response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), dict(sort=column))
-
-        object_list = response.context['object_list']
-
-        for i in range(1, 6):
-            self.assertEquals(datetime.date(2001, 3, i), getattr(object_list[i - 1], column))
-
-        self.assertEquals(None, getattr(object_list[5], column))
-        self.assertEquals(None, getattr(object_list[6], column))
-        Decision.objects.all().delete()
