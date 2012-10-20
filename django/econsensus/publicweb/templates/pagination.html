@@ -25,7 +25,7 @@
 		<noscript><input type="submit" value="{% trans 'show' %}"></noscript>
 		<input type="hidden" name="sort" value={{ sort }}>
 		<select name="num" class="pagination-num-items" onchange="repaginate()">
-			<!-- TODO Do the numeric values need trans tag-->
+			<!-- TODO Do the numeric values need trans tag?-->
 			<option value="10" {% if num == '10' %}selected{% endif %}>10</option>
 			<option value="25" {% if num == '25' %}selected{% endif %}>25</option>
 			<option value="50" {% if num == '50' %}selected{% endif %}>50</option>

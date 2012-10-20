@@ -99,20 +99,61 @@ class DecisionList(ListView):
         context['tab'] = self.status
         context['sort'] = self.order
         context['num'] = self.paginate_by
-        context['prevstring'] = self.get_query_string(context, context['page_obj'].previous_page_number())
-        context['nextstring'] = self.get_query_string(context, context['page_obj'].next_page_number())
+        context['prevstring'] = self.build_prev_query_string(context)
+        context['nextstring'] = self.build_next_query_string(context)
         return context
 
     def set_paginate_by(self, request):
-        self.paginate_by = request.GET.get('num', request.session.get('num', 10))  # Default is defined here
-        request.session['num'] = self.paginate_by
+        # NB Don't know how to handle invalid Page # - https://docs.djangoproject.com/en/1.4/ref/class-based-views/
+        # "Note that page must be either a valid page number or the value last; any other value for page will result in a 404 error."
 
-    def get_query_string(self, context, page_string):
-        page_query = 'page=' + str(page_string)
-        if context['sort'] == '-id':
-            return '?' + page_query
+        # The default number of items to paginate by        
+        self.default_num_items = '10'
+        
+        page_num = request.GET.get('page')
+        num_num = request.GET.get('num')
+        
+        # Clean-up if invalid num request was given (i.e. handles error silently)
+        if num_num:
+            try:
+                num_num_int = int(num_num)
+                if num_num_int <= 0: raise ValueError
+            except ValueError:
+                request.session['num'] = self.paginate_by = self.default_num_items
+                return
+
+        # Set to default in case where a link has been sent that includes page number, but doesn't include a num
+        if page_num and not num_num:
+            self.paginate_by = self.default_num_items
+
+        # Standard case        
         else:
-            return '?sort=' + context['sort'] + '&' + page_query
+            self.paginate_by = request.GET.get('num', request.session.get('num', self.default_num_items))
+        
+        # Finally set as user's session value
+        request.session['num'] = self.paginate_by
+    
+    def build_prev_query_string(self, context):
+        if not context['page_obj']:
+            return None
+        else:
+            return self.build_query_string(context, context['page_obj'].previous_page_number())
+
+    def build_next_query_string(self, context):
+        if not context['page_obj']:
+            return None
+        else:
+            return self.build_query_string(context, context['page_obj'].next_page_number())
+
+    def build_query_string(self, context, page_num):
+        page_query = 'page=' + str(page_num)
+        #prepend non-default number of items per page
+        if not context['num'] == self.default_num_items:
+            page_query = 'num=' + str(context['num']) + '&' + page_query
+        #prepend non-default sort
+        if not context['sort'] == '-id':
+            page_query = 'sort=' + context['sort'] + '&' + page_query
+        return '?' + page_query
 
 
 class DecisionCreate(CreateView):
