@@ -9,8 +9,6 @@ from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
 
 
-
-
 class DecisionListTest(DecisionTestCase):
 
     def test_decisions_can_be_sorted_by_id(self):
@@ -131,5 +129,44 @@ class DecisionListTest(DecisionTestCase):
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         self.assertContains(response, "Last Modified")
 
-=======
->>>>>>> Refactor decision_list_test
+    def test_pagination_set_paginate_by(self):
+        # Test the following cases confirming both self.paginate_by and session['num'] is set
+        # happy path:
+        # A) if valid num in 'get' set it (and prefer it over session)
+        # B) if nothing in get and something in session use session
+        # C) if nothing in session or get use default
+        # less happy path:
+        # D) if invalid (ee or '-10') set default
+        # E) if page number but no num set default (Note: this has to be a valid page so we have to use page=1 if we don't create lots of decisions)
+        test_cases = [{'name': 'Test A', 'sessionnum': 25, 'querydict': {'num': 100}, 'expectednum': '100'},
+                      {'name': 'Test B', 'sessionnum': 25, 'querydict': {'sort': '-id'}, 'expectednum': '25'},
+                      {'name': 'Test C', 'sessionnum': None, 'querydict': {'sort': '-id'}, 'expectednum': '10'},
+                      {'name': 'Test D', 'sessionnum': 25, 'querydict':  {'num': '-ee'}, 'expectednum': '10'},
+                      {'name': 'Test E', 'sessionnum': 25, 'querydict':  {'page': 1}, 'expectednum': '10'}]
+        for test_case in test_cases:
+                # Ensure session is clean by logging out and in again
+                self.client.get(reverse('auth_logout'))
+                #self.login('betty') <-- TODO Don't seem to need to login??? (related to method_decorator being commented out?)
+                self.assertFalse('num' in self.client.session, 'Session should be empty at start of test')
+
+                # Set an existing session val if we need one
+                if test_case['sessionnum']:
+                    s = self.client.session
+                    s['num'] = test_case['sessionnum']
+                    s.save()
+                response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), test_case['querydict'])
+
+                curr_session_num = str(self.client.session.get('num'))
+                paginator_num = str(response.context['page_obj'].paginator.per_page)
+
+                self.assertEquals(curr_session_num, test_case['expectednum'], "We did not get the expected session value for " + test_case['name'])
+                self.assertEquals(paginator_num, test_case['expectednum'], "We did not get the expected paginator value for " + test_case['name'])
+
+    def _get_random_string(self, max_length_of_string):
+        #TODO This does not generate non-english charaters
+        chars = ascii_letters + digits + ' '
+        return ''.join([chars[randint(0, len(chars) - 1)] for x in range(randint(1, max_length_of_string))])
+
+    def _get_random_date(self):
+        return date.fromordinal(randint(500000, 800000))
+
