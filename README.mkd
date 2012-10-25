@@ -1,0 +1,5 @@
+This repository is no longer in use - please go to https://github.com/aptivate/econsensus instead.
+
+If you already have a cloned repository, you can update the URL for your repo by opening a terminal in the repository and doing:
+
+    git remote set-url origin git@github.com:aptivate/econsensus.git
