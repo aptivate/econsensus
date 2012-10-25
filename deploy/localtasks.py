@@ -77,7 +77,7 @@ def add_cron_email(environment):
         return
 
     # write something like:
-    # */5 * * * * /usr/bin/python26 /var/django/openconsent/dev/django/openconsent/manage.py process_email
+    # */5 * * * * /usr/bin/python26 /var/django/econsensus/dev/django/econsensus/manage.py process_email
     f = open(cron_file, 'w')
     try:
         f.write('*/5 * * * * apache /usr/bin/python26 %s/manage.py process_email' % tasklib.env['django_dir'])

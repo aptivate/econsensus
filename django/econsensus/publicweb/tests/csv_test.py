@@ -2,10 +2,10 @@
 Tests for the csv export functionality
 """
 
-from open_consent_test_case import OpenConsentTestCase
+from open_consent_test_case import EconsensusTestCase
 from django.core.urlresolvers import reverse
 
-class CsvTest(OpenConsentTestCase):
+class CsvTest(EconsensusTestCase):
     def test_export_csv(self):
         """
         Tests that export_csv returns a response with:
