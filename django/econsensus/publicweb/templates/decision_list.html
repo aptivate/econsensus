@@ -19,7 +19,7 @@
 			<tr class="summary-header">
 				<th class="id">
 					<a href="{{ request.path }}">
-						<span class="{% if sort == 'id' %}sort{% endif %}">{% trans "ID" %}</span>
+						<span class="{% if sort == '-id' %}sort{% endif %}">{% trans "ID" %}</span>
 					</a>
 				</th>
 				<th class="excerpt">
@@ -29,12 +29,12 @@
 				</th>
 				{% if tab == 'decision' %}
 				<th class="decided_date">
-					<a href="{{ request.path }}?sort=decided_date" class="{% if sort == 'decided_date' %}sort{% endif %}">
+					<a href="{{ request.path }}?sort=decided_date">
 						<span class="{% if sort == 'decided_date' %}sort{% endif %}">{% trans "Decided Date" %}</span>
 					</a>
 				</th>
 				<th class="review_date">
-					<a href="{{ request.path }}?sort=review_date" class="{% if sort == 'review_date' %}sort{% endif %}">
+					<a href="{{ request.path }}?sort=review_date">
 						<span class="{% if sort == 'review_date' %}sort{% endif %}">{% trans "Review Date" %}</span>
 					</a>
 				</th>
@@ -64,7 +64,7 @@
 				</th>
 				<th class="last_modified">
 					<a href="{{ request.path }}?sort=-last_modified">
-						<span class="{% if sort == 'last_modified' %}sort{% endif %}">{% trans "Last Modified" %}</span>
+						<span class="{% if sort == '-last_modified' %}sort{% endif %}">{% trans "Last Modified" %}</span>
 					</a>
 				</th>
 				{% endif %}
