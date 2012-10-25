@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 """
-Tests for the public website part of the OpenConsent project
+Tests for the public website part of the Econsensus project
 """
 from django.core.urlresolvers import reverse
 from django.forms.fields import BooleanField

@@ -3,12 +3,12 @@
 #Test commands that have been added to manage.py
 import poplib
 from django.core import management, mail
-from publicweb.tests.decision_test_case import OpenConsentTestCase
+from publicweb.tests.decision_test_case import EconsensusTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-class CommandTest(OpenConsentTestCase):
+class CommandTest(EconsensusTestCase):
 
     poplib.POP3 = dummy_poplib.POP3
     poplib.POP3_SSL = dummy_poplib.POP3_SSL

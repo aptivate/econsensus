@@ -18,7 +18,7 @@ env.project_dir = env.project
 
 # repository type can be "svn" or "git"
 env.repo_type = "git"
-env.repository = 'git://github.com/aptivate/openconsent.git'
+env.repository = 'git://github.com/aptivate/econsensus.git'
 
 env.django_dir = os.path.join('django', env.project)
 env.test_cmd = ' manage.py test -v0 ' + ' '.join(project_settings.django_apps)
