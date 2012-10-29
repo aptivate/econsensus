@@ -69,7 +69,7 @@ class DecisionListTest(DecisionTestCase):
         decisions.append(self.make_decision(description="Decision None 2", organization=self.bettysorg))
 
         # Get the last_modified & id values
-        last_modifieds = [decision.last_modified.replace(microsecond=0) for decision in decisions]
+        last_modifieds = [decision.last_modified for decision in decisions]
         ids = [decision.id for decision in decisions]
         feedbackcounts = [decision.feedbackcount() for decision in decisions]
         excerpts = [decision.excerpt for decision in decisions]
@@ -96,7 +96,10 @@ class DecisionListTest(DecisionTestCase):
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': '-last_modified'})
         object_list = response.context['object_list']
         for index, sorted_last_modified in enumerate(sorted_last_modifieds):
-            self.assertEquals(sorted_last_modified, getattr(object_list[index], 'last_modified'), 'Testing date sort failed for last_modified')
+            # Replace Microsecond to enable good results on MySQL and SQLLite
+            sorted_list_last_modified = sorted_last_modified.replace(microsecond=0)
+            object_list_last_modified = getattr(object_list[index], 'last_modified').replace(microsecond=0)
+            self.assertEquals(sorted_list_last_modified, object_list_last_modified, 'Testing date sort failed for last_modified')
 
         #At this point, the ids in browser are all out of order, so good time to test id sort
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': '-id'})
