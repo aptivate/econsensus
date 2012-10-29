@@ -145,6 +145,7 @@ class HtmlTest(EconsensusTestCase):
     def test_cannot_view_decisions_when_not_member(self):
         request = self.factory.request()
         request.user = self.betty
+        request.session = self.client.session
         decision = self.make_decision()
         kwargs = {'org_slug' : decision.organization.slug,
                   'status': decision.status}

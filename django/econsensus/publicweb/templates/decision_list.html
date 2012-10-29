@@ -14,6 +14,7 @@
 			<p>{% trans "You are not a member of this organization." %}<p>
 		{% else %}
 		{% if object_list %}
+		{% include "pagination.html" %}
 	<table class="summary-list">
 		<thead>
 			<tr class="summary-header">

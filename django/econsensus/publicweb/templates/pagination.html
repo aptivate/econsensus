@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<script>
+	function repaginate() {
+		document.getElementById('paginationform').submit();
+	}
+</script>
+
+<div class="pagination">
+	{% if page_obj.has_previous %}
+		<a class="iconified-left" href="{{ prevstring }}"></a>
+	{% else %}
+		<span class="iconified-left-disabled"></span>
+	{% endif %}
+
+	<p>{{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</p>
+
+	{% if page_obj.has_next %}
+		<a class="iconified" href="{{ nextstring }}"></a>
+	{% else %}
+		<span class="iconified-disabled"></span>
+	{% endif %}
+
+	<form id="paginationform">
+		<noscript><input type="submit" value="{% trans 'show' %}"></noscript>
+		<input type="hidden" name="sort" value={{ sort }}>
+		<select name="num" class="pagination-num-items" onchange="repaginate()">
+			<!-- TODO Do the numeric values need trans tag?-->
+			<option value="10" {% if num == '10' %}selected{% endif %}>10</option>
+			<option value="25" {% if num == '25' %}selected{% endif %}>25</option>
+			<option value="50" {% if num == '50' %}selected{% endif %}>50</option>
+			<option value="100000" {% if num == '100000' %}selected{% endif %}>{% trans "all" %}</option>
+		</select>
+	</form>
+	<p>{% trans "results per page" %}</p>
+</div>
