@@ -18,20 +18,29 @@ class DecisionListTest(DecisionTestCase):
 
     def test_all_sorts_result_in_one_arrow_present(self):
         """Assert only one sort class is present in the decision list view"""
+
         # Assumes CSS will be correctly displaying the sort status
-        # Takes into account sort and sort-reverse
-        sort_options = {'proposal': ['-id', 'excerpt', 'feedback', 'deadline', '-last_modified'],
-                        'decision': ['-id', 'excerpt', 'decided_date', 'review_date'],
-                        'archived': ['-id', 'excerpt', 'creation', 'archived_date']
-                        }
+        sort_options = DecisionList().sort_table_headers
+
         self.create_decisions_with_different_statuses()
+        
+        # Test Ascending Sort
         for page, sort_queries in sort_options.iteritems():
             for sort_query in sort_queries:
                 response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': sort_query})
                 html = fromstring(response.content)
-                sort_selector = CSSSelector('table.summary-list .sort')
+                sort_selector = CSSSelector('table.summary-list .sort-asc')
                 sorts = sort_selector(html)
-                self.assertEquals(len(sorts), 1, 'Number of sort arrows should be 1. But is ' + str(len(sorts))
+                self.assertEquals(len(sorts), 1, 'Number of ascending sort arrows should be 1. But is ' + str(len(sorts))
+                                                 + ' for page=' + page + ' sort_query=' + sort_query)
+        # Test Descending Sort
+        for page, sort_queries in sort_options.iteritems():
+            for sort_query in sort_queries:
+                response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': '-' +sort_query})
+                html = fromstring(response.content)
+                sort_selector = CSSSelector('table.summary-list .sort-desc')
+                sorts = sort_selector(html)
+                self.assertEquals(len(sorts), 1, 'Number of descending sort arrows should be 1. But is ' + str(len(sorts))
                                                  + ' for page=' + page + ' sort_query=' + sort_query)
 
     def test_list_pages_can_be_sorted(self):
@@ -203,7 +212,7 @@ class DecisionListTest(DecisionTestCase):
         # C) valid sort option asc -> valid sort option
         # D) valid sort option desc -> - valid sort option
 
-        valid_sort_options = DecisionList().valid_sort_options
+        valid_sort_options = DecisionList().sort_options.keys()
 
         test_c = choice(valid_sort_options)
         test_d = '-' + choice(valid_sort_options)
@@ -215,8 +224,6 @@ class DecisionListTest(DecisionTestCase):
         for test_case in test_cases:
             response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': test_case['sortquery']})
             self.assertEquals(response.context['sort'], test_case['expectedsort'], 'Did not get expected sort with sortquery ' + test_case['sortquery'])
-            self.assertEquals(response.context['sort_order'], test_case['expectedsort_order'], 'Did not get expected sort_order with sortquery ' + test_case['sortquery'])
-            self.assertEquals(response.context['sort_field'], test_case['expectedsort_field'], 'Did not get expected sort_field with sortquery ' + test_case['sortquery'])
 
     def _get_random_string(self, max_length_of_string):
         #TODO This does not generate non-english charaters
