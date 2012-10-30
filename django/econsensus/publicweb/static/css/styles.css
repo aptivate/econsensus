@@ -311,21 +311,9 @@ input {
 	color: #000;
 }
 
-.summary-header .sort-asc {
-    background-image: url("../images/icon-sort.png");
-    background-position: right center;
-    background-repeat: no-repeat;
+.summary-header .sort-asc, .sort-desc {
     color: #3E6EA3;
-    padding-right: 20px;
-}
-
-.summary-header .sort-desc {
-    background-image: url("../images/icon-sort.png");
-    background-position: left center;
-    background-repeat: no-repeat;
-    color: #3E6EA3;
-    padding-right: 20px;
-}
+}  
 
 .summary-item a.iconified {
 	color: #3E6EA3;
@@ -482,7 +470,7 @@ li.summary-item {
 }
 
 .feedback {
-    width: 6em;
+    width: 8em;
 }
 
 .review_date,

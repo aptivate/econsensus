@@ -15,7 +15,6 @@
 			<p>{% trans "You are not a member of this organization." %}<p>
 		{% else %}
 		    {% if object_list %}
-
 	            <table class="summary-list">
                     <thead>
                     </thead>
@@ -23,7 +22,11 @@
                             {% for header in header_list %}
                             <th class="{{ header.attrs }}">
                                 <a href="{{ header.path }}">
-                                    <span class="{{ header.sortclass }}">{{ header.title }}</span>
+                                    <span class="{{ header.sortclass }}">
+                                        {{ header.title }}
+                                        {% if header.sortclass == 'sort-asc' %} ▲{% endif %} 
+                                        {% if header.sortclass == 'sort-desc' %} ▼{% endif %}
+                                    </span>
                                 </a>
                             </th>
                             {% endfor %}
@@ -50,7 +53,6 @@
                     {% endfor %}
                     </tbody>
 	            </table>
-
 		    {% else %}
 			    <p class="no_items">{% trans "There are no decisions made." %}.<p>
 		    {% endif %}
