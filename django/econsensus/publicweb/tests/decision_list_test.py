@@ -23,7 +23,7 @@ class DecisionListTest(DecisionTestCase):
         sort_options = DecisionList().sort_table_headers
 
         self.create_decisions_with_different_statuses()
-        
+
         # Test Ascending Sort
         for page, sort_queries in sort_options.iteritems():
             for sort_query in sort_queries:
@@ -36,7 +36,7 @@ class DecisionListTest(DecisionTestCase):
         # Test Descending Sort
         for page, sort_queries in sort_options.iteritems():
             for sort_query in sort_queries:
-                response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': '-' +sort_query})
+                response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': '-' + sort_query})
                 html = fromstring(response.content)
                 sort_selector = CSSSelector('table.summary-list .sort-desc')
                 sorts = sort_selector(html)
@@ -149,8 +149,8 @@ class DecisionListTest(DecisionTestCase):
         test_cases = [{'name': 'Test A', 'sessionnum': 25, 'querydict': {'num': 100}, 'expectednum': '100'},
                       {'name': 'Test B', 'sessionnum': 25, 'querydict': {'sort': '-id'}, 'expectednum': '25'},
                       {'name': 'Test C', 'sessionnum': None, 'querydict': {'sort': '-id'}, 'expectednum': '10'},
-                      {'name': 'Test D', 'sessionnum': 25, 'querydict':  {'num': '-ee'}, 'expectednum': '10'},
-                      {'name': 'Test E', 'sessionnum': 25, 'querydict':  {'page': 1}, 'expectednum': '10'}]
+                      {'name': 'Test D', 'sessionnum': 25, 'querydict': {'num': '-ee'}, 'expectednum': '10'},
+                      {'name': 'Test E', 'sessionnum': 25, 'querydict': {'page': 1}, 'expectednum': '10'}]
         for test_case in test_cases:
                 # Ensure session is clean by logging out and in again
                 self.client.get(reverse('auth_logout'))
@@ -224,6 +224,55 @@ class DecisionListTest(DecisionTestCase):
         for test_case in test_cases:
             response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': test_case['sortquery']})
             self.assertEquals(response.context['sort'], test_case['expectedsort'], 'Did not get expected sort with sortquery ' + test_case['sortquery'])
+
+    def test_sorting_header_links(self):
+        # Ensure that the links provided in table headers give the correct next sort link
+        # Use default sort for each sort_option and assert that other headers are correct.
+        self.create_decisions_with_different_statuses()
+
+        decision = DecisionList()
+        default_sort_options = decision.sort_options
+        sort_table_headers = decision.sort_table_headers
+
+        for page, sort_queries in sort_table_headers.iteritems():
+            page_url = reverse('publicweb_item_list', args=[self.bettysorg.slug, page])
+
+            sort_query_defaults = {}
+            # Build expected defaults
+            for sort_query in sort_queries:
+                default_sort_order = default_sort_options[sort_query]
+                default_sort_query = default_sort_order + sort_query
+                sort_query_defaults[sort_query] = default_sort_query
+            sort_query_defaults['id'] = ''  # Override the default sort for id
+
+            for sort_query in sort_queries:
+                sort_query_tests = sort_query_defaults.copy()
+                test_query = sort_query_tests.pop(sort_query)
+
+                response = self.client.get(page_url, {'sort': test_query})
+                html = fromstring(response.content)
+
+                # Loop through the shortened sort_query_tests to check that default links are being given
+                for selector, sort_query_test in sort_query_tests.iteritems():
+                    selector = CSSSelector('.summary-header th.' + selector + ' a')
+                    link_ending = selector(html)[0].attrib['href'].split(page_url)[1]
+
+                    if sort_query_test == '':
+                        self.assertFalse(link_ending)
+                    else:
+                        self.assertEquals(link_ending.split('?sort=')[1], sort_query_test)
+
+                # Finally check that the test_query column has the opposite sort
+                selector = CSSSelector('.summary-header th.' + sort_query + ' a')
+                link_ending = selector(html)[0].attrib['href'].split(page_url)[1].split('?sort=')[1]
+                reversed_sort_order = decision.toggle_sort_order(default_sort_options[sort_query])
+                expected_link_ending = reversed_sort_order + sort_query
+                self.assertEquals(expected_link_ending, link_ending)
+
+    def test_toggle_sort_order(self):
+        decision = DecisionList()
+        self.assertEquals('', decision.toggle_sort_order('-'))
+        self.assertEquals('-', decision.toggle_sort_order(''))
 
     def _get_random_string(self, max_length_of_string):
         #TODO This does not generate non-english charaters
