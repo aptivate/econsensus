@@ -78,6 +78,7 @@ urlpatterns = patterns('econsensus.publicweb.views',
         DecisionList.as_view(template_name='decision_list.html'),
         name='publicweb_item_list'),
     url(r'^$', 
-        RedirectView.as_view(url=reverse_lazy('organization_list')),
+        RedirectView.as_view(url=reverse_lazy('organization_list'),
+                             permanent=False),
         name='publicweb_root'),
     )
