@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 
-from random import randint
+from random import randint, choice
 from string import ascii_letters, digits
 from datetime import date
 
@@ -18,20 +18,29 @@ class DecisionListTest(DecisionTestCase):
 
     def test_all_sorts_result_in_one_arrow_present(self):
         """Assert only one sort class is present in the decision list view"""
+
         # Assumes CSS will be correctly displaying the sort status
-        # Takes into account sort and sort-reverse
-        sort_options = {'proposal': ['-id', 'excerpt', 'feedback', 'deadline', '-last_modified'],
-                        'decision': ['-id', 'excerpt', 'decided_date', 'review_date'],
-                        'archived': ['-id', 'excerpt', 'creation', 'archived_date']
-                        }
+        sort_options = DecisionList().sort_table_headers
+
         self.create_decisions_with_different_statuses()
+
+        # Test Ascending Sort
         for page, sort_queries in sort_options.iteritems():
             for sort_query in sort_queries:
                 response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': sort_query})
                 html = fromstring(response.content)
-                sort_selector = CSSSelector('table.summary-list .sort')
+                sort_selector = CSSSelector('table.summary-list .sort-asc')
                 sorts = sort_selector(html)
-                self.assertEquals(len(sorts), 1, 'Number of sort arrows should be 1. But is ' + str(len(sorts))
+                self.assertEquals(len(sorts), 1, 'Number of ascending sort arrows should be 1. But is ' + str(len(sorts))
+                                                 + ' for page=' + page + ' sort_query=' + sort_query)
+        # Test Descending Sort
+        for page, sort_queries in sort_options.iteritems():
+            for sort_query in sort_queries:
+                response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, page]), {'sort': '-' + sort_query})
+                html = fromstring(response.content)
+                sort_selector = CSSSelector('table.summary-list .sort-desc')
+                sorts = sort_selector(html)
+                self.assertEquals(len(sorts), 1, 'Number of descending sort arrows should be 1. But is ' + str(len(sorts))
                                                  + ' for page=' + page + ' sort_query=' + sort_query)
 
     def test_list_pages_can_be_sorted(self):
@@ -77,9 +86,9 @@ class DecisionListTest(DecisionTestCase):
 
         # we need sorted values to compare against
         sorted_dates = sorted(random_dates)
-        sorted_last_modifieds = sorted(last_modifieds)[::-1]  # because we sort in reverse by default
-        sorted_ids = sorted(ids)[::-1]  # because we sort in reverse by default
-        sorted_feedbackcounts = sorted(feedbackcounts)[::-1]  # because we sort in reverse by default
+        sorted_last_modifieds = sorted(last_modifieds)
+        sorted_ids = sorted(ids)
+        sorted_feedbackcounts = sorted(feedbackcounts)
         sorted_excerpts = sorted(excerpts, key=unicode.lower)
 
         # Test Dates
@@ -93,7 +102,7 @@ class DecisionListTest(DecisionTestCase):
             self.assertEquals(None, getattr(object_list[len(object_list) - 1], column), 'Testing date sort failed for' + column)
 
         # Test Last Modified
-        response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': '-last_modified'})
+        response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': 'last_modified'})
         object_list = response.context['object_list']
         for index, sorted_last_modified in enumerate(sorted_last_modifieds):
             # Replace Microsecond to enable good results on MySQL and SQLLite
@@ -102,7 +111,7 @@ class DecisionListTest(DecisionTestCase):
             self.assertEquals(sorted_list_last_modified, object_list_last_modified, 'Testing date sort failed for last_modified')
 
         #At this point, the ids in browser are all out of order, so good time to test id sort
-        response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': '-id'})
+        response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': 'id'})
         object_list = response.context['object_list']
         for index, sorted_id in enumerate(sorted_ids):
             self.assertEquals(sorted_id, getattr(object_list[index], 'id'), 'Testing id sort failed')
@@ -111,9 +120,7 @@ class DecisionListTest(DecisionTestCase):
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': 'feedback'})
         object_list = response.context['object_list']
         for index, sorted_feedbackcount in enumerate(sorted_feedbackcounts):
-            self.assertEquals(sorted_feedbackcount, object_list[index].feedbackcount(), 'Testing feedbackcount sort failed')
-        self.assertEquals(0, object_list[len(object_list) - 2].feedbackcount(), 'Testing feedbackcount sort failed')
-        self.assertEquals(0, object_list[len(object_list) - 1].feedbackcount(), 'Testing feedbackcount sort failed')
+            self.assertEquals(sorted_feedbackcount, object_list[index].feedbackcount(), 'Testing feedbackcount sort failed.')
 
         # Test Excerpt
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': 'excerpt'})
@@ -142,8 +149,8 @@ class DecisionListTest(DecisionTestCase):
         test_cases = [{'name': 'Test A', 'sessionnum': 25, 'querydict': {'num': 100}, 'expectednum': '100'},
                       {'name': 'Test B', 'sessionnum': 25, 'querydict': {'sort': '-id'}, 'expectednum': '25'},
                       {'name': 'Test C', 'sessionnum': None, 'querydict': {'sort': '-id'}, 'expectednum': '10'},
-                      {'name': 'Test D', 'sessionnum': 25, 'querydict':  {'num': '-ee'}, 'expectednum': '10'},
-                      {'name': 'Test E', 'sessionnum': 25, 'querydict':  {'page': 1}, 'expectednum': '10'}]
+                      {'name': 'Test D', 'sessionnum': 25, 'querydict': {'num': '-ee'}, 'expectednum': '10'},
+                      {'name': 'Test E', 'sessionnum': 25, 'querydict': {'page': 1}, 'expectednum': '10'}]
         for test_case in test_cases:
                 # Ensure session is clean by logging out and in again
                 self.client.get(reverse('auth_logout'))
@@ -198,6 +205,75 @@ class DecisionListTest(DecisionTestCase):
             self.assertEquals(returned_prev_string, test_case['expectedprev'], 'Did not get expected previous query')
             self.assertEquals(returned_next_string, test_case['expectednext'], 'Did not get expected next query')
 
+    def test_set_sorting(self):
+        # Test the following cases confirm expected string is returned
+        # A) None -> -id
+        # B) random -> -id
+        # C) valid sort option asc -> valid sort option
+        # D) valid sort option desc -> - valid sort option
+
+        valid_sort_options = DecisionList().sort_options.keys()
+
+        test_c = choice(valid_sort_options)
+        test_d = '-' + choice(valid_sort_options)
+
+        test_cases = [{'name': 'Test A', 'sortquery': '-id', 'expectedsort': '-id', 'expectedsort_order': '-', 'expectedsort_field': 'id'},
+                      {'name': 'Test B', 'sortquery': self._get_random_string(10), 'expectedsort': '-id', 'expectedsort_order': '-', 'expectedsort_field': 'id'},
+                      {'name': 'Test C', 'sortquery': test_c, 'expectedsort': test_c, 'expectedsort_order': '', 'expectedsort_field': test_c},
+                      {'name': 'Test D', 'sortquery': test_d, 'expectedsort': test_d, 'expectedsort_order': '-', 'expectedsort_field': test_d[1:]}]
+        for test_case in test_cases:
+            response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': test_case['sortquery']})
+            self.assertEquals(response.context['sort'], test_case['expectedsort'], 'Did not get expected sort with sortquery ' + test_case['sortquery'])
+
+    def test_sorting_header_links(self):
+        # Ensure that the links provided in table headers give the correct next sort link
+        # Use default sort for each sort_option and assert that other headers are correct.
+        self.create_decisions_with_different_statuses()
+
+        decision = DecisionList()
+        default_sort_options = decision.sort_options
+        sort_table_headers = decision.sort_table_headers
+
+        for page, sort_queries in sort_table_headers.iteritems():
+            page_url = reverse('publicweb_item_list', args=[self.bettysorg.slug, page])
+
+            sort_query_defaults = {}
+            # Build expected defaults
+            for sort_query in sort_queries:
+                default_sort_order = default_sort_options[sort_query]
+                default_sort_query = default_sort_order + sort_query
+                sort_query_defaults[sort_query] = default_sort_query
+            sort_query_defaults['id'] = ''  # Override the default sort for id
+
+            for sort_query in sort_queries:
+                sort_query_tests = sort_query_defaults.copy()
+                test_query = sort_query_tests.pop(sort_query)
+
+                response = self.client.get(page_url, {'sort': test_query})
+                html = fromstring(response.content)
+
+                # Loop through the shortened sort_query_tests to check that default links are being given
+                for selector, sort_query_test in sort_query_tests.iteritems():
+                    selector = CSSSelector('.summary-header th.' + selector + ' a')
+                    link_ending = selector(html)[0].attrib['href'].split(page_url)[1]
+
+                    if sort_query_test == '':
+                        self.assertFalse(link_ending)
+                    else:
+                        self.assertEquals(link_ending.split('?sort=')[1], sort_query_test)
+
+                # Finally check that the test_query column has the opposite sort
+                selector = CSSSelector('.summary-header th.' + sort_query + ' a')
+                link_ending = selector(html)[0].attrib['href'].split(page_url)[1].split('?sort=')[1]
+                reversed_sort_order = decision.toggle_sort_order(default_sort_options[sort_query])
+                expected_link_ending = reversed_sort_order + sort_query
+                self.assertEquals(expected_link_ending, link_ending)
+
+    def test_toggle_sort_order(self):
+        decision = DecisionList()
+        self.assertEquals('', decision.toggle_sort_order('-'))
+        self.assertEquals('-', decision.toggle_sort_order(''))
+
     def _get_random_string(self, max_length_of_string):
         #TODO This does not generate non-english charaters
         chars = ascii_letters + digits + ' '
@@ -205,4 +281,3 @@ class DecisionListTest(DecisionTestCase):
 
     def _get_random_date(self):
         return date.fromordinal(randint(500000, 800000))
-

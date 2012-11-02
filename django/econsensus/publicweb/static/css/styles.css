@@ -311,13 +311,9 @@ input {
 	color: #000;
 }
 
-.summary-header .sort {
-    background-image: url("../images/icon-sort.png");
-    background-position: right center;
-    background-repeat: no-repeat;
+.summary-header .sort-asc, .sort-desc {
     color: #3E6EA3;
-    padding-right: 20px;
-}
+}  
 
 .summary-item a.iconified {
 	color: #3E6EA3;
@@ -473,9 +469,8 @@ li.summary-item {
    text-align:left;
 }
 
-.watchercount,
-.feedbackcount {
-    width: 6em;
+.feedback {
+    width: 8em;
 }
 
 .review_date,
