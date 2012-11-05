@@ -15,7 +15,7 @@ Organization User Detail
 <h1> {{ organization_user }} @ {{ organization }}</h1>
 {% if user == organization_user.user %}This is you!{% endif %}
 <ul>
-    <li>Name: {{ organization_user.full_name }}</li>
+    <li>Name: {{ organization_user.name }}</li>
     <li>Email: {{ organization_user.user.email }}</li>
 </ul>
 <ul>
