@@ -9,14 +9,13 @@ LOGIN_REDIRECT_URL = '/'
 
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(PROJECT_HOME,'econsensus-messages')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'openconsent',                      # Or path to database file if using sqlite3.
-        'USER': 'openconsent',                      # Not used with sqlite3.
+        'NAME': 'econsensus',                      # Or path to database file if using sqlite3.
+        'USER': 'econsensus',                      # Not used with sqlite3.
         'OPTIONS' : {"init_command": "SET storage_engine=INNODB"},
         'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
