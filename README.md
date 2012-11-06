@@ -13,11 +13,11 @@ First install the requirements:
 
 Then check out the code:
 
-    $ git clone https://github.com/aptivate/openconsent.git
+    $ git clone https://github.com/aptivate/econsensus.git
 
 Then you should be able to do:
 
-    $ cd openconsent
+    $ cd econsensus
     $ deploy/tasks.py deploy:dev
 
 This should set up the database you need, install the python packages 
