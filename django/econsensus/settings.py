@@ -200,6 +200,9 @@ LOGGING = {
     }
 }
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
 TINYMCE_DEFAULT_CONFIG = {
             "theme" : "advanced",
             "theme_advanced_buttons1" : "bold,italic,underline,link,unlink," +
