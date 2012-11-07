@@ -66,8 +66,6 @@ class Command(BaseCommand):
 
     def _process_email(self, mail, verbosity): # pylint: disable=R0914
         logger = logging.getLogger('econsensus')
-        import pdb
-        pdb.set_trace()
 
         #handle multipart mails, cycle through mail 
         #until find text type with a full payload.
