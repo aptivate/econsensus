@@ -51,7 +51,7 @@ class ExportCSV(View):
         writer = unicodecsv.writer(response)
         # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
         writer.writerow(list(field_names))
-        for obj in Decision.objects.all():
+        for obj in Decision.objects.filter(organization__users=self.request.user):
             writer.writerow([unicode(getattr(obj, field)).encode("utf-8", "replace") for field in field_names])
         return response
 
