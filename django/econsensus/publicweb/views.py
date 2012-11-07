@@ -50,7 +50,7 @@ class ExportCSV(View):
         field_names = set([field.name for field in opts.fields])
 
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+        response['Content-Disposition'] = 'attachment; filename=econsensus_decisions_%s.csv' % unicode(self.organization.slug)
 
         writer = unicodecsv.writer(response)
         # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
