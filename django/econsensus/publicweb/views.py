@@ -27,7 +27,7 @@ class ExportCSV(View):
     def dispatch(self, *args, **kwargs):
         return super(ExportCSV, self).dispatch(*args, **kwargs)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
@@ -51,7 +51,8 @@ class ExportCSV(View):
         writer = unicodecsv.writer(response)
         # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
         writer.writerow(list(field_names))
-        for obj in Decision.objects.filter(organization__users=self.request.user):
+        current_organization = Organization.active.get(slug=kwargs.get('org_slug', None))
+        for obj in Decision.objects.filter(organization=current_organization):
             writer.writerow([unicode(getattr(obj, field)).encode("utf-8", "replace") for field in field_names])
         return response
 

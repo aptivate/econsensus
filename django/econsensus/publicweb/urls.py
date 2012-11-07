@@ -20,7 +20,7 @@ feedback_snippet_update_info = {'model' : Feedback,
 }
 
 urlpatterns = patterns('econsensus.publicweb.views',
-    url(r'^export_csv/$',
+    url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
         ExportCSV.as_view(),
         name='publicweb_export_csv'),
                        
