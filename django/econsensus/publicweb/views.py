@@ -4,9 +4,10 @@ from organizations.models import Organization
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.template.response import SimpleTemplateResponse
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -24,8 +25,11 @@ class ExportCSV(View):
 #Therefore it should be its own app.
 #This looks like it's already been done... see https://github.com/joshourisman/django-tablib
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ExportCSV, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.organization = Organization.active.get(slug=kwargs.get('org_slug', None))
+        if not self.organization.is_member(request.user):
+            return HttpResponseForbidden(_("Whoops, wrong organization"))
+        return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
@@ -51,8 +55,7 @@ class ExportCSV(View):
         writer = unicodecsv.writer(response)
         # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
         writer.writerow(list(field_names))
-        current_organization = Organization.active.get(slug=kwargs.get('org_slug', None))
-        for obj in Decision.objects.filter(organization=current_organization):
+        for obj in Decision.objects.filter(organization=self.organization):
             writer.writerow([unicode(getattr(obj, field)).encode("utf-8", "replace") for field in field_names])
         return response
 
