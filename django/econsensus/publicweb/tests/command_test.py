@@ -8,6 +8,8 @@ from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+
 class CommandTest(EconsensusTestCase):
 
     poplib.POP3 = dummy_poplib.POP3
@@ -27,7 +29,7 @@ class CommandTest(EconsensusTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            decision = Decision.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
+            decision = Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertEqual(decision.status, Decision.PROPOSAL_STATUS)
@@ -46,10 +48,11 @@ class CommandTest(EconsensusTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
+        self.assertEqual(feedback.description, 'Mnogi programi za stolno izdavatvo')
 
     def test_process_email_defined_feedback(self):
         #Tests that if a defined feedback type is passed it is transformed
@@ -59,16 +62,17 @@ class CommandTest(EconsensusTestCase):
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
                                       'Subject: gleda raspored #%s' % parent.id,
                                       '',
-                                      'Danger: Mnogi programi \nza stolno\n izdavatvo', ''], [''])
+                                      'Danger: Mnogi -- programi \nza stolno\n izdavatvo', ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description="Mnogi programi \nza stolno\n izdavatvo")
+            feedback = Feedback.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)
+        self.assertEqual(feedback.description, 'Mnogi -- programi \nza stolno\n izdavatvo')
 
     def test_process_email_unrecognised_feedback(self):
         #Tests that if the user mistypes the feedback type it is ignored
@@ -84,10 +88,31 @@ class CommandTest(EconsensusTestCase):
         except:
             self.fail("Exception was raised when processing legitimate email.")
         try:
-            feedback = Feedback.objects.get(description__contains="Mnogi programi za stolno izdavatvo")
+            feedback = Feedback.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as feedback.")
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
+        self.assertEqual(feedback.description, 'Mnogi programi za stolno izdavatvo')
+
+    def test_process_email_empty_feedback(self):
+        #Tests that users can assign just the rating, leaving description blank
+        #and the feedback defaults to comment
+        parent = self.make_decision()
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
+                                      'Subject: gleda raspored #%s' % parent.id,
+                                      '',
+                                      'Consent:', ''], [''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+        try:
+            feedback = Feedback.objects.latest('id')
+        except:
+            self.fail("Email failed to appear in database as feedback.")
+        self.assertEqual(feedback.rating, Feedback.CONSENT_STATUS)
+        self.assertEqual(feedback.description, '')
 
     def test_process_email_bad_content(self):
         initial_count = Decision.objects.count()
@@ -144,7 +169,7 @@ class CommandTest(EconsensusTestCase):
             self.fail("Exception: %s" % e)
         
         try:
-            decision = Decision.objects.get(description__contains="Unquoted text.")
+            decision = Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertNotIn("Some quoted text.", decision.description)
@@ -173,7 +198,7 @@ class CommandTest(EconsensusTestCase):
             self.fail("Exception: %s" % e)
         
         try:
-            decision = Decision.objects.get(description__contains="Proposal XYZ")
+            decision = Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
         self.assertNotIn("On 24/07/12 18:14, Mark Skipper wrote:", decision.description)
@@ -198,6 +223,6 @@ class CommandTest(EconsensusTestCase):
             self.fail("Exception: %s" % e)
         
         try:
-            Decision.objects.get(description__contains="Sample payload")
+            Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
