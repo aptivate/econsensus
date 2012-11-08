@@ -8,7 +8,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Econsensus Project', 'info@econsensus.org'),
+    ('Econsensus Project', 'carers-econsensus@aptivate.org'),
 )
 
 MANAGERS = ADMINS
