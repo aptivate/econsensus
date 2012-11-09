@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.dispatch import receiver
 from django.conf import settings
+from django.contrib.sites.models import Site
+
 from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
@@ -147,6 +149,12 @@ class Decision(models.Model):
         statistics['all'] = self.feedback_set.count()
         return statistics
 
+    def get_message_id(self):
+        """
+        Generates a message id that can be used in email headers
+        """
+        return "decision-%s@%s" % (self.id, Site.objects.get_current().domain)
+
     def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()
         super(Decision, self).save(*args, **kwargs)
@@ -192,6 +200,12 @@ class Feedback(models.Model):
     def rating_text(self):
         return self.RATING_CHOICES[self.rating][1]
 
+    def get_message_id(self):
+        """
+        Generates a message id that can be used in email headers
+        """
+        return "feedback-%s@%s" % (self.id, Site.objects.get_current().domain)
+
 def rating_int(string):
     try:
         index = [y[1] for y in Feedback.RATING_CHOICES].index(string)
@@ -219,7 +233,8 @@ if notification is not None:
                 notification.observe(instance, user, 'decision_change')
             extra_context = {}
             extra_context.update({"observed": instance})
-            notification.send(all_but_author, "decision_new", extra_context, from_email=instance.get_email())
+            headers = {'Message-ID' : instance.get_message_id()}
+            notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
     
     @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.new_feedback_signal_handler")
     def new_feedback_signal_handler(sender, **kwargs):
@@ -237,4 +252,8 @@ if notification is not None:
             all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
             observer_list = [x.user for x in all_observed_items_but_authors]
             extra_context = dict({"observed": instance})
-            notification.send(observer_list, "feedback_new", extra_context, from_email=instance.decision.get_email())
+            message_id = "decision-%s@%s" % (instance.id, Site.objects.get_current().domain)            
+            headers = {'Message-ID' : instance.get_message_id()}
+            headers.update({'In-Reply-To' : instance.decision.get_message_id()})
+            notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
+
