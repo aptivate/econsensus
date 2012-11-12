@@ -53,8 +53,8 @@
 					</ul>
 					{% if organization %}
 					<div id="user-actions">
+						<a class="button add_proposal" href="{% url 'publicweb_decision_create' organization.slug 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>					
 						<a class="button add_decision" href="{% url 'publicweb_decision_create' organization.slug 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
-						<a class="button add_proposal" href="{% url 'publicweb_decision_create' organization.slug 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>
 					</div>
 					{% endif %}
 				</div>
