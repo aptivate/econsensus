@@ -5,9 +5,8 @@ from organizations.models import Organization
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template.response import SimpleTemplateResponse
 from django.utils.decorators import method_decorator
-from django.views.generic.base import View
+from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -17,7 +16,7 @@ import unicodecsv
 
 from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
-
+from organizations.models import Organization
 
 class ExportCSV(View):
 #TODO: Exporting as csv is a generic function that can be required of any database.
@@ -378,3 +377,24 @@ class FeedbackUpdate(UpdateView):
 
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+
+
+class OrganizationRedirectView(RedirectView):
+    '''
+    If the user only belongs to one organization then
+    take them to that organizations proposal page, otherwise
+    take them to the organization list page.
+    '''
+    permanent = False
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self):
+        users_orgs = Organization.objects.get_for_user(self.request.user)
+        if len(users_orgs) == 1:
+            single_org = users_orgs[0]
+            return reverse('publicweb_item_list', args = [single_org.slug, 'proposal'])
+        else:
+            return reverse('organization_list')

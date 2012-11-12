@@ -1,23 +1,14 @@
 from django.conf.urls.defaults import patterns, url
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
 
 from views import DecisionCreate, DecisionUpdate, \
                     DecisionDetail, DecisionList, \
                     ExportCSV, FeedbackCreate, \
-                    FeedbackSnippetCreate, FeedbackUpdate
+                    FeedbackSnippetCreate, FeedbackUpdate, \
+                    OrganizationRedirectView
 
-from models import Decision, Feedback
-
-feedback_update_info = {'model' : Feedback,
-                        'template_name': 'feedback_update_page.html'
-}
-
-feedback_snippet_update_info = {'model' : Feedback,
-                                'template_name': 'feedback_update_snippet.html'
-}
+from models import Feedback
 
 urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^export_csv/$',
@@ -59,7 +50,7 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^decision/detail/(?P<pk>[\d]+)/$',
         DecisionDetail.as_view(template_name = 'decision_detail_page.html'),
         name='publicweb_decision_detail'),
-    #snippets                       
+    #snippets    
     url(r'^(?P<org_slug>[-\w]+)/decision/create/snippet/(?P<status>[a-z]+)/$',
         DecisionCreate.as_view(template_name = 'decision_update_snippet.html'),
         name='publicweb_decision_snippet_create'),
@@ -78,7 +69,6 @@ urlpatterns = patterns('econsensus.publicweb.views',
         DecisionList.as_view(template_name='decision_list.html'),
         name='publicweb_item_list'),
     url(r'^$', 
-        RedirectView.as_view(url=reverse_lazy('organization_list'),
-                             permanent=False),
+        OrganizationRedirectView.as_view(),
         name='publicweb_root'),
     )
