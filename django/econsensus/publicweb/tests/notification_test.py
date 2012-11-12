@@ -162,10 +162,25 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], decision.get_message_id())
         mail.outbox = []
+
+        decision = self.update_decision_through_browser(decision.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], decision.get_message_id())
+        mail.outbox = []
+
         feedback = self.create_feedback_through_browser(decision.id)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
-        
+        mail.outbox = []
+
+        feedback = self.update_feedback_through_browser(feedback.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
+        self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())

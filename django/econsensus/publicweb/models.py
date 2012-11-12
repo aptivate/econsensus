@@ -215,36 +215,40 @@ def rating_int(string):
     return Feedback.RATING_CHOICES[index][0]
 
 if notification is not None:
-    models.signals.post_save.connect(notification.handle_observations, sender=Decision, dispatch_uid="publicweb.models.decision_observations")
-    models.signals.post_save.connect(notification.handle_observations, sender=Feedback, dispatch_uid="publicweb.models.feedback_observations")
-
-    @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.new_decision_signal_handler")
-    def new_decision_signal_handler(sender, **kwargs):
+    @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
+    def decision_signal_handler(sender, **kwargs):
         """
         All users except the author will get a notification informing them of 
         new content.
         All users are made observers of the decision.
+        Notices are sent for observed decisions when feedback changes.
         """
+        instance = kwargs.get('instance')
+        headers = {'Message-ID' : instance.get_message_id()}
+
         if kwargs.get('created', True):
-            instance = kwargs.get('instance')
             all_users = instance.organization.users.all()
             all_but_author = all_users.exclude(username=instance.author)
             for user in all_users:
                 notification.observe(instance, user, 'decision_change')
             extra_context = {}
             extra_context.update({"observed": instance})
-            headers = {'Message-ID' : instance.get_message_id()}
             notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
-    
-    @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.new_feedback_signal_handler")
-    def new_feedback_signal_handler(sender, **kwargs):
+        else:
+            notification.send_observation_notices_for(instance, headers=headers)
+            
+    @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
+    def feedback_signal_handler(sender, **kwargs):
         """
         All watchers of a decision will get a notification informing them of
         new feedback.
         All watchers become observers of the feedback.
         """
+        instance = kwargs.get('instance')
+        headers = {'Message-ID' : instance.get_message_id()}
+        headers.update({'In-Reply-To' : instance.decision.get_message_id()})        
+        
         if kwargs.get('created', True):
-            instance = kwargs.get('instance')
             #author gets notified if the feedback is edited.
             notification.observe(instance, instance.author, 'feedback_change')
 
@@ -252,8 +256,7 @@ if notification is not None:
             all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
             observer_list = [x.user for x in all_observed_items_but_authors]
             extra_context = dict({"observed": instance})
-            message_id = "decision-%s@%s" % (instance.id, Site.objects.get_current().domain)            
-            headers = {'Message-ID' : instance.get_message_id()}
-            headers.update({'In-Reply-To' : instance.decision.get_message_id()})
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
-
+        else:
+            notification.send_observation_notices_for(instance, headers=headers)
+            
