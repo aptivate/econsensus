@@ -42,7 +42,7 @@ class ExportCSV(View):
         '''
 
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=econsensus_decisions_%s.csv' % unicode(self.organization.slug)
+        response['Content-Disposition'] = 'attachment; filename=econsensus_decision_data_%s.csv' % unicode(self.organization.slug)
 
         def field_sorter(s):
             """
