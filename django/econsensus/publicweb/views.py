@@ -21,9 +21,6 @@ from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
 
 class ExportCSV(View):
-#TODO: Exporting as csv is a generic function that can be required of any database.
-#Therefore it should be its own app.
-#This looks like it's already been done... see https://github.com/joshourisman/django-tablib
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.organization = Organization.active.get(slug=kwargs.get('org_slug', None))
