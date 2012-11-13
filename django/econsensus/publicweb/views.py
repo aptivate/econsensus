@@ -75,7 +75,7 @@ class DecisionDetail(DetailView):
 class DecisionList(ListView):
     model = Decision
 
-    #@method_decorator(login_required)
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         slug = kwargs.get('org_slug', None)
         self.organization = get_object_or_404(Organization, slug=slug)
