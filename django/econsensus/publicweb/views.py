@@ -35,15 +35,6 @@ class ExportCSV(View):
         ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
-        >>> res = export_csv(1000)
-        >>> res.status_code
-        200
-        >>> res['Content-Disposition']
-        'attachment; filename=publicweb_decision.csv'
-        >>> res['Content-Type']
-        'text/csv'
-        >>> len(res.content)>0
-        True
         '''
 
         opts = Decision._meta  # @UndefinedVariable
