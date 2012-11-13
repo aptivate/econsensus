@@ -11,7 +11,7 @@ from views import DecisionCreate, DecisionUpdate, \
 from models import Feedback
 
 urlpatterns = patterns('econsensus.publicweb.views',
-    url(r'^export_csv/$',
+    url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
         ExportCSV.as_view(),
         name='publicweb_export_csv'),
                        

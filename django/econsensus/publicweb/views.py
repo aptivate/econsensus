@@ -4,8 +4,9 @@ from organizations.models import Organization
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -16,17 +17,19 @@ import unicodecsv
 
 from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
-from organizations.models import Organization
 
 class ExportCSV(View):
 #TODO: Exporting as csv is a generic function that can be required of any database.
 #Therefore it should be its own app.
 #This looks like it's already been done... see https://github.com/joshourisman/django-tablib
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ExportCSV, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.organization = Organization.active.get(slug=kwargs.get('org_slug', None))
+        if not self.organization.is_member(request.user):
+            return HttpResponseForbidden(_("Whoops, wrong organization"))
+        return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
@@ -45,12 +48,12 @@ class ExportCSV(View):
         field_names = set([field.name for field in opts.fields])
 
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+        response['Content-Disposition'] = 'attachment; filename=econsensus_decisions_%s.csv' % unicode(self.organization.slug)
 
         writer = unicodecsv.writer(response)
         # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
         writer.writerow(list(field_names))
-        for obj in Decision.objects.all():
+        for obj in Decision.objects.filter(organization=self.organization):
             writer.writerow([unicode(getattr(obj, field)).encode("utf-8", "replace") for field in field_names])
         return response
 
