@@ -131,13 +131,13 @@ class Command(BaseCommand):
                             
             rating = Feedback.COMMENT_STATUS                    
             description = msg_string                
-            parse_feedback = re.match('(\w+)\s*:\s*(\w+[\s\w]*)', msg_string, re.IGNORECASE)
+            parse_feedback = re.match('(\w+)\s*:\s*([\s\S]*)', msg_string, re.IGNORECASE)
             if parse_feedback:
+                description = parse_feedback.group(2)
                 rating_match = re.match('question|danger|concerns|consent|comment', parse_feedback.group(1), re.IGNORECASE)
                 if rating_match:
                     self._print_if_verbose(verbosity, "Found feedback rating '%s'" % rating_match.group())
                     rating = rating_int(rating_match.group().lower())
-                    description = parse_feedback.group(2)
 
             self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
             feedback = Feedback(author=user, decision=decision, rating=rating, description=description)

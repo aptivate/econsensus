@@ -39,7 +39,7 @@
 				            {% if tab == 'proposal' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.feedbackcount }}</a></td>
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.deadline }}</a></td>
-				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.last_modified }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.last_modified|timesince }} ago</a></td>
             				{% endif %}
 				            {% if tab == 'decision' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.decided_date }}</a></td>

@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from decision_test_case import DecisionTestCase
 from publicweb.models import Decision, Feedback
+from organizations.models import Organization, OrganizationUser
 
 #TODO: View tests should not be dependent on redirects from urls.py
 #THerefore should not use 'reverse'. Need to create request object...
@@ -78,4 +79,35 @@ class ViewTest(DecisionTestCase):
         decision = Decision.objects.get(id=decision.id)
         self.assertNotIn(self.user, tuple(decision.watchers.all()))
         
+    def test_redirect_for_one_organization(self):
+        '''
+        if the user is a member of only one organization then on login
+        they should be redirected to the proposal page for that one
+        organization and not the organization list page.
+        '''
+        arbury = User.objects.create_user('arbury', password='arbury')
+        org = Organization.active.latest('id')
+        OrganizationUser.objects.create(user=arbury, organization=org, is_admin=False)
+        self.login('arbury')
+        path = reverse('auth_login')
+        post_dict = {'username': 'arbury', 'password': 'arbury'}
+        response = self.client.post(path, post_dict, follow=True)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[org.slug, 'proposal']))
+
+    def test_redirect_for_many_organizations(self):
+        '''
+        if the user is a member of many organizations then on login
+        they should be redirected to the organization list page
+        which shows all the organizations to which they belong.
+        '''
+        arbury = User.objects.create_user('arbury', password='arbury')
+        orgs = Organization.active.all()[:2]
+        OrganizationUser.objects.create(user=arbury, organization=orgs[0], is_admin=False)
+        OrganizationUser.objects.create(user=arbury, organization=orgs[1], is_admin=False)
+        self.login('arbury')
+        path = reverse('auth_login')
+        post_dict = {'username': 'arbury', 'password': 'arbury'}
+        response = self.client.post(path, post_dict, follow=True)
+        self.assertRedirects(response, reverse('organization_list'))
+
         

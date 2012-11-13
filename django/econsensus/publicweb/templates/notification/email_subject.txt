@@ -1,1 +1,0 @@
-{% load i18n %}[#{{ observed.decision.id }}] {% blocktrans %}{{ message }}{% endblocktrans %}

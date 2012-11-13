@@ -153,3 +153,34 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, decision.get_email())
         
+    def test_emails_contain_extra_header_info(self):
+        users_orgs = Organization.active.get_for_user(self.user)
+        self.assertGreaterEqual(len(users_orgs), 2)
+        decision = self.make_decision(organization=users_orgs[0])
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], decision.get_message_id())
+        mail.outbox = []
+
+        decision = self.update_decision_through_browser(decision.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], decision.get_message_id())
+        mail.outbox = []
+
+        feedback = self.create_feedback_through_browser(decision.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
+        self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
+        mail.outbox = []
+
+        feedback = self.update_feedback_through_browser(feedback.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertTrue(outbox[0].extra_headers)
+        self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
+        self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
