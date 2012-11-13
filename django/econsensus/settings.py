@@ -151,7 +151,9 @@ INSTALLED_APPS = (
 # more details on how to customize your logging configuration.
 
 LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'econsensus.log')
-
+if not os.path.exists(LOG_FILE):
+    open(LOG_FILE, 'w').close() 
+ 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
