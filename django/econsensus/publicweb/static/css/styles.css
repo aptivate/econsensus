@@ -572,12 +572,13 @@ span.excerpt {
     left: 0;
     margin-bottom: 5px;
     margin-right: -50px;
-    padding: 3px 0 3px 5%;
+    padding: 3px 0 3px 30px;
     text-transform: capitalize;
     width: 97%;
 }
   
 #decision_detail .stats dd {
+    color: #000;
     background: none repeat scroll 0 0 #FFFFFF;
     border-radius: 50% 50% 50% 50%;
     -moz-border-radius: 50% 50% 50% 50%;
@@ -992,33 +993,31 @@ div#tags {
 }
 
 dl.stats dt {
+    background-image: url("../images/icon-add.png");
+    background-position: 3px center;
+    background-repeat: no-repeat;
 	display:block;
-	color: #BBBBBB;
+    color: #fff;
 }
 
 .stats .consent {
 	background-color:#aad400;
-	color:#fff;
 }
 
 .stats .question {
 	background-color:#008080;
-	color:#fff;
 }
 
 .stats .danger {
 	background-color:#d81616;
-	color:#fff;
 }
 
 .stats .concerns {
 	background-color:#f60;
-	color:#fff;
 }
 
 .stats .comment {
 	background-color:#aaa;
-	color:#fff;
 }
 
 
