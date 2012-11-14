@@ -4,6 +4,8 @@ from organizations.models import Organization
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -19,9 +21,6 @@ from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
 
 class ExportCSV(View):
-#TODO: Exporting as csv is a generic function that can be required of any database.
-#Therefore it should be its own app.
-#This looks like it's already been done... see https://github.com/joshourisman/django-tablib
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.organization = Organization.active.get(slug=kwargs.get('org_slug', None))
@@ -30,31 +29,87 @@ class ExportCSV(View):
         return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        ''' Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from Decision.
+        ''' 
+        Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from 
+        Decision, Feedback and Comment.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
-        >>> res = export_csv(1000)
-        >>> res.status_code
-        200
-        >>> res['Content-Disposition']
-        'attachment; filename=publicweb_decision.csv'
-        >>> res['Content-Type']
-        'text/csv'
-        >>> len(res.content)>0
-        True
         '''
 
-        opts = Decision._meta  # @UndefinedVariable
-        field_names = set([field.name for field in opts.fields])
-
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=econsensus_decisions_%s.csv' % unicode(self.organization.slug)
+        response['Content-Disposition'] = 'attachment; filename=econsensus_decision_data_%s.csv' % unicode(self.organization.slug)
+
+        def field_sorter(s):
+            """
+            Impose an order on certain fields.
+            Fields not specified below will appear in arbitrary order at end of list.
+            """
+            if s == 'id': return '\t 00 %s' % s
+            elif s == 'creation': return '\t 01 %s' % s
+            elif s == 'submit_date': return '\t 02 %s' % s
+            elif s == 'author': return '\t 03 %s' % s
+            elif s == 'user': return '\t 04 %s' % s
+            elif s == 'user_name': return '\t 05 %s' % s
+            elif s == 'user_email': return '\t 06 %s' % s
+            elif s == 'user_url': return '\t 07 %s' % s
+            elif s == 'excerpt': return '\t 08 %s' % s
+            elif s == 'description': return '\t 09 %s' % s
+            elif s == 'budget': return '\t 10 %s' % s
+            elif s == 'people': return '\t 11 %s' % s
+            elif s == 'meeting_people': return '\t 12 %s' % s
+            elif s == 'effective_date': return '\t 13 %s' % s
+            elif s == 'deadline': return '\t 14 %s' % s
+            elif s == 'expiry_date': return '\t 15 %s' % s
+            elif s == 'review_date': return '\t 16 %s' % s
+            elif s == 'tags': return '\t 17 %s' % s
+            elif s == 'status': return '\t 18 %s' % s
+            elif s == 'last_status': return '\t 19 %s' % s
+            elif s == 'last_modified': return '\t 20 %s' % s
+            elif s == 'editor': return '\t 21 %s' % s
+            elif s == 'decided_date': return '\t 22 %s' % s
+            elif s == 'archived_date': return '\t 23 %s' % s
+            else: return s
+
+        def remove_field(l, field_name):
+            if field_name in l: 
+                l.remove(field_name)
+
+        def field_value(obj, field_name):
+            if isinstance(obj, Feedback) and field_name == 'rating':
+                value = obj.get_rating_display()
+            else:
+                value = getattr(obj, field_name)
+            return unicode(value).encode("utf-8", "replace")
+
+        decision_field_names = sorted(list(set([field.name for field in Decision._meta.fields])), key=field_sorter)
+        feedback_field_names = sorted(list(set([field.name for field in Feedback._meta.fields])), key=field_sorter)
+        comment_field_names = sorted(list(set([field.name for field in Comment._meta.fields])), key=field_sorter)
+
+        # Remove fields implied by filename (organization) or csv layout:
+        remove_field(decision_field_names, 'organization')
+        remove_field(feedback_field_names, 'decision')
+        remove_field(comment_field_names, 'content_type')
+        remove_field(comment_field_names, 'object_pk')
+
+        decision_column_titles = ["Decision.%s" % field_name for field_name in decision_field_names]
+        feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
+        comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
 
         writer = unicodecsv.writer(response)
-        # example of using writer.writerow: writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-        writer.writerow(list(field_names))
-        for obj in Decision.objects.filter(organization=self.organization):
-            writer.writerow([unicode(getattr(obj, field)).encode("utf-8", "replace") for field in field_names])
+        writer.writerow(decision_column_titles + feedback_column_titles + comment_column_titles)
+        for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
+            decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
+            writer.writerow(decision_data + [u""]*len(feedback_field_names) + [u""]*len(comment_field_names))    
+            for feedback in decision.feedback_set.all().order_by('id'):
+                feedback_data = [field_value(feedback, field_name) for field_name in feedback_field_names]
+                writer.writerow([u""]*len(decision_field_names) + feedback_data + [u""]*len(comment_field_names))
+                comments = Comment.objects.filter(
+                    content_type=ContentType.objects.get_for_model(Feedback),
+                    object_pk=feedback.id
+                ).order_by('id')
+                for comment in comments:
+                    comment_data = [field_value(comment, field_name) for field_name in comment_field_names]
+                    writer.writerow([u""]*len(decision_field_names) + [u""]*len(feedback_field_names) + comment_data)    
         return response
 
 

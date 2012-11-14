@@ -33,7 +33,7 @@ class CsvTest(EconsensusTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(
             response['Content-Disposition'], 
-            'attachment; filename=econsensus_decisions_%s.csv' % self.test_user_org.slug
+            'attachment; filename=econsensus_decision_data_%s.csv' % self.test_user_org.slug
         )
         self.assertEquals(response['Content-Type'],	'text/csv')
         self.assertTrue(len(response.content) > 0)
