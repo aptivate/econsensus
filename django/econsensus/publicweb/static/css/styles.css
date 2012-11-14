@@ -1211,8 +1211,8 @@ body.login p.message {
 
 #login-form .field_value {
     float: right;
-    
 }
+
 #login-form .label {
     float: left;
 }
@@ -1256,7 +1256,6 @@ body.login p.message {
     padding: 5px;
     position: relative;
     width: 232px;
-
 }
 
 /* 404 Page Styling */
@@ -1278,9 +1277,9 @@ p.error404 {
     width: 50%;
 	}
 	
-#decision_detail .meta_people {
-	margin-bottom:10px;
-}
+    #decision_detail .meta_people {
+        margin-bottom:10px;
+    }
 }
 
 
@@ -1465,8 +1464,8 @@ p.error404 {
 }
 
 @media screen and (max-width:400px) {
-  body {
-  }
+    body {
+    }
   
 	#header h1 span {
 		display:none;
@@ -1535,33 +1534,33 @@ p.error404 {
 	}
 
 
-a.button.add_feedback {
-    background-image: url("../images/icon-add.png");
-    background-position: 3px center;
-    background-repeat: no-repeat;
-    color: #333333;
-    display: block;
-    font-size: 0.8em;
-    line-height: 24px;
-    margin-right: 0;
-    margin-top: 6px;
-    padding-left: 30px;
-    top: 5px;
-    width: inherit;
-  }
+    a.button.add_feedback {
+        background-image: url("../images/icon-add.png");
+        background-position: 3px center;
+        background-repeat: no-repeat;
+        color: #333333;
+        display: block;
+        font-size: 0.8em;
+        line-height: 24px;
+        margin-right: 0;
+        margin-top: 6px;
+        padding-left: 30px;
+        top: 5px;
+        width: inherit;
+    }
   
-  	#id_description, #id_budget, #id_people, #id_meeting_people {
+    #id_description, #id_budget, #id_people, #id_meeting_people {
     width: 85%;
-	}
+    }
 
-  
-  .decision_feedback ol.feedback_list {
-  	padding:5px 0;
-  }
-  
-  .decision_feedback .feedback_type {
-  	width:100%;
-  }
+
+    .decision_feedback ol.feedback_list {
+    padding:5px 0;
+    }
+
+    .decision_feedback .feedback_type {
+    width:100%;
+    }
   
   
 
