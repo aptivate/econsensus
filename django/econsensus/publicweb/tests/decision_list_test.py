@@ -154,7 +154,7 @@ class DecisionListTest(DecisionTestCase):
         for test_case in test_cases:
                 # Ensure session is clean by logging out and in again
                 self.client.get(reverse('auth_logout'))
-                #self.login('betty') <-- TODO Don't seem to need to login??? (related to method_decorator being commented out?)
+                self.login('betty')
                 self.assertFalse('num' in self.client.session, 'Session should be empty at start of test')
 
                 # Set an existing session val if we need one
