@@ -565,6 +565,10 @@ span.excerpt {
     width: 100%;
 }
 #decision_detail .stats dt {
+    background-image: url("../images/icon-add.png");
+    background-position: 3px center;
+    background-repeat: no-repeat;
+    color: #fff;
     display: block;
     float: left;
     font-size: 0.9em;
@@ -575,6 +579,26 @@ span.excerpt {
     padding: 3px 0 3px 30px;
     text-transform: capitalize;
     width: 97%;
+}
+
+#decision_detail .stats .consent {
+	background-color:#aad400;
+}
+
+#decision_detail .stats .question {
+	background-color:#008080;
+}
+
+#decision_detail .stats .danger {
+	background-color:#d81616;
+}
+
+#decision_detail .stats .concerns {
+	background-color:#f60;
+}
+
+#decision_detail .stats .comment {
+	background-color:#aaa;
 }
   
 #decision_detail .stats dd {
@@ -593,6 +617,7 @@ span.excerpt {
     right: 10px;
     text-align: center;
 }
+
 
 #decision_detail .description {
 	width:68%;
@@ -904,34 +929,6 @@ div#tags {
 	float:left;
 	margin:0 2em 0 0;
 	text-align:center;
-}
-
-dl.stats dt {
-    background-image: url("../images/icon-add.png");
-    background-position: 3px center;
-    background-repeat: no-repeat;
-	display:block;
-    color: #fff;
-}
-
-.stats .consent {
-	background-color:#aad400;
-}
-
-.stats .question {
-	background-color:#008080;
-}
-
-.stats .danger {
-	background-color:#d81616;
-}
-
-.stats .concerns {
-	background-color:#f60;
-}
-
-.stats .comment {
-	background-color:#aaa;
 }
 
 
