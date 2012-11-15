@@ -72,9 +72,8 @@ def staging_test():
 
 def staging():
     """ use staging environment on remote host to demo to client"""
-    env.project_dir = env.project + '_test'
     env.environment = 'staging'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
 def production():
