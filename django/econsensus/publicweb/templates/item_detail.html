@@ -75,7 +75,13 @@
 					replaceWithRemote(replace_url, node);
 				}
 			);
-		}
+        }
+
+        function scrollToFeedbackAnchor() {
+            $('html, body').animate({
+                    scrollTop: $("#feedback_add_anchor").offset().top - 28
+                    }, 1400);
+        }
 	
 		/*
 		 * Proposal in-line editing
@@ -120,18 +126,14 @@
 		});
 	
 		$(".button.add_feedback").live("click", function (e) {
-			replaceWithRemote(feedback_add_url, ".button.add_feedback");
-            $('html, body').animate({
-                    scrollTop: $("#feedback_add_anchor").offset().top - 28
-                }, 1400);
+            replaceWithRemote(feedback_add_url, ".button.add_feedback");
+            scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
 	
 		$("#decision_detail .stats dt").live("click", function (e) {
             replaceWithRemote(feedback_add_url, ".button.add_feedback");
-            $('html, body').animate({
-                    scrollTop: $("#feedback_add_anchor").offset().top - 28
-                }, 1400);
+            scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
 	
