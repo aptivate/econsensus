@@ -1,0 +1,23 @@
+import private_settings
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/organizations/'
+
+STATIC_URL = '/static/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'econsensus',                      # Or path to database file if using sqlite3.
+        'USER': 'econsensus',                      # Not used with sqlite3.
+        'OPTIONS' : {"init_command": "SET storage_engine=INNODB"},
+        'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
