@@ -132,7 +132,7 @@
 		});
 	
 		$("#decision_detail .stats dt").live("click", function (e) {
-            replaceWithRemote(feedback_add_url, ".button.add_feedback");
+            replaceWithRemote(feedback_add_url + "?rating=" + this.className, ".button.add_feedback");
             scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
