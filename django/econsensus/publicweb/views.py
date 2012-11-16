@@ -17,6 +17,8 @@ from django.shortcuts import get_object_or_404
 
 import unicodecsv
 
+from guardian.decorators import permission_required_or_403
+
 from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
 
@@ -313,7 +315,7 @@ class DecisionCreate(CreateView):
     form_class = DecisionForm
     status = Decision.PROPOSAL_STATUS
 
-    @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'slug', 'org_slug')))
     def dispatch(self, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
         slug = kwargs.get('org_slug', None)
