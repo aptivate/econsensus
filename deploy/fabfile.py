@@ -94,6 +94,7 @@ def deploy(revision=None):
     create_private_settings()
     link_local_settings()
     rm_pyc_files()
+    collect_static_files()
     update_db()
     if env.environment == 'production':
         setup_db_dumps()
