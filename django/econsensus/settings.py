@@ -153,7 +153,7 @@ INSTALLED_APPS = (
 LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'econsensus.log')
 if not os.path.exists(LOG_FILE):
     open(LOG_FILE, 'w').close() 
- 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -259,3 +259,8 @@ else:
                 globals()[name] = value
         elif re.search('^[A-Z]', attr):
             globals()[attr] = getattr(local_settings, attr)
+
+        if attr == 'LOG_FILE':
+            LOGGING['handlers']['file']['filename'] = LOG_FILE
+            if not os.path.exists(LOG_FILE):
+                open(LOG_FILE, 'w').close()
