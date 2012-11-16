@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
 
+from guardian.admin import GuardedModelAdmin
+from organizations.models import Organization
+
 from models import Decision, Feedback
 
 class FeedbackInline(admin.TabularInline):
@@ -55,8 +58,16 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
 
+
+# With object permissions support
+class OrganizationAdmin(GuardedModelAdmin):
+    pass
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Decision, DecisionAdmin)
+
+admin.site.unregister(Organization)
+admin.site.register(Organization, OrganizationAdmin)
