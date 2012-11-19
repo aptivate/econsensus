@@ -3,7 +3,7 @@ from decision_test_case import DecisionTestCase
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from guardian.models import UserObjectPermission
-
+from guardian.shortcuts import remove_perm
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -20,8 +20,9 @@ class OrganizationTest(DecisionTestCase):
             self.fail("Could not find 'edit_decisions_feedback' permission on model 'Organizations'")
     
     def test_decision_create_restricted_if_no_editor_perm_for_specific_organization(self):
-        #first check does not have editor perm for org
-        self.assertFalse(self.betty.has_perm('edit_decisions_feedback'), self.bettysorg)
+        #first remove the permission and check the removal worked
+        remove_perm('edit_decisions_feedback', self.betty, self.bettysorg)
+        self.assertFalse(self.betty.has_perm('edit_decisions_feedback', self.bettysorg))
         
         #assert that creating a decision gives a 403
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])

@@ -6,6 +6,7 @@ from mechanize import ParseString
 from publicweb.models import Decision, Feedback
 from organizations.models import Organization
 from django.db.models.fields import FieldDoesNotExist
+from guardian.shortcuts import assign
 
 class EconsensusTestCase(TestCase):
     fixtures = ['organizations.json', 'users.json']
@@ -14,6 +15,8 @@ class EconsensusTestCase(TestCase):
         self.betty = User.objects.get(username="betty")
         self.charlie = User.objects.get(username="charlie")
         self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        
         self.factory = RequestFactory()
         self.login('betty')
 

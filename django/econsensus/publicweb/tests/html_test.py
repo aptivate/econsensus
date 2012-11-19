@@ -143,6 +143,7 @@ class HtmlTest(EconsensusTestCase):
         self.assertRegexpMatches(rendered_response.content, "<h1>[\s\S]*%s[\s\S]*</h1>" % self.bettysorg)
         
     def test_cannot_view_decisions_when_not_member(self):
+
         request = self.factory.request()
         request.user = self.betty
         request.session = self.client.session
@@ -157,9 +158,9 @@ class HtmlTest(EconsensusTestCase):
         self.assertContains(response, decision.description)
         
         members = [x.username for x in decision.organization.users.all()]
-        non_members = User.objects.exclude(username__in=members)
+        non_members = User.objects.exclude(username__in=members).exclude(username='AnonymousUser')
         self.assertTrue(non_members)
-        
+                
         self.login(non_members[0].username)
         request.user = self.user
         kwargs = {'org_slug' : decision.organization.slug,
