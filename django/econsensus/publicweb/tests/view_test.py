@@ -50,7 +50,7 @@ class ViewTest(DecisionTestCase):
             self.assert_context_has_dict(dictionary, url)                                
 
     def test_feedback_author_is_assigned(self):
-        decision = Decision.objects.latest('id')
+        decision = self.create_and_return_decision()
         path = reverse('publicweb_feedback_create', args=[decision.id])
         post_dict = {'description': 'Lorem Ipsum', 'rating': Feedback.COMMENT_STATUS }
         response = self.client.post(path, post_dict)

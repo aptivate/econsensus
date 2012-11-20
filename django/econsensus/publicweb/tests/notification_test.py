@@ -4,6 +4,7 @@ from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 
+from guardian.shortcuts import assign
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -130,6 +131,8 @@ class NotificationTest(DecisionTestCase):
         decision = self.create_decision_through_browser()
         #charlie adds feedback
         self.login('charlie')
+        #allow charlie to edit        
+        assign('edit_decisions_feedback', self.user, self.bettysorg)        
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
         #Charlie changes the feedback...

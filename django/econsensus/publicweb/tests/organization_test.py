@@ -2,8 +2,7 @@ from django.contrib.auth.models import Permission
 from decision_test_case import DecisionTestCase
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from guardian.models import UserObjectPermission
-from guardian.shortcuts import remove_perm
+from guardian.shortcuts import remove_perm, assign
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -19,17 +18,19 @@ class OrganizationTest(DecisionTestCase):
         except:
             self.fail("Could not find 'edit_decisions_feedback' permission on model 'Organizations'")
     
-    def test_decision_create_restricted_if_no_editor_perm_for_specific_organization(self):
-        #first remove the permission and check the removal worked
+    def test_decision_create_restricted(self):
+        '''
+        Decision create should be restricted to those with the organizations editor permission
+        '''
+        #first remove the permission
         remove_perm('edit_decisions_feedback', self.betty, self.bettysorg)
-        self.assertFalse(self.betty.has_perm('edit_decisions_feedback', self.bettysorg))
         
         #assert that creating a decision gives a 403
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)
         #give perm
-        UserObjectPermission.objects.assign('edit_decisions_feedback', user=self.betty, obj=self.bettysorg)
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
@@ -39,4 +40,60 @@ class OrganizationTest(DecisionTestCase):
         path = reverse('publicweb_decision_create', args=[bettys_unauthed_org.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)        
-               
+    
+    def test_decision_update_restricted(self):
+        '''
+        Decision update should be restricted to those with the organizations editor permission
+        '''
+        
+        #setup
+        decision = self.create_and_return_decision()
+        #first remove the permission        
+        remove_perm('edit_decisions_feedback', self.betty, self.bettysorg)
+        #assert that creating a decision gives a 403
+        path = reverse('publicweb_decision_update', args=[decision.id])
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 403)
+        #give perm
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        # get a 200
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 200)
+        
+    def test_feedback_create_restricted(self):
+        '''
+        Feedback create should be restricted to those with the organizations editor permission
+        '''
+
+        #setup
+        decision = self.create_and_return_decision()        
+        #first remove the permission
+        remove_perm('edit_decisions_feedback', self.betty, self.bettysorg)
+        
+        #assert that creating feedback gives a 403
+        path = reverse('publicweb_feedback_create', args=[decision.id])
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 403)
+        #give perm
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        # get a 200
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 200)     
+            
+    def test_feedback_update_restricted(self):
+        '''
+        Feedback update should be restricted to those with the organizations editor permission
+        '''
+        #setup
+        feedback = self.create_and_return_feedback()
+        #first remove the permission        
+        remove_perm('edit_decisions_feedback', self.betty, self.bettysorg)
+        #assert that creating a decision gives a 403
+        path = reverse('publicweb_feedback_update', args=[feedback.id])
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 403)
+        #give perm
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        # get a 200
+        response = self.client.get(path)
+        self.assertEquals(response.status_code, 200)
