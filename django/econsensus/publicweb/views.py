@@ -392,8 +392,17 @@ class FeedbackCreate(CreateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(FeedbackCreate, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.rating_initial = Feedback.COMMENT_STATUS
+        rating = request.GET.get('rating')
+        if rating:
+            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
+        return super(FeedbackCreate, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super(FeedbackCreate, self).get_initial().copy()
+        initial['rating'] = self.rating_initial
+        return initial
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -411,19 +420,6 @@ class FeedbackCreate(CreateView):
 
 
 class FeedbackSnippetCreate(FeedbackCreate):
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        self.rating_initial = Feedback.COMMENT_STATUS
-        rating = request.GET.get('rating')
-        if rating:
-            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
-        return super(FeedbackSnippetCreate, self).dispatch(request, *args, **kwargs)
-
-    def get_initial(self):
-        initial = super(FeedbackCreate, self).get_initial().copy()
-        initial['rating'] = self.rating_initial
-        return initial
-
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_feedback_snippet_detail', args=[self.object.pk])
 
