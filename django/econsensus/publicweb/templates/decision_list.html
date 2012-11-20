@@ -11,7 +11,9 @@
 
 {% block main_content %}
 		{% if not organization|is_member:user %}
-			<p>{% trans "You are not a member of this organization." %}<p>
+			<p>{% trans "You are not a member of this organization." %}</p>
+			</br>
+			<p>{% trans "Go here to see " %}<a href="{% url 'organization_list' %}">{% trans "your organizations" %}</a>.</p>
 		{% else %}
 		    {% if object_list %}
 		    {% include "pagination.html" %}

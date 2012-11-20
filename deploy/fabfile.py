@@ -72,9 +72,8 @@ def staging_test():
 
 def staging():
     """ use staging environment on remote host to demo to client"""
-    env.project_dir = env.project + '_test'
     env.environment = 'staging'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
+    env.hosts = ['fen-vz-' + project_settings.project_name]
     _local_setup()
 
 def production():
@@ -95,6 +94,7 @@ def deploy(revision=None):
     create_private_settings()
     link_local_settings()
     rm_pyc_files()
+    collect_static_files()
     update_db()
     if env.environment == 'production':
         setup_db_dumps()

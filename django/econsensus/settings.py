@@ -151,6 +151,8 @@ INSTALLED_APPS = (
 # more details on how to customize your logging configuration.
 
 LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'econsensus.log')
+if not os.path.exists(LOG_FILE):
+    open(LOG_FILE, 'w').close() 
 
 LOGGING = {
     'version': 1,
@@ -257,3 +259,8 @@ else:
                 globals()[name] = value
         elif re.search('^[A-Z]', attr):
             globals()[attr] = getattr(local_settings, attr)
+
+        if attr == 'LOG_FILE':
+            LOGGING['handlers']['file']['filename'] = LOG_FILE
+            if not os.path.exists(LOG_FILE):
+                open(LOG_FILE, 'w').close()

@@ -8,7 +8,7 @@ This is based on using Ubuntu 10.04, but should also work on Debian Squeeze.
 First install the requirements:
 
     $ sudo apt-get install git-core python-virtualenv python-pip sqlite3 \
-          python2.6-dev libxml2-dev libyaml-dev mysql-server mysql-client \
+          python-dev libxml2-dev libyaml-dev mysql-server mysql-client \
           libmysqlclient-dev build-essential libxslt1-dev
 
 Then check out the code:
