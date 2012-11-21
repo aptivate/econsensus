@@ -1,1 +1,1 @@
-{{ observed.author }} {{ observed.rating_text|capfirst }}: {{ observed.decision.excerpt }}
+{{ observed.author }} {{ observed.rating_text|capfirst }} Feedback #{{observed.id}}: {{ observed.decision.excerpt }}

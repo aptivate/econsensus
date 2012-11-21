@@ -2,9 +2,14 @@
 import poplib
 import re
 import logging
+
 from email import message_from_string
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
+from django.contrib.sites.models import Site
+from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from livesettings import config_value
 from publicweb.models import Decision, Feedback, rating_int
@@ -118,33 +123,61 @@ class Command(BaseCommand):
                          % (mail['From'], user.username, organization.name))
             return
 
+        #determine whether email is in reply to a decision or feedback
         #match id to object
-        id_match = re.search('#(\d+)', mail['Subject'])        
-        if id_match:
-            self._print_if_verbose(verbosity, "Found '%s' in Subject" % id_match.group())
-            try:
-                decision = Decision.objects.get(pk=id_match.group(1))
-            except:
-                logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
-                             % (mail['From'], id_match.group(1)))
-                return
-                            
-            rating = Feedback.COMMENT_STATUS                    
-            description = msg_string                
-            parse_feedback = re.match('(\w+)\s*:\s*([\s\S]*)', msg_string, re.IGNORECASE)
-            if parse_feedback:
-                description = parse_feedback.group(2)
-                rating_match = re.match('question|danger|concerns|consent|comment', parse_feedback.group(1), re.IGNORECASE)
-                if rating_match:
-                    self._print_if_verbose(verbosity, "Found feedback rating '%s'" % rating_match.group())
-                    rating = rating_int(rating_match.group().lower())
+        subject_match = re.search('(\w+)\s#(\d+)', mail['Subject'])
+        if subject_match:
+            #process feedback against decision
+            if subject_match.group(1).lower() == 'issue':
+                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(2))
+                try:
+                    decision = Decision.objects.get(pk=subject_match.group(2))
+                except:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
+                                 % (mail['From'], subject_match.group(2)))
+                    return
+                                
+                rating = Feedback.COMMENT_STATUS                    
+                description = msg_string                
+                parse_feedback = re.match('(\w+)\s*:\s*([\s\S]*)', msg_string, re.IGNORECASE)
+                if parse_feedback:
+                    description = parse_feedback.group(2)
+                    rating_match = re.match('question|danger|concerns|consent|comment', parse_feedback.group(1), re.IGNORECASE)
+                    if rating_match:
+                        self._print_if_verbose(verbosity, "Found feedback rating '%s'" % rating_match.group())
+                        rating = rating_int(rating_match.group().lower())
+    
+                self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
+                feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
+                feedback.save()
+                logger.info("User '%s' added feedback via email to decision #%s" % (user, decision.id))
+                self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
 
-            self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
-            feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
-            feedback.save()
-            logger.info("User '%s' added feedback via email to decision #%s" % (user, decision.id))
-            self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
-
+            #process comment against feedback
+            elif subject_match.group(1).lower() == 'feedback':
+                self._print_if_verbose(verbosity, "Found feedback id '%s' in Subject" % subject_match.group(2))
+                try:
+                    feedback = Feedback.objects.get(pk=subject_match.group(2))
+                except:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Feedback" \
+                                 % (mail['From'], subject_match.group(2)))
+                    return
+                comment_text = msg_string                
+                self._print_if_verbose(verbosity, "Creating comment '%s'." % (comment_text))
+                comment = Comment(user=user,
+                                 comment = comment_text,
+                                 content_object=feedback, 
+                                 object_pk=feedback.id,
+                                 content_type=ContentType.objects.get(app_label="publicweb", model="feedback"),
+                                 submit_date = timezone.now(),
+                                 site = Site.objects.get_current())
+                comment.save()
+                logger.info("User '%s' added comment via email to feedback #%s" % (user, feedback.id))
+                self._print_if_verbose(verbosity, "Found corresponding object '%s'" % feedback.description)
+            else:
+                self._print_if_verbose(verbosity, "Unknown object type %s" % subject_match.group(1))                
+                logger.error("[EMAIL REJECTED] From '%s' Reason: Object id present but unknown object type." \
+                             % mail['From'])     
         #couldn't match id, look for 'proposal'
         else:
             proposal_match = re.search('proposal', mail['Subject'], re.IGNORECASE)

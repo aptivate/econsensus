@@ -1,5 +1,5 @@
 {% if observed.status == observed.DECISION_STATUS %}
-Consensus Reached #{{ observed.id }}: {{ observed.excerpt|safe }}
+Consensus Reached Issue #{{ observed.id }}: {{ observed.excerpt|safe }}
 {% else %}
-New {{ observed.status|capfirst }} #{{ observed.id }}: {{ observed.excerpt|safe }}
+New {{ observed.status|capfirst }} Issue #{{ observed.id }}: {{ observed.excerpt|safe }}
 {% endif %}

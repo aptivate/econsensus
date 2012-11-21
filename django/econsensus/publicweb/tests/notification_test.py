@@ -10,7 +10,7 @@ from organizations.models import Organization
 
 from publicweb.models import Decision
 from decision_test_case import DecisionTestCase
-import datetime
+from django.utils import timezone
 
 class NotificationTest(DecisionTestCase):
     """
@@ -139,7 +139,7 @@ class NotificationTest(DecisionTestCase):
                                     content_object=feedback, 
                                     object_pk=feedback.id,
                                     content_type=feedback_type,
-                                    submit_date = datetime.datetime.now(),
+                                    submit_date = timezone.now(),
                                     site = Site.objects.get_current())
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]

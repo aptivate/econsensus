@@ -8,6 +8,7 @@ from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from django.contrib.comments.models import Comment
 
 
 class CommandTest(EconsensusTestCase):
@@ -40,7 +41,7 @@ class CommandTest(EconsensusTestCase):
         parent = self.make_decision()
         poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored #%s' % parent.id,
+                                      'Subject: gleda Issue #%s' % parent.id,
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
         try:
@@ -60,7 +61,7 @@ class CommandTest(EconsensusTestCase):
         parent = self.make_decision()
         poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored #%s' % parent.id,
+                                      'Subject: gleda Issue #%s' % parent.id,
                                       '',
                                       'Danger: Mnogi -- programi \nza stolno\n izdavatvo', ''], [''])
         try:
@@ -80,7 +81,7 @@ class CommandTest(EconsensusTestCase):
         parent = self.make_decision()
         poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored #%s' % parent.id,
+                                      'Subject: gleda Issue #%s' % parent.id,
                                       '',
                                       'Dager: Mnogi programi za stolno izdavatvo', ''], [''])
         try:
@@ -100,7 +101,7 @@ class CommandTest(EconsensusTestCase):
         parent = self.make_decision()
         poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored #%s' % parent.id,
+                                      'Subject: gleda Issue #%s' % parent.id,
                                       '',
                                       'Consent:', ''], [''])
         try:
@@ -114,12 +115,33 @@ class CommandTest(EconsensusTestCase):
         self.assertEqual(feedback.rating, Feedback.CONSENT_STATUS)
         self.assertEqual(feedback.description, '')
 
+    def test_process_email_defined_comment(self):
+        #Tests that a reply to a new feedback notification results in a new comment.
+        comment_body = 'Comment description'
+        decision = self.make_decision()
+        feedback = self.make_feedback(decision=decision)
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
+                                      str('Subject: %s consent Feedback #%s: Issue #1' % (self.betty.username, feedback.id)),
+                                      '',
+                                      comment_body, ''], [''])
+
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+        try:
+            comment = Comment.objects.latest('id')
+        except:
+            self.fail("Email failed to appear in database as comment.")
+        self.assertEqual(comment.comment, comment_body)
+
     def test_process_email_bad_content(self):
         initial_count = Decision.objects.count()
         #Test that an unknown email address is rejected.
         poplib.POP3.mailbox = ([''], ['From: Secret <youdont@knowme.com>',
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored',
+                                      'Subject: gleda Issue #54',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
         self.assertFalse(Decision.objects.count() - initial_count)
@@ -127,7 +149,7 @@ class CommandTest(EconsensusTestCase):
         #Test that a corrupt from field is rejected.
         poplib.POP3.mailbox = ([''], ['From: Donald <spam>',
                                       str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: gleda raspored',
+                                      'Subject: gleda Issue #8',
                                       '',
                                       'Mnogi programi za stolno izdavatvo', ''], [''])
         self.assertFalse(Decision.objects.count() - initial_count)
