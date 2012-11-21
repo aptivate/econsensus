@@ -3,11 +3,14 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 
 from organizations.models import Organization
 
 from publicweb.models import Decision
 from decision_test_case import DecisionTestCase
+import datetime
 
 class NotificationTest(DecisionTestCase):
     """
@@ -119,6 +122,29 @@ class NotificationTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
         user_list = [user_object.email for user_object in decision.organization.users.exclude(username=self.user).exclude(is_active=False)]
+        self.assertNotIn(self.user.email, outbox_to)
+        self.assertItemsEqual(user_list, outbox_to)
+
+    def test_new_comment_notification(self):
+        """
+        When a new comment is added to feedback notifcations
+        should be sent to all users watching the decision,
+        minus the author of the new comment.
+        """
+        decision = self.make_decision(organization=self.bettysorg)
+        feedback = self.make_feedback(decision=decision)
+        mail.outbox = []
+        feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
+        comment = self.make_comment(user=self.user,
+                                    content_object=feedback, 
+                                    object_pk=feedback.id,
+                                    content_type=feedback_type,
+                                    submit_date = datetime.datetime.now(),
+                                    site = Site.objects.get_current())
+        outbox = getattr(mail, 'outbox')
+        outbox_to = [to for to_list in outbox for to in to_list.to]
+        all_members = comment.content_object.decision.organization.users.exclude(username=self.user).exclude(is_active=False) 
+        user_list = [user_object.email for user_object in all_members]
         self.assertNotIn(self.user.email, outbox_to)
         self.assertItemsEqual(user_list, outbox_to)
         

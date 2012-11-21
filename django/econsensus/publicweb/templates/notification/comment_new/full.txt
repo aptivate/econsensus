@@ -1,0 +1,10 @@
+Comment from {{ observed.user_name }}: on Feedback #{{ observed.content_object.id }} (http://{{ current_site }}{{ observed.content_object.decision.get_absolute_url }}):
+
+   -----------------------------------------------------------------
+{{ observed.comment|safe }}
+   -----------------------------------------------------------------
+
+To view this on the website: http://{{ current_site }}{{ observed.content_object.decision.get_absolute_url }}
+
+You are receiving this mail because you are signed up to the {{ current_site.name }} 
+Econsensus service and you are subscribed to this item. To change your subscription, use the link above.

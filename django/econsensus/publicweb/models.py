@@ -9,6 +9,7 @@ from django.db import models
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
 from django.contrib.contenttypes import generic
 from django.dispatch import receiver
 from django.conf import settings
@@ -25,6 +26,7 @@ from managers import DecisionManager
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
 class Decision(models.Model):
@@ -257,6 +259,30 @@ if notification is not None:
             observer_list = [x.user for x in all_observed_items_but_authors]
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
+        else:
+            notification.send_observation_notices_for(instance, headers=headers)
+            
+            
+    @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
+    def comment_signal_handler(sender, **kwargs):
+        """
+        All watchers of a decision will get a notification informing them of
+        new comment.
+        All watchers become observers of the comment.
+        """
+        instance = kwargs.get('instance')
+        headers = {'Message-ID' : "comment-%s@%s" % (instance.id, Site.objects.get_current().domain)}
+        headers.update({'In-Reply-To' : instance.content_object.get_message_id()})        
+        
+        if kwargs.get('created', True):
+            # Creator gets notified if the comment is edited.
+            notification.observe(instance, instance.user, 'comment_change')
+
+            #All watchers of parent get notified of new comment.
+            all_observed_items_but_author = list(instance.content_object.decision.watchers.exclude(user=instance.user))
+            observer_list = [x.user for x in all_observed_items_but_author]
+            extra_context = dict({"observed": instance})
+            notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
         else:
             notification.send_observation_notices_for(instance, headers=headers)
             
