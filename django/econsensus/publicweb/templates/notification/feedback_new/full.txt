@@ -6,7 +6,7 @@ Feedback from {{ observed.author }}: {{ observed.rating_text|capfirst }} on {{ o
 
 To view this on the website: http://{{ current_site }}{{ observed.decision.get_absolute_url }}
 
-To leave your own feedback comment just reply to this email, making sure to remove any quoted reply text.
+To leave your own feedback against this issue just reply to this email, making sure to remove any quoted reply text.
 
 To indicate the type of feedback you're leaving put
 Question:
@@ -15,6 +15,8 @@ Concerns:
 Consent:
 Comment:
 at the start of your email.
+
+To leave a comment against this feedback just reply to this email, removing any quoted reply text and not providing a feedback type (as described above). 
 
 You are receiving this mail because you are signed up to the {{ current_site.name }} 
 Econsensus service and you are subscribed to this item. To change your subscription, use the link above.
