@@ -221,12 +221,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    try:
-        sys.exit(main(sys.argv))
-    except tasklib.TaskFatalError, e:
-        if e.error_text:
-            print e.error_text
-        else:
-            print "Abnormal exit - reason unknown"
-        sys.exit(e.exit_code)
-
+    sys.exit(main(sys.argv))
