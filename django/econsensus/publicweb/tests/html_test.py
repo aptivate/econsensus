@@ -7,10 +7,10 @@ from organizations.views import OrganizationDetail
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
-from decision_test_case import OpenConsentTestCase
+from decision_test_case import EconsensusTestCase
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
-class HtmlTest(OpenConsentTestCase):
+class HtmlTest(EconsensusTestCase):
 
     def test_add_decision(self):
         """
@@ -145,6 +145,7 @@ class HtmlTest(OpenConsentTestCase):
     def test_cannot_view_decisions_when_not_member(self):
         request = self.factory.request()
         request.user = self.betty
+        request.session = self.client.session
         decision = self.make_decision()
         kwargs = {'org_slug' : decision.organization.slug,
                   'status': decision.status}

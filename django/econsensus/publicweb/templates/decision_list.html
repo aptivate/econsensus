@@ -11,131 +11,57 @@
 
 {% block main_content %}
 		{% if not organization|is_member:user %}
-			<p>{% trans "You are not a member of this organization." %}<p>
+			<p>{% trans "You are not a member of this organization." %}</p>
+			</br>
+			<p>{% trans "Go here to see " %}<a href="{% url 'organization_list' %}">{% trans "your organizations" %}</a>.</p>
 		{% else %}
-		{% if object_list %}
-	<table class="summary-list">
-		<thead>
-			<tr class="summary-header">
-				<th class="id">
-					<a href="{{ request.path }}">
-						<span class="{% if sort == 'id' %}sort{% endif %}">{% trans "ID" %}</span>
-					</a>
-				</th>
-				<th class="excerpt">
-					<a href="{{ request.path }}?sort=excerpt">
-						<span class="{% if sort == 'excerpt' %}sort{% endif %}">{% trans "Excerpt" %}</span>
-					</a>
-				</th>
-				{% if tab == 'decision' %}
-				<th class="decided_date">
-					<a href="{{ request.path }}?sort=decided_date" class="{% if sort == 'decided_date' %}sort{% endif %}">
-						<span class="{% if sort == 'decided_date' %}sort{% endif %}">{% trans "Decided Date" %}</span>
-					</a>
-				</th>
-				<th class="review_date">
-					<a href="{{ request.path }}?sort=review_date" class="{% if sort == 'review_date' %}sort{% endif %}">
-						<span class="{% if sort == 'review_date' %}sort{% endif %}">{% trans "Review Date" %}</span>
-					</a>
-				</th>
-				{% endif %}
-				{% if tab == 'archived' %}
-				<th class="creation">
-					<a href="{{ request.path }}?sort=creation">
-						<span class="{% if sort == 'creation' %}sort{% endif %}">{% trans "Creation" %}</span>
-					</a>
-				</th>
-				<th class="archived_date">
-					<a href="{{ request.path }}?sort=archived_date">
-						<span class="{% if sort == 'archived_date' %}sort{% endif %}">{% trans "Archived Date" %}</span>
-					</a>			
-				</th>
-				{% endif %}
-				{% if tab == 'proposal' %}
-				<th class="feedbackcount">
-					<a href="{{ request.path }}?sort=feedback">
-						<span class="{% if sort == 'feedback' %}sort{% endif %}">{% trans "Feedback" %}</span>
-					</a>
-				</th>
-				<th class="deadline">
-					<a href="{{ request.path }}?sort=deadline">
-						<span class="{% if sort == 'deadline' %}sort{% endif %}">{% trans "Deadline" %}</span>
-					</a>
-				</th>
-				<th class="last_modified">
-					<a href="{{ request.path }}?sort=-last_modified">
-						<span class="{% if sort == 'last_modified' %}sort{% endif %}">{% trans "Last Modified" %}</span>
-					</a>
-				</th>
-				{% endif %}
-			</tr>
-		</thead>
-		<tbody>{% for object in object_list %}
-			<tr>
-				<td class="id">
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						<span class="iconified">{{ object.id }}</span>
-					</a>
-				</td>
-				<td class="excerpt">
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.excerpt }}
-					</a>
-				</td>
-				{% if tab == 'decision' %}
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.decided_date }}
-					</a>
-				</td>
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-					{{ object.review_date }}
-					</a>
-				</td>
-				{% endif %}
-				{% if tab == 'archived' %}
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.creation }}
-					</a>
-				</td>
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.archived_date }}
-					</a>
-				</td>
-				{% endif %}
-				{% if tab == 'proposal' %}
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.feedbackcount }}
-					</a>
-				</td>{% comment %}
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.watchercount }}
-					</a>
-				</td>{% endcomment %}
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.deadline }}
-					</a>
-				</td>
-				<td>
-					<a href="{% url 'publicweb_item_detail' object.id %}">
-						{{ object.last_modified }}
-					</a>
-				</td>
-				{% endif %}
-			</tr>{% endfor %} <!-- item proposal -->
-		</tbody>
-	</table> <!-- list_view proposal -->
-		{% else %}
-			<p class="no_items">{% trans "There are no decisions made." %}.<p>
-		{% endif %}{% endif %}			
-{% endblock %}
+		    {% if object_list %}
+		    {% include "pagination.html" %}
+	            <table class="summary-list">
+                    <thead>
+                    </thead>
+                        <tr class="summary-header">
+                            {% for header in header_list %}
+                            <th class="{{ header.attrs }}">
+                                <a href="{{ header.path }}">
+                                    <span class="{{ header.sortclass }}">
+                                        {{ header.title }}
+                                        {% if header.sortclass == 'sort-asc' %} ▲{% endif %} 
+                                        {% if header.sortclass == 'sort-desc' %} ▼{% endif %}
+                                    </span>
+                                </a>
+                            </th>
+                            {% endfor %}
+            			</tr>                  
+                    <tbody>
+                    {% for object in object_list %}
+                        <tr>
+                            <td class="id"><a href="{% url 'publicweb_item_detail' object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
+				            <td class="excerpt"><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.excerpt }}	</a></td>
+				            {% if tab == 'proposal' %}
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.feedbackcount }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.deadline }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.last_modified|timesince }} ago</a></td>
+            				{% endif %}
+				            {% if tab == 'decision' %}
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.decided_date }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.review_date }}</a></td>
+				            {% endif %}
+                            {% if tab == 'archived' %}
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.creation }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.archived_date }}</a></td>
+            				{% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+	            </table>
+	        {% include "pagination.html" %}
+		    {% else %}
+			    <p class="no_items">{% trans "There are no decisions made." %}.<p>
+		    {% endif %}
+		{% endif %}			
+{% endblock main_content %}
 
 {% block footer_content %}
-	<p class="export"><a title="Export as CSV file" href="{% url 'publicweb_export_csv' %}">{% trans "Export as CSV file" %}</a></p>
+	<p class="export"><a title="Export as CSV file" href="{% url 'publicweb_export_csv' organization.slug %}">{% trans "Export as CSV file" %}</a></p>
 {% endblock %}

@@ -664,7 +664,6 @@ def _rm_all_pyc():
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
-    # don't want any stray pyc files causing trouble
     _rm_all_pyc()
     # do this to ensure we delete the old virtualenv
     update_ve(force=True)
@@ -708,8 +707,14 @@ def deploy(environment=None):
 
 def patch_south():
     """ patch south to fix pydev errors """
+    python = 'python2.6'
+    if '2.7' in env['python_bin']:
+        python = 'python2.7'
     south_db_init = os.path.join(env['ve_dir'],
-                'lib/python2.6/site-packages/south/db/__init__.py')
+                'lib/%s/site-packages/south/db/__init__.py' % python)
     patch_file = os.path.join(env['deploy_dir'], 'south.patch')
-    cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
-    _check_call_wrapper(cmd)
+    # check if patch already applied - patch will fail if it is
+    patch_applied = _call_wrapper(['grep', '-q', 'pydev', south_db_init])
+    if patch_applied != 0:
+        cmd = ['patch', '-N', '-p0', south_db_init, patch_file]
+        _check_call_wrapper(cmd)

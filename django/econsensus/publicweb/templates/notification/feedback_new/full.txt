@@ -1,4 +1,4 @@
-Feedback from {{ observed.author }}: {{ observed.rating_text|capfirst }} on issue #{{ observed.decision.id }}:
+Feedback from {{ observed.author }}: {{ observed.rating_text|capfirst }} on {{ observed.decision.excerpt }} (http://{{ current_site }}{{ observed.decision.get_absolute_url }}):
 
    -----------------------------------------------------------------
 {{ observed.description|safe }}

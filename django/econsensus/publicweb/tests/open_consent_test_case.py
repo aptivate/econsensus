@@ -7,7 +7,7 @@ from publicweb.models import Decision, Feedback
 from organizations.models import Organization
 from django.db.models.fields import FieldDoesNotExist
 
-class OpenConsentTestCase(TestCase):
+class EconsensusTestCase(TestCase):
     fixtures = ['organizations.json', 'users.json']
 
     def setUp(self):

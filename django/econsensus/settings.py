@@ -8,7 +8,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Econsensus Project', 'info@econsensus.org'),
+    ('Econsensus Project', 'carers-econsensus@aptivate.org'),
 )
 
 MANAGERS = ADMINS
@@ -150,7 +150,9 @@ INSTALLED_APPS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
-LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'error.log')
+LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'econsensus.log')
+if not os.path.exists(LOG_FILE):
+    open(LOG_FILE, 'w').close() 
 
 LOGGING = {
     'version': 1,
@@ -174,14 +176,14 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler',
         },
         'file':{
-            'level':'ERROR',
+            'level':'INFO',
             'filters': ['require_debug_false'],
             'class':'logging.FileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE
         },
         'console':{
-            'level':'INFO',
+            'level':'ERROR',
             'class':'logging.StreamHandler',
             'formatter': 'simple'
         },
@@ -200,6 +202,9 @@ LOGGING = {
     }
 }
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
 TINYMCE_DEFAULT_CONFIG = {
             "theme" : "advanced",
             "theme_advanced_buttons1" : "bold,italic,underline,link,unlink," +
@@ -211,7 +216,7 @@ TINYMCE_DEFAULT_CONFIG = {
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 #Emails from organizations will be built around this address 
-DEFAULT_FROM_EMAIL = 'econsensus@aptivate.org'
+DEFAULT_FROM_EMAIL = 'econsensus@econsensus.org'
 
 #Required for djangoregistration:
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -254,3 +259,8 @@ else:
                 globals()[name] = value
         elif re.search('^[A-Z]', attr):
             globals()[attr] = getattr(local_settings, attr)
+
+        if attr == 'LOG_FILE':
+            LOGGING['handlers']['file']['filename'] = LOG_FILE
+            if not os.path.exists(LOG_FILE):
+                open(LOG_FILE, 'w').close()

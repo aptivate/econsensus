@@ -66,7 +66,7 @@ a img, img {
 	}
 
 p {
-	line-height:1.3em;	
+	line-height:1.3em;
 }
 
 h1, h2, h3, h4, h5, h6 {margin:0.3em 0 0.5em 0;}
@@ -131,7 +131,6 @@ input {
 #header-wrapper {
 	background-color:#fff;
 	padding-top:10px;
-	
 }
 
 #navigation-wrapper {
@@ -174,7 +173,7 @@ input {
 }
 
 #user_access {
-	width:15em;
+	width:20em;
 	display:block;
 	position:relative;
 	float:right;
@@ -242,6 +241,7 @@ input {
 }
 
 #content h2.page_title {
+	display: inline;
 	color:#666;
 	padding-bottom: 6px;
 	margin-bottom:0;
@@ -259,6 +259,35 @@ input {
 #content h2.page_title.feedback {
 	margin-bottom:10px;
 	width:inherit;
+}
+
+/* pagination */
+.pagination {
+	float: right;
+	padding: 6px 35px;
+	font-size: 0.9em;
+	display: inline;
+}
+
+.pagination form {
+	display: inline;
+	margin-left: 5px;
+}
+
+.pagination input {
+	border: none;
+}
+
+.pagination-num-items { 
+	width: 50px; 
+	padding: 0px;
+	border: 1px solid #eee;
+	background: white;
+	text-align:center;
+}
+
+.pagination p {
+	display: inline;
 }
 
 /* list view */
@@ -282,13 +311,9 @@ input {
 	color: #000;
 }
 
-.summary-header .sort {
-    background-image: url("../images/icon-sort.png");
-    background-position: right center;
-    background-repeat: no-repeat;
+.summary-header .sort-asc, .sort-desc {
     color: #3E6EA3;
-    padding-right: 20px;
-}
+}  
 
 .summary-item a.iconified {
 	color: #3E6EA3;
@@ -329,6 +354,22 @@ input {
 
 .summary-list td .iconified {
 	display:block;
+	padding:0 5px;
+	border:5px solid #EFEFEF;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+    background-color: #EFEFEF;
+	color: #3E6EA3;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.id {
+    width: 80px;
+}
+td.id {
+    text-align:left;
 }
 
 p.no_items {
@@ -382,37 +423,54 @@ li.summary-item {
 	border-color: #AAD400;
 }
 
-.iconified {
-    background-color: #EFEFEF;
-    background-image: url("../images/icon-view-item.png");
-    background-position: right center;
-    background-repeat: no-repeat;
-    -moz-border-radius: 15px;
-  	-webkit-border-radius: 15px;
-    border-radius: 15px;
-    font-size: 0.9em;
-    font-weight: bold;
-	border:5px solid #EFEFEF;
-	color: #3E6EA3;
-	padding:0 5px;
-	
+/*
+ * Iconified
+ */
+
+/*apply to all icons*/
+[class*="iconified"] {
+	display: inline-block;
+  	vertical-align: middle;
+  	padding: 10px;
+  	background-repeat: no-repeat;
 }
 
-.id {
-    width: 80px;
+/*apply to active icons*/
+.iconified, .iconified-left {
+	background-image: url("../images/icon-view-item.png");
 }
-td.id {
-    text-align:left;
+
+/*apply to disabled icons*/
+.iconified-disabled, .iconified-left-disabled {
+	background-image: url("../images/icon-view-item-disabled.png");
 }
+
+/*apply to right-pointing icons*/
+.iconified, .iconified-disabled {
+	background-position: right center;
+}
+
+/*apply to left-pointing icons*/
+.iconified-left, .iconified-left-disabled {
+	background-position: left center;
+	-webkit-transform:scaleX(-1);
+    -moz-transform:scaleX(-1);
+    -ms-transform:scaleX(-1);
+    -o-transform:scaleX(-1);
+    transform:scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+/****************************/
 
 .excerpt {
    /* Use all that is left */
    text-align:left;
 }
 
-.watchercount,
-.feedbackcount {
-    width: 6em;
+.summary-header .feedback {
+    width: 8em;
 }
 
 .review_date,
@@ -653,7 +711,7 @@ p.title {
 }
 
 #decision_update_form.proposal {
-	border-color: #FFCC00; /* #993377 - I quite liked this colour */	
+	border-color: #FFCC00; /* #993377 - I quite liked this colour */
 }
 
 #decision_update_form.decision {
@@ -697,6 +755,7 @@ p.title {
     float: left;
     position: relative;
     width: 100%;
+    margin-top: 10px;
 }
 
 .button.add_feedback {
@@ -1093,7 +1152,7 @@ body.login #header {
     left: -25px;
     margin: 30px auto;
     position: relative;
-    width: 400px;
+    width: 370px;
 }
 
 body.login #header h1 {
@@ -1132,7 +1191,7 @@ body.login p.message {
     margin: 0 auto;
     overflow: auto;
     padding: 20px;
-    width: 450px;
+    width: 370px;
 }
 
 #login-form .helptext {
@@ -1153,19 +1212,23 @@ body.login p.message {
 #login-form .field_value {
     float: right;
     
-}#login-form .label {
+}
+#login-form .label {
     float: left;
 }
 
 #login-form p {
     float: left;
+    line-height: 3.3em;
+    width: 100%;
 }
 
 #login-form label {
     display: block;
     float: left;
     font-size: 1.3em;
-	color:#333;
+    color:#333;
+    width: 6em;
 }
 
 #login-form input {
@@ -1186,11 +1249,13 @@ body.login p.message {
     display: block;
     font-size: 1.5em;
     font-weight: bold;
+    /*
     margin-right: 5px;
     margin-top: 10px;
+    */
     padding: 5px;
     position: relative;
-    width: 230px;
+    width: 232px;
 
 }
 

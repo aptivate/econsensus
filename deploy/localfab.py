@@ -34,14 +34,15 @@ def deploy(revision=None):
     fablib.create_private_settings()
     fablib.link_local_settings()
     fablib.rm_pyc_files()
+    fablib.collect_static_files()
     fablib.update_db()
     if env.environment == 'production':
         fablib.setup_db_dumps()
     if env.environment.startswith('production'):
-        fablib.link_apache_conf('production')
+        link_apache_conf('production')
     else:
-        fablib.link_apache_conf()
-    fablib.load_fixtures()
+        link_apache_conf()
+    load_fixtures()
 
     fablib.apache_cmd('start')
 

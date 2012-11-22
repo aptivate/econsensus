@@ -8,23 +8,23 @@ This is based on using Ubuntu 10.04, but should also work on Debian Squeeze.
 First install the requirements:
 
     $ sudo apt-get install git-core python-virtualenv python-pip sqlite3 \
-          python2.6-dev libxml2-dev libyaml-dev mysql-server mysql-client \
+          python-dev libxml2-dev libyaml-dev mysql-server mysql-client \
           libmysqlclient-dev build-essential libxslt1-dev
 
 Then check out the code:
 
-    $ git clone https://github.com/aptivate/openconsent.git
+    $ git clone https://github.com/aptivate/econsensus.git
 
 Then you should be able to do:
 
-    $ cd openconsent
+    $ cd econsensus
     $ deploy/tasks.py deploy:dev
 
 This should set up the database you need, install the python packages 
 required and a few other details. You should now be able to run the 
 development server:
 
-    $ cd django/openconsent/
+    $ cd django/econsensus/
     $ ./manage.py runserver
 
 You should now be able to access the application at:
