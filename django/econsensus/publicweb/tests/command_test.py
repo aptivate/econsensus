@@ -115,7 +115,7 @@ class CommandTest(EconsensusTestCase):
         self.assertEqual(feedback.rating, Feedback.CONSENT_STATUS)
         self.assertEqual(feedback.description, '')
 
-    def test_process_email_defined_comment(self):
+    def test_process_email_reply_to_feedback_with_comment(self):
         #Tests that a reply to a new feedback notification results in a new comment.
         comment_body = 'Comment description'
         decision = self.make_decision()
@@ -126,15 +126,45 @@ class CommandTest(EconsensusTestCase):
                                       '',
                                       comment_body, ''], [''])
 
+        before_count = Comment.objects.all().count()
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        try:
-            comment = Comment.objects.latest('id')
-        except:
-            self.fail("Email failed to appear in database as comment.")
+        after_count = Comment.objects.all().count()
+        self.assertEqual(after_count, before_count + 1, "New comment failed to appear in database")
+        comment = Comment.objects.latest('id')
         self.assertEqual(comment.comment, comment_body)
+
+    def test_process_email_reply_to_feedback_with_rating(self):
+        '''
+        User replies to a feedback email with rating appear as Feedback
+        If a User replies to a feedback email with a rating then
+        Feedback should be created against the original Decision
+        '''
+        decision = self.make_decision()
+        first_feedback = self.make_feedback(decision=decision)
+        
+        rating_str = Feedback.RATING_CHOICES[Feedback.QUESTION_STATUS][1]
+        description = 'Some description'
+        mail_body = str(rating_str.upper() +' : ' + description)
+        
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
+                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
+                                      str('Subject: %s consent Feedback #%s: Issue #1' % (self.betty.username, first_feedback.id)),
+                                      '',
+                                      mail_body, ''], [''])
+
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+
+        new_feedback = Feedback.objects.latest('id')
+        self.assertNotEqual(first_feedback.id, new_feedback.id)
+        self.assertEqual(new_feedback.description, description)
+        self.assertEqual(new_feedback.get_rating_display(), rating_str)
+
 
     def test_process_email_bad_content(self):
         initial_count = Decision.objects.count()
