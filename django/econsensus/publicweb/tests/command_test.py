@@ -9,6 +9,10 @@ from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.contrib.comments.models import Comment
+from django.core import mail
+from django.utils import timezone
+from django.contrib.sites.models import Site
+from django.contrib.contenttypes.models import ContentType
 
 
 class CommandTest(EconsensusTestCase):
@@ -36,103 +40,105 @@ class CommandTest(EconsensusTestCase):
         self.assertEqual(decision.status, Decision.PROPOSAL_STATUS)
         
     def test_process_email_basic_feedback(self):
-        #Tests that if [*\*\*] tag is in the header, but no feedback type is
-        #identified then the payload becomes comment feedback
-        parent = self.make_decision()
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: Re: [%s] New Decision' % parent.id,
+        #Tests that if [*] tag is in the header, a new feedback is created
+        self.make_decision()
+        count = Feedback.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
-                                      'Mnogi programi za stolno izdavatvo', ''], [''])
+                                      "This is a good idea", ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        try:
-            feedback = Feedback.objects.latest('id')
-        except:
-            self.fail("Email failed to appear in database as feedback.")
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(count+1, Feedback.objects.count())
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
-        self.assertEqual(feedback.description, 'Mnogi programi za stolno izdavatvo')
+        self.assertEqual(feedback.description, "This is a good idea")
 
     def test_process_email_defined_feedback(self):
         #Tests that if a defined feedback type is passed it is transformed
         #into the rating field.
-        parent = self.make_decision()
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: Re: [%s] New Decision' % parent.id,
+        self.make_decision()
+        count = Feedback.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
-                                      'Danger: Mnogi -- programi \nza stolno\n izdavatvo', ''], [''])
+                                      "Danger: This is a bad idea", ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        try:
-            feedback = Feedback.objects.latest('id')
-        except:
-            self.fail("Email failed to appear in database as feedback.")
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(count+1, Feedback.objects.count())
         self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)
-        self.assertEqual(feedback.description, 'Mnogi -- programi \nza stolno\n izdavatvo')
+        self.assertEqual(feedback.description, "This is a bad idea")
 
     def test_process_email_unrecognised_feedback(self):
         #Tests that if the user mistypes the feedback type it is ignored
         #and the feedback defaults to comment
-        parent = self.make_decision()
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: [%s] gleda Issue' % parent.id,
+        self.make_decision()
+        count = Feedback.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
-                                      'Dager: Mnogi programi za stolno izdavatvo', ''], [''])
+                                      "Dager: This is a bad idea", ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        try:
-            feedback = Feedback.objects.latest('id')
-        except:
-            self.fail("Email failed to appear in database as feedback.")
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(count+1, Feedback.objects.count())
         self.assertEqual(feedback.rating, Feedback.COMMENT_STATUS)
-        self.assertEqual(feedback.description, 'Mnogi programi za stolno izdavatvo')
+        self.assertEqual(feedback.description, "This is a bad idea")
 
     def test_process_email_empty_feedback(self):
         #Tests that users can assign just the rating, leaving description blank
         #and the feedback defaults to comment
-        parent = self.make_decision()
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      'Subject: [%s] New decision' % parent.id,
+        self.make_decision()
+        count = Feedback.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
-                                      'Consent:', ''], [''])
+                                      "Danger:", ''], [''])
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        try:
-            feedback = Feedback.objects.latest('id')
-        except:
-            self.fail("Email failed to appear in database as feedback.")
-        self.assertEqual(feedback.rating, Feedback.CONSENT_STATUS)
-        self.assertEqual(feedback.description, '')
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(count+1, Feedback.objects.count())
+        self.assertEqual(feedback.rating, Feedback.DANGER_STATUS)
+        self.assertEqual(feedback.description, "")
 
     def test_process_email_reply_to_feedback_with_comment(self):
         #Tests that a reply to a new feedback notification results in a new comment.
         comment_body = 'Comment description'
         decision = self.make_decision()
         feedback = self.make_feedback(decision=decision)
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      str('Subject: re: [%s\%s] New feedback' % (decision.id, feedback.id)),
+        count = Comment.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
                                       comment_body, ''], [''])
-
-        before_count = Comment.objects.all().count()
         try:
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        after_count = Comment.objects.all().count()
-        self.assertEqual(after_count, before_count + 1, "New comment failed to appear in database")
+        self.assertEqual(count + 1, Comment.objects.count(), "New comment failed to appear in database")
         comment = Comment.objects.latest('id')
         self.assertEqual(comment.comment, comment_body)
 
@@ -144,14 +150,81 @@ class CommandTest(EconsensusTestCase):
         '''
         decision = self.make_decision()
         first_feedback = self.make_feedback(decision=decision)
+        email = getattr(mail, 'outbox')[-1]
         
         rating_str = Feedback.RATING_CHOICES[Feedback.QUESTION_STATUS][1]
         description = 'Some description'
         mail_body = str(rating_str.upper() +' : ' + description)
         
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty, self.betty.email)),
-                                      str('To: %s <%s@econsensus.com>' % (self.bettysorg.name, self.bettysorg.slug)),
-                                      str('Subject: re: [%s\%s] New feedback' % (decision.id, first_feedback.id)),
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
+                                      '',
+                                      mail_body, ''], [''])
+
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+
+        new_feedback = Feedback.objects.latest('id')
+        self.assertNotEqual(first_feedback.id, new_feedback.id)
+        self.assertEqual(new_feedback.description, description)
+        self.assertEqual(new_feedback.get_rating_display(), rating_str)
+        
+
+    def test_process_email_reply_to_comment_with_comment(self):
+        #Tests that a reply to a new comment notification results in a new comment if no rating supplied.
+        comment_body = 'Comment description'
+        decision = self.make_decision()
+        feedback = self.make_feedback(decision=decision)
+        feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
+        self.make_comment(user=self.user,
+                                    content_object=feedback, 
+                                    object_pk=feedback.id,
+                                    content_type=feedback_type,
+                                    submit_date = timezone.now(),
+                                    site = Site.objects.get_current())
+        count = Comment.objects.count()
+        email = getattr(mail, 'outbox')[-1]
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
+                                      '',
+                                      comment_body, ''], [''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+        self.assertEqual(count + 1, Comment.objects.count(), "New comment failed to appear in database")
+        comment = Comment.objects.latest('id')
+        self.assertEqual(comment.comment, comment_body)
+        
+
+    def test_process_email_reply_to_comment_with_rating(self):
+        '''
+        User replies to a comment email with rating appears as Feedback
+        If a User replies to a comment email with a rating then
+        Feedback should be created against the original Decision
+        '''
+        decision = self.make_decision()
+        first_feedback = self.make_feedback(decision=decision)
+        feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
+        self.make_comment(user=self.user,
+                                    content_object=first_feedback, 
+                                    object_pk=first_feedback.id,
+                                    content_type=feedback_type,
+                                    submit_date = timezone.now(),
+                                    site = Site.objects.get_current())
+        email = getattr(mail, 'outbox')[-1]
+        
+        rating_str = Feedback.RATING_CHOICES[Feedback.QUESTION_STATUS][1]
+        description = 'Some description'
+        mail_body = str(rating_str.upper() +' : ' + description)
+        
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+                                      str('To: %s <%s>' % (email.from_email, email.from_email)),
+                                      str('Subject: Re: %s' % email.subject),
                                       '',
                                       mail_body, ''], [''])
 
