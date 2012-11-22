@@ -15,7 +15,12 @@ if "notification" in settings.INSTALLED_APPS:
             "feedback_new", 
             _("New Feedback"), 
             _("New feedback has been created."))
-
+        
+        notification.create_notice_type(
+            "comment_new", 
+            _("New Comment"), 
+            _("New comment has been created."))
+        
         notification.create_notice_type(
             "decision_change", 
             _("Decision Change"),
@@ -24,7 +29,12 @@ if "notification" in settings.INSTALLED_APPS:
         notification.create_notice_type(
             "feedback_change", 
             _("Feedback Change"), 
-            _("There has been a change to feedback."))        
+            _("There has been a change to feedback."))    
+        
+        notification.create_notice_type(
+            "comment_change", 
+            _("Comment Change"), 
+            _("There has been a change to comment."))    
 
     signals.post_syncdb.connect(create_notice_types, sender=notification)
 else:

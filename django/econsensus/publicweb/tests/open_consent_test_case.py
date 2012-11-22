@@ -6,6 +6,7 @@ from mechanize import ParseString
 from publicweb.models import Decision, Feedback
 from organizations.models import Organization
 from django.db.models.fields import FieldDoesNotExist
+from django.contrib.comments import Comment
 
 class EconsensusTestCase(TestCase):
     fixtures = ['organizations.json', 'users.json']
@@ -41,6 +42,23 @@ class EconsensusTestCase(TestCase):
             if key not in kwargs.keys():
                 kwargs[key] = value
         return self.make_model_instance(Decision, **kwargs)
+
+    def make_feedback(self, **kwargs):
+        required = {'description': 'Default description text',
+                    'resolved': False,
+                    'author': self.user,
+                    'rating': Feedback.DANGER_STATUS}    
+        for (key,value) in required.items():
+            if key not in kwargs.keys():
+                kwargs[key] = value
+        return self.make_model_instance(Feedback, **kwargs)
+        
+    def make_comment(self, **kwargs):
+        required = {'comment': 'Default comment text'}    
+        for (key,value) in required.items():
+            if key not in kwargs.keys():
+                kwargs[key] = value
+        return self.make_model_instance(Comment, **kwargs)
         
     def make_model_instance(self, model, **kwargs):
         instance = model()
