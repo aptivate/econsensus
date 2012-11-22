@@ -49,6 +49,16 @@ def _setup_paths(project_settings):
     # valid environments - used for require statements in fablib
     env.valid_envs = env.host_list.keys()
 
+    # work out if we're based on redhat or centos
+    # TODO: look up stackoverflow question about this.
+    if files.exists('/etc/redhat-release'):
+        env.linux_type = 'redhat'
+    elif files.exists('/etc/debian_version'):
+        env.linux_type = 'debian'
+    else:
+        # TODO: should we print a warning here?
+        env.linux_type = 'unknown'
+
 
 def _tasks(tasks_args, verbose=False):
     require('tasks_bin', provided_by=env.valid_envs)
@@ -78,7 +88,7 @@ def deploy_clean(revision=None):
     require('project_root', provided_by=env.valid_envs)
     # TODO: dump before cleaning database?
     with settings(warn_only=True):
-        apache_cmd('stop')
+        webserver_cmd('stop')
     clean_db()
     clean_files()
     deploy(revision)
@@ -107,9 +117,9 @@ def deploy(revision=None, keep=None):
     if files.exists(env.vcs_root):
         create_copy_for_rollback(keep)
 
-    # we only have to stop apache after creating the rollback copy
+    # we only have to stop the webserver after creating the rollback copy
     with settings(warn_only=True):
-        apache_cmd('stop')
+        webserver_cmd('stop')
     checkout_or_update(revision)
 
     # Use tasks.py deploy:env to actually do the deployment, including
@@ -122,8 +132,8 @@ def deploy(revision=None, keep=None):
         if env.environment == 'production':
             setup_db_dumps()
 
-    link_apache_conf()
-    apache_cmd('start')
+    link_webserver_conf()
+    webserver_cmd('start')
 
 def set_up_celery_daemon():
     require('vcs_root', provided_by=env)
@@ -220,7 +230,7 @@ def rollback(version='last', migrate=False, restore_db=False):
     if not files.exists(rollback_dir):
         utils.abort("Cannot rollback to version %s, it does not exist, use list_previous to see versions available" % version)
 
-    apache_cmd("stop")
+    webserver_cmd("stop")
     # first copy this version out of the way
     create_copy_for_rollback(-1)
     if migrate:
@@ -235,7 +245,7 @@ def rollback(version='last', migrate=False, restore_db=False):
     sudo_or_run('rm -rf %s' % env.vcs_root)
     # cp -a from rollback_dir to vcs_root
     sudo_or_run('cp -a %s %s' % (rollback_dir, env.vcs_root))
-    apache_cmd("start")
+    webserver_cmd("start")
 
 
 def local_test():
@@ -299,12 +309,15 @@ def checkout_or_update(revision=None):
     You can also specify a revision to checkout, as an argument."""
     require('project_root', 'repo_type', 'vcs_root', 'repository',
         provided_by=env.valid_envs)
-    if env.repo_type == "svn":
-        _checkout_or_update_svn(revision)
-    elif env.repo_type == "git":
-        _checkout_or_update_git(revision)
-    elif env.repo_type == "cvs":
-        _checkout_or_update_cvs(revision)
+    checkout_fn = {
+            'cvs': _checkout_or_update_cvs,
+            'svn': _checkout_or_update_svn,
+            'git': _checkout_or_update_git,
+            }
+    if env.repo_type.lower() in checkout_fn:
+        checkout_fn[env.repo_type](revision)
+    else:
+        utils.abort('Unsupported VCS: %s' % env.repo_type.lower())
 
 def _checkout_or_update_svn(revision=None):
     # function to ask for svnuser and svnpass
@@ -468,39 +481,74 @@ def rm_pyc_files():
         with cd(env.django_root):
             sudo_or_run('find . -name \*.pyc | xargs rm')
 
-def link_apache_conf():
-    """link the apache.conf file"""
+def link_webserver_conf():
+    """link the webserver conf file"""
     require('vcs_root', provided_by=env.valid_envs)
-    if env.use_apache == False:
+    if env.webserver == None:
         return
-    conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
-    apache_conf = os.path.join('/etc/httpd/conf.d', env.project_name+'_'+env.environment+'.conf')
+    conf_file = os.path.join(env.vcs_root, env.webserver, env.environment+'.conf')
     if not files.exists(conf_file):
-        utils.abort('No apache conf file found - expected %s' % conf_file)
-    if not files.exists(apache_conf):
-        sudo_or_run('ln -s %s %s' % (conf_file, apache_conf))
-    configtest()
+        utils.abort('No %s conf file found - expected %s' %
+                (env.webserver, conf_file))
+    webserver_conf = _webserver_conf_path()
+    if not files.exists(webserver_conf):
+        sudo_or_run('ln -s %s %s' % (conf_file, webserver_conf))
+
+    # debian has sites-available/sites-enabled split with links
+    if env.linux_type == 'debian':
+        webserver_conf_enabled = webserver_conf.replace('available', 'enabled')
+        sudo_or_run('ln -s %s %s' % (webserver_conf, webserver_conf_enabled))
+    webserver_configtest()
+
+def _webserver_conf_path():
+    webserver_conf_dir = {
+            'apache_redhat': '/etc/httpd/conf.d',
+            'apache_debian': '/etc/apache2/sites-available',
+            }
+    key = env.webserver + '_' + env.linux_type
+    if key in webserver_conf_dir:
+        return os.path.join(webserver_conf_dir[key], 
+                env.project_name+'_'+env.environment+'.conf')
+    else:
+        utils.abort('webserver %s is not supported (linux type %s)' %
+                (env.webserver, env.linux_type))
+
+def webserver_configtest():
+    """ test webserver configuration """
+    tests = {
+            'apache_redhat': '/usr/sbin/httpd -S',
+            'apache_debian': '/usr/sbin/apache2ctl -S',
+            }
+    if env.webserver:
+        key = env.webserver + '_' + env.linux_type
+        if key in tests:
+            sudo(tests[key])
+        else:
+            utils.abort('webserver %s is not supported (linux type %s)' %
+                    (env.webserver, env.linux_type))
 
 
-def configtest():
-    """ test Apache configuration """
-    if env.use_apache:
-        sudo('/usr/sbin/httpd -S')
+def webserver_reload():
+    """ reload webserver on remote host """
+    webserver_cmd('reload')
 
 
-def apache_reload():
-    """ reload Apache on remote host """
-    apache_cmd('reload')
+def webserver_restart():
+    """ restart webserver on remote host """
+    webserver_cmd('restart')
 
 
-def apache_restart():
-    """ restart Apache on remote host """
-    apache_cmd('restart')
-
-
-def apache_cmd(cmd):
-    """ run cmd against apache init.d script """
-    if env.use_apache:
-        sudo('/etc/init.d/httpd %s' % cmd)
+def webserver_cmd(cmd):
+    """ run cmd against webserver init.d script """
+    cmd_strings = {
+            'apache_redhat': '/etc/init.d/httpd',
+            'apache_debian': '/etc/init.d/apache2',
+            }
+    if env.webserver:
+        key = env.webserver + '_' + env.linux_type
+        if key in cmd_strings:
+            sudo(cmd_strings[key] + ' ' + cmd)
+        else:
+            utils.abort('webserver %s is not supported' % env.webserver)
 
 

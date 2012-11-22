@@ -148,14 +148,14 @@ def convert_args(value):
     else:
         return value
 
-def main():
+def main(argv):
     global localtasks
     verbose = False
     quiet = False
     project_dir = os.path.dirname(__file__)
     # parse command line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "dhpqv", 
+        opts, args = getopt.getopt(argv[1:], "dhpqv", 
                 ["description", "help", "projectdir", "quiet", "verbose"])
     except getopt.error, msg:
         print msg
@@ -221,5 +221,12 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        sys.exit(main(sys.argv))
+    except tasklib.TaskFatalError, e:
+        if e.error_text:
+            print e.error_text
+        else:
+            print "Abnormal exit - reason unknown"
+        sys.exit(e.exit_code)
 

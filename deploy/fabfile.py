@@ -47,7 +47,7 @@ def staging_test():
     # this is on the same server as the customer facing stage site
     # so we need project_root to be different ...
     env.project_dir = env.project_name + '_test'
-    env.use_apache = False
+    env.webserver = None
     _server_setup('staging_test')
 
 def staging():
