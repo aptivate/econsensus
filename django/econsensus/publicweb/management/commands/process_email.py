@@ -134,28 +134,11 @@ class Command(BaseCommand):
                 self._print_if_verbose(verbosity, "Found feedback rating '%s'" % rating_match.group())
                 rating = rating_int(rating_match.group().lower())
 
-        #determine whether email is in reply to a decision or feedback
-        #match id to object
-        subject_match = re.search('(\w+)\s#(\d+)', mail['Subject'])
+        # Determine whether email is in reply to a notification
+        subject_match = re.search('\[(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
         if subject_match:
-            #process feedback against decision
-            if subject_match.group(1).lower() == 'issue':
-                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(2))
-                try:
-                    decision = Decision.objects.get(pk=subject_match.group(2))
-                except:
-                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
-                                 % (mail['From'], subject_match.group(2)))
-                    return
-    
-                self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
-                feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
-                feedback.save()
-                logger.info("User '%s' added feedback via email to decision #%s" % (user, decision.id))
-                self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
-
-            #process comment against feedback
-            elif subject_match.group(1).lower() == 'feedback':
+            #process comment or feedback against feedback
+            if subject_match.group(2):
                 self._print_if_verbose(verbosity, "Found feedback id '%s' in Subject" % subject_match.group(2))
                 try:
                     feedback = Feedback.objects.get(pk=subject_match.group(2))
@@ -184,11 +167,28 @@ class Command(BaseCommand):
                     comment.save()
                     logger.info("User '%s' added comment via email to feedback #%s" % (user, feedback.id))
                     self._print_if_verbose(verbosity, "Found corresponding object '%s'" % feedback.description)
+            
+            #process feedback against decision
+            elif subject_match.group(1):
+                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(1))
+                try:
+                    decision = Decision.objects.get(pk=subject_match.group(1))
+                except:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
+                                 % (mail['From'], subject_match.group(1)))
+                    return
+    
+                self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
+                feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
+                feedback.save()
+                logger.info("User '%s' added feedback via email to decision #%s" % (user, decision.id))
+                self._print_if_verbose(verbosity, "Found corresponding object '%s'" % decision.excerpt)
+                
             else:
-                self._print_if_verbose(verbosity, "Unknown object type %s" % subject_match.group(1))                
-                logger.error("[EMAIL REJECTED] From '%s' Reason: Object id present but unknown object type." \
-                             % mail['From'])     
-        #couldn't match id, look for 'proposal'
+                self._print_if_verbose(verbosity, "No id found in message subject: %s" % mail['Subject'])                
+                logger.error("[EMAIL REJECTED] From '%s' Reason: No id present." \
+                             % mail['From'])
+        # Email was not in reply to a notification so create a new proposal
         else:
             proposal_match = re.search('proposal', mail['Subject'], re.IGNORECASE)
             if proposal_match:
@@ -199,7 +199,7 @@ class Command(BaseCommand):
                 logger.info("User '%s' created decision #%s via email" % (user, decision.id))
 
             else:
-                logger.error("[EMAIL REJECTED] From '%s' Reason: Email did not contain either an #<id> or keyword 'proposal'" \
+                logger.error("[EMAIL REJECTED] From '%s' Reason: Email was not in reply to a notification and body didn't contain keyword 'proposal'" \
                              % mail['From'])
                 
 

@@ -1,1 +1,1 @@
-{{ observed.user_name }} left a Comment against Feedback #{{observed.content_object.id}}
+[{{observed.content_object.decision.id}}\{{observed.content_object.id}}\{{observed.id}}] {{ observed.user_name }} left a Comment against Feedback

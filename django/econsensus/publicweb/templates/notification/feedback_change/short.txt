@@ -1,1 +1,1 @@
-Your Feedback has been edited.
+[{{observed.decision.id}}\{{observed.id}}] {{ observed.author }} changed your feedback.
