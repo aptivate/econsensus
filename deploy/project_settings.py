@@ -50,8 +50,8 @@ server_home = '/var/django'
 # the top level directory on the server
 project_dir = project_name
 
-# whether to use apache
-use_apache = True
+# which web server to use (or None)
+webserver = 'apache'
 
 ###################################################
 # OPTIONAL SETTINGS FOR FABRIC - will be put in env
