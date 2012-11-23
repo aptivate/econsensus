@@ -49,15 +49,19 @@ def _setup_paths(project_settings):
     # valid environments - used for require statements in fablib
     env.valid_envs = env.host_list.keys()
 
-    # work out if we're based on redhat or centos
-    # TODO: look up stackoverflow question about this.
-    if files.exists('/etc/redhat-release'):
-        env.linux_type = 'redhat'
-    elif files.exists('/etc/debian_version'):
-        env.linux_type = 'debian'
-    else:
-        # TODO: should we print a warning here?
-        env.linux_type = 'unknown'
+
+def _linux_type():
+    if 'linux_type' not in env:
+        # work out if we're based on redhat or centos
+        # TODO: look up stackoverflow question about this.
+        if files.exists('/etc/redhat-release'):
+            env.linux_type = 'redhat'
+        elif files.exists('/etc/debian_version'):
+            env.linux_type = 'debian'
+        else:
+            # TODO: should we print a warning here?
+            utils.abort("could not determine linux type of server we're deploying to")
+    return env.linux_type
 
 
 def _tasks(tasks_args, verbose=False):
@@ -495,7 +499,7 @@ def link_webserver_conf():
         sudo_or_run('ln -s %s %s' % (conf_file, webserver_conf))
 
     # debian has sites-available/sites-enabled split with links
-    if env.linux_type == 'debian':
+    if _linux_type() == 'debian':
         webserver_conf_enabled = webserver_conf.replace('available', 'enabled')
         sudo_or_run('ln -s %s %s' % (webserver_conf, webserver_conf_enabled))
     webserver_configtest()
@@ -505,13 +509,13 @@ def _webserver_conf_path():
             'apache_redhat': '/etc/httpd/conf.d',
             'apache_debian': '/etc/apache2/sites-available',
             }
-    key = env.webserver + '_' + env.linux_type
+    key = env.webserver + '_' + _linux_type()
     if key in webserver_conf_dir:
         return os.path.join(webserver_conf_dir[key], 
                 env.project_name+'_'+env.environment+'.conf')
     else:
         utils.abort('webserver %s is not supported (linux type %s)' %
-                (env.webserver, env.linux_type))
+                (env.webserver, _linux_type()))
 
 def webserver_configtest():
     """ test webserver configuration """
@@ -520,12 +524,12 @@ def webserver_configtest():
             'apache_debian': '/usr/sbin/apache2ctl -S',
             }
     if env.webserver:
-        key = env.webserver + '_' + env.linux_type
+        key = env.webserver + '_' + _linux_type()
         if key in tests:
             sudo(tests[key])
         else:
             utils.abort('webserver %s is not supported (linux type %s)' %
-                    (env.webserver, env.linux_type))
+                    (env.webserver, _linux_type()))
 
 
 def webserver_reload():
@@ -545,7 +549,7 @@ def webserver_cmd(cmd):
             'apache_debian': '/etc/init.d/apache2',
             }
     if env.webserver:
-        key = env.webserver + '_' + env.linux_type
+        key = env.webserver + '_' + _linux_type()
         if key in cmd_strings:
             sudo(cmd_strings[key] + ' ' + cmd)
         else:
