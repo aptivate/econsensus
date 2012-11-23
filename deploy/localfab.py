@@ -34,6 +34,7 @@ def deploy(revision=None):
     else:
         link_webserver_conf()
     load_fixtures()
+    correct_log_perms()
 
     fablib.webserver_cmd('start')
 
@@ -49,8 +50,8 @@ def link_webserver_conf(webserver_conf_name=None):
     """link the webserver.conf file"""
     require('vcs_root', provided_by=env.valid_envs)
     if webserver_conf_name == None:
-        webserver_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
-        conf_file = os.path.join(env.vcs_root, 'webserver', env.environment+'.conf')
+        webserver_conf = os.path.join('/etc/httpd/conf.d', env.project_name+'_'+env.environment+'.conf')
+        conf_file = os.path.join(env.vcs_root, env.webserver, env.environment+'.conf')
     else:
         # this assumes that each server will only have one DNS name, ie there is
         # only one VirtualHost directive per server. If this changes you might
@@ -65,10 +66,15 @@ def link_webserver_conf(webserver_conf_name=None):
         abort('No webserver conf file found - expected %s' % conf_file)
     if not files.exists(webserver_conf):
         sudo('ln -s %s %s' % (conf_file, webserver_conf))
-    fablib.configtest()
+    fablib.webserver_configtest()
 
 def add_cron_email():
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
         sudo(env.tasks_bin + ' add_cron_email:' + env.environment)
 
+def correct_log_perms():
+    require('project_root', provided_by=env.valid_envs)
+    sudo('chown apache /var/log/httpd')
+    sudo('touch /var/log/httpd/econsensus.log')
+    sudo('chown apache /var/log/httpd/econsensus.log')
