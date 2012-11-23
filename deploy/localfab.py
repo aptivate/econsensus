@@ -15,13 +15,6 @@ import project_settings
 # to be used by later commands
 #
 
-def staging():
-    """ use staging environment on remote host to demo to client"""
-    env.project_dir = project_settings.project_name + '_test'
-    env.environment = 'staging'
-    env.hosts = ['lin-' + project_settings.project_name + '.aptivate.org:48001']
-    fablib._setup_paths(project_settings)
-
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
