@@ -32,10 +32,10 @@ import project_settings
 # to be used by later commands
 #
 def _server_setup(environment):
-    if environment not in env.host_list:
+    if environment not in project_settings.host_list:
         utils.abort('%s not defined in project_settings.host_list' % environment)
     env.environment = environment
-    env.hosts = env.host_list[environment]
+    env.hosts = project_settings.host_list[environment]
     fablib._setup_paths(project_settings)
 
 def dev_server():
