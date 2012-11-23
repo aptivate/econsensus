@@ -384,7 +384,7 @@ def _checkout_or_update_git(revision=None):
             with settings(warn_only=True):
                 rev_is_branch = sudo_or_run('git branch -r | grep %s' % revision)
             if rev_is_branch.succeeded:
-                sudo_or_run('git merge origin/%s' % branch)
+                sudo_or_run('git merge origin/%s' % revision)
             # if we did a stash, now undo it
             if not stash_result.startswith("No local changes"):
                 sudo_or_run('git stash pop')
