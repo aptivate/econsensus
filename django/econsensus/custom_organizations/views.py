@@ -1,5 +1,6 @@
 from organizations.views import OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
 from forms import CustomOrganizationUserForm, CustomOrganizationUserAddForm
+from guardian.shortcuts import remove_perm
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
@@ -13,6 +14,10 @@ class CustomOrganizationUserUpdate(OrganizationUserUpdate):
 class CustomOrganizationUserCreate(OrganizationUserCreate):
     form_class = CustomOrganizationUserAddForm
 
-#Remember to delete unused permissions!
-#class CustomOrganizationUserDelete(OrganizationUserDelete):
-#    pass
+#Delete unused permissions!
+class CustomOrganizationUserDelete(OrganizationUserDelete):
+    def delete(self, *args, **kwargs):
+        org_user = self.get_object()
+        remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
+        return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
+    

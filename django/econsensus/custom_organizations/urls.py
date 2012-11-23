@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.decorators import login_required
-from views import CustomOrganizationUserCreate, CustomOrganizationUserUpdate 
+from views import CustomOrganizationUserCreate,\
+                    CustomOrganizationUserUpdate,\
+                    CustomOrganizationUserDelete
 
 urlpatterns = patterns('',    
     # Use custom urganization user URLs
@@ -10,5 +12,8 @@ urlpatterns = patterns('',
     url(r'^(?P<organization_pk>[\d]+)/people/(?P<user_pk>[\d]+)/edit/$',
         view=login_required(CustomOrganizationUserUpdate.as_view()),
         name="organization_user_edit"),
+    url(r'^(?P<organization_pk>[\d]+)/people/(?P<user_pk>[\d]+)/delete/$',
+        view=login_required(CustomOrganizationUserDelete.as_view()),
+        name="organization_user_delete"),                       
     url(r'', include('organizations.urls')),
 )
