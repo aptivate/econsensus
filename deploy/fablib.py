@@ -121,9 +121,12 @@ def deploy(revision=None, keep=None):
     if files.exists(env.vcs_root):
         create_copy_for_rollback(keep)
 
-    # we only have to stop the webserver after creating the rollback copy
+    # we only have to disable this site after creating the rollback copy
+    # (do this so that apache carries on serving other sites on this server
+    # and the maintenance page for this vhost)
+    link_webserver_conf(unlink=True)
     with settings(warn_only=True):
-        webserver_cmd('stop')
+        webserver_cmd('reload')
     checkout_or_update(revision)
 
     # Use tasks.py deploy:env to actually do the deployment, including
@@ -136,8 +139,9 @@ def deploy(revision=None, keep=None):
         if env.environment == 'production':
             setup_db_dumps()
 
+    # bring this vhost back in
     link_webserver_conf()
-    webserver_cmd('start')
+    webserver_cmd('reload')
 
 def set_up_celery_daemon():
     require('vcs_root', provided_by=env)
@@ -485,24 +489,28 @@ def rm_pyc_files():
         with cd(env.django_root):
             sudo_or_run('find . -name \*.pyc | xargs rm')
 
-def link_webserver_conf():
+def link_webserver_conf(unlink=False):
     """link the webserver conf file"""
     require('vcs_root', provided_by=env.valid_envs)
     if env.webserver == None:
         return
-    conf_file = os.path.join(env.vcs_root, env.webserver, env.environment+'.conf')
-    if not files.exists(conf_file):
-        utils.abort('No %s conf file found - expected %s' %
-                (env.webserver, conf_file))
+    vcs_conf_file = os.path.join(env.vcs_root, env.webserver, env.environment+'.conf')
     webserver_conf = _webserver_conf_path()
-    if not files.exists(webserver_conf):
-        sudo_or_run('ln -s %s %s' % (conf_file, webserver_conf))
+    if unlink:
+        if files.exists(webserver_conf):
+            sudo_or_run('rm %s' % webserver_conf)
+    else:
+        if not files.exists(vcs_conf_file):
+            utils.abort('No %s conf file found - expected %s' %
+                    (env.webserver, vcs_conf_file))
+        if not files.exists(webserver_conf):
+            sudo_or_run('ln -s %s %s' % (vcs_conf_file, webserver_conf))
 
-    # debian has sites-available/sites-enabled split with links
-    if _linux_type() == 'debian':
-        webserver_conf_enabled = webserver_conf.replace('available', 'enabled')
-        sudo_or_run('ln -s %s %s' % (webserver_conf, webserver_conf_enabled))
-    webserver_configtest()
+        # debian has sites-available/sites-enabled split with links
+        if _linux_type() == 'debian':
+            webserver_conf_enabled = webserver_conf.replace('available', 'enabled')
+            sudo_or_run('ln -s %s %s' % (webserver_conf, webserver_conf_enabled))
+        webserver_configtest()
 
 def _webserver_conf_path():
     webserver_conf_dir = {
