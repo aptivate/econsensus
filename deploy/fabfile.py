@@ -103,9 +103,10 @@ def deploy(revision=None):
     else:
         link_apache_conf()
     load_fixtures()
-    
+    correct_log_perms()
+
     apache_cmd('start')
-    
+
 def load_fixtures():
     """load fixtures for this environment"""
     require('tasks_bin', provided_by=env.valid_envs)
@@ -140,4 +141,8 @@ def add_cron_email():
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):    
         sudo(env.tasks_bin + ' add_cron_email:' + env.environment)
-    
+
+def correct_log_perms():
+    require('project_root', provided_by=env.valid_envs)
+    log_path = os.path.join(env.django_root, 'log', 'econsensus.log')
+    sudo('chown apache %s' % log_path)
