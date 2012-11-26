@@ -14,6 +14,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
@@ -465,9 +466,8 @@ class OrganizationRedirectView(RedirectView):
         return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
 
     def get_redirect_url(self):
-        users_orgs = Organization.objects.get_for_user(self.request.user)
-        if len(users_orgs) == 1:
-            single_org = users_orgs[0]
-            return reverse('publicweb_item_list', args = [single_org.slug, 'proposal'])
-        else:
+        try:
+            users_org = Organization.objects.get(users=self.request.user)
+            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+        except:
             return reverse('organization_list')
