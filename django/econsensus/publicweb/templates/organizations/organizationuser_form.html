@@ -18,7 +18,24 @@ Organisation User Form
 {% endif %}
 {% if user == organization_user.user %}This is you!{% endif %}
 <form action="." method="post">{% csrf_token %}
-    {{ form }}
+    {{ form.non_field_errors }}
+	{% if form.email %}
+    <div class="fieldWrapper">
+    	{{ form.email.errors }}
+    	<label for="id_email">Email:</label>
+    	{{ form.email }}
+    </div>
+    {% endif %}
+    <div class="fieldWrapper">
+    	{{ form.is_admin.errors }}
+    	<label for="id_email">Is Admin:</label>
+    	{{ form.is_admin }}
+    </div>
+    <div class="fieldWrapper">
+    	{{ form.is_editor.errors }}
+    	<label for="id_email">Is Editor:</label>
+    	{{ form.is_editor }}
+    </div>        
     <input type="submit" value="submit">
 </form>
 {% endblock %}
