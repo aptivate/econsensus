@@ -93,7 +93,7 @@ class ExportCSV(View):
         remove_field(comment_field_names, 'content_type')
         remove_field(comment_field_names, 'object_pk')
 
-        decision_column_titles = ["Decision.%s" % field_name for field_name in decision_field_names]
+        decision_column_titles = ["Issue.%s" % field_name for field_name in decision_field_names]
         feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
         comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
 
