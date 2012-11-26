@@ -27,7 +27,7 @@ def load_sample_data(environment, force=False):
 
         tasklib._manage_py(['loaddata', "sample_data.json"])
 
-def load_auth_user(environment):
+def load_auth_user(environment, force=False):
     """load auth user fixture based on environment. """
     if force == False:
         # first check if it has already been loaded
