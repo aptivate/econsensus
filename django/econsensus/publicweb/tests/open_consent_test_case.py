@@ -2,11 +2,14 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from mechanize import ParseString
-from publicweb.models import Decision, Feedback
-from organizations.models import Organization
 from django.db.models.fields import FieldDoesNotExist
 from django.contrib.comments import Comment
+
+from mechanize import ParseString
+from organizations.models import Organization
+from guardian.shortcuts import assign
+
+from publicweb.models import Decision, Feedback
 
 class EconsensusTestCase(TestCase):
     fixtures = ['organizations.json', 'users.json']
@@ -15,6 +18,8 @@ class EconsensusTestCase(TestCase):
         self.betty = User.objects.get(username="betty")
         self.charlie = User.objects.get(username="charlie")
         self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
+        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        
         self.factory = RequestFactory()
         self.login('betty')
 

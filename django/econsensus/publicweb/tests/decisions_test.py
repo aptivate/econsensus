@@ -207,7 +207,7 @@ class DecisionsTest(DecisionTestCase):
                                 post_dict,
                                 follow=True )
         
-        count_all_but_author = User.objects.exclude(username=decision.author).count()
+        count_all_but_author = User.objects.exclude(username=decision.author).exclude(is_active=False).count()
         self.assertEqual(count_all_but_author, decision.watchers.all().count())
         
         self.assertNotIn(self.user, decision.watchers.all())
