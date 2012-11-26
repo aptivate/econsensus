@@ -19,7 +19,6 @@
 		    {% include "pagination.html" %}
 	            <table class="summary-list">
                     <thead>
-                    </thead>
                         <tr class="summary-header">
                             {% for header in header_list %}
                             <th class="{{ header.attrs }}">
@@ -33,6 +32,7 @@
                             </th>
                             {% endfor %}
             			</tr>                  
+                    </thead>
                     <tbody>
                     {% for object in object_list %}
                         <tr>

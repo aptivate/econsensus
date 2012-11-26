@@ -295,7 +295,7 @@ input {
 .summary-list {
 	border-collapse: separate;
 	border-spacing: 0 2px;
-	table-layout: fixed;
+	table-layout: auto;
 	width: 100%;
 	clear: both;
 	margin: 20px 0 0;
@@ -353,8 +353,7 @@ input {
 }
 
 .summary-list td .iconified {
-	display:block;
-	padding:0 5px;
+	padding:0 25px 0 5px;
 	border:5px solid #EFEFEF;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
@@ -365,11 +364,14 @@ input {
     font-weight: bold;
 }
 
-.id {
-    width: 80px;
+.id a {
+    max-width: 120px;
 }
-td.id {
-    text-align:left;
+.id a span {
+    max-width: 85px;
+}
+td.id, th.id {
+    text-align: right;
 }
 
 p.no_items {
