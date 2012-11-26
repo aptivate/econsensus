@@ -397,8 +397,17 @@ class FeedbackCreate(CreateView):
 
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))    
-    def dispatch(self, *args, **kwargs):
-        return super(FeedbackCreate, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.rating_initial = Feedback.COMMENT_STATUS
+        rating = request.GET.get('rating')
+        if rating:
+            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
+        return super(FeedbackCreate, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super(FeedbackCreate, self).get_initial().copy()
+        initial['rating'] = self.rating_initial
+        return initial
 
     def form_valid(self, form):
         form.instance.author = self.request.user
