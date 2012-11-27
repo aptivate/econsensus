@@ -39,15 +39,3 @@ class DecisionTestCase(EconsensusTestCase):
         decision.save()
         
         return decision
-    
-    def create_and_return_feedback(self,decision=None,
-                                   description='Feedback', author=None):
-        if author==None:
-            author=self.user
-        if decision==None:
-            decision=self.create_and_return_decision()
-        feedback = Feedback(description=description,
-                          decision=decision,
-                          author=author)
-        feedback.save()
-        return feedback

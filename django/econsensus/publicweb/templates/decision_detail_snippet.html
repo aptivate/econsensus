@@ -91,11 +91,9 @@
                 <dd>{{ object.get_feedback_statistics.comment }}</dd>
             </a>
 		</dl>
-{% if "edit_decisions_feedback" in organization_permissions %}		
 			<div class="controls">
 				<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
 			</div>
-{% endif %}
 		</div>
 	</div>
 </div>

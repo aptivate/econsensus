@@ -1,13 +1,12 @@
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-
+from django.test.client import RequestFactory
+from organizations.models import Organization
 from organizations.views import OrganizationDetail
-from guardian.shortcuts import assign
-
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
-
 from decision_test_case import EconsensusTestCase
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
@@ -76,8 +75,7 @@ class HtmlTest(EconsensusTestCase):
         decision = Decision.objects.get(description='Lorem Ipsum')
         self.assertEqual(decision.author, self.user)
         self.user = self.login('charlie')
-        #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)             
+        
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
@@ -130,9 +128,6 @@ class HtmlTest(EconsensusTestCase):
     def test_editor_shown(self):
         decision = self.create_decision_through_browser()
         self.login('charlie')
-        #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)
-
         decision = self.update_decision_through_browser(decision.id)
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path, follow=True)
@@ -148,7 +143,6 @@ class HtmlTest(EconsensusTestCase):
         self.assertRegexpMatches(rendered_response.content, "<h1>[\s\S]*%s[\s\S]*</h1>" % self.bettysorg)
         
     def test_cannot_view_decisions_when_not_member(self):
-
         request = self.factory.request()
         request.user = self.betty
         request.session = self.client.session
@@ -163,9 +157,9 @@ class HtmlTest(EconsensusTestCase):
         self.assertContains(response, decision.description)
         
         members = [x.username for x in decision.organization.users.all()]
-        non_members = User.objects.exclude(username__in=members).exclude(username='AnonymousUser')
+        non_members = User.objects.exclude(username__in=members)
         self.assertTrue(non_members)
-                
+        
         self.login(non_members[0].username)
         request.user = self.user
         kwargs = {'org_slug' : decision.organization.slug,

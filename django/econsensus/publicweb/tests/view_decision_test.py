@@ -23,6 +23,7 @@ class ViewDecisionTest(DecisionTestCase):
     def test_load_decision_snippet(self):
         decision = self.create_and_return_decision(status=Decision.DECISION_STATUS)
         response = self.client.get(reverse('publicweb_decision_snippet_detail', args=[decision.id]))       
+        self.assertContains(response, u'<a class="edit" href="/decision/update/%s/">Edit</a>' % decision.id)
         self.assertTrue(response.content.strip().startswith('<div id="decision_snippet_envelope">'))
         self.assertContains(response, u'<div id="decision_detail" class="decision">')
 

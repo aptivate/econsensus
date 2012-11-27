@@ -2,11 +2,7 @@
 {% autoescape on %}
 {% load i18n %}
 {% load org_filters %}
-{% load guardian_tags %}
 
-{% if organization %}
-{% get_obj_perms request.user for organization as "organization_permissions" %}
-{% endif %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" dir="ltr" lang="en-US">
 <head>
@@ -58,10 +54,8 @@
 					</ul>
 					{% if organization %}
 					<div id="user-actions">
-						{% if "edit_decisions_feedback" in organization_permissions %}
 						<a class="button add_proposal" href="{% url 'publicweb_decision_create' organization.slug 'proposal' %}"><span>{% trans "Add Proposal" %}</span></a>					
 						<a class="button add_decision" href="{% url 'publicweb_decision_create' organization.slug 'decision' %}"><span>{% trans "Add Decision" %}</span></a>
-						{% endif %}
 					</div>
 					{% endif %}
 				</div>

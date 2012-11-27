@@ -18,8 +18,6 @@ from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
-from guardian.decorators import permission_required_or_403
-
 from models import Decision, Feedback
 from publicweb.forms import DecisionForm, FeedbackForm
 
@@ -317,7 +315,6 @@ class DecisionCreate(CreateView):
     status = Decision.PROPOSAL_STATUS
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'slug', 'org_slug')))
     def dispatch(self, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
         slug = kwargs.get('org_slug', None)
@@ -359,7 +356,6 @@ class DecisionUpdate(UpdateView):
     form_class = DecisionForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))    
     def dispatch(self, *args, **kwargs):
         return super(DecisionUpdate, self).dispatch(*args, **kwargs)
 
@@ -397,7 +393,6 @@ class FeedbackCreate(CreateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))    
     def dispatch(self, request, *args, **kwargs):
         self.rating_initial = Feedback.COMMENT_STATUS
         rating = request.GET.get('rating')
@@ -435,7 +430,6 @@ class FeedbackUpdate(UpdateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
 
