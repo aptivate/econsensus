@@ -1,6 +1,6 @@
 Your feedback has been edited.
 
-{{ observed.rating_text|capfirst }}
+{{ observed.get_rating_display|capfirst }}
 
 "{{ observed.description|safe }}"
 

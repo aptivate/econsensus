@@ -3,9 +3,9 @@
 {% load comments %}
 {% get_comment_list for object as comment_list %}
 <li id="id{{ object.id }}">
-  <div class="feedback_wrapper {{ object.rating_text }}">
-    <div class="feedback_type {{ object.rating_text }}">
-      {{ object.rating_text|capfirst }}
+  <div class="feedback_wrapper {{ object.get_rating_display }}">
+    <div class="feedback_type {{ object.get_rating_display }}">
+      {{ object.get_rating_display|capfirst }}
     </div>
 	<div class="description">
 	  <span class="author">{{ object.get_author_name }} says:</span>

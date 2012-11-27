@@ -199,9 +199,6 @@ class Feedback(models.Model):
         else:
             return "An Anonymous Contributor"
 
-    def rating_text(self):
-        return self.RATING_CHOICES[self.rating][1]
-
     def get_message_id(self):
         """
         Generates a message id that can be used in email headers
