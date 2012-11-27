@@ -1,5 +1,6 @@
 {% load url from future %}
 {% load i18n %}
+{% load publicweb_filters %}
 <div id="decision_snippet_envelope">
 	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
 
@@ -70,26 +71,12 @@
 		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
         </div>{% endif %}
         <dl class="stats">
-            <a href="{% url 'publicweb_feedback_create' object.id %}?rating=consent">
-                <dt class="consent">{% trans "consent" %}</dt>
-                <dd>{{ object.get_feedback_statistics.consent }}</dd>
+            {% for rating in rating_names %}
+            <a href="{% url 'publicweb_feedback_create' object.id %}?rating={{rating}}">
+                <dt class="{{rating}}">{% trans rating %}</dt>
+                <dd>{{ object.get_feedback_statistics|get_item:rating }}</dd>
             </a>
-            <a href="{% url 'publicweb_feedback_create' object.id %}?rating=concerns">
-                <dt class="concerns">{% trans "concerns" %}</dt>
-                <dd>{{ object.get_feedback_statistics.concerns }}</dd>
-            </a>
-            <a href="{% url 'publicweb_feedback_create' object.id %}?rating=danger">
-                <dt class="danger">{% trans "danger" %}</dt>
-                <dd>{{ object.get_feedback_statistics.danger }}</dd>
-            </a>
-            <a href="{% url 'publicweb_feedback_create' object.id %}?rating=question">
-                <dt class="question">{% trans "question" %}</dt>
-                <dd>{{ object.get_feedback_statistics.question }}</dd>
-            </a>
-            <a href="{% url 'publicweb_feedback_create' object.id %}?rating=comment">
-                <dt class="comment">{% trans "comment" %}</dt>
-                <dd>{{ object.get_feedback_statistics.comment }}</dd>
-            </a>
+            {% endfor %}
 		</dl>
 			<div class="controls">
 				<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>

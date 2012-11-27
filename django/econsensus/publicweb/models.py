@@ -214,6 +214,10 @@ def rating_int(string):
     
     return Feedback.RATING_CHOICES[index][0]
 
+def get_rating_names():
+    # Call unicode on the names because they are lazy translations, not strings
+    return [unicode(name) for value, name in Feedback.RATING_CHOICES]
+
 if notification is not None:
     @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
     def decision_signal_handler(sender, **kwargs):
