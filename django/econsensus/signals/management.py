@@ -8,7 +8,7 @@ from organizations.models import Organization
 
 def create_org_editor_perm(app, created_models, verbosity, **kwargs):
     ct_organization = ContentType.objects.get_for_model(Organization)
-    Permission.objects.create(codename='edit_decisions_feedback',
+    Permission.objects.get_or_create(codename='edit_decisions_feedback',
                               name='Can Add & Edit Decisions and Feedback',
                               content_type=ct_organization)
 
