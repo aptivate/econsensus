@@ -370,9 +370,6 @@ input {
 .id a span {
     max-width: 85px;
 }
-td.id, th.id {
-    text-align: right;
-}
 
 p.no_items {
 	clear:both;
