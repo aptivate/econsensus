@@ -1,5 +1,10 @@
 {% load url from future %}
 {% load i18n %}
+{% load guardian_tags %}
+
+{% if organization %}
+{% get_obj_perms request.user for organization as "organization_permissions" %}
+{% endif %}
 <div id="decision_snippet_envelope">
 	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
 
