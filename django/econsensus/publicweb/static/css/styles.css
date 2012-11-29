@@ -364,11 +364,8 @@ input {
     font-weight: bold;
 }
 
-.id a {
-    max-width: 120px;
-}
-.id a span {
-    max-width: 85px;
+.id {
+    width: 140px;
 }
 
 p.no_items {
