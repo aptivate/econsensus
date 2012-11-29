@@ -365,7 +365,8 @@ input {
 }
 
 .id {
-    width: 140px;
+    width: 80px;
+    text-align: left;
 }
 
 p.no_items {
