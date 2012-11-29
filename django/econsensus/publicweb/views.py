@@ -18,9 +18,11 @@ from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
+
 from guardian.decorators import permission_required_or_403
 
-from models import Decision, Feedback
+from models import Decision, Feedback, get_rating_names
+
 from publicweb.forms import DecisionForm, FeedbackForm
 
 class ExportCSV(View):
@@ -127,6 +129,7 @@ class DecisionDetail(DetailView):
         context = super(DecisionDetail, self).get_context_data(*args, **kwargs)
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
+        context['rating_names'] = get_rating_names() 
         return context
 
 
