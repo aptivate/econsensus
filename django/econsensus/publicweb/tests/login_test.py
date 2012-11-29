@@ -28,10 +28,10 @@ class LoginTest(EconsensusTestCase):
         post_data = self.get_form_values_from_response(page, 1)
         self.assertIn('username', post_data, 'No username field in page content!')
         self.assertIn('password', post_data, 'No password field in page content!')
-        post_data['login'] = 'admin'
-        post_data['password'] = 'aptivate'
+        post_data['username'] = 'betty'
+        post_data['password'] = 'betty'
                 
-        self.client.post(path, post_data, follow=True)
+        response = self.client.post(path, post_data, follow=True)
 
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path, follow=True)
