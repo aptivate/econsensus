@@ -2,16 +2,17 @@ from django.conf import settings
 from django.utils.translation import ugettext_noop as _
 from django.db.models import signals
 from django.contrib.auth.models import Permission
+from django.contrib.auth import models as auth
 from django.contrib.contenttypes.models import ContentType
-from organizations import models as organizations
+from organizations.models import Organization
 
 def create_org_editor_perm(app, created_models, verbosity, **kwargs):
-    organizations = ContentType.objects.get(app_label='organizations', model='organization')
+    ct_organization = ContentType.objects.get_for_model(Organization)
     Permission.objects.create(codename='edit_decisions_feedback',
                               name='Can Add & Edit Decisions and Feedback',
-                              content_type=organizations)
+                              content_type=ct_organization)
 
-signals.post_syncdb.connect(create_org_editor_perm, sender=organizations)
+signals.post_syncdb.connect(create_org_editor_perm, sender=auth)
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
