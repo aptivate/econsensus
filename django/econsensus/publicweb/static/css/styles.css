@@ -465,7 +465,7 @@ li.summary-item {
    text-align:left;
 }
 
-.summary-header .feedback {
+.feedback {
     width: 8em;
 }
 
@@ -1185,6 +1185,14 @@ p.error404 {
 	
     #decision_detail .meta_people {
         margin-bottom:10px;
+    }
+
+    .summary-list td a, .summary-list th a {
+        padding: 3px;
+    }
+
+    .summary-list td, .summary-list th {
+        width: auto;
     }
 }
 
