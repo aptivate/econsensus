@@ -178,7 +178,8 @@ class Feedback(models.Model):
                   )
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")    
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
@@ -261,7 +262,8 @@ if notification is not None:
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            if instance.author != instance.editor:
+                notification.send_observation_notices_for(instance, headers=headers)
             
             
     @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")

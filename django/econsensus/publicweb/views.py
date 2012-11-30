@@ -442,10 +442,11 @@ class FeedbackUpdate(UpdateView):
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, *args, **kwargs):
+    def form_valid(self, form, *args, **kwargs):
+        form.instance.editor = self.request.user
         if not notification.is_observing(self.object.decision, self.request.user):
             notification.observe(self.object.decision, self.request.user, 'decision_change')
-        return super(FeedbackUpdate, self).form_valid(*args, **kwargs)
+        return super(FeedbackUpdate, self).form_valid(form, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(FeedbackUpdate, self).get_context_data(**kwargs)
