@@ -1198,6 +1198,12 @@ p.error404 {
         padding: 3px;
     }
 
+    /* Give id header an extra 10px left padding to compensate for 
+     * 5px border and 5px left padding on content */
+    .summary-list th.id a {
+        padding-left: 13px;
+    }
+
     .summary-list td, .summary-list th {
         width: auto;
     }
