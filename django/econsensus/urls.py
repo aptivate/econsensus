@@ -23,8 +23,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('',
     url(r'^accounts/register/$', 'registration.views.register',
-        {'form_class':RegistrationFormUniqueEmail,
-        'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),
+        {'backend':'custom_registration.backends.RecaptchaRegistrationBackend' }, name='registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 

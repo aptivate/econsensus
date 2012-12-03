@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
+    'captcha',
     'registration',
     'notification',
     'custom_comments',
@@ -237,6 +238,10 @@ CACHE_PREFIX = str(SITE_ID)
 CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
+
+#for django-recaptcha
+RECAPTCHA_PUBLIC_KEY = '6Ldk59kSAAAAAJTRljlo_xqu4MDkU6A-7sTz0yKc'
+RECAPTCHA_PRIVATE_KEY = '6Ldk59kSAAAAANRgtFTv4TpAxxepA3D4s5UYDyqf'
 
 #--------------------------------
 # local settings import
