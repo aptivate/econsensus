@@ -364,6 +364,12 @@ input {
     font-weight: bold;
 }
 
+/* Give id header an extra 10px left padding to compensate for 
+ * 5px border and 5px left padding on content */
+.summary-list th.id a {
+    padding-left: 20px;
+}
+
 .id {
     width: 80px;
     text-align: left;
