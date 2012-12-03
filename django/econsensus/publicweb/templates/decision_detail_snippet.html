@@ -76,12 +76,14 @@
 		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
         </div>{% endif %}
         <dl class="stats">
+        	{% with statistics=object.get_feedback_statistics %}
             {% for rating in rating_names %}
             <a href="{% url 'publicweb_feedback_create' object.id %}?rating={{rating}}">
                 <dt class="{{rating}}">{% trans rating %}</dt>
-                <dd>{{ object.get_feedback_statistics|get_item:rating }}</dd>
+                <dd>{{ statistics|get_item:rating }}</dd>
             </a>
             {% endfor %}
+            {% endwith %}
 		</dl>
 {% if "edit_decisions_feedback" in organization_permissions %}		
 			<div class="controls">

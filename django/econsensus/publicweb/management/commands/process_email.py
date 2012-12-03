@@ -12,7 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
 from livesettings import config_value
-from publicweb.models import Decision, Feedback, rating_int
+from publicweb.models import Decision, Feedback
 from organizations.models import Organization
 
 class Command(BaseCommand):
@@ -132,7 +132,7 @@ class Command(BaseCommand):
             rating_match = re.match('question|danger|concerns|consent|comment', parse_feedback.group(1), re.IGNORECASE)
             if rating_match:
                 self._print_if_verbose(verbosity, "Found feedback rating '%s'" % rating_match.group())
-                rating = rating_int(rating_match.group().lower())
+                rating = dict(Feedback.RATING_CHOICES).values().index(rating_match.group().lower())
 
         # Determine whether email is in reply to a notification
         subject_match = re.search('\[(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
@@ -201,7 +201,6 @@ class Command(BaseCommand):
             else:
                 logger.error("[EMAIL REJECTED] From '%s' Reason: Email was not in reply to a notification and body didn't contain keyword 'proposal'" \
                              % mail['From'])
-                
 
     def _print_if_verbose(self, verbosity, message):
         if verbosity > 1:
