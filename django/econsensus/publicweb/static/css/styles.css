@@ -465,7 +465,7 @@ li.summary-item {
    text-align:left;
 }
 
-.feedback {
+.summary-header .feedback {
     width: 8em;
 }
 
