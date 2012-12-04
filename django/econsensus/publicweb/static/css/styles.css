@@ -574,7 +574,7 @@ span.excerpt {
     font-weight: bold;
     left: 0;
     margin-bottom: 5px;
-    margin-right: -50px;
+    margin-right: -100px;
     padding: 3px 0 3px 5%;
     text-transform: capitalize;
     width: 97%;
@@ -609,9 +609,9 @@ span.excerpt {
 #decision_detail .stats dd {
     color: #000;
     background: none repeat scroll 0 0 #FFFFFF;
-    border-radius: 50% 50% 50% 50%;
-    -moz-border-radius: 50% 50% 50% 50%;
-    -webkit-border-radius: 50% 50% 50% 50%;
+    border-radius: 10px / 8px;
+    -moz-border-radius: 10px / 8px;
+    -webkit-border-radius: 10px / 8px;
  	display: block;
     float: right;
     font-size: 0.9em;
