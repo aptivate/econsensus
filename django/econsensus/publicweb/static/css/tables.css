@@ -97,6 +97,7 @@
 	.proposal-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.proposal-list td:nth-of-type(3):before { font-weight:bold;content:"Feedback"; }
 	.proposal-list td:nth-of-type(4):before { font-weight:bold;content:"Deadline"; }
+	.proposal-list td:nth-of-type(5):before { font-weight:bold;content:"Last Modified"; }
 
 	.decision-list td:nth-of-type(1):before { font-weight:bold;content:"ID";color:#000; }
 	.decision-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
