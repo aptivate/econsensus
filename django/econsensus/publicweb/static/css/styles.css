@@ -364,15 +364,8 @@ input {
     font-weight: bold;
 }
 
-/* Give id header an extra 10px left padding to compensate for 
- * 5px border and 5px left padding on content */
-.summary-list th.id a {
-    padding-left: 20px;
-}
-
 .id {
     width: 80px;
-    text-align: left;
 }
 
 p.no_items {
@@ -1196,12 +1189,6 @@ p.error404 {
 
     .summary-list td a, .summary-list th a {
         padding: 3px;
-    }
-
-    /* Give id header an extra 10px left padding to compensate for 
-     * 5px border and 5px left padding on content */
-    .summary-list th.id a {
-        padding-left: 13px;
     }
 
     .summary-list td, .summary-list th {
