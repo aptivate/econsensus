@@ -50,7 +50,7 @@ class ViewTest(DecisionTestCase):
             self.assert_context_has_dict(dictionary, url)                                
 
     def test_feedback_author_is_assigned(self):
-        decision = Decision.objects.latest('id')
+        decision = self.create_and_return_decision()
         path = reverse('publicweb_feedback_create', args=[decision.id])
         post_dict = {'description': 'Lorem Ipsum', 'rating': Feedback.COMMENT_STATUS }
         response = self.client.post(path, post_dict)
@@ -67,7 +67,7 @@ class ViewTest(DecisionTestCase):
 
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()
-        all_users = User.objects.all().count()
+        all_users = User.objects.all().exclude(is_active=False).count()
         self.assertEqual(all_users, decision.watchers.all().count())
 
     def test_user_can_unwatch(self):

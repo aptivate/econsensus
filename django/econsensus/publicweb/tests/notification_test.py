@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
+from guardian.shortcuts import assign
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -156,6 +157,8 @@ class NotificationTest(DecisionTestCase):
         decision = self.create_decision_through_browser()
         #charlie adds feedback
         self.login('charlie')
+        #allow charlie to edit        
+        assign('edit_decisions_feedback', self.user, self.bettysorg)        
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
         #Charlie changes the feedback...

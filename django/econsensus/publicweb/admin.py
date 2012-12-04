@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
 
+from guardian.admin import GuardedModelAdmin
+from organizations.models import Organization
+
 from models import Decision, Feedback
 
 class FeedbackInline(admin.TabularInline):
