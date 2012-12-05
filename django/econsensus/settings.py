@@ -138,12 +138,12 @@ INSTALLED_APPS = (
     'livesettings',
     'organizations',
     'custom_organizations',
+    'guardian',    
     'publicweb',
     'signals',
     'tinymce',
     'south',
     'tagging',
-    'guardian'
 )
 
 AUTHENTICATION_BACKENDS = (
