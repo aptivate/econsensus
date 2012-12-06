@@ -24,17 +24,13 @@
 		margin-bottom:10px;
 		position:relative;
 		display:block;
-		
 	}
 	
 	.object-list td {display:table-row;position:relative;}
 
-
-.proposal-list .summary-list tr {border-color: #FFCC00; }
-.decision-list .summary-list tr {border-color: #AAD400; }
-.archived-list .summary-list tr {border-color: #D1D7DF; }
-
-
+    .proposal-list .summary-list tr {border-color: #FFCC00; }
+    .decision-list .summary-list tr {border-color: #AAD400; }
+    .archived-list .summary-list tr {border-color: #D1D7DF; }
 
 	.object-list td {
 		/* Behave  like a "row" */
@@ -59,9 +55,9 @@
 		color:#666;
 	}
 
-.object-list .excerpt a {font-weight:bold;}
-.object-list .excerpt a:hover {color:#3E6DA3;}
-.object-list td a {display:table-cell;width:80%;}
+    .object-list .excerpt a {font-weight:bold;}
+    .object-list .excerpt a:hover {color:#3E6DA3;}
+    .object-list td a {display:table-cell;width:80%;}
 
 	.object-list td, .object-list td:first-child, .object-list td:last-child {
 		border:none;
@@ -74,23 +70,23 @@
 		left: -9999px;
 	}
 
-@media screen and (max-width: 660px) {
-	
-	.object-list td.id a {
-    left: 60px;
-    position: absolute;
-    top: -33px;
-    width: 7em;
-    padding:0;
-	}
-   
-   .object-list td:nth-of-type(1):before {
-    content: "ID";
-    font-weight: bold;
-    position: absolute;
-    top: -40px;
-	}
-}
+    @media screen and (max-width: 660px) {
+        
+        .object-list td.id a {
+        left: 60px;
+        position: absolute;
+        top: -33px;
+        width: 7em;
+        padding:0;
+        }
+       
+       .object-list td:nth-of-type(1):before {
+        content: "ID";
+        font-weight: bold;
+        position: absolute;
+        top: -40px;
+        }
+    }
 
 	/* Labels */
 	.proposal-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
