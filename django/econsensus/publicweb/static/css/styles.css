@@ -247,6 +247,11 @@ input {
 	margin-bottom:0;
 }
 
+#content h2.simple-form-header {
+	display: block;
+	text-align: center;
+}
+
 #content h2.page_title span {
     color: #030303;
     font-size: 0.7em;
@@ -1091,7 +1096,7 @@ body.login p.message {
     width: 500px;
 }
 
-#login-form {
+#short-form {
     background: none repeat scroll 0 0 #EFEFEF;
     -moz-border-radius: 20px;
   	-webkit-border-radius: 20px;
@@ -1100,47 +1105,53 @@ body.login p.message {
     margin: 0 auto;
     overflow: auto;
     padding: 20px;
-    width: 370px;
+    width: 400px;
 }
 
-#login-form .helptext {
+#short-form.login .helptext {
     display: none;
 }
 
-#login-form .errorlist {
+#short-form span.helptext {
+	clear:both;
+	float: left;
+	font-size: 0.8em;
+}
+
+#short-form .errorlist {
     font-size: 0.8em;
     float: left;
 }
 
-#login-form .field {
+#short-form .field {
     float: left;
     width: inherit;
     padding: 2px;
 }
 
-#login-form .field_value {
+#short-form .field_value {
     float: right;
 }
 
-#login-form .label {
+#short-form .label {
     float: left;
 }
 
-#login-form p {
+#short-form p {
     float: left;
     line-height: 3.3em;
     width: 100%;
 }
 
-#login-form label {
+#short-form label {
     display: block;
     float: left;
     font-size: 1.3em;
     color:#333;
-    width: 6em;
+    width: 8em;
 }
 
-#login-form input {
+#short-form input {
 	-moz-border-radius: 10px;
   	-webkit-border-radius: 10px;
     border-radius: 10px;
@@ -1150,7 +1161,7 @@ body.login p.message {
     width: 200px;
 }
 
-#login-form .button {
+#short-form .button {
     background: none repeat scroll 0 0 #AAD400;
     border: medium none;
     box-shadow: none;
