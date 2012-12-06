@@ -567,9 +567,6 @@ span.excerpt {
     width: 100%;
 }
 #decision_detail .stats dt {
-    background-image: url("../images/icon-add.png");
-    background-position: 3px center;
-    background-repeat: no-repeat;
     color: #fff;
     display: block;
     float: left;
@@ -578,11 +575,17 @@ span.excerpt {
     left: 0;
     margin-bottom: 5px;
     margin-right: -50px;
-    padding: 3px 0 3px 30px;
+    padding: 3px 0 3px 5%;
     text-transform: capitalize;
     width: 97%;
 }
 
+#decision_detail .stats a dt {
+    background-image: url("../images/icon-add.png");
+    background-position: 3px center;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
 #decision_detail .stats .consent {
 	background-color:#aad400;
 }
