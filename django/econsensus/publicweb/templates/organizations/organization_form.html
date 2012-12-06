@@ -3,17 +3,16 @@
 {% load org_tags %}
 
 {% block title %}
-Organization Form
+{% if organization %}{{ organization }}{% else %}Create Organization{% endif %}
 {% endblock %}
 
 {% block heading %}
-Organization Form
 {% endblock %}
 
 {% block main_content %}
-<h1>{{ organization }}</h1>
-<form action="." method="post">{% csrf_token %}
+<h2 class="page_title simple-form-header">{% if organization %}{{ organization }}{% else %}Create Organization{% endif %}</h2>
+<form id="short-form" action="." method="post">{% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="submit">
+    <input class="button" type="submit" value="submit">
 </form>
 {% endblock %}
