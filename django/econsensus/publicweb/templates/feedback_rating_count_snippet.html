@@ -1,0 +1,5 @@
+{% load i18n %}
+{% load publicweb_filters %}
+
+<dt class="{{rating}}">{% trans rating %}</dt>
+<dd>{{ statistics|get_item:rating }}</dd>
