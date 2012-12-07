@@ -1,11 +1,5 @@
 {% load i18n %}
 
-<script>
-	function repaginate() {
-		document.getElementById('paginationform').submit();
-	}
-</script>
-
 <div class="pagination">
 	{% if page_obj.has_previous %}
 		<a class="iconified-left" href="{{ prevstring }}"></a>
@@ -21,10 +15,10 @@
 		<span class="iconified-disabled"></span>
 	{% endif %}
 
-	<form id="paginationform">
+	<form class="paginationform">
 		<noscript><input type="submit" value="{% trans 'show' %}"></noscript>
 		<input type="hidden" name="sort" value={{ sort }}>
-		<select name="num" class="pagination-num-items" onchange="repaginate()">
+		<select name="num" class="pagination-num-items">
 			<!-- TODO Do the numeric values need trans tag?-->
 			<option value="10" {% if num == '10' %}selected{% endif %}>10</option>
 			<option value="25" {% if num == '25' %}selected{% endif %}>25</option>
@@ -32,5 +26,9 @@
 			<option value="100000" {% if num == '100000' %}selected{% endif %}>{% trans "all" %}</option>
 		</select>
 	</form>
+	
 	<p>{% trans "results per page" %}</p>
 </div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/repaginate.js"></script>
