@@ -24,17 +24,14 @@
 		margin-bottom:10px;
 		position:relative;
 		display:block;
-		
 	}
 	
 	.object-list td {display:table-row;position:relative;}
+    .object-list td.excerpt {display:block;width:100%}
 
-
-.proposal-list .summary-list tr {border-color: #FFCC00; }
-.decision-list .summary-list tr {border-color: #AAD400; }
-.archived-list .summary-list tr {border-color: #D1D7DF; }
-
-
+    .proposal-list .summary-list tr {border-color: #FFCC00; }
+    .decision-list .summary-list tr {border-color: #AAD400; }
+    .archived-list .summary-list tr {border-color: #D1D7DF; }
 
 	.object-list td {
 		/* Behave  like a "row" */
@@ -44,6 +41,10 @@
 		padding-left: 9em;
 		text-align:left;
 	}
+
+    .object-list td.excerpt {
+        padding-left: 0px;
+    }
 
 	.object-list td:before {
 		/* Now like a table header */
@@ -59,9 +60,10 @@
 		color:#666;
 	}
 
-.object-list .excerpt a {font-weight:bold;}
-.object-list .excerpt a:hover {color:#3E6DA3;}
-.object-list td a {display:table-cell;width:80%;}
+    .object-list .excerpt a {font-weight:bold;}
+    .object-list .excerpt a:hover {color:#3E6DA3;}
+    .object-list td a {display:table-cell;width:80%;}
+    .object-list td.excerpt a {display:block;width:auto;}
 
 	.object-list td, .object-list td:first-child, .object-list td:last-child {
 		border:none;
@@ -74,37 +76,35 @@
 		left: -9999px;
 	}
 
-@media screen and (max-width: 660px) {
-	
-	.object-list td.id a {
-    left: 60px;
-    position: absolute;
-    top: -33px;
-    width: 7em;
-    padding:0;
-	}
-   
-   .object-list td:nth-of-type(1):before {
-    content: "ID";
-    font-weight: bold;
-    position: absolute;
-    top: -40px;
-	}
-}
+    @media screen and (max-width: 660px) {
+        
+        .object-list td.id a {
+        left: 60px;
+        position: absolute;
+        top: -33px;
+        width: 7em;
+        padding:0;
+        }
+       
+       .object-list td:nth-of-type(1):before {
+        content: "ID";
+        font-weight: bold;
+        position: absolute;
+        top: -40px;
+        }
+    }
 
 	/* Labels */
 	.proposal-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
-	.proposal-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.proposal-list td:nth-of-type(3):before { font-weight:bold;content:"Feedback"; }
 	.proposal-list td:nth-of-type(4):before { font-weight:bold;content:"Deadline"; }
+	.proposal-list td:nth-of-type(5):before { font-weight:bold;content:"Last Modified"; }
 
 	.decision-list td:nth-of-type(1):before { font-weight:bold;content:"ID";color:#000; }
-	.decision-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.decision-list td:nth-of-type(3):before { font-weight:bold;content:"Decided Date"; }
 	.decision-list td:nth-of-type(4):before { font-weight:bold;content:"Review Date"; }
 
 	.archived-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
-	.archived-list td:nth-of-type(2):before { font-weight:bold;content:"Excerpt"; }
 	.archived-list td:nth-of-type(3):before { font-weight:bold;content:"Created Date"; }
 	.archived-list td:nth-of-type(4):before { font-weight:bold;content:"Archived Date"; }
 }
