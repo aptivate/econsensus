@@ -566,9 +566,6 @@ span.excerpt {
     width: 100%;
 }
 #decision_detail .stats dt {
-    background-image: url("../images/icon-add.png");
-    background-position: 3px center;
-    background-repeat: no-repeat;
     color: #fff;
     display: block;
     float: left;
@@ -576,12 +573,18 @@ span.excerpt {
     font-weight: bold;
     left: 0;
     margin-bottom: 5px;
-    margin-right: -50px;
-    padding: 3px 0 3px 30px;
+    margin-right: -100px;
+    padding: 3px 0 3px 5%;
     text-transform: capitalize;
     width: 97%;
 }
 
+#decision_detail .stats a dt {
+    background-image: url("../images/icon-add.png");
+    background-position: 3px center;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
 #decision_detail .stats .consent {
 	background-color:#aad400;
 }
@@ -605,9 +608,9 @@ span.excerpt {
 #decision_detail .stats dd {
     color: #000;
     background: none repeat scroll 0 0 #FFFFFF;
-    border-radius: 50% 50% 50% 50%;
-    -moz-border-radius: 50% 50% 50% 50%;
-    -webkit-border-radius: 50% 50% 50% 50%;
+    border-radius: 10px / 8px;
+    -moz-border-radius: 10px / 8px;
+    -webkit-border-radius: 10px / 8px;
  	display: block;
     float: right;
     font-size: 0.9em;

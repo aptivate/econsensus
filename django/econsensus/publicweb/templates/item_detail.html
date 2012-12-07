@@ -131,7 +131,7 @@
 			e.preventDefault();
 		});
 	
-		$("#decision_detail .stats dt").live("click", function (e) {
+		$("#decision_detail .stats a dt").live("click", function (e) {
             replaceWithRemote(feedback_add_url + "?rating=" + this.className, ".button.add_feedback");
             scrollToFeedbackAnchor();
 			e.preventDefault();
