@@ -12,7 +12,25 @@
 {% block main_content %}
 <h2 class="page_title simple-form-header">{% if organization %}{{ organization }}{% else %}Create Organization{% endif %}</h2>
 <form id="short-form" action="." method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input class="button" type="submit" value="submit">
+{% for error in form.non_field_errors %}
+  <p class="error" >{{ error }}</p>
+{% endfor %}
+
+  <p>
+    <label for="id_name">{% trans "Name" %}:</label>
+    {{ form.name }}
+    {{ form.name.errors }}    
+  </p>
+  <p>
+    <label for="id_slug">{% trans "URL Name" %}:</label>
+    {{ form.slug }}
+    {{ form.slug.errors }}    
+  </p>
+  <p>
+    <label for="id_name">{% trans "Owner Email" %}:</label>
+    {{ form.email }}
+    {{ form.email.errors }}    
+  </p>
+  <input class="button" type="submit" value="submit">
 </form>
 {% endblock %}
