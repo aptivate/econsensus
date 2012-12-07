@@ -369,14 +369,8 @@ input {
     font-weight: bold;
 }
 
-.id a {
-    max-width: 120px;
-}
-.id a span {
-    max-width: 85px;
-}
-td.id, th.id {
-    text-align: right;
+.id {
+    width: 80px;
 }
 
 p.no_items {
@@ -1202,6 +1196,14 @@ p.error404 {
 	
     #decision_detail .meta_people {
         margin-bottom:10px;
+    }
+
+    .summary-list td a, .summary-list th a {
+        padding: 3px;
+    }
+
+    .summary-list td, .summary-list th {
+        width: auto;
     }
 }
 
