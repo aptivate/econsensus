@@ -135,7 +135,7 @@ class Command(BaseCommand):
                 rating = dict(Feedback.RATING_CHOICES).values().index(rating_match.group().lower())
 
         # Determine whether email is in reply to a notification
-        subject_match = re.search('\[(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
+        subject_match = re.search('\[EC#(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
         if subject_match:
             #process comment or feedback against feedback
             if subject_match.group(2):
