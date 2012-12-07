@@ -1,5 +1,5 @@
 {% if observed.status == observed.DECISION_STATUS %}
-[{{ observed.id }}] Consensus Reached: {{ observed.excerpt|safe }}
+[EC#{{ observed.id }}] Consensus Reached: {{ observed.excerpt|safe }}
 {% else %}
-[{{ observed.id }}] New [{{ observed.status|capfirst }}: {{ observed.excerpt|safe }}
+[EC#{{ observed.id }}] New [{{ observed.status|capfirst }}: {{ observed.excerpt|safe }}
 {% endif %}
