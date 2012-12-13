@@ -35,5 +35,6 @@ Login
 </div>
 </form>
 
+<p class="message"><a href="{% url 'registration_register' %}"> {% trans "Sign up" %}</a> {% trans "as a new member." %}</p>
 <p class="message"><a href="{% url 'auth_password_reset' %}">{% trans "Reset" %}</a>{% trans " your password." %}</p>
 {% endblock %}

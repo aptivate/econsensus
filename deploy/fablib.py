@@ -99,19 +99,16 @@ def deploy(revision=None, keep=None):
     if files.exists(env.vcs_root):
         create_copy_for_rollback(keep)
 
-    # we only have to stop apache after creating the rollback copy
+    # we only have to unlink this vhost after creating the rollback copy
+    link_apache_conf(unlink=True)
     with settings(warn_only=True):
-        apache_cmd('stop')
+        apache_cmd('reload')
     checkout_or_update(revision)
-    if env.use_virtualenv:
-        update_requirements()
 
-    # if we're going to call tasks.py then this has to be done first:
-    create_private_settings()
-    link_local_settings()
-
-    update_db()
-
+    # Use tasks.py deploy:env to actually do the deployment, including
+    # creating the virtualenv if it thinks it necessary, ignoring
+    # env.use_virtualenv as tasks.py knows nothing about it.
+    _tasks('deploy:' + env.environment)
 
     if env.project_type == "django":
         rm_pyc_files()
@@ -119,7 +116,7 @@ def deploy(revision=None, keep=None):
             setup_db_dumps()
 
     link_apache_conf()
-    apache_cmd('start')
+    apache_cmd('reload')
 
 def set_up_celery_daemon():
     require('vcs_root', provided_by=env)
@@ -340,11 +337,11 @@ def _checkout_or_update_git(revision=None):
         # if on branch then merge, otherwise just print a warning
         with cd(env.vcs_root):
             with settings(warn_only=True):
-                branch = sudo_or_run('git rev-parse --abbrev-ref HEAD')
-            if branch != 'HEAD':
+                current_branch = sudo_or_run('git rev-parse --abbrev-ref HEAD')
+            if current_branch != 'HEAD':
                 # we are on a branch
                 stash_result = sudo_or_run('git stash')
-                sudo_or_run('git merge origin/%s' % branch)
+                sudo_or_run('git merge origin/%s' % current_branch)
                 # if we did a stash, now undo it
                 if not stash_result.startswith("No local changes"):
                     sudo_or_run('git stash pop')
@@ -355,13 +352,14 @@ def _checkout_or_update_git(revision=None):
                 warn('redeploy and specify a branch or revision to checkout.')
     else:
         with cd(env.vcs_root):
+
             stash_result = sudo_or_run('git stash')
             sudo_or_run('git checkout %s' % revision)
             # check if revision is a branch, and do a merge if it is
-            with settings(warn_only=True):
+            with settings(warn_only=True):              
                 rev_is_branch = sudo_or_run('git branch -r | grep %s' % revision)
-            if rev_is_branch.succeeded:
-                sudo_or_run('git merge origin/%s' % branch)
+            if not rev_is_branch.failed:
+                sudo_or_run('git merge origin/%s' % revision)
             # if we did a stash, now undo it
             if not stash_result.startswith("No local changes"):
                 sudo_or_run('git stash pop')
@@ -472,7 +470,6 @@ def link_local_settings():
         # touch the wsgi file to reload apache
         touch()
 
-
 def rm_pyc_files():
     """Remove all the old pyc files to prevent stale files being used"""
     require('django_root', provided_by=env.valid_envs)
@@ -480,18 +477,22 @@ def rm_pyc_files():
         with cd(env.django_root):
             sudo_or_run('find . -name \*.pyc | xargs rm')
 
-def link_apache_conf():
+def link_apache_conf(unlink=False):
     """link the apache.conf file"""
     require('vcs_root', provided_by=env.valid_envs)
     if env.use_apache == False:
         return
     conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
     apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
-    if not files.exists(conf_file):
-        utils.abort('No apache conf file found - expected %s' % conf_file)
-    if not files.exists(apache_conf):
-        sudo_or_run('ln -s %s %s' % (conf_file, apache_conf))
-    configtest()
+    if unlink:
+        if files.exists(apache_conf):
+            sudo_or_run('rm %s' % apache_conf)
+    else:
+        if not files.exists(conf_file):
+            utils.abort('No apache conf file found - expected %s' % conf_file)
+        if not files.exists(apache_conf):
+            sudo_or_run('ln -s %s %s' % (conf_file, apache_conf))
+        configtest()
 
 
 def configtest():

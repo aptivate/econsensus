@@ -365,7 +365,7 @@ def link_local_settings(environment):
         print "Fatal error: settings.py doesn't seem to import " \
             "local_settings.*: %s" % settings_file
         sys.exit(1)
-    
+
     # die if the correct local settings does not exist
     if not env['quiet']:
         print "### creating link to local_settings.py"
@@ -402,6 +402,7 @@ def link_local_settings(environment):
     else:
         import shutil
         shutil.copy2(source, target)
+    env['environment'] = environment
 
 def collect_static():
     return _manage_py(["collectstatic", "--noinput"])
@@ -415,7 +416,7 @@ def _get_cache_table():
         return None
     if not settings.CACHES['default']['BACKEND'].endswith('DatabaseCache'):
         return None
-    return settings.CACHES['default']['LOCATION'] 
+    return settings.CACHES['default']['LOCATION']
 
 def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, database='default'):
     """ create the database, and do syncdb and migrations
@@ -438,8 +439,12 @@ def update_db(syncdb=True, drop_test_db=True, force_use_migrations=False, databa
     if db_engine.endswith('mysql'):
         if not db_exists(db_user, db_pw, db_name, db_port, db_host):
             _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % db_name)
-            _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' %
-                (db_name, db_user, db_pw)))
+            # we want to skip the grant when we are running fast tests -
+            # when running mysql in RAM with --skip-grant-tables the following
+            # line will give errors
+            if env['environment'] != 'dev_fasttests':
+                _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' %
+                        (db_name, db_user, db_pw)))
 
         if not db_exists(db_user, db_pw, 'test_'+db_name, db_port, db_host):
             create_test_db(drop_after_create=drop_test_db, database=database)
@@ -492,8 +497,9 @@ def create_test_db(drop_after_create=True, database='default'):
 
     test_db_name = 'test_' + db_name
     _mysql_exec_as_root('CREATE DATABASE %s CHARACTER SET utf8' % test_db_name)
-    _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' %
-        (test_db_name, db_user, db_pw)))
+    if env['environment'] != 'dev_fasttests':
+        _mysql_exec_as_root(('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' %
+            (test_db_name, db_user, db_pw)))
     if drop_after_create:
         _mysql_exec_as_root(('DROP DATABASE %s' % test_db_name))
 
@@ -530,7 +536,7 @@ def restore_db(dump_filename):
     if db_port != None:
         restore_cmd.append('--port='+db_port)
     restore_cmd.append(db_name)
-    
+
     dump_file = open(dump_filename, 'r')
     if env['verbose']:
         print 'Executing dump command: %s\nSending stdin to %s' % (' '.join(restore_cmd), dump_filename)
@@ -661,9 +667,15 @@ def _manage_py_jenkins():
         print "### Running django-jenkins, with args; %s" % args
     _manage_py(args, cwd=env['project_dir'])
 
+def _rm_all_pyc():
+    """Remove all pyc files, to be sure"""
+    _call_wrapper('find . -name \*.pyc | xargs rm', shell=True, cwd=env['project_dir'])
+
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
     env['verbose'] = True
+    # don't want any stray pyc files causing trouble
+    _rm_all_pyc()
     # do this to ensure we delete the old virtualenv
     update_ve(force=True)
     _install_django_jenkins()
@@ -677,7 +689,8 @@ def run_jenkins():
 def _infer_environment():
     local_settings = os.path.join(env['django_dir'], 'local_settings.py')
     if os.path.exists(local_settings):
-        return os.readlink(local_settings).split('.')[-1]
+        env['environment'] = os.readlink(local_settings).split('.')[-1]
+        return env['environment']
     else:
         print 'no environment set, or pre-existing'
         sys.exit(2)

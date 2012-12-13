@@ -21,7 +21,7 @@ import unicodecsv
 
 from guardian.decorators import permission_required_or_403
 
-from models import Decision, Feedback, get_rating_names
+from models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm
 
@@ -129,7 +129,7 @@ class DecisionDetail(DetailView):
         context = super(DecisionDetail, self).get_context_data(*args, **kwargs)
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
-        context['rating_names'] = get_rating_names() 
+        context['rating_names'] = [unicode(x) for x in Feedback.rating_names]
         return context
 
 
@@ -442,10 +442,11 @@ class FeedbackUpdate(UpdateView):
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, *args, **kwargs):
+    def form_valid(self, form, *args, **kwargs):
+        form.instance.editor = self.request.user
         if not notification.is_observing(self.object.decision, self.request.user):
             notification.observe(self.object.decision, self.request.user, 'decision_change')
-        return super(FeedbackUpdate, self).form_valid(*args, **kwargs)
+        return super(FeedbackUpdate, self).form_valid(form, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(FeedbackUpdate, self).get_context_data(**kwargs)

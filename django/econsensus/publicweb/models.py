@@ -14,6 +14,7 @@ from django.contrib.contenttypes import generic
 from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.db.models import Count
 
 from tagging.fields import TagField
 from organizations.models import Organization
@@ -135,20 +136,11 @@ class Decision(models.Model):
         return re.sub('\w+@', "%s@" % self.organization.slug, default_from_email)
     
     def get_feedback_statistics(self):
-        statistics = {'all': 0,
-                      'question': 0,
-                      'danger': 0,
-                      'concerns': 0,
-                      'comment': 0,
-                      'consent': 0
-                     }
-        
-        statistics['question'] = self.feedback_set.filter(rating=Feedback.QUESTION_STATUS).count()
-        statistics['danger'] = self.feedback_set.filter(rating=Feedback.DANGER_STATUS).count()
-        statistics['concerns'] = self.feedback_set.filter(rating=Feedback.CONCERNS_STATUS).count()
-        statistics['comment'] = self.feedback_set.filter(rating=Feedback.COMMENT_STATUS).count()
-        statistics['consent'] = self.feedback_set.filter(rating=Feedback.CONSENT_STATUS).count()
-        statistics['all'] = self.feedback_set.count()
+        statistics = dict([(unicode(x),0) for x in Feedback.rating_names])
+        raw_data = self.feedback_set.values('rating').annotate(Count('rating'))
+        for x in raw_data:
+            key = unicode(Feedback.rating_names[x['rating']])
+            statistics[key] = x['rating__count']
         return statistics
 
     def get_message_id(self):
@@ -163,22 +155,19 @@ class Decision(models.Model):
         
 class Feedback(models.Model):
 
-    QUESTION_STATUS = 0
-    DANGER_STATUS = 1
-    CONCERNS_STATUS = 2
-    CONSENT_STATUS = 3
-    COMMENT_STATUS = 4
+    rating_names = (_('question'), _('danger'), _('concerns'), _('consent'), _('comment'))
 
-    RATING_CHOICES = ( 
-                  (QUESTION_STATUS, _('question')),
-                  (DANGER_STATUS, _('danger')),
-                  (CONCERNS_STATUS, _('concerns')),
-                  (CONSENT_STATUS, _('consent')),
-                  (COMMENT_STATUS, _('comment')),
-                  )
+    RATING_CHOICES = [(rating_names.index(x), x) for x in rating_names]
+    
+    QUESTION_STATUS = rating_names.index('question')
+    DANGER_STATUS = rating_names.index('danger')
+    CONCERNS_STATUS = rating_names.index('concerns')
+    CONSENT_STATUS = rating_names.index('consent')
+    COMMENT_STATUS = rating_names.index('comment')
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")    
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
@@ -204,18 +193,6 @@ class Feedback(models.Model):
         Generates a message id that can be used in email headers
         """
         return "feedback-%s@%s" % (self.id, Site.objects.get_current().domain)
-
-def rating_int(string):
-    try:
-        index = [y[1] for y in Feedback.RATING_CHOICES].index(string)
-    except ValueError:
-        return None
-    
-    return Feedback.RATING_CHOICES[index][0]
-
-def get_rating_names():
-    # Call unicode on the names because they are lazy translations, not strings
-    return [unicode(name) for value, name in Feedback.RATING_CHOICES]
 
 if notification is not None:
     @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
@@ -261,7 +238,8 @@ if notification is not None:
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            if instance.author != instance.editor:
+                notification.send_observation_notices_for(instance, headers=headers)
             
             
     @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")

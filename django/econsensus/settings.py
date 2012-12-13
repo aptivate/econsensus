@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'keyedcache',
     'livesettings',
     'organizations',
+    'custom_organizations',
     'publicweb',
     'signals',
     'tinymce',
