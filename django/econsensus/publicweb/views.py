@@ -420,7 +420,7 @@ class FeedbackCreate(CreateView):
         return super(FeedbackCreate, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+        return reverse('publicweb_item_detail', args=[self.kwargs['parent_pk']])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
