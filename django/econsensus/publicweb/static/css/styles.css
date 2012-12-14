@@ -240,28 +240,28 @@ input {
 	padding:20px;
 }
 
-#content h2.page_title {
+.page_title {
 	display: inline;
 	color:#666;
 	padding-bottom: 6px;
 	margin-bottom:0;
 }
 
-#content h2.simple-form-header {
+.simple-form-header {
 	display: block;
 	text-align: center;
 }
 
-#content h2.page_title span {
+.page_title span {
     color: #030303;
     font-size: 0.7em;
     font-weight: bold;
 }
 
-#content h2.page_title.decision {color:#90AA27;}
-#content h2.page_title.proposal {color:#FFB900;}
+.page_title.decision {color:#90AA27;}
+.page_title.proposal {color:#FFB900;}
 
-#content h2.page_title.feedback {
+.page_title.feedback {
 	margin-bottom:10px;
 	width:inherit;
 }
@@ -405,6 +405,15 @@ p.no_items {
 	background-color: #AAD400;
 }
 
+.actionitems-list .summary-list td {
+	border-color: #E02E78;
+}
+
+.actionitems-list .summary-list th {
+	background-color: #F7D9E5;
+	border-color: #F7D9E5;
+}
+
 
 /* borders */
 
@@ -495,7 +504,8 @@ li.summary-item {
 
 a.button.add_decision,
 a.button.add_proposal,
-a.button.add_feedback {
+a.button.add_feedback,
+.button.add_actionitem {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -1178,6 +1188,97 @@ body.login p.message {
     width: 232px;
 }
 
+
+/* Action Items */
+
+.actionitems {
+    clear: both;
+    padding-top: 5px;
+}
+.actionitems > .page_title {
+    font-size: 1.6em;
+    color: #E02E78;
+}
+
+.actionitem-deadline {
+    font-weight: bold;
+}
+
+.actionitem-form {
+    clear: both;
+    margin-bottom:10px;
+    margin-top: 5px;
+    padding: 20px;
+    border: 3px solid #E02E78;
+	-moz-border-radius: 15px;
+  	-webkit-border-radius: 15px;
+	border-radius: 15px;
+}
+
+.button.add_actionitem {
+    background-color: #E02E78;
+    color:#fff;
+    float: right;
+}
+
+.actionitem-form:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+del {
+    color: gray;
+}
+
+.formfield {
+    margin-bottom: 10px;
+}
+
+.formfield.deadline, 
+.formfield.responsible,
+.formfield.done {
+    float: left;
+    width: 25%;
+}
+
+.formfield > label, .errorlist {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.errorlist {
+    color: #E02E78;
+}
+
+.error > input,
+.error > textarea {
+    background-color: #F7D9E5;
+}
+
+.actionitem-form-button {
+    margin-left: 10px;
+    border-radius: 10px 10px 10px 10px;
+    background-color: #90AA27;
+    color: white;
+    font-size: 16px;
+    font-family: ubuntu;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.actionitem-form-button {
+    border: 10px solid #90AA27;
+}
+
+input.actionitem-form-button {
+    border: 8px solid #90AA27;
+}
+
+.hidden {
+    display: none;
+}
+
 /* 404 Page Styling */
 p.error404 {
 	clear : both;
@@ -1305,7 +1406,7 @@ p.error404 {
 		width: 8em;
 	}
 
-	#content h2.page_title {
+	h2.page_title {
 		padding:0 0;
 		font-size:1.3em;
 		width:100%;
@@ -1435,7 +1536,7 @@ p.error404 {
 	
 	
 	
-	#content h2.page_title {
+	h2.page_title {
 		font-size:1.2em;
 		width:100%;
 		padding-bottom:20px;

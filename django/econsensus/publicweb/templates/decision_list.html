@@ -3,9 +3,30 @@
 {% load i18n %}
 {% load org_filters %}
 
-{% block title %}{{ block.super }}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
+{% block title %}
+    {{ block.super }}
+    {% if tab == 'proposal' %}
+        {% trans "Proposals" %}
+    {% elif tab == 'archived' %}
+        {% trans "Archive" %}
+    {% elif tab == 'actionitems' %}
+        {% trans "Action Items" %}        
+    {% else %}
+        {% trans "Decisions Made" %}
+    {% endif %}
+{% endblock %}
 
-{% block heading %}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
+{% block heading %}
+    {% if tab == 'proposal' %}
+        {% trans "Proposals" %}
+    {% elif tab == 'archived' %}
+        {% trans "Archive" %}
+    {% elif tab == 'actionitems' %}
+        {% trans "Action Items" %}        
+    {% else %}
+        {% trans "Decisions Made" %}
+    {% endif %}
+{% endblock %}
 
 {% block body_class%}object-list {{ tab }}-list{% endblock %}
 
@@ -36,8 +57,10 @@
                     <tbody>
                     {% for object in object_list %}
                         <tr>
-                            <td class="id"><a href="{% url 'publicweb_item_detail' object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
-				            <td class="excerpt"><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.excerpt }}	</a></td>
+                            {% if tab != 'actionitems' %}
+                                <td class="id"><a href="{% url 'publicweb_item_detail' object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
+				                <td class="excerpt"><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.excerpt }}	</a></td>
+				            {% endif %}
 				            {% if tab == 'proposal' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.feedbackcount }}</a></td>
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.deadline }}</a></td>
@@ -50,6 +73,14 @@
                             {% if tab == 'archived' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.creation }}</a></td>
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.archived_date }}</a></td>
+            				{% endif %}
+            				{% if tab == 'actionitems' %}
+            				    <td class="id"><a href="{% url 'actionitems_edit' decisionpk=object.origin.id pk=object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
+				                <td class="excerpt">{{ object.title }}</td>
+                                <td>{{ object.responsible }}</td>
+                                <td>{{ object.deadline }}</td>
+                                <td><input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} disabled/></td>
+                                <td class="id"><a href="{{ object.origin.get_absolute_url }}"><span class="iconified">{{ object.origin.id }}</span></a></td>
             				{% endif %}
                         </tr>
                     {% endfor %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load org_filters %}
+{% load guardian_tags %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block heading %}
+    {% trans "Action Item" %}
+{% endblock %}
+
+{% block main_content %}
+
+	{% if not organization|is_member:user %}
+		<p>{% trans "You are not a member of this organization." %}</p>
+		</br>
+		<p>{% trans "Go here to see " %}<a href="{% url 'organization_list' %}">{% trans "your organizations" %}</a>.</p>
+	{% else %}
+
+    <a class="actionitem-close button" href="{{ returnurl }}">{% trans 'Decision' %}</a>
+
+    {% if 'internal' in actionitem.manager and iseditor %}
+        <form class="actionitem-form" method="POST">{% csrf_token %}
+            {% for field in form %}
+                <div class="formfield {{field.html_name}} {% if field.name in hidefields %} hidden{% endif %}">
+                    {{ field.label_tag }} <span{% if field.errors %} class="error"{% endif %}>{{ field.errors }}{{ field }}</span>
+                </div> 
+            {% endfor %}
+            <div class="formfield done">
+                <label for="id_done">{% trans 'Done' %}</label>
+                <input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} /> 
+            </div>
+            <input class="actionitem-form-button" type="submit" value="{% trans 'Save' %}" />
+            <a class="actionitem-form-button" href="{{ returnurl }}">{% trans 'Cancel' %}</a>
+        </form>
+    {% else %}
+        <form class="actionitem-form" action="sync/">
+            {% for field in form %}
+                <div class="formfield {{field.html_name}} {% if field.name in hidefields %} hidden{% endif %}">
+                    {{ field.label_tag }} <span>{{ field.value }}</span>
+                </div> 
+            {% endfor %}
+            <div class="formfield done">
+                <label for="id_done">{% trans 'Done' %}</label>: 
+                <input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} disabled/>
+            </div>
+            {% if iseditor %}		
+                <input class="actionitem-form button" type="submit" value="{% trans 'Sync' %}" />
+            {% endif %}
+                <a class="actionitem-form-button" href="{{ returnurl }}">{% trans 'Cancel' %}</a>
+        </form>
+    {% endif %}
+    
+    {% endif %}
+
+{% endblock main_content %}

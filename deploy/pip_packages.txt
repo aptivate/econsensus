@@ -15,3 +15,5 @@ django-registration
 git+git://github.com/aptivate/django-organizations.git
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
 django-guardian
+git+git://github.com/birdsarah/django-actionitems.git
+

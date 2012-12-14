@@ -87,11 +87,30 @@
             {% endfor %}
             {% endwith %}
 		</dl>
-{% if "edit_decisions_feedback" in organization_permissions %}		
-			<div class="controls">
-				<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
+		
+		<dl class="actionitems">
+	        <h2 class="page_title">{% trans "Action Items" %}</h2>
+	        {% for actionitem in actionitems %}
+                <dt>
+                <a href="{% url 'actionitems_edit' decisionpk=object.id pk=actionitem.id  %}"><span class="iconified"></span></a>
+                {% if actionitem.is_done %}<del>{% endif %}
+                    {{ actionitem.title }} <span class="actionitem-deadline">({% trans "Due" %}: {{ actionitem.deadline }})</span>
+                {% if actionitem.is_done %}</del>{% endif %}
+                </dt>
+            {% endfor %}
+            <div class="addactionitem">
+			    {% if "edit_decisions_feedback" in organization_permissions %}		
+					<a class="button add_actionitem" href="{% url 'actionitems_add' decisionpk=object.id %}">{% trans "Add Action Item" %}</a>
+				{% endif %}
 			</div>
+		</dl>
+		
+{% if "edit_decisions_feedback" in organization_permissions %}		
+		<div class="controls">
+			<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
+		</div>
 {% endif %}
+
 		</div>
 	</div>
 </div>

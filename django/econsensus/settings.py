@@ -144,7 +144,10 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'tagging',
+    'actionitems',
 )
+
+ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
