@@ -57,7 +57,7 @@ def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
     utils.abort('remove this line when dev server setup')
     env.environment = 'dev_server'
-    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev']
+    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev' + '.fen.aptivate.org']
     _local_setup()
 
 
@@ -68,14 +68,14 @@ def staging_test():
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
     env.use_apache = False
-    env.hosts = ['fen-vz-' + project_settings.project_name]
+    env.hosts = ['fen-vz-' + project_settings.project_name + '.fen.aptivate.org']
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-    env.hosts = ['fen-vz-' + project_settings.project_name]
+    env.hosts = ['fen-vz-' + project_settings.project_name + '.fen.aptivate.org']
     _local_setup()
 
 
