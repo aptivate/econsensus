@@ -97,7 +97,7 @@ def deploy(revision=None):
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
     # env.use_virtualenv as tasks.py knows nothing about it.
-    tasklib._tasks('deploy:' + env.environment)
+    fablib._tasks('deploy:' + env.environment)
     rm_pyc_files()
     collect_static_files()
     update_db()
