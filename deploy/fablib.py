@@ -30,21 +30,25 @@ def _setup_path():
     if env.use_virtualenv:
         _set_dict_if_not_set(env, 'virtualenv_root', os.path.join(env.django_root, '.ve'))
 
-    python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
-    if os.path.exists(python26):
-        _set_dict_if_not_set(env, 'python_bin', python26)
-    else:
-        _set_dict_if_not_set(env, 'python_bin', os.path.join('/', 'usr', 'bin', 'python'))
-
-    _set_dict_if_not_set(env, 'tasks_bin',
-            env.python_bin + ' ' + os.path.join(env.deploy_root, 'tasks.py'))
     _set_dict_if_not_set(env, 'local_tasks_bin',
-            env.python_bin + ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
+            os.path.join('/', 'usr', 'bin', 'python') + ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
 
+def _get_python():
+    if 'python_bin' not in env:
+        python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
+        if files.exists(python26):
+            env.python_bin = python26
+        else:
+            env.python_bin = os.path.join('/', 'usr', 'bin', 'python')
+    return env.python_bin
+
+def _get_tasks_bin():
+    if 'tasks_bin' not in env:
+        env.tasks_bin = _get_python() + ' ' + os.path.join(env.deploy_root, 'tasks.py')
+    return env.tasks_bin
 
 def _tasks(tasks_args, verbose=False):
-    require('tasks_bin', provided_by=env.valid_envs)
-    tasks_cmd = env.tasks_bin
+    tasks_cmd = _get_tasks_bin()
     if env.verbose or verbose:
         tasks_cmd += ' -v'
     sudo_or_run(tasks_cmd + ' ' + tasks_args)
@@ -147,9 +151,9 @@ def create_copy_for_rollback(keep):
     _create_dir_if_not_exists(prev_dir)
     # cp -a
     sudo_or_run('cp -a %s %s' % (env.vcs_root, prev_dir))
+    # dump database (provided local_settings has been set up properly)
     if (env.project_type == 'django' and
             files.exists(os.path.join(env.django_root, 'local_settings.py'))):
-        # dump database (provided local_settings has been set up properly)
         with cd(prev_dir):
             # just in case there is some other reason why the dump fails
             with settings(warn_only=True):
@@ -240,9 +244,9 @@ def local_test():
 
 def remote_test():
     """ run the django tests remotely - staging only """
-    require('django_root', 'python_bin', 'test_cmd', provided_by=env.valid_non_prod_envs)
+    require('django_root', 'test_cmd', provided_by=env.valid_non_prod_envs)
     with cd(env.django_root):
-        sudo_or_run(env.python_bin + env.test_cmd)
+        sudo_or_run(_get_python() + env.test_cmd)
 
 def version():
     """ return the deployed VCS revision and commit comments"""
@@ -352,11 +356,10 @@ def _checkout_or_update_git(revision=None):
                 warn('redeploy and specify a branch or revision to checkout.')
     else:
         with cd(env.vcs_root):
-
             stash_result = sudo_or_run('git stash')
             sudo_or_run('git checkout %s' % revision)
             # check if revision is a branch, and do a merge if it is
-            with settings(warn_only=True):              
+            with settings(warn_only=True):
                 rev_is_branch = sudo_or_run('git branch -r | grep %s' % revision)
             if not rev_is_branch.failed:
                 sudo_or_run('git merge origin/%s' % revision)
@@ -403,9 +406,8 @@ def update_requirements():
     _tasks('update_ve')
 
 def collect_static_files():
-    """ coolect static files in the 'static' directory """
-    require('tasks_bin', provided_by=env.valid_envs)
-    sudo(env.tasks_bin + ' collect_static')
+    """ collect static files in the 'static' directory """
+    sudo(_get_tasks_bin() + ' collect_static')
 
 def clean_db(revision=None):
     """ delete the entire database """
@@ -452,23 +454,6 @@ def touch():
     require('vcs_root', provided_by=env.valid_envs)
     wsgi_dir = os.path.join(env.vcs_root, 'wsgi')
     sudo_or_run('touch ' + os.path.join(wsgi_dir, 'wsgi_handler.py'))
-
-def create_private_settings():
-    _tasks('create_private_settings')
-
-def link_local_settings():
-    """link the local_settings.py file for this environment"""
-    _tasks('link_local_settings:' + env.environment)
-
-    # check that settings imports local_settings, as it always should,
-    # and if we forget to add that to our project, it could cause mysterious
-    # failures
-    if env.project_type == "django":
-        run('grep -q "local_settings" %s' %
-            os.path.join(env.django_root, 'settings.py'))
-
-        # touch the wsgi file to reload apache
-        touch()
 
 def rm_pyc_files():
     """Remove all the old pyc files to prevent stale files being used"""
