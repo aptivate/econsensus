@@ -35,16 +35,8 @@ def _setup_paths(project_settings):
     if env.use_virtualenv:
         h.set_dict_if_not_set(env, 'virtualenv_root', os.path.join(env.django_root, '.ve'))
 
-    python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
-    if os.path.exists(python26):
-        h.set_dict_if_not_set(env, 'python_bin', python26)
-    else:
-        h.set_dict_if_not_set(env, 'python_bin', os.path.join('/', 'usr', 'bin', 'python'))
-
-    h.set_dict_if_not_set(env, 'tasks_bin',
-            env.python_bin + ' ' + os.path.join(env.deploy_root, 'tasks.py'))
-    h.set_dict_if_not_set(env, 'local_tasks_bin',
-            env.python_bin + ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
+    h.set_dict_if_not_set(env, 'local_tasks_bin', os.path.join('/', 'usr', 'bin', 'python') +
+            ' ' + os.path.join(os.path.dirname(__file__), 'tasks.py'))
 
     # valid environments - used for require statements in fablib
     env.valid_envs = env.host_list.keys()
@@ -63,10 +55,22 @@ def _linux_type():
             utils.abort("could not determine linux type of server we're deploying to")
     return env.linux_type
 
+def _get_python():
+    if 'python_bin' not in env:
+        python26 = os.path.join('/', 'usr', 'bin', 'python2.6')
+        if files.exists(python26):
+            env.python_bin = python26
+        else:
+            env.python_bin = os.path.join('/', 'usr', 'bin', 'python')
+    return env.python_bin
+
+def _get_tasks_bin():
+    if 'tasks_bin' not in env:
+        env.tasks_bin = _get_python() + ' ' + os.path.join(env.deploy_root, 'tasks.py')
+    return env.tasks_bin
 
 def _tasks(tasks_args, verbose=False):
-    require('tasks_bin', provided_by=env.valid_envs)
-    tasks_cmd = env.tasks_bin
+    tasks_cmd = _get_tasks_bin()
     if env.verbose or verbose:
         tasks_cmd += ' -v'
     sudo_or_run(tasks_cmd + ' ' + tasks_args)
@@ -129,6 +133,8 @@ def deploy(revision=None, keep=None):
         webserver_cmd('reload')
     checkout_or_update(revision)
 
+    # create the deploy virtualenv if we use it
+    create_deploy_virtualenv()
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
     # env.use_virtualenv as tasks.py knows nothing about it.
@@ -265,11 +271,11 @@ def local_test():
 
 def remote_test():
     """ run the django tests remotely - staging only """
-    require('django_root', 'python_bin', provided_by=env.valid_envs)
+    require('django_root', provided_by=env.valid_envs)
     if env.environment == 'production':
         utils.abort('do not run tests on the production environment')
     with cd(env.django_root):
-        sudo_or_run(env.python_bin + env.test_cmd)
+        sudo_or_run(_get_python() + env.test_cmd)
 
 def version():
     """ return the deployed VCS revision and commit comments"""
@@ -367,11 +373,11 @@ def _checkout_or_update_git(revision=None):
         # if on branch then merge, otherwise just print a warning
         with cd(env.vcs_root):
             with settings(warn_only=True):
-                branch = sudo_or_run('git rev-parse --abbrev-ref HEAD')
-            if branch != 'HEAD':
+                current_branch = sudo_or_run('git rev-parse --abbrev-ref HEAD')
+            if current_branch != 'HEAD':
                 # we are on a branch
                 stash_result = sudo_or_run('git stash')
-                sudo_or_run('git merge origin/%s' % branch)
+                sudo_or_run('git merge origin/%s' % current_branch)
                 # if we did a stash, now undo it
                 if not stash_result.startswith("No local changes"):
                     sudo_or_run('git stash pop')
@@ -426,6 +432,12 @@ def sudo_or_run(command):
     else:
         return run(command)
 
+def create_deploy_virtualenv():
+    """ if using new style dye stuff, create the virtualenv to hold dye """
+    require('deploy_root', provided_by=env.valid_envs)
+    bootstrap_path = os.path.join(env.deploy_root, 'bootstrap.py')
+    if files.exists(bootstrap_path):
+        sudo_or_run(bootstrap_path)
 
 def update_requirements():
     """ update external dependencies on remote host """
@@ -433,8 +445,7 @@ def update_requirements():
 
 def collect_static_files():
     """ coolect static files in the 'static' directory """
-    require('tasks_bin', provided_by=env.valid_envs)
-    sudo(env.tasks_bin + ' collect_static')
+    sudo(_get_tasks_bin() + ' collect_static')
 
 def clean_db(revision=None):
     """ delete the entire database """
