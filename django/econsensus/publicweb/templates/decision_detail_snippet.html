@@ -92,7 +92,7 @@
 	        <h2 class="page_title">{% trans "Action Items" %}</h2>
 	        {% for actionitem in actionitems %}
                 <dt>
-                <a href="{% url 'actionitems_edit' decisionpk=object.id pk=actionitem.id  %}"><span class="iconified"></span></a>
+                <a href="{% url 'actionitems_update' decisionpk=object.id pk=actionitem.id  %}"><span class="iconified"></span></a>
                 {% if actionitem.is_done %}<del>{% endif %}
                     {{ actionitem.title }} <span class="actionitem-deadline">({% trans "Due" %}: {{ actionitem.deadline }})</span>
                 {% if actionitem.is_done %}</del>{% endif %}

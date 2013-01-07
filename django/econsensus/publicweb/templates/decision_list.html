@@ -75,11 +75,11 @@
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.archived_date }}</a></td>
             				{% endif %}
             				{% if tab == 'actionitems' %}
-            				    <td class="id"><a href="{% url 'actionitems_edit' decisionpk=object.origin.id pk=object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
+            				    <td class="id"><a href="{% url 'actionitems_update' decisionpk=object.origin.id pk=object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
 				                <td class="excerpt">{{ object.title }}</td>
                                 <td>{{ object.responsible }}</td>
                                 <td>{{ object.deadline }}</td>
-                                <td><input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} disabled/></td>
+                                <td><input id="id_done" type="checkbox" name="done" {% if object.done %}checked{% endif %} disabled/></td>
                                 <td class="id"><a href="{{ object.origin.get_absolute_url }}"><span class="iconified">{{ object.origin.id }}</span></a></td>
             				{% endif %}
                         </tr>

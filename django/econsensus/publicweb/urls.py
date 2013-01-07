@@ -75,6 +75,6 @@ urlpatterns = patterns('econsensus.publicweb.views',
         
     #action item urls
     url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/add$', EconsensusActionItemCreate.as_view(), name='actionitems_add'),    
-    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)$', EconsensusActionItemUpdate.as_view(), name='actionitems_edit'),
+    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)$', EconsensusActionItemUpdate.as_view(), name='actionitems_update'),
     url(r'^(?P<org_slug>[-\w]+)/actionitems/$', EconsensusActionItemList.as_view(), name='actionitems_list'),
     )

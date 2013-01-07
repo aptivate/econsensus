@@ -2,7 +2,7 @@
 from notification import models as notification
 from organizations.models import Organization
 from actionitems.models import ActionItem
-from actionitems.views import ActionItemCreate, ActionItemUpdate, ActionItemList
+from actionitems.views import ActionItemAdd, ActionItemUpdate, ActionItemList
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -483,7 +483,7 @@ class OrganizationRedirectView(RedirectView):
 ############################
 # Action Items
 ############################
-class EconsensusActionItemCreate(ActionItemCreate):
+class EconsensusActionItemCreate(ActionItemAdd):
     template_name = 'actionitems_create.html'
     
     def get_success_url(self, *args, **kwargs):
@@ -493,16 +493,14 @@ class EconsensusActionItemCreate(ActionItemCreate):
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'decisionpk')))    
     def dispatch(self, request, *args, **kwargs):
-        return super(ActionItemCreate, self).dispatch(request, *args, **kwargs)
+        return super(ActionItemAdd, self).dispatch(request, *args, **kwargs)
 
-    @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'decisionpk')))    
-    def get(self, request, *args, **kwargs):
+    def get_origin(self, request, *args, **kwargs):
         self.origin = kwargs.get('decisionpk')
-        return super(ActionItemCreate, self).get(request, *args, **kwargs)
+        return self.origin
     
     def get_context_data(self, *args, **kwargs):
-        context = super(ActionItemCreate, self).get_context_data(**kwargs)
+        context = super(ActionItemAdd, self).get_context_data(**kwargs)
         context['returnurl'] = self.get_success_url()
         context['organization'] = Decision.objects.get(pk=self.kwargs.get('decisionpk')).organization
         context['hidefields'] = ('origin', 'manager')
@@ -510,16 +508,17 @@ class EconsensusActionItemCreate(ActionItemCreate):
 
 
 class EconsensusActionItemUpdate(ActionItemUpdate):
-    template_name = 'actionitems_edit.html'
-    
+    template_name = 'actionitems_update.html'
+
+    # Return them to the original decision on save
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', args=[self.kwargs.get('decisionpk')])
-        
+        return reverse('publicweb_item_detail', kwargs={'pk': self.kwargs.get('decisionpk')})
+
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         kwargs['decisionpk'] = kwargs.get('decisionpk', ActionItem.objects.get(pk=kwargs.get('pk')).origin)
         return super(ActionItemUpdate, self).get(request, *args, **kwargs)
-       
+
     def get_context_data(self, *args, **kwargs):
         context = super(EconsensusActionItemUpdate, self).get_context_data(**kwargs)
         context['returnurl'] = self.get_success_url()

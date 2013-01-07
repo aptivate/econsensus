@@ -29,10 +29,6 @@
                     {{ field.label_tag }} <span{% if field.errors %} class="error"{% endif %}>{{ field.errors }}{{ field }}</span>
                 </div> 
             {% endfor %}
-            <div class="formfield done">
-                <label for="id_done">{% trans 'Done' %}</label>
-                <input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} /> 
-            </div>
             <input class="actionitem-form-button" type="submit" value="{% trans 'Save' %}" />
             <a class="actionitem-form-button" href="{{ returnurl }}">{% trans 'Cancel' %}</a>
         </form>
@@ -43,10 +39,6 @@
                     {{ field.label_tag }} <span>{{ field.value }}</span>
                 </div> 
             {% endfor %}
-            <div class="formfield done">
-                <label for="id_done">{% trans 'Done' %}</label>: 
-                <input id="id_done" type="checkbox" name="done" {% if object.is_done %}checked{% endif %} disabled/>
-            </div>
             {% if iseditor %}		
                 <input class="actionitem-form button" type="submit" value="{% trans 'Sync' %}" />
             {% endif %}
