@@ -20,7 +20,6 @@ class Command(BaseCommand):
     help = 'Checks for emails and posts content to site.'
 
     def handle(self, *args, **options): # pylint: disable=R0914
-
         verbosity = int(options.get('verbosity', 1))
         user = config_value('ReceiveMail', 'USERNAME')
         password = config_value('ReceiveMail', 'PASSWORD')
@@ -158,6 +157,8 @@ class Command(BaseCommand):
                     comment_text = msg_string                
                     self._print_if_verbose(verbosity, "Creating comment '%s'." % (comment_text))
                     comment = Comment(user=user,
+                                     user_name=user.get_full_name(),
+                                     user_email=user.email,
                                      comment = comment_text,
                                      content_object=feedback, 
                                      object_pk=feedback.id,
