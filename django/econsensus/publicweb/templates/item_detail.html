@@ -146,11 +146,8 @@
 				function (data) {
 					var $feedback = $(".feedback_list");
 	
+                    $('.no_feedback').remove();
 					if (data) {
-						if (!$feedback.length && $(".no_feedback").length) {
-							$(".no_feedback").replaceWith('<ol class="feedback_list"></ol>');
-							$feedback = $(".feedback_list");
-						}
 						$feedback.html($feedback.html()+data);
 					}
 					$form.replaceWith(feedback_button);
