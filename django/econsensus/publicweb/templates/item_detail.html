@@ -169,6 +169,16 @@
 		});
 	
 		// Override redirect to view and put it inline
+        $('.feedback_list .feedback_form input[value="Cancel"]').live("click", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+			var feedback_form = $(this).parents('.feedback_form');
+			var object_id = feedback_form.parent('li').attr("id").slice(2);
+            var snippet_detail_url = snippet_detail_url_template.replace('0', object_id);
+
+            replaceWithRemote(snippet_detail_url, feedback_form);
+            e.preventDefault();
+        });
 		$('.feedback_list .feedback_form').live("submit", function (e) {
 			var $this = $(this),
 				object_id = $this.parent().attr("id").slice(2),
