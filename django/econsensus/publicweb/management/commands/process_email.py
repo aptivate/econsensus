@@ -136,6 +136,20 @@ class Command(BaseCommand):
         # Determine whether email is in reply to a notification
         subject_match = re.search('\[EC#(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
         if subject_match:
+            #Check that the user has the right to comment against the decision.
+            if subject_match.group(1):
+                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(1))
+                try:
+                    decision = Decision.objects.get(pk=subject_match.group(1))
+                    if user not in decision.organization.users.all():
+                        logger.error("[EMAIL REJECTED] From '%s' Reason: User cannot reply to decision #%s because they are not a member of that organization." \
+                                     % (mail['From'], subject_match.group(1)))
+                        return
+                except:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
+                                 % (mail['From'], subject_match.group(1)))
+                    return
+
             #process comment or feedback against feedback
             if subject_match.group(2):
                 self._print_if_verbose(verbosity, "Found feedback id '%s' in Subject" % subject_match.group(2))
@@ -171,14 +185,6 @@ class Command(BaseCommand):
             
             #process feedback against decision
             elif subject_match.group(1):
-                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(1))
-                try:
-                    decision = Decision.objects.get(pk=subject_match.group(1))
-                except:
-                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
-                                 % (mail['From'], subject_match.group(1)))
-                    return
-    
                 self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
                 feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
                 feedback.save()

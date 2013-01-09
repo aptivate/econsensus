@@ -2,18 +2,20 @@
 #         W0703 - Too general exception
 #Test commands that have been added to manage.py
 import poplib
-from django.core import management, mail
-from publicweb.tests.decision_test_case import EconsensusTestCase
-from publicweb.tests import dummy_poplib
-from publicweb.models import Decision, Feedback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from django.core import management, mail
 from django.contrib.comments.models import Comment
-from django.core import mail
 from django.utils import timezone
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 
+from organizations.models import Organization
+
+from publicweb.tests.decision_test_case import EconsensusTestCase
+from publicweb.tests import dummy_poplib
+from publicweb.models import Decision, Feedback
 
 class CommandTest(EconsensusTestCase):
 
@@ -351,3 +353,31 @@ class CommandTest(EconsensusTestCase):
             Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
+
+    def test_membership_checked_against_decision_id(self):
+        """
+        Ensure that when creating feedback and comments by email
+        against a decision, the users membership is tested against
+        that decision and not (just) the email representing the
+        organization.
+        """
+        #create an organization decision that Betty shouldn't be able to access
+        non_member_organization = Organization.objects.exclude(users=self.user).latest('id')
+        self.make_decision(organization=non_member_organization)
+
+        #Betty tries to spoof something onto that decision
+        #by posting to her own organization but using the original decision id
+        email = getattr(mail, 'outbox')[-1]
+        mail_to = '%s@econsensus.com>' % self.bettysorg.slug
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty.email, self.betty.email)),
+                                      str('To: %s <%s>' % (mail_to, mail_to)),
+                                      str('Subject: Re: %s' % email.subject),
+                                      '',
+                                      "Danger: This is a bad idea", ''], [''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+
+        #the email should be rejected and no feedback should be created.
+        self.assertFalse(Feedback.objects.all())
