@@ -441,6 +441,12 @@ class FeedbackUpdate(UpdateView):
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
+    
+    def post(self, *args, **kwargs):
+        if self.request.POST.get('submit', None) == "Cancel":
+            self.object = self.get_object()
+            return HttpResponseRedirect(self.get_success_url())
+        return super(FeedbackUpdate, self).post(*args, **kwargs)
 
     def form_valid(self, form, *args, **kwargs):
         form.instance.editor = self.request.user
