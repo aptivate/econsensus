@@ -1,4 +1,4 @@
-Your feedback has been edited.
+Your feedback has been edited by {{ observed.editor }}.
 
 {{ observed.get_rating_display|capfirst }}
 
