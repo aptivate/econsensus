@@ -57,7 +57,13 @@
 	            </table>
 	        {% include "pagination.html" %}
 		    {% else %}
-			    <p class="no_items">{% trans "There are no decisions made." %}.<p>
+		    	{% if tab == "proposal" %}
+			    <p class="no_items">{% trans "There are no proposals" %}.<p>		    			    	
+		    	{% elif tab  == "archived" %}
+			    <p class="no_items">{% trans "There are no archived items" %}.<p>		    	
+		    	{% else %}
+			    <p class="no_items">{% trans "There are no decisions made" %}.<p>
+			    {% endif %}
 		    {% endif %}
 		{% endif %}			
 {% endblock main_content %}
