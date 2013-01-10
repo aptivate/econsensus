@@ -1096,6 +1096,14 @@ body.login p.message {
     width: 500px;
 }
 
+p.error input {
+	border-color : #C93A2A;
+}
+
+ul.errorlist {
+	color: #C93A2A;
+}
+
 #short-form {
     background: none repeat scroll 0 0 #EFEFEF;
     -moz-border-radius: 20px;
@@ -1120,7 +1128,7 @@ body.login p.message {
 
 #short-form .errorlist {
     font-size: 0.8em;
-    float: left;
+    float: right;
 }
 
 #short-form .field {

@@ -16,21 +16,8 @@
   <p class="error" >{{ error }}</p>
 {% endfor %}
 
-  <p>
-    <label for="id_name">{% trans "Name" %}:</label>
-    {{ form.name }}
-    {{ form.name.errors }}    
-  </p>
-  <p>
-    <label for="id_slug">{% trans "URL Name" %}:</label>
-    {{ form.slug }}
-    {{ form.slug.errors }}    
-  </p>
-  <p>
-    <label for="id_name">{% trans "Owner Email" %}:</label>
-    {{ form.email }}
-    {{ form.email.errors }}    
-  </p>
+{{ form.as_p }}
+
   <input class="button" type="submit" value="submit">
 </form>
 {% endblock %}
