@@ -496,8 +496,8 @@ class EconsensusActionItemCreate(ActionItemAdd):
         return super(ActionItemAdd, self).dispatch(request, *args, **kwargs)
 
     def get_origin(self, request, *args, **kwargs):
-        self.origin = kwargs.get('decisionpk')
-        return self.origin
+        origin = kwargs.get('decisionpk')
+        return origin
     
     def get_context_data(self, *args, **kwargs):
         context = super(ActionItemAdd, self).get_context_data(**kwargs)

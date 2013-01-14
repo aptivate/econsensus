@@ -3,6 +3,10 @@
 {% load i18n %}
 {% load org_filters %}
 
+{% block head_content %}
+    {{ form.media }}
+{% endblock %}
+
 {% block title %}
     {{ block.super }}
 {% endblock %}
