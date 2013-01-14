@@ -2,6 +2,7 @@
 #         W0703 - Too general exception
 #Test commands that have been added to manage.py
 import poplib
+import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -362,6 +363,7 @@ class CommandTest(EconsensusTestCase):
         organization.
         """
         #create an organization decision that Betty shouldn't be able to access
+        logging.disable(logging.CRITICAL)
         non_member_organization = Organization.objects.exclude(users=self.user).latest('id')
         self.make_decision(organization=non_member_organization)
 
