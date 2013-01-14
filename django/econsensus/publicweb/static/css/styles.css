@@ -1100,7 +1100,12 @@ p.error input {
 	border-color : #C93A2A;
 }
 
+.form_item.error textarea {
+    border-color : #C93A2A;
+}
+
 ul.errorlist {
+	clear: both;
 	color: #C93A2A;
 }
 
