@@ -33,11 +33,13 @@ add_introspection_rules([], ["^tagging\.fields\.TagField"])
 class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
+    DISCUSION_STATUS = 'discussion'
     PROPOSAL_STATUS = 'proposal'
     DECISION_STATUS = 'decision'
     ARCHIVED_STATUS = 'archived'
 
     STATUS_CHOICES = (
+                  (DISCUSION_STATUS, _('discussion')),
                   (PROPOSAL_STATUS, _('proposal')),
                   (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
