@@ -7,6 +7,8 @@ from os import path
 MIN_PYTHON_MAJOR_VERSION = 2
 MIN_PYTHON_MINOR_VERSION = 6
 PYTHON_EXE = 'python%d.%d' % (MIN_PYTHON_MAJOR_VERSION, MIN_PYTHON_MINOR_VERSION)
+PROJECT_ROOT = path.abspath(path.dirname(__file__))
+DEPLOY_DIR = path.abspath(path.join(PROJECT_ROOT, '..', '..', 'deploy'))
 
 if (sys.version_info[0] < MIN_PYTHON_MAJOR_VERSION or
         sys.version_info[1] < MIN_PYTHON_MINOR_VERSION):
@@ -42,8 +44,6 @@ if '--ignore-ve' in sys.argv:
 
 if 'IGNORE_DOTVE' not in os.environ:
     import shutil
-    PROJECT_ROOT = path.abspath(path.dirname(__file__))
-    DEPLOY_DIR = path.abspath(path.join(PROJECT_ROOT, '..', '..', 'deploy'))
 
     REQUIREMENTS = path.join(DEPLOY_DIR, 'pip_packages.txt')
     VE_ROOT = path.join(PROJECT_ROOT, '.ve')
