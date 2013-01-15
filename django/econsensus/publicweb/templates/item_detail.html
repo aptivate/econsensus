@@ -131,8 +131,14 @@
 			e.preventDefault();
 		});
 	
-		$("#decision_detail .stats a dt").live("click", function (e) {
+        $("#decision_detail .stats a dt").live("click", function (e) {
+            var feedback_create_form_rating = $('#feedback_add_anchor .formset_item #id_rating');
+            feedback_create_form_rating.find('option[selected="selected"]').removeAttr('selected');
+            feedback_create_form_rating.find('option:contains("'+this.className+'")').attr('selected', 'selected');
+            feedback_create_form_rating.html(feedback_create_form_rating.html());
+
             replaceWithRemote(feedback_add_url + "?rating=" + this.className, ".button.add_feedback");
+
             scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
