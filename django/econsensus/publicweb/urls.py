@@ -6,7 +6,9 @@ from views import DecisionCreate, DecisionUpdate, \
                     DecisionDetail, DecisionList, \
                     ExportCSV, FeedbackCreate, \
                     FeedbackSnippetCreate, FeedbackUpdate, \
-                    EconsensusActionitemCreateView
+                    EconsensusActionitemCreateView, EconsensusActionitemUpdateView
+
+from actionitems.views import ActionItemUpdateView
 
 from models import Feedback
 
@@ -71,7 +73,10 @@ urlpatterns = patterns('econsensus.publicweb.views',
 
 
     #actionitem urls
-    url(r'^item/detail/(?P<pk>[\d]+)/actionitem/$', 
+    url(r'^item/detail/(?P<pk>[\d]+)/actionitem/add$', 
         EconsensusActionitemCreateView.as_view(), 
         name='actionitem_create'),
+    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)$', 
+        EconsensusActionitemUpdateView.as_view(), 
+        name='actionitem_update'),
     )

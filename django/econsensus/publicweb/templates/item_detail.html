@@ -245,7 +245,7 @@
     <div class="decision_actionitem">
 
         <ol class="actionitem_list">
-            {% for actionitem in object.actionitems.all %}
+            {% for actionitem in actionitems %}
             {% include "actionitem_detail_snippet.html" with object=actionitem %}
             {% empty %}
                 <li class="no_actionitem">{% trans "No actionitems." %}</li>

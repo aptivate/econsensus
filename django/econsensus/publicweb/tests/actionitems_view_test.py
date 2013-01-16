@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from decision_test_case import DecisionTestCase
 
-from publicweb.views import EconsensusActionitemCreateView
+from publicweb.views import EconsensusActionitemCreateView, EconsensusActionitemUpdateView
 from organizations.models import Organization
 from actionitems.models import ActionItem
 from actionitems.forms import ActionItemCreateForm
@@ -22,55 +22,77 @@ class ActionitemsViewTestFast(TestCase):
         assert EconsensusActionitemCreateView.form_class == ActionItemCreateForm
 
     def test_create_template(self):
-        assert EconsensusActionitemCreateView.template_name == 'actionitem_update_page.html'
+        assert EconsensusActionitemCreateView.template_name == 'actionitem_create_snippet.html'
 
-    def test_get_successurl(self):
+    def test_create_get_successurl(self):
         createview = EconsensusActionitemCreateView()
-        createview.kwargs = {'pk' : 1}
+        createview.kwargs = {'pk': 1}
         assert createview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
 
-    def test_get_origin(self):
+    def test_create_get_origin(self):
         # Have get_origin get the pk from url
         createview = EconsensusActionitemCreateView()
-        createview.kwargs = {'pk' : 1}
+        createview.kwargs = {'pk': 1}
         origin = createview.get_origin(RequestFactory())
         assert origin == 1
 
-    def test_login_and_editor_not_logged_in(self):
+    def test_create_login_and_editor_not_logged_in(self):
         get_request = RequestFactory().get('/')
-        user = User.objects.create()
+        user = User.objects.create()        
         user.is_authenticated = lambda: False
         get_request.user = user
         response = EconsensusActionitemCreateView.as_view()(get_request, pk=1)
         assert response.status_code == 302  # Redirects to login
+        user.delete()
 
     def test_create_url(self):
         resolved = resolve(reverse('actionitem_create', kwargs={'pk': 1}))
         assert resolved.func.func_name == 'EconsensusActionitemCreateView'
 
+    def test_update_url(self):
+        resolved = resolve(reverse('actionitem_update', kwargs={'decisionpk': 1, 'pk': 1}))
+        assert resolved.func.func_name == 'EconsensusActionitemUpdateView'
+
+    def test_update_login_and_editor_not_logged_in(self):
+        get_request = RequestFactory().get('/')
+        user = User.objects.create()        
+        user.is_authenticated = lambda: False
+        get_request.user = user
+        response = EconsensusActionitemUpdateView.as_view()(get_request)
+        assert response.status_code == 302  # Redirects to login
+        user.delete()
+
+    def test_update_get_successurl(self):
+        updateview = EconsensusActionitemUpdateView()
+        updateview.kwargs = {'decisionpk' : 1}
+        assert updateview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
+
 # Untested:
-# - item_detail template
-
-
+# templates
+# - item_detail
+# - actionitem_update (snippet & page)
+# - actionitem_detail (snippet)
 
 class ActionitemsViewTest(DecisionTestCase):
 
-    def test_login_and_editor(self):
+    def test_create_login_and_editor(self):
         decision = self.create_and_return_decision()
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
-        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk)
+        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
         assert response.status_code == 200
+        decision.delete()
 
-    def test_login_and_editor_noeditor_perms(self):
+    def test_create_login_and_editor_noeditor_perms(self):
         decision = self.create_and_return_decision()
         get_request = RequestFactory().get('/')
         assert self.charlie.is_authenticated()  # Confirm user is logged in
         get_request.user = self.charlie
-        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk)
+        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
         assert response.status_code == 403
+        decision.delete()
 
-    def test_render_and_confirm_origin_and_other_required_fields(self):
+    def test_create_render_and_confirm_origin_and_other_required_fields(self):
         decision = self.create_and_return_decision()
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
@@ -81,4 +103,23 @@ class ActionitemsViewTest(DecisionTestCase):
         assert origin['value'] == str(decision.pk)
         assert soup.find("textarea", {"id": "id_description"})
         assert soup.find("input", {"id": "id_responsible"})
+        decision.delete()
 
+    def test_update_login_and_editor(self):
+        decision = self.create_and_return_decision()
+        actionitem = ActionItem.objects.create()
+        get_request = RequestFactory().get('/')
+        get_request.user = self.betty
+        response = EconsensusActionitemUpdateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        assert response.status_code == 200
+        decision.delete()
+        actionitem.delete()
+
+    def test_update_login_and_editor_noeditor_perms(self):
+        decision = self.create_and_return_decision()
+        get_request = RequestFactory().get('/')
+        assert self.charlie.is_authenticated()  # Confirm user is logged in
+        get_request.user = self.charlie
+        response = EconsensusActionitemUpdateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        assert response.status_code == 403
+        decision.delete()

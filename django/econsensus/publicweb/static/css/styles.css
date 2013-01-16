@@ -846,6 +846,10 @@ p.title {
     position: relative;
 }
 
+.actionitem_list > li {
+    padding: 0.5em 0;
+}
+
 .decision_feedback .feedback_type {
 	width:8em;
 	color:#fff;
@@ -857,7 +861,7 @@ p.title {
 	margin-top:3px;
 }
 
-.decision_feedback .author {
+.decision_feedback .author, .actionitem_responsible {
 	position:relative;
 	top:inherit;
 	padding-bottom:10px;

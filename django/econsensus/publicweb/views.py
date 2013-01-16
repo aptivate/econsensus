@@ -24,7 +24,8 @@ from models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm
 
-from actionitems.views import ActionItemCreateView
+from actionitems.models import ActionItem
+from actionitems.views import ActionItemCreateView, ActionItemUpdateView
 from actionitems.forms import ActionItemCreateForm
 
 class ExportCSV(View):
@@ -132,6 +133,7 @@ class DecisionDetail(DetailView):
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
         context['rating_names'] = [unicode(x) for x in Feedback.rating_names]
+        context['actionitems'] = ActionItem.objects.filter(origin=self.kwargs['pk'])
         return context
 
 
@@ -468,7 +470,7 @@ class FeedbackUpdate(UpdateView):
 
 
 class EconsensusActionitemCreateView(ActionItemCreateView):
-    template_name = 'actionitem_update_page.html'
+    template_name = 'actionitem_create_snippet.html'
 
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
@@ -481,3 +483,14 @@ class EconsensusActionitemCreateView(ActionItemCreateView):
 
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', kwargs=self.kwargs)
+
+class EconsensusActionitemUpdateView(ActionItemUpdateView):
+    template_name = 'actionitem_update_snippet.html'
+
+    @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
+    def dispatch(self, *args, **kwargs):
+        return super(EconsensusActionitemUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('publicweb_item_detail', kwargs={'pk': self.kwargs['decisionpk']})

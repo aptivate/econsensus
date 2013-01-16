@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% block main_content %}
-    <form class="actionitem-form" action="{% url 'actionitem_update' decisionpk=object.origin_id pk=object.id %}" method="POST">{% csrf_token %}
+    <form class="actionitem-form" action="{% url 'actionitem_create' pk=form.origin.value %}" method="POST">{% csrf_token %}
         <div class="formset_item actionitem">
             <div class="form_item{{form.description.html_name}}">
                 <span{% if form.description.errors %} class="error"{% endif %}>{{ form.description.errors }}{{ form.description }}</span>
@@ -18,8 +18,10 @@
             </div>
             <div class="controls">
 					<input class="button go" id="actionitem_save" type="submit" name="submit" value="Save"/>
-					<a class="button go" id="actionitem_cancel" href="{% url 'publicweb_item_detail' pk=object.origin_id %}">{% trans "Cancel" %}</a>
+					<a class="button go" id="actionitem_cancel" href="{% url 'publicweb_item_detail' pk=form.origin.value %}">{% trans "Cancel" %}</a>
             </div>
+            <input type="hidden" name="origin" value={{form.origin.value}} id="id_origin" />
+            <input type="hidden" name="manager" value={{form.manager.value}} id="id_manager" />
         </div>
     </form>
 {% endblock %}
