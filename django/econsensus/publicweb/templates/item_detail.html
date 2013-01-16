@@ -56,6 +56,16 @@
 			}
 		}
 
+        function updateFeedbackFormRatingClassName(form_element, new_rating) {
+            var class_names = form_element.attr('class').split(' ');
+            for(var i=0; i<class_names.length; i++) {
+                if (class_names[i].match(/^rating_/)) {
+                    form_element.removeClass(class_names[i]);
+                }
+            }
+            form_element.addClass('rating_'+new_rating);
+        }
+
 		function replaceWithRemote(url, selector) {
 			$.ajax(url,
 					{
@@ -132,16 +142,33 @@
 		});
 	
         $("#decision_detail .stats a dt").live("click", function (e) {
-            var feedback_create_form_rating = $('#feedback_add_anchor .formset_item #id_rating');
-            feedback_create_form_rating.find('option[selected="selected"]').removeAttr('selected');
-            feedback_create_form_rating.find('option:contains("'+this.className+'")').attr('selected', 'selected');
-            feedback_create_form_rating.html(feedback_create_form_rating.html());
+            var feedback_create_section = $('#feedback_add_anchor');
 
-            replaceWithRemote(feedback_add_url + "?rating=" + this.className, ".button.add_feedback");
+            if (feedback_create_section.find('.button.add_feedback').length) {
+                replaceWithRemote(feedback_add_url + "?rating=" + this.className, ".button.add_feedback");
+            }
+            else {
+                var feedback_create_form = feedback_create_section.find('.formset_item');
+                var feedback_create_form_rating = feedback_create_form.find(' #id_rating');
+                feedback_create_form_rating.find('option[selected="selected"]').removeAttr('selected');
+                feedback_create_form_rating.find('option:contains("'+this.className+'")').attr('selected', 'selected');
+                feedback_create_form_rating.html(feedback_create_form_rating.html());
+                updateFeedbackFormRatingClassName(
+                    feedback_create_form, 
+                    this.className);
+            }
 
             scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
+
+        $('#id_rating').live("change", function (e) {
+            var new_rating_value = $(this).val();
+            var new_rating_name = e.currentTarget.form.rating.options[new_rating_value].text
+            updateFeedbackFormRatingClassName(
+                $(this).parents('.formset_item.feedback'), 
+                new_rating_name);
+        });
 	
 		$("#feedback_add_anchor form").live("submit", function (e) {
 			var $form = $(this),
