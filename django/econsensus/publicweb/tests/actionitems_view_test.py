@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 
 from decision_test_case import DecisionTestCase
 
-from publicweb.views import EconsensusActionitemCreateView, EconsensusActionitemUpdateView
+from publicweb.views import EconsensusActionitemCreateView, EconsensusActionitemUpdateView, EconsensusActionitemListView
 from organizations.models import Organization
 from actionitems.models import ActionItem
-from actionitems.forms import ActionItemCreateForm
+from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
 
 from BeautifulSoup import BeautifulSoup
 
@@ -24,10 +24,24 @@ class ActionitemsViewTestFast(TestCase):
     def test_create_template(self):
         assert EconsensusActionitemCreateView.template_name == 'actionitem_create_snippet.html'
 
+    def test_update_model(self):
+        assert EconsensusActionitemUpdateView.model == ActionItem
+
+    def test_update_formclass(self):
+        assert EconsensusActionitemUpdateView.form_class == ActionItemUpdateForm
+
+    def test_update_template(self):
+        assert EconsensusActionitemUpdateView.template_name == 'actionitem_update_snippet.html'
+
     def test_create_get_successurl(self):
         createview = EconsensusActionitemCreateView()
         createview.kwargs = {'pk': 1}
         assert createview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
+
+    def test_update_get_successurl(self):
+        updateview = EconsensusActionitemUpdateView()
+        updateview.kwargs = {'decisionpk' : 1}
+        assert updateview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
 
     def test_create_get_origin(self):
         # Have get_origin get the pk from url
@@ -35,6 +49,18 @@ class ActionitemsViewTestFast(TestCase):
         createview.kwargs = {'pk': 1}
         origin = createview.get_origin(RequestFactory())
         assert origin == 1
+
+    def test_create_url(self):
+        resolved = resolve(reverse('actionitem_create', kwargs={'pk': 1}))
+        assert resolved.func.func_name == 'EconsensusActionitemCreateView'
+
+    def test_update_url(self):
+        resolved = resolve(reverse('actionitem_update', kwargs={'decisionpk': 1, 'pk': 1}))
+        assert resolved.func.func_name == 'EconsensusActionitemUpdateView'
+
+    def test_list_url(self):
+        resolved = resolve(reverse('actionitem_list', kwargs={'org_slug': 'dummy'}))
+        assert resolved.func.func_name == 'EconsensusActionitemListView'
 
     def test_create_login_and_editor_not_logged_in(self):
         get_request = RequestFactory().get('/')
@@ -45,14 +71,6 @@ class ActionitemsViewTestFast(TestCase):
         assert response.status_code == 302  # Redirects to login
         user.delete()
 
-    def test_create_url(self):
-        resolved = resolve(reverse('actionitem_create', kwargs={'pk': 1}))
-        assert resolved.func.func_name == 'EconsensusActionitemCreateView'
-
-    def test_update_url(self):
-        resolved = resolve(reverse('actionitem_update', kwargs={'decisionpk': 1, 'pk': 1}))
-        assert resolved.func.func_name == 'EconsensusActionitemUpdateView'
-
     def test_update_login_and_editor_not_logged_in(self):
         get_request = RequestFactory().get('/')
         user = User.objects.create()        
@@ -62,18 +80,26 @@ class ActionitemsViewTestFast(TestCase):
         assert response.status_code == 302  # Redirects to login
         user.delete()
 
-    def test_update_get_successurl(self):
-        updateview = EconsensusActionitemUpdateView()
-        updateview.kwargs = {'decisionpk' : 1}
-        assert updateview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
+    def test_list_login_not_logged_in(self):
+        get_request = RequestFactory().get('/')
+        user = User.objects.create()        
+        user.is_authenticated = lambda: False
+        get_request.user = user
+        response = EconsensusActionitemListView.as_view()(get_request)
+        assert response.status_code == 302  # Redirects to login
+        user.delete()
 
 # Untested:
 # templates
+# - base (actionitems list)
+# - decision_list (actionitems list additions)
 # - item_detail
 # - actionitem_update (snippet & page)
 # - actionitem_detail (snippet)
 # javascript
 # - item_detail
+# - minimizer
+# sorting <- will be handled by refactor
 
 class ActionitemsViewTest(DecisionTestCase):
 
@@ -125,3 +151,20 @@ class ActionitemsViewTest(DecisionTestCase):
         response = EconsensusActionitemUpdateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
         assert response.status_code == 403
         decision.delete()
+
+    def test_list_login(self):
+        get_request = RequestFactory().get('/')
+        get_request.user = self.betty
+        get_request.session = {}
+        response = EconsensusActionitemListView.as_view()(get_request, org_slug=self.bettysorg.slug) 
+        assert response.status_code == 200
+
+    def test_list_wrongorg(self):
+        get_request = RequestFactory().get('/')
+        get_request.user = self.betty
+        get_request.session = {}
+        response = EconsensusActionitemListView.as_view()(get_request, org_slug='wild-about-town') 
+        assert response.status_code == 200  # This seems like we could aim for better?
+        response.render()
+        soup = BeautifulSoup(str(response.content))
+        assert soup.find("p", {"class": "wrongorg"})

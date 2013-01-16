@@ -1587,6 +1587,12 @@ p.error404 {
 	}
 }
 
+del,
+del > .actionitem_responsible {
+    color: gray;
+    font-weight: normal;
+}
+
 .hide {
     cursor: pointer;
 }
@@ -1594,4 +1600,18 @@ p.error404 {
 .envelope.minimized > .add_anchor,
 .envelope.minimized > .list {
     display: none;
+}
+
+.actionitems-list .summary-list td {
+    border-color: #E02E78;
+}
+
+.actionitems-list .summary-list th {
+    background-color: #F7D9E5;
+    border-color: #F7D9E5;
+}
+
+.actionitems-list .summary-list th.description a {
+    text-align: left;
+    padding: 10px 10px 10px 0px;
 }
