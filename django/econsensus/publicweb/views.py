@@ -2,7 +2,7 @@
 from notification import models as notification
 from organizations.models import Organization
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -478,3 +478,6 @@ class EconsensusActionitemCreateView(ActionItemCreateView):
     def get_origin(self, request, *args, **kwargs):
         origin = self.kwargs.get('pk')
         return origin
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('publicweb_item_detail', kwargs=self.kwargs)
