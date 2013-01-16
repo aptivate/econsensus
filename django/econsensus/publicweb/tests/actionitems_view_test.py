@@ -72,6 +72,8 @@ class ActionitemsViewTestFast(TestCase):
 # - item_detail
 # - actionitem_update (snippet & page)
 # - actionitem_detail (snippet)
+# javascript
+# - item_detail
 
 class ActionitemsViewTest(DecisionTestCase):
 

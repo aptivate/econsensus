@@ -118,6 +118,22 @@
                                 "form#decision_update_form");
             e.preventDefault();
         });
+
+        //Action items inline editing
+        var actionitem_add_url = "{% url 'actionitem_create' object.id %}",
+            actionitem_edit_url = "{% url 'actionitem_update' decisionpk=object.id pk=0 %}"
+        // Add
+		$(".button.add_actionitem").live("click", function (e) {
+            replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
+			e.preventDefault();
+		});
+        //Edit
+		$(".edit.actionitem").live("click", function (e) {
+            var actionitempk = $(this).parent().attr("id"),
+				snippet_update_url = actionitem_edit_url.replace('0', actionitempk);
+            replaceWithRemote(snippet_update_url, "#"+actionitempk);
+			e.preventDefault();
+		});
         	
 		/*
 		 * Feedback in-line editing

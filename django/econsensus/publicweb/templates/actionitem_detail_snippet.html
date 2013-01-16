@@ -1,6 +1,6 @@
 {% load url from future %}
 {% load i18n %}
-<li>
+<li id="{{ actionitem.id }}">
     {% if actionitem.done %}<del>{% endif %}
         <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
         {{ actionitem.title }} <br />
@@ -8,5 +8,5 @@
         {% else %}{% trans "No deadline" %}
         {% endif %}
     {% if actionitem.done %}</del>{% endif %} <br />
-    <a class="edit" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
+    <a class="edit actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
 </li>
