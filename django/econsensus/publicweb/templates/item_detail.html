@@ -239,6 +239,11 @@
 			updateAndReplace(feedback_update_url, snippet_detail_url, $this);
 			e.preventDefault();
 		});
+
+        $(".hide").click(function() {
+            $(this).parent().toggleClass("minimized");
+            $(this).toggleClass("maximize");
+        });
 	});
 	//-->
 	</script>
@@ -254,11 +259,11 @@
 {% include "decision_detail_snippet.html" %}
 
 <div class="envelope">
-    <h2 class="page_title actionitem">{% trans "Action Items" %}</h2>
+    <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
         {% if "edit_decisions_feedback" in organization_permissions %}
-            <div id="actionitem_add_anchor"><a class="button add_actionitem" href='{% url 'actionitem_create' object.id %}'><span>Add action item</span></a></div>
+            <div class="add_anchor" id="actionitem_add_anchor"><a class="button add_actionitem" href='{% url 'actionitem_create' object.id %}'><span>Add action item</span></a></div>
         {% endif %}
-    <div class="decision_actionitem">
+    <div class="list decision_actionitem">
 
         <ol class="actionitem_list">
             {% for actionitem in actionitems %}
@@ -271,11 +276,11 @@
 </div>
 
 <div class="envelope">
-    <h2 class="page_title feedback">{% trans "Feedback" %}</h2>
+    <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
     {% if "edit_decisions_feedback" in organization_permissions %}
-    <div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
+    <div class="add_anchor" id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
     {% endif %}
-    <div class="decision_feedback">
+    <div class="list decision_feedback">
         <ol class="feedback_list">
             {% for feedback in object.feedback_set.all %}
             {% include "feedback_detail_snippet.html" with object=feedback %}

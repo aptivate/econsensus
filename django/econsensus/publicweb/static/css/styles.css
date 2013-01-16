@@ -549,6 +549,10 @@ a.button.add_discussion {
     background-color: #3E6EA3;
 }
 
+a.button.add_actionitem {
+    background-color: #E02E78;
+    color:#fff;
+}
 
 /* Decision View */
 
@@ -1581,4 +1585,13 @@ p.error404 {
     margin-left: 0;
     padding-top: 10px;
 	}
+}
+
+.hide {
+    cursor: pointer;
+}
+
+.envelope.minimized > .add_anchor,
+.envelope.minimized > .list {
+    display: none;
 }
