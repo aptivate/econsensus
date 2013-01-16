@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}
+
+{% block title %}{% trans "Add Action Item" %}{% endblock %}
+
+{% block heading %}{% trans "Add Action Item" %}{% endblock %}
+
+{% block main_content %}
+    {% include "actionitem_update_snippet.html" %}
+{% endblock %}

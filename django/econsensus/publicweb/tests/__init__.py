@@ -17,3 +17,4 @@ from form_test import FormTest
 from html_test import HtmlTest
 from command_test import CommandTest
 from organization_test import OrganizationTest
+from actionitems_view_test import ActionitemsViewTest, ActionitemsViewTestFast

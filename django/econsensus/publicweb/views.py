@@ -18,12 +18,14 @@ from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
-
 from guardian.decorators import permission_required_or_403
 
 from models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm
+
+from actionitems.views import ActionItemCreateView
+from actionitems.forms import ActionItemCreateForm
 
 class ExportCSV(View):
     @method_decorator(login_required)
@@ -463,3 +465,16 @@ class FeedbackUpdate(UpdateView):
 
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+
+
+class EconsensusActionitemCreateView(ActionItemCreateView):
+    template_name = 'actionitem_update_page.html'
+
+    @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
+    def dispatch(self, *args, **kwargs):
+        return super(EconsensusActionitemCreateView, self).dispatch(*args, **kwargs)
+
+    def get_origin(self, request, *args, **kwargs):
+        origin = self.kwargs.get('pk')
+        return origin

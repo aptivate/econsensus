@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load url from future %}
+
+{% block main_content %}
+    <form class="actionitem-form" action="{% url 'actionitem_create' pk=form.origin.value %}" method="POST">{% csrf_token %}
+        <div class="formset_item actionitem">
+            <div class="form_item{{form.description.html_name}}">
+                <span{% if form.description.errors %} class="error"{% endif %}>{{ form.description.errors }}{{ form.description }}</span>
+            </div>
+            <div class="form_item {{form.responsible.html_name}}">
+                {{ form.responsible.label_tag }} <span{% if form.responsible.errors %} class="error"{% endif %}>{{ form.responsible.errors }}{{ form.responsible }}</span>
+            </div>
+            <div class="form_item {{form.deadline.html_name}}">
+                {{ form.deadline.label_tag }} <span{% if form.deadline.errors %} class="error"{% endif %}>{{ form.deadline.errors }}{{ form.deadline }}</span>
+            </div>
+            <div class="form_item {{form.done.html_name}}">
+                {{ form.done.label_tag }} <span{% if form.done.errors %} class="error"{% endif %}>{{ form.done.errors }}{{ form.done }}</span>
+            </div>
+            <div class="controls">
+					<input class="button go" id="feedback_button" type="submit" name="submit" value="Save"/>
+					<input class="button go" type="submit" name="submit" value="Cancel" />
+            </div>
+            <input type="hidden" name="origin" value={{form.origin.value}} id="id_origin" />
+
+        </div>
+    </form>
+{% endblock %}
