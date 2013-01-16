@@ -237,19 +237,37 @@
 {% else %}
 {% include "decision_detail_snippet.html" %}
 
-<h2 class="page_title feedback">{% trans "Feedback" %}</h2>
-{% if "edit_decisions_feedback" in organization_permissions %}
-<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
-{% endif %}
-<div class="decision_feedback">
+<div class="envelope">
+    <h2 class="page_title actionitem">{% trans "Action Items" %}</h2>
+        {% if "edit_decisions_feedback" in organization_permissions %}
+            <div id="actionitem_add_anchor"><a class="button add_actionitem" href='{% url 'actionitem_create' object.id %}'><span>Add action item</span></a></div>
+        {% endif %}
+    <div class="decision_actionitem">
 
-  <ol class="feedback_list">
-{% for feedback in object.feedback_set.all %}
-{% include "feedback_detail_snippet.html" with object=feedback %}
-{% empty %}
-	<li class="no_feedback">{% trans "No feedback yet." %}</li>
-{% endfor %}
-  </ol>
+        <ol class="actionitem_list">
+            {% for actionitem in object.actionitems.all %}
+            {% include "actionitem_detail_snippet.html" with object=actionitem %}
+            {% empty %}
+                <li class="no_actionitem">{% trans "No actionitems." %}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+<div class="envelope">
+    <h2 class="page_title feedback">{% trans "Feedback" %}</h2>
+    {% if "edit_decisions_feedback" in organization_permissions %}
+    <div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
+    {% endif %}
+    <div class="decision_feedback">
+        <ol class="feedback_list">
+            {% for feedback in object.feedback_set.all %}
+            {% include "feedback_detail_snippet.html" with object=feedback %}
+            {% empty %}
+            <li class="no_feedback">{% trans "No feedback yet." %}</li>
+            {% endfor %}
+        </ol>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

@@ -119,7 +119,7 @@ input {
 
 /* Main Blocks */
 
-#header-wrapper, #navigation-wrapper, #content-wrapper, #footer-wrapper {
+#header-wrapper, #navigation-wrapper, #content-wrapper, #footer-wrapper, .envelope {
 	width:100%;
 	display:block;
 	float:left;
@@ -244,30 +244,42 @@ input {
 	padding:20px;
 }
 
-#content h2.page_title {
+.page_title {
 	display: inline;
 	color:#666;
 	padding-bottom: 6px;
 	margin-bottom:0;
 }
 
-#content h2.simple-form-header {
+.simple-form-header {
 	display: block;
 	text-align: center;
 }
 
-#content h2.page_title span {
+.page_title span {
     color: #030303;
     font-size: 0.7em;
     font-weight: bold;
 }
 
-#content h2.page_title.decision {color:#90AA27;}
-#content h2.page_title.proposal {color:#FFB900;}
+.page_title.decision {
+    color:#90AA27;
 
-#content h2.page_title.feedback {
-	margin-bottom:10px;
+}
+
+.page_title.proposal {
+    color:#FFB900;
+
+}
+
+.page_title.feedback {
+	margin-top:10px;
 	width:inherit;
+}
+
+.page_title.actionitem, 
+.page_title.feedback {
+    display: block;
 }
 
 /* pagination */
@@ -512,7 +524,8 @@ li.summary-item {
 a.button.add_discussion,
 a.button.add_decision,
 a.button.add_proposal,
-a.button.add_feedback {
+a.button.add_feedback,
+a.button.add_actionitem {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -796,7 +809,7 @@ p.title {
 	font-weight: bold;
 }
 
-.decision_feedback {
+.decision_feedback, .decision_actionitem {
     display: block;
     float: left;
     position: relative;
@@ -804,11 +817,13 @@ p.title {
     margin-top: 10px;
 }
 
-.button.add_feedback {
+.button.add_feedback,
+.button.add_actionitem {
 	color:#fff!important;
 }
 
-.decision_feedback ol.feedback_list {
+.decision_feedback ol.feedback_list,
+.actionitem_list {
     border: 5px solid #ECECEC;
     border-radius: 15px;
     -moz-border-radius:15px;
@@ -822,7 +837,8 @@ p.title {
 	position:relative;
 }
 
-.decision_feedback ol.feedback_list > li {
+.decision_feedback ol.feedback_list > li,
+.actionitem_list > li {
     border-bottom: 1px solid #3E6EA3;
     margin: 0 20px;
     overflow: auto;
@@ -949,7 +965,7 @@ div#tags {
 	overflow: auto;
 }
 
-.formset_item .form_row .controls {
+.controls {
 	float: right;
 	margin: 5px;
 	margin-right:20px;
@@ -1001,13 +1017,20 @@ div#tags {
 	font-size: 1em;
 }
 
-.formset_item.feedback {
+.formset_item {
 	-moz-border-radius: 15px;
   	-webkit-border-radius: 15px;
 	border-radius: 15px;
-	border: 3px solid #3E6EA3;
     border-radius: 15px 15px 15px 15px;
     padding: 20px 0;  
+}
+
+.formset_item.feedback {
+	border: 3px solid #3E6EA3;
+}
+
+.formset_item.actionitem {
+	border: 3px solid #E02E78;
 }
 
 .contrib_comment_container {
