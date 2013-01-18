@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Test Report</title>
+    <style>body {font-family: Helvetica, Arial, sans-serif; font-size: 12px}
+body * {box-sizing: -moz-border-box; box-sizing: -webkit-border-box; box-sizing: border-box}
+a {color: #999}
+h2 {font-size: 16px}
+table {border: 1px solid #e6e6e6; color: #999; font-size: 12px; border-collapse: collapse}
+#configuration tr:nth-child(odd) {background-color: #f6f6f6}
+#results {width:100%}
+th, td {padding: 5px; border: 1px solid #E6E6E6; text-align: left}
+th {font-weight: bold}
+tr.passed, tr.skipped, tr.xfailed, tr.error, tr.failed, tr.xpassed {color: inherit}
+tr.passed + tr.additional {display: none}
+.passed {color: green}
+.skipped, .xfailed {color: orange}
+.error, .failed, .xpassed {color: red}
+.log:only-child {height: inherit}
+.log {background-color: #e6e6e6; border: 1px solid #e6e6e6; color: black; display: block; font-family: "Courier New", Courier, monospace; height: 230px; overflow-y: scroll; padding: 5px; white-space:pre-wrap}
+.screenshot, .video {border: 1px solid #e6e6e6; float:right; height:240px; margin-left:5px; overflow:hidden; width:320px}
+.screenshot img {width: 320px}</style></head>
+  <body>
+    <p>Report generated on 18-Jan-2013 at 06:25:55 by pytest-mozwebqa 1.0</p>
+    <h2>Configuration</h2>
+    <table id="configuration">
+      <tr>
+        <td>Base URL</td>
+        <td>http://econsensus.stage.aptivate.org/</td></tr>
+      <tr>
+        <td>Credentials</td>
+        <td>credentials.yaml</td></tr>
+      <tr>
+        <td>Driver</td>
+        <td>firefox</td></tr>
+      <tr>
+        <td>Selenium API</td>
+        <td>webdriver</td></tr>
+      <tr>
+        <td>Selenium Server</td>
+        <td>http://localhost:4444</td></tr>
+      <tr>
+        <td>Timeout</td>
+        <td>60</td></tr></table>
+    <h2>Summary</h2>
+    <p>1 tests ran in 11 seconds.<br/><span class="passed">1 passed</span>, <span class="skipped">0 skipped</span>, <span class="failed">0 failed</span>, <span class="error">0 errors</span>.<br/><span class="skipped">0 expected failures</span>, <span class="failed">0 unexpected passes</span>.</p>
+    <h2>Results</h2>
+    <table id="results">
+      <tr>
+        <th>Result</th>
+        <th>Class</th>
+        <th>Name</th>
+        <th>Duration</th>
+        <th>Links</th></tr>
+      <tr class="passed">
+        <td class="passed">Passed</td>
+        <td>tests.test_login.TestLogin</td>
+        <td>test_login</td>
+        <td>6.0</td>
+        <td></td></tr></table></body></html>
