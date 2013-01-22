@@ -51,7 +51,7 @@ body {
     font-family: ubuntu, verdana, sans-serif;
 	margin:0 auto;
 	min-width:320px;
-	font-size:1em/1.5em;
+	font-size:1em;
 }
 
 a, a:link, a:active a:visited {
@@ -111,6 +111,10 @@ input {
     color: #FFFFFF;
     font-weight: bold;
     padding: 5px 10px;
+}
+
+.button:hover {
+    cursor: pointer;
 }
 
 /* Main Blocks */
@@ -405,6 +409,18 @@ p.no_items {
 	background-color: #AAD400;
 }
 
+.discussion-list .summary-list th,
+.discussion-list .summary-list td {
+	border-color: #3E6EA3;
+}
+
+.discussion-list .summary-list th {
+	background-color: #3E6EA3;
+}
+
+.discussion-list .sort-desc {
+	color: #000000;
+}
 
 /* borders */
 
@@ -493,6 +509,7 @@ li.summary-item {
 	line-height:1.5em;
 }
 
+a.button.add_discussion,
 a.button.add_decision,
 a.button.add_proposal,
 a.button.add_feedback {
@@ -514,6 +531,11 @@ a.button.add_decision {
 a.button.add_proposal {
     background-color: #FFCC00;
 }
+
+a.button.add_discussion {
+    background-color: #3E6EA3;
+}
+
 
 /* Decision View */
 
@@ -558,6 +580,9 @@ span.excerpt {
 	border-color: #666666;
 }
 
+#decision_detail.discussion {
+	border-color: #3E6EA3;
+}
 #decision_detail .stats {
     display: block;
     float: left;
@@ -584,25 +609,6 @@ span.excerpt {
     background-position: 3px center;
     background-repeat: no-repeat;
     padding-left: 30px;
-}
-#decision_detail .stats .consent {
-	background-color:#aad400;
-}
-
-#decision_detail .stats .question {
-	background-color:#008080;
-}
-
-#decision_detail .stats .danger {
-	background-color:#d81616;
-}
-
-#decision_detail .stats .concerns {
-	background-color:#f60;
-}
-
-#decision_detail .stats .comment {
-	background-color:#aaa;
 }
   
 #decision_detail .stats dd {
@@ -687,7 +693,17 @@ a.edit, a.show {
 	margin-bottom:1.5em;
 }
 
- 
+.discussion-detail .meta {
+	display: none;
+}
+
+.discussion-detail .feedback_type {
+	display: none;
+}
+
+.discussion-detail .formset_item .form_item.rating {
+	display: none;
+}
 #decision_detail.proposal .date {width:100%;}
 
 #decision_detail .date strong {
@@ -817,7 +833,7 @@ p.title {
 .decision_feedback .feedback_type {
 	width:8em;
 	color:#fff;
-	background:#bbb;
+	background:#000;
 	text-align:center;
 	font-weight:bold;
 	font-size:.8em;
@@ -831,22 +847,6 @@ p.title {
 	padding-bottom:10px;
 	font-weight:bold;
 	color:#3E6EA3;
-}
-
-.feedback_type.question {
-	background:#008080;
-}
-
-.feedback_type.danger {
-background:#d81616;
-}
-
-.feedback_type.concerns {
-	background:#f60;
-}
-
-.feedback_type.consent {
-	background:#aad400;
 }
 
 .decision_feedback .description {
@@ -1008,7 +1008,7 @@ div#tags {
 	border: 3px solid #3E6EA3;
     border-radius: 15px 15px 15px 15px;
     padding: 20px 0;  
-	}
+}
 
 .contrib_comment_container {
 	margin-left: 10em;
@@ -1030,6 +1030,42 @@ div#tags {
 
 .contrib_comment p, .contrib_comment span {
 	font-size: 0.9em;
+}
+
+/* Feedback rating colors */
+#decision_detail .stats .consent, .feedback_type.consent {
+	background-color: #aad400;
+}
+.formset_item.feedback.rating_consent {
+    border-color: #aad400;
+}
+
+#decision_detail .stats .question, .feedback_type.question {
+	background-color: #008080;
+}
+.formset_item.feedback.rating_question {
+    border-color: #008080;
+}
+
+#decision_detail .stats .danger, .feedback_type.danger {
+	background-color: #d81616;
+}
+.formset_item.feedback.rating_danger {
+    border-color: #d81616;
+}
+
+#decision_detail .stats .concerns, .feedback_type.concerns {
+	background-color: #f60;
+}
+.formset_item.feedback.rating_concerns {
+    border-color: #f60;
+}
+
+#decision_detail .stats .comment, .feedback_type.comment {
+	background-color: #aaa;
+}
+.formset_item.feedback.rating_comment {
+    border-color: #aaa;
 }
 
 /* Footer */

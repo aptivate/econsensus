@@ -12,6 +12,9 @@ class DecisionTestCase(EconsensusTestCase):
         self.create_and_return_decision(description='Issue Archived',
                                         status=Decision.ARCHIVED_STATUS)
 
+        self.create_and_return_decision(description='Issue Archived',
+                                        status=Decision.DISCUSION_STATUS)
+
     def create_and_return_example_decision_with_feedback(self):
         decision = self.create_and_return_decision()
         

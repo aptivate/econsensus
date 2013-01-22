@@ -1,7 +1,12 @@
 {% load url from future %}
 {% load i18n %}	
 {% load comments %}
+{% load guardian_tags %}
+
+{% comment %}Define organization_permissions here to cover case where this template is used to re-render a feedback detail following an inline javascript update of that feedback.{% endcomment %}
+{% get_obj_perms request.user for object.decision.organization as "organization_permissions" %}
 {% get_comment_list for object as comment_list %}
+
 <li id="id{{ object.id }}">
   <div class="feedback_wrapper {{ object.get_rating_display }}">
     <div class="feedback_type {{ object.get_rating_display }}">
