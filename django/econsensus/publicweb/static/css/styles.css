@@ -113,6 +113,10 @@ input {
     padding: 5px 10px;
 }
 
+.button:hover {
+    cursor: pointer;
+}
+
 /* Main Blocks */
 
 #header-wrapper, #navigation-wrapper, #content-wrapper, #footer-wrapper {
@@ -606,25 +610,6 @@ span.excerpt {
     background-repeat: no-repeat;
     padding-left: 30px;
 }
-#decision_detail .stats .consent {
-	background-color:#aad400;
-}
-
-#decision_detail .stats .question {
-	background-color:#008080;
-}
-
-#decision_detail .stats .danger {
-	background-color:#d81616;
-}
-
-#decision_detail .stats .concerns {
-	background-color:#f60;
-}
-
-#decision_detail .stats .comment {
-	background-color:#aaa;
-}
   
 #decision_detail .stats dd {
     color: #000;
@@ -848,7 +833,7 @@ p.title {
 .decision_feedback .feedback_type {
 	width:8em;
 	color:#fff;
-	background:#bbb;
+	background:#000;
 	text-align:center;
 	font-weight:bold;
 	font-size:.8em;
@@ -862,22 +847,6 @@ p.title {
 	padding-bottom:10px;
 	font-weight:bold;
 	color:#3E6EA3;
-}
-
-.feedback_type.question {
-	background:#008080;
-}
-
-.feedback_type.danger {
-background:#d81616;
-}
-
-.feedback_type.concerns {
-	background:#f60;
-}
-
-.feedback_type.consent {
-	background:#aad400;
 }
 
 .decision_feedback .description {
@@ -1039,7 +1008,7 @@ div#tags {
 	border: 3px solid #3E6EA3;
     border-radius: 15px 15px 15px 15px;
     padding: 20px 0;  
-	}
+}
 
 .contrib_comment_container {
 	margin-left: 10em;
@@ -1061,6 +1030,42 @@ div#tags {
 
 .contrib_comment p, .contrib_comment span {
 	font-size: 0.9em;
+}
+
+/* Feedback rating colors */
+#decision_detail .stats .consent, .feedback_type.consent {
+	background-color: #aad400;
+}
+.formset_item.feedback.rating_consent {
+    border-color: #aad400;
+}
+
+#decision_detail .stats .question, .feedback_type.question {
+	background-color: #008080;
+}
+.formset_item.feedback.rating_question {
+    border-color: #008080;
+}
+
+#decision_detail .stats .danger, .feedback_type.danger {
+	background-color: #d81616;
+}
+.formset_item.feedback.rating_danger {
+    border-color: #d81616;
+}
+
+#decision_detail .stats .concerns, .feedback_type.concerns {
+	background-color: #f60;
+}
+.formset_item.feedback.rating_concerns {
+    border-color: #f60;
+}
+
+#decision_detail .stats .comment, .feedback_type.comment {
+	background-color: #aaa;
+}
+.formset_item.feedback.rating_comment {
+    border-color: #aaa;
 }
 
 /* Footer */

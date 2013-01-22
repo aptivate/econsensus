@@ -422,7 +422,7 @@ class FeedbackCreate(CreateView):
         return super(FeedbackCreate, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+        return reverse('publicweb_item_detail', args=[self.kwargs['parent_pk']])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -443,6 +443,12 @@ class FeedbackUpdate(UpdateView):
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
+    
+    def post(self, *args, **kwargs):
+        if self.request.POST.get('submit', None) == "Cancel":
+            self.object = self.get_object()
+            return HttpResponseRedirect(self.get_success_url())
+        return super(FeedbackUpdate, self).post(*args, **kwargs)
 
     def form_valid(self, form, *args, **kwargs):
         form.instance.editor = self.request.user
