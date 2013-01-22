@@ -186,7 +186,9 @@ class DecisionList(ListView):
                     }
     sort_by_count_fields = ['feedback']
     sort_by_alpha_fields = ['excerpt']
-    sort_table_headers = {'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+    
+    sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+                          'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
                           'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
                           'archived': ['id', 'excerpt', 'creation', 'archived_date']}
 

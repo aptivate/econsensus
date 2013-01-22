@@ -51,7 +51,7 @@ body {
     font-family: ubuntu, verdana, sans-serif;
 	margin:0 auto;
 	min-width:320px;
-	font-size:1em/1.5em;
+	font-size:1em;
 }
 
 a, a:link, a:active a:visited {
@@ -405,6 +405,18 @@ p.no_items {
 	background-color: #AAD400;
 }
 
+.discussion-list .summary-list th,
+.discussion-list .summary-list td {
+	border-color: #3E6EA3;
+}
+
+.discussion-list .summary-list th {
+	background-color: #3E6EA3;
+}
+
+.discussion-list .sort-desc {
+	color: #000000;
+}
 
 /* borders */
 
@@ -493,6 +505,7 @@ li.summary-item {
 	line-height:1.5em;
 }
 
+a.button.add_discussion,
 a.button.add_decision,
 a.button.add_proposal,
 a.button.add_feedback {
@@ -514,6 +527,11 @@ a.button.add_decision {
 a.button.add_proposal {
     background-color: #FFCC00;
 }
+
+a.button.add_discussion {
+    background-color: #3E6EA3;
+}
+
 
 /* Decision View */
 
@@ -558,6 +576,9 @@ span.excerpt {
 	border-color: #666666;
 }
 
+#decision_detail.discussion {
+	border-color: #3E6EA3;
+}
 #decision_detail .stats {
     display: block;
     float: left;
@@ -687,7 +708,17 @@ a.edit, a.show {
 	margin-bottom:1.5em;
 }
 
- 
+.discussion-detail .meta {
+	display: none;
+}
+
+.discussion-detail .feedback_type {
+	display: none;
+}
+
+.discussion-detail .formset_item .form_item.rating {
+	display: none;
+}
 #decision_detail.proposal .date {width:100%;}
 
 #decision_detail .date strong {

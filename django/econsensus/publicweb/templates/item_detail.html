@@ -9,6 +9,8 @@
 {% endif %}
 {% endblock %}
 
+{% block body_class%}base {{ tab }}-detail{% endblock %}
+
 {% block head_content %}
 {{ object.media }}
 	<link href="{{ STATIC_URL }}jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
