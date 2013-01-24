@@ -17,8 +17,8 @@
                 {{ form.done.label_tag }} <span{% if form.done.errors %} class="error"{% endif %}>{{ form.done.errors }}{{ form.done }}</span>
             </div>
             <div class="controls">
-					<input class="button go" id="actionitem_save" type="submit" name="submit" value="Save"/>
-					<a class="button go" id="actionitem_cancel" href="{% url 'publicweb_item_detail' pk=form.origin.value %}">{% trans "Cancel" %}</a>
+					<input class="button go actionitem_save" type="submit" name="submit" value="Save"/>
+					<a class="button go actionitem_cancel" href="{% url 'publicweb_item_detail' pk=form.origin.value %}">{% trans "Cancel" %}</a>
             </div>
             <input type="hidden" name="origin" value={{form.origin.value}} id="id_origin" />
             <input type="hidden" name="manager" value={{form.manager.value}} id="id_manager" />
