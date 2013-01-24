@@ -130,7 +130,7 @@
         //Edit
 		$(".edit.actionitem").live("click", function (e) {
             var actionitempk = $(this).parent().attr("id"),
-				snippet_update_url = actionitem_edit_url.replace('0', actionitempk);
+				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
             replaceWithRemote(snippet_update_url, "#"+actionitempk);
 			e.preventDefault();
 		});
