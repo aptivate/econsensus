@@ -1,0 +1,9 @@
+{% load url from future %}
+
+You've been invited to join {{ organization }} on {{ domain.name }} by {{ sender.first_name }} {{ sender.last_name }}.
+
+Follow this link to create your user account.
+
+http://{{ domain.domain }}{% url "invitations_register" user.id token %}
+
+If you were not expecting this email then please delete it, and your user account will not be activated.
