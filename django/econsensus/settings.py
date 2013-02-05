@@ -239,6 +239,9 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
+# Override invitation email templates
+INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
+
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
