@@ -322,7 +322,15 @@ input {
 
 .summary-header .sort-asc, .sort-desc {
     color: #3E6EA3;
-}  
+}
+
+.discussion-list .sort-asc, .sort-desc {
+    color: #000;
+}
+
+.discussion-list span {
+    color: #FFF;
+}
 
 .summary-item a.iconified {
 	color: #3E6EA3;
@@ -512,6 +520,7 @@ li.summary-item {
 a.button.add_discussion,
 a.button.add_decision,
 a.button.add_proposal,
+a.button.add_discussion,
 a.button.add_feedback {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
@@ -534,6 +543,7 @@ a.button.add_proposal {
 
 a.button.add_discussion {
     background-color: #3E6EA3;
+    color:#fff;
 }
 
 
@@ -766,6 +776,10 @@ p.title {
 
 #decision_update_form.archived {
 	border-color: #666666;
+}
+
+#decision_update_form.discussion {
+	border-color: #3E6EA3;
 }
 
 .decision_summary {
