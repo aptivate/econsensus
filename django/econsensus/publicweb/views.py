@@ -512,8 +512,7 @@ class EconsensusActionitemListView(ActionItemListView):
 
     def get_queryset(self):
         qs = ActionItem.objects \
-                .filter(origin__organization=self.organization) \
-                .extra(select={'is_done': "CASE WHEN DATE() >= completed_on THEN 1 ELSE 0 END"})
+                .filter(origin__organization=self.organization)
         if self.sort_field in self.sort_by_alpha_fields:
             qs = qs.extra(select={'lower': "lower(" + self.sort_field + ")"}).order_by(self.sort_order + 'lower')
         else:
