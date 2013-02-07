@@ -50,7 +50,7 @@
 				<div id="navigation">
 					<ul>
 					{% if organization %}					
-						<li {% if tab == "discussion" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{% trans "Discussion" %}</a></li>
+						<li {% if tab == "discussion" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{% trans "Discussions" %}</a></li>
 						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'proposal'%}">{% trans "Proposals" %}</a></li>
 						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'decision'%}">{% trans "Decisions" %}</a></li>
 						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'archived'%}">{% trans "Archived" %}</a></li>
