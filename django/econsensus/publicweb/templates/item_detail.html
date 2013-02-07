@@ -130,7 +130,7 @@
         //Edit
 		$(".edit.actionitem").live("click", function (e) {
             var actionitempk = $(this).parent().attr("id"),
-				snippet_update_url = actionitem_edit_url.replace('0', actionitempk);
+				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
             replaceWithRemote(snippet_update_url, "#"+actionitempk);
 			e.preventDefault();
 		});
@@ -145,13 +145,6 @@
 			feedback_add_url = "{% url 'publicweb_feedback_snippet_create' object.id %}",
 			// .prop("outerHTML") will work in future (.outerHTML added to FF11)
 			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
-	
-		// Handle cancel manually, because it doesn't get submitted with
-		// javascript submission
-		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
-			e.stopPropagation();e.preventDefault();
-			$("#feedback_add_anchor form").replaceWith(feedback_button);
-		});
 	
 		$(".button.add_feedback").live("click", function (e) {
             replaceWithRemote(feedback_add_url, ".button.add_feedback");
@@ -187,6 +180,13 @@
                 $(this).parents('.formset_item.feedback'), 
                 new_rating_name);
         });
+	
+		// Handle cancel manually, because it doesn't get submitted with
+		// javascript submission
+		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+			e.stopPropagation();e.preventDefault();
+			$("#feedback_add_anchor form").replaceWith(feedback_button);
+		});
 	
 		$("#feedback_add_anchor form").live("submit", function (e) {
 			var $form = $(this),
