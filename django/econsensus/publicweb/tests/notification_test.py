@@ -154,17 +154,18 @@ class NotificationTest(DecisionTestCase):
         When feedback is changed only the original author of the feedback
         should be notified.
         """
+        # Betty creates a decision
         decision = self.create_decision_through_browser()
-        #charlie adds feedback
+        # Charlie adds feedback to it
         self.login('charlie')
-        #allow charlie to edit        
         assign('edit_decisions_feedback', self.user, self.bettysorg)        
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
-        #Charlie changes the feedback...
+        # Betty changes the feedback...
         self.login('betty')
         assign('edit_decisions_feedback', self.user, self.bettysorg)        
         self.update_feedback_through_browser(feedback.id)
+        # Check email
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
         user_list = [self.charlie.email]
@@ -173,11 +174,48 @@ class NotificationTest(DecisionTestCase):
     def test_emails_come_from_organization(self):
         users_orgs = Organization.active.get_for_user(self.user)
         self.assertGreaterEqual(len(users_orgs), 2)
+        # Add Decision for first organization
         decision = self.make_decision(organization=users_orgs[0])
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, decision.get_email())
         mail.outbox = []
+        # Edit Decision
+        decision = self.update_decision_through_browser(decision.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, decision.get_email())
+        mail.outbox = []
+        # Add a Feedback
+        feedback = self.make_feedback(author=self.charlie, decision=decision)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, feedback.decision.get_email())
+        mail.outbox = []
+        # Edit the Feedback
+        feedback = self.update_feedback_through_browser(feedback.id)
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, feedback.decision.get_email())
+        mail.outbox = []
+        # Add a comment
+        feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
+        comment = self.make_comment(user=self.charlie,
+            content_object = feedback,
+            object_pk = feedback.id,
+            content_type = feedback_type) 
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
+        mail.outbox = []
+        # Edit the comment
+        comment.decision = "edited"
+        comment.save()
+        outbox = getattr(mail, 'outbox')
+        self.assertTrue(outbox)
+        self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
+        mail.outbox = []
+        # Add Decision for second organization
         decision = self.make_decision(organization=users_orgs[1])
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
