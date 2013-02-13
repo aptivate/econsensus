@@ -320,15 +320,15 @@ input {
 	color: #000;
 }
 
-.summary-header .sort-asc, .sort-desc {
+.summary-header .sort-asc, .summary-header .sort-desc {
     color: #3E6EA3;
 }
 
-.discussion-list .sort-asc, .sort-desc {
+.discussion-list .sort-asc, .discussion-list .sort-desc {
     color: #000;
 }
 
-.discussion-list span {
+.discussion-list th > a > span {
     color: #FFF;
 }
 
