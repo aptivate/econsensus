@@ -212,7 +212,7 @@ LOGGING = {
 }
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/organizations/'
+LOGIN_REDIRECT_URL = '/'
 
 TINYMCE_DEFAULT_CONFIG = {
             "theme" : "advanced",

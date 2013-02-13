@@ -3,9 +3,6 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic.base import RedirectView
-from django.core.urlresolvers import reverse
-
 from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
@@ -22,7 +19,6 @@ urlpatterns = patterns('',
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^organizations/', include('custom_organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
-    url(r'^$', RedirectView.as_view(url='/organizations/', permanent=False)),    
     url(r'', include('econsensus.publicweb.urls')),
 )
 
