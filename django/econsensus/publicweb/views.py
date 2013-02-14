@@ -463,3 +463,23 @@ class FeedbackUpdate(UpdateView):
 
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+
+
+class OrganizationRedirectView(RedirectView):
+    '''
+    If the user only belongs to one organization then
+    take them to that organizations proposal page, otherwise
+    take them to the organization list page.
+    '''
+    permanent = False
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self):
+        try:
+            users_org = Organization.objects.get(users=self.request.user)
+            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+        except:
+            return reverse('organization_list')
