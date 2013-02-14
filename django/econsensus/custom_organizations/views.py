@@ -1,9 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from organizations.models import Organization
-from organizations.views import OrganizationList, OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
+from organizations.views import OrganizationCreate, OrganizationList, \
+    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
 from guardian.shortcuts import remove_perm
-from forms import CustomOrganizationUserForm, CustomOrganizationUserAddForm
+from forms import CustomOrganizationAddForm, CustomOrganizationUserForm, \
+    CustomOrganizationUserAddForm
+
+class CustomOrganizationCreate(OrganizationCreate):
+    form_class = CustomOrganizationAddForm
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm

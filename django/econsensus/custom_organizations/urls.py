@@ -1,12 +1,15 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.decorators import login_required
-from views import CustomOrganizationUserCreate,\
+from views import CustomOrganizationCreate, \
+                    CustomOrganizationUserCreate,\
                     CustomOrganizationUserUpdate,\
                     CustomOrganizationUserDelete, \
                     CustomOrganizationList
 
 urlpatterns = patterns('',    
     # Use custom urganization user URLs
+    url(r'^add/$', view=login_required(CustomOrganizationCreate.as_view()),
+        name="organization_add"),
     url(r'^(?P<organization_pk>[\d]+)/people/add/$',
         view=login_required(CustomOrganizationUserCreate.as_view()),
         name="organization_user_add"),
