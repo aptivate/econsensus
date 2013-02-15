@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.contrib.comments import Comment
+from django.contrib.sites.models import Site
+from django.utils import timezone
 
 from mechanize import ParseString
 from organizations.models import Organization
@@ -59,7 +61,10 @@ class EconsensusTestCase(TestCase):
         return self.make_model_instance(Feedback, **kwargs)
         
     def make_comment(self, **kwargs):
-        required = {'comment': 'Default comment text'}    
+        required = {'comment': 'Default comment text',
+                    'user': self.user,
+                    'submit_date': timezone.now(),
+                    'site':Site.objects.get_current()}
         for (key,value) in required.items():
             if key not in kwargs.keys():
                 kwargs[key] = value

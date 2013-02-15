@@ -6,9 +6,9 @@
 		{% endfor %}
 		<div id="decision" {% if tab %}class="{{ tab }}"{% endif %}>
 			<div class="decision_summary">
-			    <div class="form_item">
-			        {{ form.description.errors }}
+			    <div class="form_item {% if form.description.errors %}error{% endif %}">
 					<label for="id_description">{% trans "Description" %}:</label>
+			        {{ form.description.errors }}
 			        {{ form.description }}
 			    </div>
 			    {% if tab == 'decision' %}

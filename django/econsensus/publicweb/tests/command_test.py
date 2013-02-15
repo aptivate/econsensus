@@ -2,13 +2,15 @@
 #         W0703 - Too general exception
 #Test commands that have been added to manage.py
 import poplib
+import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from django.core import management, mail
-from django.contrib.comments.models import Comment
 from django.utils import timezone
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 
 from organizations.models import Organization
@@ -131,7 +133,8 @@ class CommandTest(EconsensusTestCase):
         feedback = self.make_feedback(decision=decision)
         count = Comment.objects.count()
         email = getattr(mail, 'outbox')[-1]
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+        user  = User.objects.get(email=email.to[0])
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to[0], email.to[0])),
                                       str('To: %s <%s>' % (email.from_email, email.from_email)),
                                       str('Subject: Re: %s' % email.subject),
                                       '',
@@ -142,8 +145,11 @@ class CommandTest(EconsensusTestCase):
             self.fail("Exception was raised when processing legitimate email.")
         self.assertEqual(count + 1, Comment.objects.count(), "New comment failed to appear in database")
         comment = Comment.objects.latest('id')
+        
         self.assertEqual(comment.comment, comment_body)
-
+        self.assertEqual(comment.user_name, user.get_full_name())
+        self.assertEqual(comment.user_email, user.email)
+        
     def test_process_email_reply_to_feedback_with_rating(self):
         '''
         User replies to a feedback email with rating appear as Feedback
@@ -362,6 +368,7 @@ class CommandTest(EconsensusTestCase):
         organization.
         """
         #create an organization decision that Betty shouldn't be able to access
+        logging.disable(logging.CRITICAL)
         non_member_organization = Organization.objects.exclude(users=self.user).latest('id')
         self.make_decision(organization=non_member_organization)
 

@@ -1,0 +1,3 @@
+[submodule "django/django-organizations"]
+	path = django/django-organizations
+	url = https://github.com/aptivate/django-organizations.git

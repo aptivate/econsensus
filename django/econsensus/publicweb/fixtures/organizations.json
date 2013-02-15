@@ -1043,5 +1043,86 @@
       "modified": "2012-09-13T10:14:08Z", 
       "created": "2012-09-13T10:14:08Z"
     }
+  }, 
+  {
+    "pk": 100, 
+    "model": "organizations.organizationuser", 
+    "fields": {
+      "organization": 5, 
+      "user": 1, 
+      "is_admin": true, 
+      "modified": "2013-01-22T16:51:20.851Z", 
+      "created": "2013-01-22T16:51:20.687Z"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 51, 
+      "organization": 6, 
+      "modified": "2013-01-22T16:46:31.857Z", 
+      "created": "2013-01-22T16:46:31.533Z"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 12, 
+      "organization": 1, 
+      "modified": "2013-01-22T16:46:56.458Z", 
+      "created": "2013-01-22T16:46:56.235Z"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 38, 
+      "organization": 7, 
+      "modified": "2013-01-22T16:47:28.625Z", 
+      "created": "2013-01-22T16:47:28.404Z"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 64, 
+      "organization": 2, 
+      "modified": "2013-01-22T16:48:01.266Z", 
+      "created": "2013-01-22T16:48:00.972Z"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 75, 
+      "organization": 3, 
+      "modified": "2013-01-22T16:48:26.697Z", 
+      "created": "2013-01-22T16:48:26.473Z"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 87, 
+      "organization": 4, 
+      "modified": "2013-01-22T16:48:53.798Z", 
+      "created": "2013-01-22T16:48:53.585Z"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "organizations.organizationowner", 
+    "fields": {
+      "organization_user": 100, 
+      "organization": 5, 
+      "modified": "2013-01-22T16:52:03.428Z", 
+      "created": "2013-01-22T16:52:03.258Z"
+    }
   }
 ]

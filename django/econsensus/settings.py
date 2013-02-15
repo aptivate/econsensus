@@ -212,7 +212,7 @@ LOGGING = {
 }
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/organizations/'
+LOGIN_REDIRECT_URL = '/'
 
 TINYMCE_DEFAULT_CONFIG = {
             "theme" : "advanced",
@@ -238,6 +238,9 @@ CACHE_PREFIX = str(SITE_ID)
 CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
+
+# Override invitation email templates
+INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 
 #--------------------------------
 # local settings import

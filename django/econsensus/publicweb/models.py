@@ -20,6 +20,8 @@ from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
 
+from custom_notification.utils import send_observation_notices_for
+
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
@@ -33,11 +35,13 @@ add_introspection_rules([], ["^tagging\.fields\.TagField"])
 class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
+    DISCUSSION_STATUS = 'discussion'
     PROPOSAL_STATUS = 'proposal'
     DECISION_STATUS = 'decision'
     ARCHIVED_STATUS = 'archived'
 
     STATUS_CHOICES = (
+                  (DISCUSSION_STATUS, _('discussion')),
                   (PROPOSAL_STATUS, _('proposal')),
                   (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
@@ -215,7 +219,7 @@ if notification is not None:
             extra_context.update({"observed": instance})
             notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            send_observation_notices_for(instance, headers=headers, from_email=instance.get_email())
             
     @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
     def feedback_signal_handler(sender, **kwargs):
@@ -239,7 +243,7 @@ if notification is not None:
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
         else:
             if instance.author != instance.editor:
-                notification.send_observation_notices_for(instance, headers=headers)
+                send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
             
             
     @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
@@ -263,5 +267,5 @@ if notification is not None:
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
             

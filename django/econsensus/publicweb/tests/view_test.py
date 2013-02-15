@@ -90,6 +90,8 @@ class ViewTest(DecisionTestCase):
         OrganizationUser.objects.create(user=arbury, organization=org, is_admin=False)
         self.login('arbury')
         path = reverse('auth_login')
+        # Known bug when next param supplied - see https://aptivate.kanbantool.com/boards/5986-econsensus#tasks-1251883
+        #post_dict = {'username': 'arbury', 'password': 'arbury', 'next': '/organizations/'}
         post_dict = {'username': 'arbury', 'password': 'arbury'}
         response = self.client.post(path, post_dict, follow=True)
         self.assertRedirects(response, reverse('publicweb_item_list', args=[org.slug, 'proposal']))
@@ -109,5 +111,3 @@ class ViewTest(DecisionTestCase):
         post_dict = {'username': 'arbury', 'password': 'arbury'}
         response = self.client.post(path, post_dict, follow=True)
         self.assertRedirects(response, reverse('organization_list'))
-
-        

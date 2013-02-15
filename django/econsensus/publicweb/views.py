@@ -186,7 +186,9 @@ class DecisionList(ListView):
                     }
     sort_by_count_fields = ['feedback']
     sort_by_alpha_fields = ['excerpt']
-    sort_table_headers = {'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+    
+    sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+                          'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
                           'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
                           'archived': ['id', 'excerpt', 'creation', 'archived_date']}
 
@@ -420,7 +422,7 @@ class FeedbackCreate(CreateView):
         return super(FeedbackCreate, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+        return reverse('publicweb_item_detail', args=[self.kwargs['parent_pk']])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -441,6 +443,12 @@ class FeedbackUpdate(UpdateView):
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
+    
+    def post(self, *args, **kwargs):
+        if self.request.POST.get('submit', None) == "Cancel":
+            self.object = self.get_object()
+            return HttpResponseRedirect(self.get_success_url())
+        return super(FeedbackUpdate, self).post(*args, **kwargs)
 
     def form_valid(self, form, *args, **kwargs):
         form.instance.editor = self.request.user
@@ -455,3 +463,23 @@ class FeedbackUpdate(UpdateView):
 
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+
+
+class OrganizationRedirectView(RedirectView):
+    '''
+    If the user only belongs to one organization then
+    take them to that organizations proposal page, otherwise
+    take them to the organization list page.
+    '''
+    permanent = False
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self):
+        try:
+            users_org = Organization.objects.get(users=self.request.user)
+            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+        except:
+            return reverse('organization_list')
