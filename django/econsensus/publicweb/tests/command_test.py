@@ -2,18 +2,22 @@
 #         W0703 - Too general exception
 #Test commands that have been added to manage.py
 import poplib
+import logging
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 from django.core import management, mail
+from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
+
+from organizations.models import Organization
+
 from publicweb.tests.decision_test_case import EconsensusTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from django.contrib.comments.models import Comment
-from django.core import mail
-from django.utils import timezone
-from django.contrib.sites.models import Site
-from django.contrib.contenttypes.models import ContentType
-
 
 class CommandTest(EconsensusTestCase):
 
@@ -129,7 +133,8 @@ class CommandTest(EconsensusTestCase):
         feedback = self.make_feedback(decision=decision)
         count = Comment.objects.count()
         email = getattr(mail, 'outbox')[-1]
-        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to, email.to)),
+        user  = User.objects.get(email=email.to[0])
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (email.to[0], email.to[0])),
                                       str('To: %s <%s>' % (email.from_email, email.from_email)),
                                       str('Subject: Re: %s' % email.subject),
                                       '',
@@ -140,8 +145,11 @@ class CommandTest(EconsensusTestCase):
             self.fail("Exception was raised when processing legitimate email.")
         self.assertEqual(count + 1, Comment.objects.count(), "New comment failed to appear in database")
         comment = Comment.objects.latest('id')
+        
         self.assertEqual(comment.comment, comment_body)
-
+        self.assertEqual(comment.user_name, user.get_full_name())
+        self.assertEqual(comment.user_email, user.email)
+        
     def test_process_email_reply_to_feedback_with_rating(self):
         '''
         User replies to a feedback email with rating appear as Feedback
@@ -351,3 +359,32 @@ class CommandTest(EconsensusTestCase):
             Decision.objects.latest('id')
         except:
             self.fail("Email failed to appear in database as a decision.")
+
+    def test_membership_checked_against_decision_id(self):
+        """
+        Ensure that when creating feedback and comments by email
+        against a decision, the users membership is tested against
+        that decision and not (just) the email representing the
+        organization.
+        """
+        #create an organization decision that Betty shouldn't be able to access
+        logging.disable(logging.CRITICAL)
+        non_member_organization = Organization.objects.exclude(users=self.user).latest('id')
+        self.make_decision(organization=non_member_organization)
+
+        #Betty tries to spoof something onto that decision
+        #by posting to her own organization but using the original decision id
+        email = getattr(mail, 'outbox')[-1]
+        mail_to = '%s@econsensus.com>' % self.bettysorg.slug
+        poplib.POP3.mailbox = ([''], [str('From: %s <%s>' % (self.betty.email, self.betty.email)),
+                                      str('To: %s <%s>' % (mail_to, mail_to)),
+                                      str('Subject: Re: %s' % email.subject),
+                                      '',
+                                      "Danger: This is a bad idea", ''], [''])
+        try:
+            management.call_command('process_email')
+        except:
+            self.fail("Exception was raised when processing legitimate email.")
+
+        #the email should be rejected and no feedback should be created.
+        self.assertFalse(Feedback.objects.all())

@@ -5,6 +5,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.core.urlresolvers import reverse_lazy
 from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
+from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 
 admin.autodiscover()
 
@@ -26,6 +27,10 @@ urlpatterns += patterns('',
         {'form_class':RegistrationFormUniqueEmail,
         'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+        {'authentication_form': CustomAuthenticationForm}),
+    url(r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset',
+        {'password_reset_form': CustomPasswordResetForm}),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
 )

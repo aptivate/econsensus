@@ -20,7 +20,9 @@ Your Organizations
     {% if organization|is_admin:user %}<span class="org-admin"><a href="{{ organization.get_absolute_url }}">Admin</a></span>{% endif %}
     </li>
     {% empty %}
-    <p>You do not belong to any organizations.</p>
+    <p>{% trans "You do not belong to any organizations."%}</p>
     {% endfor %}
 </ul>
+    <p>Create a new organization <a href="{% url 'organization_add' %}">{% trans "here" %}.</a></p>
+
 {% endblock %}

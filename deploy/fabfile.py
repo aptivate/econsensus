@@ -57,7 +57,7 @@ def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
     utils.abort('remove this line when dev server setup')
     env.environment = 'dev_server'
-    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev']
+    env.hosts = ['fen-vz-' + project_settings.project_name + '-dev' + '.fen.aptivate.org']
     _local_setup()
 
 
@@ -68,14 +68,14 @@ def staging_test():
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
     env.use_apache = False
-    env.hosts = ['fen-vz-' + project_settings.project_name]
+    env.hosts = ['fen-vz-' + project_settings.project_name + '.fen.aptivate.org']
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-    env.hosts = ['fen-vz-' + project_settings.project_name]
+    env.hosts = ['fen-vz-' + project_settings.project_name + '.fen.aptivate.org']
     _local_setup()
 
 
@@ -88,27 +88,26 @@ def production():
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
+    link_apache_conf(unlink=True)
     with settings(warn_only=True):
-        apache_cmd('stop')
+        apache_cmd('reload')
     if not files.exists(env.project_root):
         sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
-    update_requirements()
-    create_private_settings()
-    link_local_settings()
+    # Use tasks.py deploy:env to actually do the deployment, including
+    # creating the virtualenv if it thinks it necessary, ignoring
+    # env.use_virtualenv as tasks.py knows nothing about it.
+    fablib._tasks('deploy:' + env.environment)
     rm_pyc_files()
     collect_static_files()
     update_db()
     if env.environment == 'production':
         setup_db_dumps()
-    if env.environment.startswith('production'):
-        pass
-    else:
-        link_apache_conf()
+    link_apache_conf()
     load_fixtures()
     correct_log_perms()
 
-    apache_cmd('start')
+    apache_cmd('reload')
 
 def load_fixtures():
     """load fixtures for this environment"""
@@ -118,31 +117,9 @@ def load_fixtures():
         sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
         sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
 
-def link_apache_conf(apache_conf_name=None):
-    """link the apache.conf file"""
-    require('vcs_root', provided_by=env.valid_envs)
-    if apache_conf_name == None:
-        apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
-        conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
-    else:
-        # this assumes that each server will only have one DNS name, ie there is
-        # only one VirtualHost directive per server. If this changes you might
-        # want to go back to the fablib version of this function
-        # So we only ever have one file in /etc/httpd/conf.d that links to the
-        # apache conf in the last deployed instance
-        apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'.conf')
-        conf_file = os.path.join(env.vcs_root, 'apache', apache_conf_name+'.conf')
-        if files.exists(apache_conf):
-            sudo('rm %s' % apache_conf)
-    if not files.exists(conf_file):
-        utils.abort('No apache conf file found - expected %s' % conf_file)
-    if not files.exists(apache_conf):
-        sudo('ln -s %s %s' % (conf_file, apache_conf))
-    configtest()
-
 def add_cron_email():
     require('tasks_bin', provided_by=env.valid_envs)
-    with settings(warn_only=True):    
+    with settings(warn_only=True):
         sudo(env.tasks_bin + ' add_cron_email:' + env.environment)
 
 def correct_log_perms():

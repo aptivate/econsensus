@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 
 from organizations.views import OrganizationDetail
 from guardian.shortcuts import assign
@@ -62,6 +63,19 @@ class HtmlTest(EconsensusTestCase):
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
     
+    def test_comment_linebreaks(self):
+        decision = self.make_decision()
+        feedback = self.make_feedback(decision=decision, author=self.user)
+        self.make_comment(comment="comment\ntext",
+                          object_pk=feedback.id,
+                          content_type=ContentType.objects.get_for_model(Feedback)
+                          )
+
+        path = reverse('publicweb_feedback_detail', args=[feedback.id])
+        response = self.client.get(path)
+        self.assertContains(response, 'comment<br />text', 1,
+                            msg_prefix="Failed to line break text")
+
     def test_organization_name_in_header(self):
         path = reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)

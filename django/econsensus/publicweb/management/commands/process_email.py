@@ -5,6 +5,7 @@ import logging
 
 from email import message_from_string
 from django.core.management.base import BaseCommand
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
@@ -20,7 +21,6 @@ class Command(BaseCommand):
     help = 'Checks for emails and posts content to site.'
 
     def handle(self, *args, **options): # pylint: disable=R0914
-
         verbosity = int(options.get('verbosity', 1))
         user = config_value('ReceiveMail', 'USERNAME')
         password = config_value('ReceiveMail', 'PASSWORD')
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         except poplib.error_proto, e:
             logger.error(e)
             raise
-        except Exception, e:
+        except Exception as e:
             logger.error(e)
             raise
         
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 mail = message_from_string("\n".join(msg))
                 try:
                     self._process_email(mail, verbosity)
-                except Exception, e:
+                except Exception as e:
                     logger.error(e)
                 finally:                    
                     mailbox.dele(i)
@@ -93,10 +93,15 @@ class Command(BaseCommand):
             self._print_if_verbose(verbosity, "Found email 'from' '%s'" % from_match.group(1))
             try:
                 user = User.objects.get(email=from_match.group(1))
-                self._print_if_verbose(verbosity, "Matched email to user '%s'" % user)
-            except:
-                logger.error("[EMAIL REJECTED] From '%s' Reason: Email address does not correspond to any known User" % mail['From'])
+            except ObjectDoesNotExist:
+                logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known User" \
+                             % (mail['From'], subject_match.group(1)))
                 return
+            except MultipleObjectsReturned:
+                logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned several Users for id '%s'" \
+                             % (mail['From'], subject_match.group(1)))
+                return
+            self._print_if_verbose(verbosity, "Matched email to user '%s'" % user)
         else:
             logger.error("[EMAIL REJECTED] From '%s' Reason: Unrecognised email address format" % mail['From'])
             return
@@ -107,11 +112,15 @@ class Command(BaseCommand):
             self._print_if_verbose(verbosity, "Found email 'to' '%s'" % org_match.group(1))
             try:
                 organization = Organization.objects.get(slug=org_match.group(1))
-                self._print_if_verbose(verbosity, "Matched email to organization '%s'" % organization.name)
-            except:
-                logger.error("[EMAIL REJECTED] From '%s' Reason: '%s' does not correspond to any known Organization" \
-                             % (mail['From'], org_match.group(1)))
+            except ObjectDoesNotExist:
+                logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Organization" \
+                             % (mail['From'], subject_match.group(1)))
                 return
+            except MultipleObjectsReturned:
+                logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned several Organizations for id '%s'" \
+                             % (mail['From'], subject_match.group(1)))
+                return
+            self._print_if_verbose(verbosity, "Matched email to organization '%s'" % organization.name)
         else:
             logger.error("[EMAIL REJECTED] From '%s' Reason: Couldn't pull Organization from '%s'" % (mail['From'], mail['To']))
             return
@@ -135,15 +144,37 @@ class Command(BaseCommand):
                 rating = dict(Feedback.RATING_CHOICES).values().index(rating_match.group().lower())
 
         # Determine whether email is in reply to a notification
-        subject_match = re.search('\[(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
+        subject_match = re.search('\[EC#(\d+)(?:\\\\(\d+)(?:\\\\(\d+))?)?\]', mail['Subject'])
         if subject_match:
+            #Check that the user has the right to comment against the decision.
+            if subject_match.group(1):
+                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(1))
+                try:
+                    decision = Decision.objects.get(pk=subject_match.group(1))
+                except ObjectDoesNotExist:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
+                                 % (mail['From'], subject_match.group(1)))
+                    return
+                except MultipleObjectsReturned:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned several Decisions for id '%s'" \
+                                 % (mail['From'], subject_match.group(1)))
+                    return
+                if user not in decision.organization.users.all():
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: User cannot reply to decision #%s because they are not a member of that organization." \
+                                 % (mail['From'], subject_match.group(1)))
+                    return
+                    
             #process comment or feedback against feedback
             if subject_match.group(2):
                 self._print_if_verbose(verbosity, "Found feedback id '%s' in Subject" % subject_match.group(2))
                 try:
                     feedback = Feedback.objects.get(pk=subject_match.group(2))
-                except:
+                except ObjectDoesNotExist:
                     logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Feedback" \
+                                 % (mail['From'], subject_match.group(2)))
+                    return
+                except MultipleObjectsReturned:
+                    logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned more than one Feedback for id '%s'" \
                                  % (mail['From'], subject_match.group(2)))
                     return
                 
@@ -158,6 +189,8 @@ class Command(BaseCommand):
                     comment_text = msg_string                
                     self._print_if_verbose(verbosity, "Creating comment '%s'." % (comment_text))
                     comment = Comment(user=user,
+                                     user_name=user.get_full_name(),
+                                     user_email=user.email,
                                      comment = comment_text,
                                      content_object=feedback, 
                                      object_pk=feedback.id,
@@ -170,14 +203,6 @@ class Command(BaseCommand):
             
             #process feedback against decision
             elif subject_match.group(1):
-                self._print_if_verbose(verbosity, "Found decision id '%s' in Subject" % subject_match.group(1))
-                try:
-                    decision = Decision.objects.get(pk=subject_match.group(1))
-                except:
-                    logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Decision" \
-                                 % (mail['From'], subject_match.group(1)))
-                    return
-    
                 self._print_if_verbose(verbosity, "Creating feedback with rating '%s' and description '%s'." % (rating, description))
                 feedback = Feedback(author=user, decision=decision, rating=rating, description=description)
                 feedback.save()

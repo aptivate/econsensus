@@ -3,9 +3,22 @@
 {% load i18n %}
 {% load org_filters %}
 
-{% block title %}{{ block.super }}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
+{% block title %}
+  {{ block.super }}
+  {% if tab == 'proposal' %}{% trans "Proposals" %}
+	{% elif tab == 'archived' %}{% trans "Archive" %}
+	{% elif tab == 'decision' %}{% trans "Decisions Made" %}
+	{% else %}{% trans "Discussions" %}
+  {% endif %}
+{% endblock %}
 
-{% block heading %}{% if tab == 'proposal' %}{% trans "Proposals" %}{% else %}{% if tab == 'archived' %}{% trans "Archive" %}{% else %}{% trans "Decisions Made" %}{% endif %}{% endif %}{% endblock %}
+{% block heading %}
+  {% if tab == 'proposal' %}{% trans "Proposals" %}
+	{% elif tab == 'archived' %}{% trans "Archive" %}
+	{% elif  tab == 'decision' %}{% trans "Decisions Made" %}
+	{% else %}{% trans "Discussions" %}
+  {% endif %}
+{% endblock %}
 
 {% block body_class%}object-list {{ tab }}-list{% endblock %}
 
@@ -38,26 +51,32 @@
                         <tr>
                             <td class="id"><a href="{% url 'publicweb_item_detail' object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
 				            <td class="excerpt"><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.excerpt }}	</a></td>
-				            {% if tab == 'proposal' %}
-				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.feedbackcount }}</a></td>
-				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.deadline }}</a></td>
-				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.last_modified|timesince }} ago</a></td>
-            				{% endif %}
 				            {% if tab == 'decision' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.decided_date }}</a></td>
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.review_date }}</a></td>
-				            {% endif %}
-                            {% if tab == 'archived' %}
+                            {% elif tab == 'archived' %}
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.creation }}</a></td>
 				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.archived_date }}</a></td>
-            				{% endif %}
+                            {% else %}
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.feedbackcount }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.deadline }}</a></td>
+				                <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.last_modified|timesince }} ago</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
 	            </table>
 	        {% include "pagination.html" %}
 		    {% else %}
-			    <p class="no_items">{% trans "There are no decisions made." %}.<p>
+		    	{% if tab == "proposal" %}
+			    <p class="no_items">{% trans "There are no proposals" %}.<p>		    			    	
+		    	{% elif tab  == "archived" %}
+			    <p class="no_items">{% trans "There are no archived items" %}.<p>		    	
+		    	{% elif tab  == "discussion" %}
+			    <p class="no_items">{% trans "There are no discussion items" %}.<p>		    	
+		    	{% else %}
+			    <p class="no_items">{% trans "There are no decisions made" %}.<p>
+			    {% endif %}
 		    {% endif %}
 		{% endif %}			
 {% endblock main_content %}

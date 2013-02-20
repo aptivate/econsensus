@@ -138,12 +138,12 @@ INSTALLED_APPS = (
     'livesettings',
     'organizations',
     'custom_organizations',
+    'guardian',    
     'publicweb',
     'signals',
     'tinymce',
     'south',
     'tagging',
-    'guardian'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -238,6 +238,9 @@ CACHE_PREFIX = str(SITE_ID)
 CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
+
+# Override invitation email templates
+INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 
 #--------------------------------
 # local settings import

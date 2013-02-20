@@ -12,6 +12,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 LOG_FILE = '/var/log/httpd/econsensus.log'
 
+DEFAULT_FROM_EMAIL = 'econsensus@econsensus.stage.aptivate.org'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

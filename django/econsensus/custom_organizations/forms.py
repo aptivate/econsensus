@@ -1,6 +1,14 @@
 from django import forms
-from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
+from organizations.forms import OrganizationAddForm, OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
+
+class CustomOrganizationAddForm(OrganizationAddForm):
+    
+    def save(self, **kwargs):
+        organization = super(CustomOrganizationAddForm, self).save(**kwargs)
+        assign('edit_decisions_feedback', organization.owner.organization_user.user, organization)
+        return organization
+
 
 class CustomOrganizationUserForm(OrganizationUserForm):
     is_editor = forms.BooleanField(required=False)     
