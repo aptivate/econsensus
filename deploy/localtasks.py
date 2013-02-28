@@ -1,5 +1,4 @@
 # functions just for this project
-import json
 import os
 import sys
 import subprocess
