@@ -23,7 +23,8 @@ def load_sample_data(environment, force=False):
 def load_auth_user(environment, force=False):
     """load auth user fixture based on environment. """
     if force == False:
-        if not tasklib._manage_py(['auth_user_needs_initializing']):
+        auth_user_needs_initializing = int(tasklib._manage_py(['auth_user_needs_initializing'])[0].strip())
+        if not auth_user_needs_initializing:
             print "Environment '", environment, "' already has auth.user initialized."
             return
 
@@ -39,7 +40,8 @@ def load_auth_user(environment, force=False):
 def load_django_site_data(environment, force=False):
     """Load data for django sites framework. """
     if force == False:
-        if not tasklib._manage_py(['site_needs_initializing']):
+        site_needs_initializing = int(tasklib._manage_py(['site_needs_initializing'])[0].strip())
+        if not site_needs_initializing:
             print "Environment '", environment, "' already has site data initialized."
             return
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
