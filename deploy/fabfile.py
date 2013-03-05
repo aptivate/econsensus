@@ -88,6 +88,8 @@ def production():
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
+    if files.exists(env.vcs_root):
+        fabfile.create_copy_for_rollback(keep=1)
     link_apache_conf(unlink=True)
     with settings(warn_only=True):
         apache_cmd('reload')
