@@ -46,7 +46,7 @@ def _local_setup():
     # override settings here
     # if you have an ssh key and particular user you need to use
     # then uncomment the next 2 lines
-    #env.user = "root" 
+    #env.user = "root"
     #env.key_filename = ["/home/shared/keypair.rsa"]
 
 
@@ -137,6 +137,7 @@ def deploy(revision=None):
     correct_log_perms()
 
     apache_cmd('reload')
+    touch()
 
 def load_sample_data():
     """load sample data for this environment"""
