@@ -36,7 +36,7 @@
 					<a href='{{ organization.get_absolute_url }}'>{% trans "Admin" %} |</a>
 				{% endif %}
 					{% if user.is_authenticated %}
-						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %} |</a>
+						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %}</a> |
 						<a href='{% url 'auth_logout' %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 					{% else %}
 						<a href='{% url 'auth_login' %}'> {%trans "Login" %}</a>
