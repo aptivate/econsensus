@@ -33,7 +33,7 @@
 			{% block user_access %}
 				<div id="user_access">
 				{% if organization and organization|is_admin:user %}
-					<a href='{{ organization.get_absolute_url }}'>{% trans "Admin" %} |</a>
+					<a href='{{ organization.get_absolute_url }}'>{% trans "Admin" %}</a> |
 				{% endif %}
 					{% if user.is_authenticated %}
 						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %}</a> |
