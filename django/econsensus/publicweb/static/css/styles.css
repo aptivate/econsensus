@@ -703,10 +703,6 @@ a.edit, a.show {
 	margin-bottom:1.5em;
 }
 
-.discussion-detail .meta {
-	display: none;
-}
-
 .discussion-detail .feedback_type {
 	display: none;
 }
