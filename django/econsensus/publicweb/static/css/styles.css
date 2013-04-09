@@ -703,13 +703,6 @@ a.edit, a.show {
 	margin-bottom:1.5em;
 }
 
-.discussion-detail .feedback_type {
-	display: none;
-}
-
-.discussion-detail .formset_item .form_item.rating {
-	display: none;
-}
 #decision_detail.proposal .date {width:100%;}
 
 #decision_detail .date strong {
