@@ -25,7 +25,13 @@
 	  <ul class="contrib_comment_list">
 	  {% for comment in comment_list %}
 		<li class = "contrib_comment" id="c{{ comment.object_pk }}_{{ comment.pk }}">
-		  <span class="author">{{ comment.user }} says:</span>
+		  	<span class="author">
+			{% if comment.user %}
+		  	{{ comment.user }}
+			{% else %}
+				{{ comment.user_name }}
+			{% endif %}
+				says:</span>
 		  <p>{{ comment.comment|urlize|linebreaksbr }}</p>
 		</li>
 		  {% endfor %}
