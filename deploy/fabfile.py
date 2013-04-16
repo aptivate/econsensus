@@ -1,3 +1,5 @@
+import errno
+
 from fabric.api import *
 from fabric import utils
 from fabric.decorators import hosts
@@ -29,8 +31,8 @@ env.project_type = project_settings.project_type
 env.use_virtualenv = True
 
 # valid environments - used for require statements in fablib
-env.valid_non_prod_envs = ('dev_server', 'staging_test', 'staging')
-env.valid_envs = ('dev_server', 'staging_test', 'staging', 'production')
+env.valid_non_prod_envs = ('dev', 'dev_server', 'staging_test', 'staging')
+env.valid_envs = ('dev', 'dev_server', 'staging_test', 'staging', 'production')
 
 # does this use apache - mostly for staging_test
 env.use_apache = True
@@ -44,7 +46,7 @@ def _local_setup():
     # override settings here
     # if you have an ssh key and particular user you need to use
     # then uncomment the next 2 lines
-    #env.user = "root" 
+    #env.user = "root"
     #env.key_filename = ["/home/shared/keypair.rsa"]
 
 
@@ -52,6 +54,33 @@ def _local_setup():
 # These commands set up the environment variables
 # to be used by later commands
 #
+
+
+def dev():
+    """ 
+    Test fabric scripts locally
+    Setup steps ...
+    1) To allow fabric to ssh to localhost:
+        sudo apt-get install openssh-server
+    2) To avoid failure at correct_log_perms as probably no apache user on localhost
+        sudo adduser apache
+    3) ROOT_DIR below points to an absolute path for fabric deployment to act within
+    4) Override env.repository below if necessary
+    """
+    ROOT_DIR = '/tmp/fabtesting/'#'/home/joanna/Code/aptivate/fabtesting/'
+    try:
+        os.makedirs(ROOT_DIR)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(ROOT_DIR):
+            pass
+        else:
+            raise
+    env.environment = 'dev'
+    env.hosts = ['localhost']
+    env.home = os.path.join(ROOT_DIR, env.home.strip('/'))
+    env.use_apache = False
+    env.branch = 'develop'
+    _local_setup()
 
 def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
@@ -88,33 +117,32 @@ def production():
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
+    check_for_local_changes()
+
+    fablib._create_dir_if_not_exists(env.project_root)
+    if files.exists(env.vcs_root):
+        create_copy_for_rollback(keep=1)
     link_apache_conf(unlink=True)
     with settings(warn_only=True):
         apache_cmd('reload')
-    if not files.exists(env.project_root):
-        sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
     # env.use_virtualenv as tasks.py knows nothing about it.
     fablib._tasks('deploy:' + env.environment)
     rm_pyc_files()
-    collect_static_files()
-    update_db()
     if env.environment == 'production':
         setup_db_dumps()
     link_apache_conf()
-    load_fixtures()
     correct_log_perms()
 
     apache_cmd('reload')
+    touch()
 
-def load_fixtures():
-    """load fixtures for this environment"""
+def load_sample_data():
+    """load sample data for this environment"""
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
-        sudo(env.tasks_bin + ' load_auth_user:' + env.environment)
-        sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
         sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
 
 def add_cron_email():
