@@ -1,3 +1,5 @@
+import copy
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
@@ -108,10 +110,9 @@ class NotificationTest(DecisionTestCase):
         orig_org_members_names = ['nobbie', 'ollie', 'pollie', 'queenie', 'robbie']
         orig_org_members_users = [User.objects.get(username=name) for name in orig_org_members_names]
         orig_org_members = dict(zip(orig_org_members_names, orig_org_members_users))
-        both_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie', 'freddy']
+        both_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie']
         both_org_members_users = [User.objects.get(username=name) for name in both_org_members_names]
         both_org_members = dict(zip(both_org_members_names, both_org_members_users))
-        from guardian.shortcuts import assign
         for user in orig_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertFalse(new_org.is_member(user))
@@ -121,7 +122,6 @@ class NotificationTest(DecisionTestCase):
             self.assertTrue(new_org.is_member(user))
             assign('edit_decisions_feedback', user, orig_org)
             assign('edit_decisions_feedback', user, new_org)
-        import copy
         new_org_members = copy.deepcopy(both_org_members)
         new_org_members.update(orig_org_members)
 
