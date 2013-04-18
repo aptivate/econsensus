@@ -173,9 +173,7 @@ class NotificationTest(DecisionTestCase):
         comment.comment += ' updated'
         comment.save()
         outbox = getattr(mail, 'outbox')
-        # TODO: fix this
-        self.assertEqual(len(outbox), 1)
-        self.assertEqual(outbox[0].to[0], orig_org_members['robbie'].email)
+        self.assertEqual(len(outbox), 0)
         mail.outbox = []
 
         self.login(new_org_members['debbie'])
