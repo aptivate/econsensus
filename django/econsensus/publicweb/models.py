@@ -158,6 +158,8 @@ class Decision(models.Model):
         if self.id:
             if self.__class__.objects.get(id=self.id).organization.id != self.organization.id:
                 self.watchers.all().delete()
+                for feedback in self.feedback_set.all():
+                    feedback.watchers.all().delete()
         super(Decision, self).save(*args, **kwargs)
         
 class Feedback(models.Model):
@@ -178,6 +180,8 @@ class Feedback(models.Model):
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
+
+    watchers = generic.GenericRelation(notification.ObservedItem)
 
     @models.permalink
     def get_absolute_url(self):

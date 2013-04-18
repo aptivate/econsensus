@@ -114,6 +114,7 @@ class NotificationTest(DecisionTestCase):
         from guardian.shortcuts import assign
         for user in orig_org_members.values():
             self.assertTrue(orig_org.is_member(user))
+            self.assertFalse(new_org.is_member(user))
             assign('edit_decisions_feedback', user, orig_org)
         for user in both_org_members.values():
             self.assertTrue(orig_org.is_member(user))
@@ -152,7 +153,8 @@ class NotificationTest(DecisionTestCase):
         self.update_decision_through_browser(
             decision.id, 
             description=decision.description + ' updated again')
-        # This adds andy to the decision's watcher list - bug?
+        # This adds andy to the decision's watcher list
+        # TODO: is above a bug?
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 1)
         self.assertEqual(outbox[0].to[0], new_org_members['andy'].email)
@@ -164,12 +166,19 @@ class NotificationTest(DecisionTestCase):
             description=feedback.description+' updated again')
         # This adds betty to the decision's watcher list.
         outbox = getattr(mail, 'outbox')
-        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox), 0)
+
+        # Can't edit Comments via screens yet, but lets future proof:
+        self.login(new_org_members['charlie'])
+        comment.comment += ' updated'
+        comment.save()
+        outbox = getattr(mail, 'outbox')
         # TODO: fix this
-        self.assertEqual(outbox[0].to[0], orig_org_members['pollie'].email)
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(outbox[0].to[0], orig_org_members['robbie'].email)
         mail.outbox = []
 
-        self.login(new_org_members['charlie'])
+        self.login(new_org_members['debbie'])
         feedback_2 = self.make_feedback(decision=decision)
         outbox = getattr(mail, 'outbox')
         recipient_addresses = self.get_addresses_from_outbox(outbox)
@@ -178,7 +187,7 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(new_org_members['betty'].email in recipient_addresses)
         mail.outbox = []
 
-        self.login(new_org_members['debbie'])
+        self.login(new_org_members['ernie'])
         comment_2 = self.make_comment(
             object_pk=feedback.id,
             content_type=ContentType.objects.get(name='feedback')) 
