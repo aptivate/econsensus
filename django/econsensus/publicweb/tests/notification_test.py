@@ -103,12 +103,90 @@ class NotificationTest(DecisionTestCase):
         If a Decision's Organization is changed, ensure that members of 
         the old Organization no longer get email notifications about it.
         """
-        decision = self.make_decision()
+        orig_org = self.bettysorg
+        new_org = Organization.objects.get(name="Ferocious Feral Furrballs")
+        orig_org_members_names = ['nobbie', 'ollie', 'pollie', 'queenie', 'robbie']
+        orig_org_members_users = [User.objects.get(username=name) for name in orig_org_members_names]
+        orig_org_members = dict(zip(orig_org_members_names, orig_org_members_users))
+        both_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie', 'freddy']
+        both_org_members_users = [User.objects.get(username=name) for name in both_org_members_names]
+        both_org_members = dict(zip(both_org_members_names, both_org_members_users))
+        from guardian.shortcuts import assign
+        for user in orig_org_members.values():
+            self.assertTrue(orig_org.is_member(user))
+            assign('edit_decisions_feedback', user, orig_org)
+        for user in both_org_members.values():
+            self.assertTrue(orig_org.is_member(user))
+            self.assertTrue(new_org.is_member(user))
+            assign('edit_decisions_feedback', user, orig_org)
+            assign('edit_decisions_feedback', user, new_org)
+        import copy
+        new_org_members = copy.deepcopy(both_org_members)
+        new_org_members.update(orig_org_members)
+
+
+        self.login(orig_org_members['nobbie'])
+        decision = self.make_decision(organization=orig_org)
+        self.login(orig_org_members['ollie'])
+        self.update_decision_through_browser(
+            decision.id, 
+            description=decision.description + ' updated')
+        self.login(orig_org_members['pollie'])
+        feedback = self.make_feedback(decision=decision)
+        self.login(orig_org_members['queenie'])
+        self.update_feedback_through_browser(
+            feedback.id,
+            description = feedback.description + ' updated')
+        self.login(orig_org_members['robbie'])
+        comment = self.make_comment(
+            object_pk=feedback.id,
+            content_type=ContentType.objects.get(name='feedback')) 
         mail.outbox = []
-        new_org = Organization.objects.exclude(id=decision.organization.id)[0]
+
+        
         self.change_organization_via_admin_screens(decision, new_org)
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 0)
+
+        self.login(new_org_members['andy'])
+        self.update_decision_through_browser(
+            decision.id, 
+            description=decision.description + ' updated again')
+        # This adds andy to the decision's watcher list - bug?
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(outbox[0].to[0], new_org_members['andy'].email)
+        mail.outbox = []
+
+        self.login(new_org_members['betty'])
+        self.update_feedback_through_browser(
+            feedback.id, 
+            description=feedback.description+' updated again')
+        # This adds betty to the decision's watcher list.
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), 1)
+        # TODO: fix this
+        self.assertEqual(outbox[0].to[0], orig_org_members['pollie'].email)
+        mail.outbox = []
+
+        self.login(new_org_members['charlie'])
+        feedback_2 = self.make_feedback(decision=decision)
+        outbox = getattr(mail, 'outbox')
+        recipient_addresses = self.get_addresses_from_outbox(outbox)
+        self.assertEqual(len(recipient_addresses), 2)
+        self.assertTrue(new_org_members['andy'].email in recipient_addresses)
+        self.assertTrue(new_org_members['betty'].email in recipient_addresses)
+        mail.outbox = []
+
+        self.login(new_org_members['debbie'])
+        comment_2 = self.make_comment(
+            object_pk=feedback.id,
+            content_type=ContentType.objects.get(name='feedback')) 
+        outbox = getattr(mail, 'outbox')
+        recipient_addresses = self.get_addresses_from_outbox(outbox)
+        self.assertEqual(len(recipient_addresses), 2)
+        self.assertTrue(new_org_members['andy'].email in recipient_addresses)
+        self.assertTrue(new_org_members['betty'].email in recipient_addresses)
         
     def test_notifications_dont_contain_amp(self):
         """

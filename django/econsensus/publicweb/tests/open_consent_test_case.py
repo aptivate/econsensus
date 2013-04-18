@@ -91,8 +91,8 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def update_decision_through_browser(self, idd):
-        description = 'Aenean eros nibh'
+    def update_decision_through_browser(self, idd, 
+            description = 'Aenean eros nibh'):
         path = reverse('publicweb_decision_update', args=[idd])
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
@@ -108,8 +108,8 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
     
-    def update_feedback_through_browser(self, idd):
-        description = 'nibh ut dignissim. Sed a aliquet quam'
+    def update_feedback_through_browser(self, idd, 
+            description = 'nibh ut dignissim. Sed a aliquet quam'):
         path = reverse('publicweb_feedback_update', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
