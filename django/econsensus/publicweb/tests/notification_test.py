@@ -31,6 +31,30 @@ class NotificationTest(DecisionTestCase):
         for this in queryset:
             return_list.append(this.email)        
         return return_list
+
+    def change_organization_via_admin_screens(self, decision, new_organization):
+        orig_user = self.user
+
+        admin_user = User.objects.filter(is_staff=True)[0]
+        self.login(admin_user.username)
+        ma = ModelAdmin(Decision, AdminSite())
+        data = ma.get_form(None)(instance=decision).initial
+        for key, value in data.items():
+            if value == None:
+                data[key] = u''
+        man_data = {
+            'feedback_set-TOTAL_FORMS': u'1', 
+            'feedback_set-INITIAL_FORMS': u'0', 
+            'feedback_set-MAX_NUM_FORMS': u''
+        }
+        data.update(man_data)
+        data['organization'] = new_organization.id
+        url = reverse('admin:publicweb_decision_change', args=[decision.id])
+        response = self.client.post(url, data, follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(Decision.objects.get(id=decision.id).organization.id, new_organization.id)
+
+        self.login(orig_user)
         
     def test_send_locmem_email(self):
         """
@@ -81,28 +105,8 @@ class NotificationTest(DecisionTestCase):
         """
         decision = self.make_decision()
         mail.outbox = []
-
-        admin_user = User.objects.filter(is_staff=True)[0]
-        self.login(admin_user.username)
-        ma = ModelAdmin(Decision, AdminSite())
-        data = ma.get_form(None)(instance=decision).initial
-        for key, value in data.items():
-            if value == None:
-                data[key] = u''
-        man_data = {
-            'feedback_set-TOTAL_FORMS': u'1', 
-            'feedback_set-INITIAL_FORMS': u'0', 
-            'feedback_set-MAX_NUM_FORMS': u''
-        }
-        data.update(man_data)
-
-        new_org = Organization.objects.exclude(id=data['organization'])[0]
-        data['organization'] = new_org.id
-        url = reverse('admin:publicweb_decision_change', args=[decision.id])
-        response = self.client.post(url, data, follow=True)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(Decision.objects.get(id=decision.id).organization.id, new_org.id)
-
+        new_org = Organization.objects.exclude(id=decision.organization.id)[0]
+        self.change_organization_via_admin_screens(decision, new_org)
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 0)
         
