@@ -155,6 +155,9 @@ class Decision(models.Model):
 
     def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()
+        if self.id:
+            if self.__class__.objects.get(id=self.id).organization.id != self.organization.id:
+                self.watchers.all().delete()
         super(Decision, self).save(*args, **kwargs)
         
 class Feedback(models.Model):

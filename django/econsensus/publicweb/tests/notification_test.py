@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
+from django.contrib.admin.options import ModelAdmin
+from django.contrib.admin.sites import AdminSite
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
@@ -71,6 +73,38 @@ class NotificationTest(DecisionTestCase):
 
         mailed_users = self.get_addresses_from_outbox(outbox)
         self.assertIn(self.betty.email, mailed_users)
+
+    def test_changing_decisions_org_drops_decisions_watchers(self):
+        """
+        If a Decision's Organization is changed, ensure that members of 
+        the old Organization no longer get email notifications about it.
+        """
+        decision = self.make_decision()
+        mail.outbox = []
+
+        admin_user = User.objects.filter(is_staff=True)[0]
+        self.login(admin_user.username)
+        ma = ModelAdmin(Decision, AdminSite())
+        data = ma.get_form(None)(instance=decision).initial
+        for key, value in data.items():
+            if value == None:
+                data[key] = u''
+        man_data = {
+            'feedback_set-TOTAL_FORMS': u'1', 
+            'feedback_set-INITIAL_FORMS': u'0', 
+            'feedback_set-MAX_NUM_FORMS': u''
+        }
+        data.update(man_data)
+
+        new_org = Organization.objects.exclude(id=data['organization'])[0]
+        data['organization'] = new_org.id
+        url = reverse('admin:publicweb_decision_change', args=[decision.id])
+        response = self.client.post(url, data, follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(Decision.objects.get(id=decision.id).organization.id, new_org.id)
+
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), 0)
         
     def test_notifications_dont_contain_amp(self):
         """
