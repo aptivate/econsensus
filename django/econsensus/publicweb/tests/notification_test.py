@@ -104,28 +104,30 @@ class NotificationTest(DecisionTestCase):
         """
         If a Decision's Organization is changed, ensure that members of 
         the old Organization no longer get email notifications about it.
+        To avoid hiding bugs in who gets what notification, use a different 
+        user per action (some actions only prompt notification to the 
+        author)
         """
         orig_org = self.bettysorg
         new_org = Organization.objects.get(name="Ferocious Feral Furrballs")
+        # TODO: deduce suitable members to use rather than hardcoding and then asserting suitability
         orig_org_members_names = ['nobbie', 'ollie', 'pollie', 'queenie', 'robbie']
         orig_org_members_users = [User.objects.get(username=name) for name in orig_org_members_names]
         orig_org_members = dict(zip(orig_org_members_names, orig_org_members_users))
-        both_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie']
-        both_org_members_users = [User.objects.get(username=name) for name in both_org_members_names]
-        both_org_members = dict(zip(both_org_members_names, both_org_members_users))
+        new_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie']
+        new_org_members_users = [User.objects.get(username=name) for name in new_org_members_names]
+        new_org_members = dict(zip(new_org_members_names, new_org_members_users))
         for user in orig_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertFalse(new_org.is_member(user))
             assign('edit_decisions_feedback', user, orig_org)
-        for user in both_org_members.values():
+        for user in new_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertTrue(new_org.is_member(user))
-            assign('edit_decisions_feedback', user, orig_org)
             assign('edit_decisions_feedback', user, new_org)
-        new_org_members = copy.deepcopy(both_org_members)
-        new_org_members.update(orig_org_members)
 
-
+        # Make a decision under original org and edit it in various
+        # ways using various users 
         self.login(orig_org_members['nobbie'])
         decision = self.make_decision(organization=orig_org)
         self.login(orig_org_members['ollie'])
@@ -144,17 +146,23 @@ class NotificationTest(DecisionTestCase):
             content_type=ContentType.objects.get(name='feedback')) 
         mail.outbox = []
 
-        
+        # Move the decision to the new org and check that no one from
+        # the original org gets notified of the change.
+        # TODO: we should send a special notiddfication to the original
+        # org users telling them of the move (see 
+        # https://aptivate.kanbantool.com/boards/5986-econsensus#tasks-1533249)
         self.change_organization_via_admin_screens(decision, new_org)
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 0)
 
+        # Edit the decision in various ways using various users of the 
+        # new organization. We want to check that none of the orig org's 
+        # users get notified.
         self.login(new_org_members['andy'])
         self.update_decision_through_browser(
             decision.id, 
             description=decision.description + ' updated again')
         # This adds andy to the decision's watcher list
-        # TODO: is above a bug?
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 1)
         self.assertEqual(outbox[0].to[0], new_org_members['andy'].email)
@@ -168,7 +176,8 @@ class NotificationTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), 0)
 
-        # Can't edit Comments via screens yet, but lets future proof:
+        # Can't edit Comments via screens yet, but lets check that 
+        # we've future proofed for this
         self.login(new_org_members['charlie'])
         comment.comment += ' updated'
         comment.save()
