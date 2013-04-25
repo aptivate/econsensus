@@ -9,7 +9,7 @@ First install the requirements:
 
     $ sudo apt-get install git-core python-virtualenv python-pip sqlite3 \
           python-dev libxml2-dev libyaml-dev mysql-server mysql-client \
-          libmysqlclient-dev build-essential libxslt1-dev
+          libmysqlclient-dev build-essential libxslt1-dev mercurial
 
 Then check out the code:
 
