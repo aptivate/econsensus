@@ -43,6 +43,7 @@ class DecisionAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.editor = request.user
+        obj.last_status = obj.status
         obj.save()
 
 class FeedbackAdmin(admin.ModelAdmin):

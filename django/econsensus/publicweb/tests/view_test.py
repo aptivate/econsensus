@@ -71,31 +71,34 @@ class ViewTest(DecisionTestCase):
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, self.user)
 
-    def test_decison_editor_set_on_update(self):
+    def test_decision_editor_set_on_update(self):
         self.login('andy')
         decision = self.create_decision_through_browser()
         self.login('betty')
         decision = self.update_decision_through_browser(decision.id)
-        self.assertEquals(self.user, decision.editor)
+        self.assertEquals(decision.editor, self.user)
 
-        admin_user = User.objects.filter(is_staff=True)[0]
-        self.login(admin_user.username)
-        ma = ModelAdmin(Decision, AdminSite())
-        data = ma.get_form(None)(instance=decision).initial
-        for key, value in data.items():
-            if value == None:
-                data[key] = u''
-        man_data = {
-            'feedback_set-TOTAL_FORMS': u'1', 
-            'feedback_set-INITIAL_FORMS': u'0', 
-            'feedback_set-MAX_NUM_FORMS': u''
-        }
-        data.update(man_data)
-        url = reverse('admin:publicweb_decision_change', args=[decision.id])
-        response = self.client.post(url, data, follow=True)
-        self.assertEquals(response.status_code, 200)
+        admin_user = self.change_organization_via_admin_screens(decision)
         decision = Decision.objects.get(id=decision.id)
         self.assertEquals(decision.editor, admin_user)
+
+    def test_decision_last_status_set_on_update(self):
+        self.login('andy')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(decision.last_status, 'new')
+
+        self.login('betty')
+        decision = self.update_decision_through_browser(decision.id)
+        self.assertEquals(decision.last_status, decision.status)
+
+    def test_decision_last_status_set_on_update_via_admin(self):
+        self.login('andy')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(decision.last_status, 'new')
+
+        self.change_organization_via_admin_screens(decision)
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEquals(decision.last_status, decision.status)
 
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()

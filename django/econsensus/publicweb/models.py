@@ -159,13 +159,20 @@ class Decision(models.Model):
         if self.id:
             if self.__class__.objects.get(id=self.id).organization.id != self.organization.id:
                 self.watchers.all().delete()
+                org_users = self.organization.users.all()
+                for user in org_users:
+                    notification.observe(self, user, 'decision_change')
                 for feedback in self.feedback_set.all():
                     feedback.watchers.all().delete()
+                    for user in org_users:
+                        notification.observe(feedback, user, 'feedback_change')
                     for comment in feedback.comments.all():
                         comment_watchers = notification.ObservedItem.objects.filter(
                             content_type = ContentType.objects.get(name='comment'),
                             object_id = comment.id)
                         comment_watchers.delete()
+                        for user in org_users:
+                            notification.observe(comment, user, 'comment_change')
 
         super(Decision, self).save(*args, **kwargs)
         
