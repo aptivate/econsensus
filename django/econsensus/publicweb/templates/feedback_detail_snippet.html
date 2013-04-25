@@ -2,6 +2,7 @@
 {% load i18n %}	
 {% load comments %}
 {% load guardian_tags %}
+{% load publicweb_filters %}
 
 {% comment %}Define organization_permissions here to cover case where this template is used to re-render a feedback detail following an inline javascript update of that feedback.{% endcomment %}
 {% get_obj_perms request.user for object.decision.organization as "organization_permissions" %}
@@ -25,13 +26,7 @@
 	  <ul class="contrib_comment_list">
 	  {% for comment in comment_list %}
 		<li class = "contrib_comment" id="c{{ comment.object_pk }}_{{ comment.pk }}">
-		  	<span class="author">
-			{% if comment.user %}
-		  	{{ comment.user }}
-			{% else %}
-				{{ comment.user_name }}
-			{% endif %}
-				says:</span>
+        <span class="author">{{ comment|get_user_name_from_comment }} says:</span>
 		  <p>{{ comment.comment|urlize|linebreaksbr }}</p>
 		</li>
 		  {% endfor %}
