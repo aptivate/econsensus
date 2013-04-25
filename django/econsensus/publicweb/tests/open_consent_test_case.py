@@ -3,6 +3,8 @@ from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
+from django.contrib.admin.options import ModelAdmin
+from django.contrib.admin.sites import AdminSite
 from django.contrib.comments import Comment
 from django.contrib.sites.models import Site
 from django.utils import timezone
@@ -91,8 +93,8 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def update_decision_through_browser(self, idd):
-        description = 'Aenean eros nibh'
+    def update_decision_through_browser(self, idd, 
+            description = 'Aenean eros nibh'):
         path = reverse('publicweb_decision_update', args=[idd])
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
@@ -108,10 +110,39 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
     
-    def update_feedback_through_browser(self, idd):
-        description = 'nibh ut dignissim. Sed a aliquet quam'
+    def update_feedback_through_browser(self, idd, 
+            description = 'nibh ut dignissim. Sed a aliquet quam'):
         path = reverse('publicweb_feedback_update', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
+
+
+    def change_organization_via_admin_screens(self, decision, new_organization=None):
+        orig_user = self.user
+
+        admin_user = User.objects.filter(is_staff=True)[0]
+        self.login(admin_user.username)
+        ma = ModelAdmin(Decision, AdminSite())
+        data = ma.get_form(None)(instance=decision).initial
+        for key, value in data.items():
+            if value == None:
+                data[key] = u''
+        man_data = {
+            'feedback_set-TOTAL_FORMS': u'1', 
+            'feedback_set-INITIAL_FORMS': u'0', 
+            'feedback_set-MAX_NUM_FORMS': u''
+        }
+        data.update(man_data)
+        if new_organization:
+            data['organization'] = new_organization.id
+        url = reverse('admin:publicweb_decision_change', args=[decision.id])
+        response = self.client.post(url, data, follow=True)
+        self.assertEquals(response.status_code, 200)
+        if new_organization:
+            self.assertEquals(Decision.objects.get(id=decision.id).organization.id, new_organization.id)
+
+        self.login(orig_user)
+        return admin_user
+

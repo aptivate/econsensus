@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -155,6 +156,24 @@ class Decision(models.Model):
 
     def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()
+        if self.id:
+            if self.__class__.objects.get(id=self.id).organization.id != self.organization.id:
+                self.watchers.all().delete()
+                org_users = self.organization.users.all()
+                for user in org_users:
+                    notification.observe(self, user, 'decision_change')
+                for feedback in self.feedback_set.all():
+                    feedback.watchers.all().delete()
+                    for user in org_users:
+                        notification.observe(feedback, user, 'feedback_change')
+                    for comment in feedback.comments.all():
+                        comment_watchers = notification.ObservedItem.objects.filter(
+                            content_type = ContentType.objects.get(name='comment'),
+                            object_id = comment.id)
+                        comment_watchers.delete()
+                        for user in org_users:
+                            notification.observe(comment, user, 'comment_change')
+
         super(Decision, self).save(*args, **kwargs)
         
 class Feedback(models.Model):
@@ -175,6 +194,9 @@ class Feedback(models.Model):
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
+
+    watchers = generic.GenericRelation(notification.ObservedItem)
+    comments = generic.GenericRelation(Comment, object_id_field='object_pk')
 
     @models.permalink
     def get_absolute_url(self):

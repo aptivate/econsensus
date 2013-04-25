@@ -69,12 +69,34 @@ class ViewTest(DecisionTestCase):
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, self.user)
 
-    def test_decison_editor_set_on_update(self):
+    def test_decision_editor_set_on_update(self):
         self.login('andy')
         decision = self.create_decision_through_browser()
         self.login('betty')
         decision = self.update_decision_through_browser(decision.id)
-        self.assertEquals(self.user, decision.editor)
+        self.assertEquals(decision.editor, self.user)
+
+        admin_user = self.change_organization_via_admin_screens(decision)
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEquals(decision.editor, admin_user)
+
+    def test_decision_last_status_set_on_update(self):
+        self.login('andy')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(decision.last_status, 'new')
+
+        self.login('betty')
+        decision = self.update_decision_through_browser(decision.id)
+        self.assertEquals(decision.last_status, decision.status)
+
+    def test_decision_last_status_set_on_update_via_admin(self):
+        self.login('andy')
+        decision = self.create_decision_through_browser()
+        self.assertEquals(decision.last_status, 'new')
+
+        self.change_organization_via_admin_screens(decision)
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEquals(decision.last_status, decision.status)
 
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()
