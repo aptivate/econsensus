@@ -32,5 +32,7 @@ You should now be able to access the application at:
     http://127.0.0.1:8000/
 
 An initial user ID is created with Username : admin Password : admin
+
 The admin password can be changed through the admin interface at http://127.0.0.1:8000/admin/
+
 User accounts with different privileges can also be created through the admin interface.
