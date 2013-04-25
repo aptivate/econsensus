@@ -111,7 +111,7 @@ class HtmlTest(EconsensusTestCase):
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
         betty = User.objects.get(username='betty')
-        self.assertContains(response, betty.first_name)
+        self.assertContains(response, betty.username)
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
