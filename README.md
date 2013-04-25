@@ -1,5 +1,8 @@
 Consensus decision-making support tool, open source, by Aptivate.
 
+Read the [documentation](http://old.aptivate.org/econsensus). Join the 
+[discussion](https://groups.google.com/forum/?fromgroups#!forum/econsensusdiscuss).
+
 Install Instructions
 ====================
 
