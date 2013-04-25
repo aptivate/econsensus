@@ -1,6 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.contrib.admin.options import ModelAdmin
-from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from decision_test_case import DecisionTestCase
 from publicweb.models import Decision, Feedback
