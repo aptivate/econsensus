@@ -1,5 +1,8 @@
 Consensus decision-making support tool, open source, by Aptivate.
 
+Read the [documentation](http://old.aptivate.org/econsensus). Join the 
+[discussion](https://groups.google.com/forum/?fromgroups#!forum/econsensusdiscuss).
+
 Install Instructions
 ====================
 
@@ -32,5 +35,7 @@ You should now be able to access the application at:
     http://127.0.0.1:8000/
 
 An initial user ID is created with Username : admin Password : admin
+
 The admin password can be changed through the admin interface at http://127.0.0.1:8000/admin/
+
 User accounts with different privileges can also be created through the admin interface.
