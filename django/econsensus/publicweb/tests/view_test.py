@@ -1,140 +1,186 @@
+from django.test import TestCase
+from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from decision_test_case import DecisionTestCase
-from publicweb.models import Decision, Feedback
-from organizations.models import Organization, OrganizationUser
 
-#TODO: View tests should not be dependent on redirects from urls.py
-#THerefore should not use 'reverse'. Need to create request object...
+from publicweb.views import DecisionDetail, DecisionList, DecisionUpdate, \
+    FeedbackCreate, OrganizationRedirectView
+from publicweb.models import Decision
+from publicweb.forms import DecisionForm, FeedbackForm
+from organizations.models import Organization
+
+from publicweb.tests.factories import DecisionFactory, OrganizationFactory, \
+    OrganizationUserFactory, UserFactory
 
 
-class ViewTest(DecisionTestCase):
-    fixtures = ['organizations.json', 'users.json', 'decisions.json']
+class TestDecisionListView(TestCase):
 
-    expected_proposal_key_tuple = ('tab',)
-    expected_proposal_dict_tuple = ({'tab': 'proposal'},)
+    def test_set_status_is_correctly_set_when_kwarg_is_passed(self):
+        dl = DecisionList()
+        kwargs = {'status': 'test status'}
+        dl.set_status(**kwargs)
+        self.assertEqual(dl.status, 'test status')
 
-    expected_consensus_key_tuple = ('tab',)
-    expected_consensus_dict_tuple = ({'tab': 'decision'},)
+    def test_set_status_uses_default_when_no_kwarg_is_passed(self):
+        dl = DecisionList()
+        dl.set_status()
+        default_status = Decision.PROPOSAL_STATUS
+        self.assertEqual(dl.status, default_status)
 
-    expected_archived_key_tuple = ('tab',)
-    expected_archived_dict_tuple = ({'tab': 'archived'},)
+    def test_status_set_in_get_and_get_context_data(self):
+        """
+        More integrated test, that goes through dispatch, get, and
+        get_context_data method to get the response object.
+        """
+        org = OrganizationFactory()
+        kwargs = {'org_slug': org.slug,
+                  'status': Decision.PROPOSAL_STATUS}
+        request = RequestFactory().get('/')
+        request.user = UserFactory.build()
+        request.session = {}
+        dl = DecisionList.as_view()
+        response = dl(request, **kwargs)
+        self.assertEqual(response.context_data['tab'],
+                         Decision.PROPOSAL_STATUS)
 
-    def assert_context_has_key(self, key, url):
-        response = self.client.get(url)
-        self.assertTrue(key in response.context,
-                        'Key "%s" not found in response.context' % key)
 
-    def assert_context_has_dict(self, dictionary, url):
-        response = self.client.get(url)
-        self.assertDictContainsSubset(dictionary, response.context)
+class TestDecisionDetailView(TestCase):
 
-    def test_expected_context_keys(self):
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'proposal'])
-        for key in self.expected_proposal_key_tuple:
-            self.assert_context_has_key(key, url)
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'decision'])
-        for key in self.expected_consensus_key_tuple:
-            self.assert_context_has_key(key, url)
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'archived'])
-        for key in self.expected_archived_key_tuple:
-            self.assert_context_has_key(key, url)
+    def test_status_is_set_in_decision_detail_context(self):
+        """
+        Same as test_status_is_set_in_decision_list_context but for
+        decision_detail view.
+        """
+        dd = DecisionDetail()
+        manual_status = 'i set the status'
+        decision = Decision(status=manual_status, organization=Organization())
+        dd.object = decision
+        context = dd.get_context_data()
+        self.assertEqual(context['tab'], manual_status)
 
-    def test_expected_context_dict(self):
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'proposal'])
-        for dictionary in self.expected_proposal_dict_tuple:
-            self.assert_context_has_dict(dictionary, url)
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'decision'])
-        for dictionary in self.expected_consensus_dict_tuple:
-            self.assert_context_has_dict(dictionary, url)
-        url = reverse('publicweb_item_list',
-                      args=[self.bettysorg.slug, 'archived'])
-        for dictionary in self.expected_archived_dict_tuple:
-            self.assert_context_has_dict(dictionary, url)
 
-    def test_feedback_author_is_assigned(self):
-        decision = self.create_and_return_decision()
-        path = reverse('publicweb_feedback_create', args=[decision.id])
-        post_dict = {'description': 'Lorem Ipsum',
-                     'rating': Feedback.COMMENT_STATUS}
-        response = self.client.post(path, post_dict)
-        self.assertRedirects(response,
-                             reverse('publicweb_item_detail',
-                                     args=[decision.id]))
-        feedback = decision.feedback_set.get()
-        self.assertEqual(feedback.author, self.user)
+class TestDecisionUpdateView(TestCase):
 
-    def test_decison_editor_set_on_update(self):
-        self.login('andy')
-        decision = self.create_decision_through_browser()
-        self.login('betty')
-        decision = self.update_decision_through_browser(decision.id)
-        self.assertEquals(self.user, decision.editor)
+    def test_user_can_unwatch_a_decision(self):
+        """
+        There appears to be a duplicate test for the same
+        in decisions_test.py
+        """
+        org_user_factory = OrganizationUserFactory()
+        org = org_user_factory.organization
+        user = org_user_factory.user
+        decision = DecisionFactory(organization=org)
+        # Confirm decision has a single watcher
+        self.assertEqual(decision.watchers.count(), 1)
+        # Get the view ready
+        request = RequestFactory()
+        request.user = user
+        decision_update_view = DecisionUpdate()
+        decision_update_view.request = request
+        decision_update_view.object = decision
+        decision_update_view.get_object = lambda: decision
+        decision_update_view.last_status = 'dummy'
+        form = DecisionForm(instance=decision)
+        form.cleaned_data = {'watch': False}
+        # Run the form_valid method to stop observing
+        decision_update_view.form_valid(form)
+        self.assertEqual(decision.watchers.count(), 0)
 
-    def test_all_users_added_to_watchers(self):
-        decision = self.create_decision_through_browser()
-        all_users = User.objects.all().exclude(is_active=False).count()
-        self.assertEqual(all_users, decision.watchers.all().count())
+    def test_decision_editor_set_on_update(self):
+        # Create the decision
+        user1 = UserFactory()
+        decision = DecisionFactory(author=user1,
+                                   editor=user1)
+        # Have a different user update it
+        user2 = UserFactory()
+        request = RequestFactory()
+        request.user = user2
+        decision_update_view = DecisionUpdate()
+        decision_update_view.request = request
+        decision_update_view.object = decision
+        decision_update_view.get_object = lambda: decision
+        decision_update_view.last_status = 'dummy'
+        form = DecisionForm(instance=decision)
+        form.cleaned_data = {'watch': True}
+        # Run the form_valid method to stop observing
+        decision_update_view.form_valid(form)
+        self.assertEqual(decision.editor, user2)
 
-    def test_user_can_unwatch(self):
-        decision = self.create_decision_through_browser()
-        path = reverse('publicweb_decision_update', args=[decision.id])
-        post_dict = {'description': decision.description,
-                     'status': decision.status,
-                     'watch': False}
-        response = self.client.post(path, post_dict)
-        self.assertRedirects(response,
-                             reverse('publicweb_item_list',
-                                     args=[self.bettysorg.slug,
-                                           'proposal']))
-        decision = Decision.objects.get(id=decision.id)
-        self.assertNotIn(self.user, tuple(decision.watchers.all()))
+
+class TestFeedbackCreateView(TestCase):
+
+    def test_feedback_author_is_assigned_on_feedback_create(self):
+        decision = DecisionFactory()
+        user = UserFactory()
+        request = RequestFactory()
+        request.user = user
+        feedback_create_view = FeedbackCreate()
+        feedback_create_view.request = request
+        feedback_create_view.kwargs = {'parent_pk': decision.id}
+        form = FeedbackForm()
+        form.cleaned_data = {}
+        feedback_create_view.form_valid(form)
+        feedback_author = decision.feedback_set.get().author
+        self.assertEqual(feedback_author, user)
+
+
+class TestDecisionModel(TestCase):
+
+    def test_active_users_of_org_added_to_watchers_of_new_decision(self):
+        """
+        See no reason to have this in a view test, this behavior is almost
+        entirely tested already in the model tests in tests/decisions_test.py
+        Suggest, moving this test to there.
+        """
+        org_user_factory = OrganizationUserFactory()
+        org = org_user_factory.organization
+        user_in_org = org_user_factory.user
+        UserFactory()  # Create one user not linked to the org for completeness
+        user_inactive = UserFactory(is_active=False)
+        # Link the inactive user with the existing org and confirm it worked
+        OrganizationUserFactory(user=user_inactive, organization=org)
+        user_status_list = [user.user.is_active
+                            for user in org.organization_users.all()]
+        assert user_status_list.count(True) == 1
+        assert user_status_list.count(False) == 1
+        # The Test
+        decision = DecisionFactory(organization=org)
+        self.assertEqual(decision.watchers.count(), 1,
+                         "There should be one watcher.")
+        self.assertEqual(decision.watchers.get().user, user_in_org,
+                         "The watcher user should be the active user.")
+
+
+class TestOrganizationRedirectView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.login_request = RequestFactory()
+        self.login_request.user = self.user
 
     def test_redirect_for_one_organization(self):
         '''
-        if the user is a member of only one organization then on login
+        If the user is a member of only one organization then on login
         they should be redirected to the proposal page for that one
         organization and not the organization list page.
         '''
-        arbury = User.objects.create_user('arbury', password='arbury')
-        org = Organization.active.latest('id')
-        OrganizationUser.objects.create(user=arbury,
-                                        organization=org,
-                                        is_admin=False)
-        self.login('arbury')
-        path = reverse('auth_login')
-        # Known bug when next param supplied - see
-        # https://aptivate.kanbantool.com/boards/5986-econsensus#tasks-1251883
-        #post_dict = {'username': 'arbury',
-        #             'password': 'arbury',
-        #             'next': '/organizations/'}
-        post_dict = {'username': 'arbury', 'password': 'arbury'}
-        response = self.client.post(path, post_dict, follow=True)
-        self.assertRedirects(response,
-                             reverse('publicweb_item_list',
-                                     args=[org.slug, 'proposal']))
+        org_user_factory = OrganizationUserFactory(user=self.user)
+        org_redirect_view = OrganizationRedirectView()
+        org_redirect_view.request = self.login_request
+        response = org_redirect_view.get_redirect_url()
+        expected_url = reverse('publicweb_item_list',
+                               args=[org_user_factory.organization.slug,
+                                     'proposal'])
+        self.assertEqual(response, expected_url)
 
     def test_redirect_for_many_organizations(self):
         '''
-        if the user is a member of many organizations then on login
+        If the user is a member of many organizations then on login
         they should be redirected to the organization list page
         which shows all the organizations to which they belong.
         '''
-        arbury = User.objects.create_user('arbury', password='arbury')
-        orgs = Organization.active.all()[:2]
-        OrganizationUser.objects.create(user=arbury,
-                                        organization=orgs[0],
-                                        is_admin=False)
-        OrganizationUser.objects.create(user=arbury,
-                                        organization=orgs[1],
-                                        is_admin=False)
-        self.login('arbury')
-        path = reverse('auth_login')
-        post_dict = {'username': 'arbury', 'password': 'arbury'}
-        response = self.client.post(path, post_dict, follow=True)
-        self.assertRedirects(response, reverse('organization_list'))
+        OrganizationUserFactory(user=self.user)
+        OrganizationUserFactory(user=self.user)
+        org_redirect_view = OrganizationRedirectView()
+        org_redirect_view.request = self.login_request
+        response = org_redirect_view.get_redirect_url()
+        self.assertEquals(response, reverse('organization_list'))
