@@ -8,52 +8,39 @@ from publicweb.models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
 from organizations.models import Organization
 
-from publicweb.tests.factories import DecisionFactory, \
+from publicweb.tests.factories import DecisionFactory, OrganizationFactory, \
     OrganizationUserFactory, UserFactory
 
 
 class TestDecisionListView(TestCase):
 
-    def test_status_is_set_in_decision_list_context(self):
-        """
-        This test half replaces test_expected_context_keys and
-        test_expected_context_dict which just check that the context settings
-        (tab, status) is set.
-        """
+    def test_set_status_is_correctly_set_when_kwarg_is_passed(self):
         dl = DecisionList()
-        # Calling a ListView requires a object_list kwarg
-        kwargs = {'object_list': {}}
-        # Set-up other dummy information for context (could also check all
-        # this data in one test)
-        dummy = 'dummy'
-        dl.organization = dummy
-        dl.sort_order = dummy
-        dl.sort_field = dummy
-        dl.header_list = dummy
-        dl.paginate_by = None  # Set to none, to bypass pagination
-        dl.build_prev_query_string = lambda x: dummy
-        dl.build_next_query_string = lambda x: dummy
-        # Test the status
-        manual_status = 'i set the status'
-        dl.status = manual_status
-        context = dl.get_context_data(**kwargs)
-        self.assertEqual(context['tab'], manual_status)
+        kwargs = {'status': 'test status'}
+        dl.set_status(**kwargs)
+        self.assertEqual(dl.status, 'test status')
 
-    def test_status_is_correctly_set_on_view_get_for_decision_list(self):
-        """
-        It's very hard to atomically test the get method. Two options:
-            1) Move L146 of the get method into get_context_data (preferred)
-            2) Write an integration test.
-        """
-        self.fail('Placeholder fail')
+    def test_set_status_uses_default_when_no_kwarg_is_passed(self):
+        dl = DecisionList()
+        dl.set_status()
+        default_status = Decision.PROPOSAL_STATUS
+        self.assertEqual(dl.status, default_status)
 
-    def test_default_status_is_proposal_on_view_get_for_decision_list(self):
+    def test_status_set_in_get_and_get_context_data(self):
         """
-        It's very hard to atomically test the get method. Two options:
-            1) Move L146 of the get method into get_context_data (preferred)
-            2) Write an integration test.
+        More integrated test, that goes through dispatch, get, and
+        get_context_data method to get the response object.
         """
-        self.fail('Placeholder fail')
+        org = OrganizationFactory()
+        kwargs = {'org_slug': org.slug,
+                  'status': Decision.PROPOSAL_STATUS}
+        request = RequestFactory().get('/')
+        request.user = UserFactory.build()
+        request.session = {}
+        dl = DecisionList.as_view()
+        response = dl(request, **kwargs)
+        self.assertEqual(response.context_data['tab'],
+                         Decision.PROPOSAL_STATUS)
 
 
 class TestDecisionDetailView(TestCase):
@@ -157,16 +144,9 @@ class TestDecisionModel(TestCase):
         assert user_status_list.count(False) == 1
         # The Test
         decision = DecisionFactory(organization=org)
-        # TODO - NOTE THIS FAILS!!! This is what the original test was meant to
-        # be testing. Either the test was wrong or the code is wrong. If the
-        # code is wrong its a simple fix. L214 of models.py changes from
-        # all_users = instance.organization.users.all() to
-        # all_users = instance.organization.users.filter(is_active=True)
-        self.assertEqual(decision.watchers.count(),
-                         1,
+        self.assertEqual(decision.watchers.count(), 1,
                          "There should be one watcher.")
-        self.assertEqual(decision.watchers.get().user,
-                         user_in_org,
+        self.assertEqual(decision.watchers.get().user, user_in_org,
                          "The watcher user should be the active user.")
 
 

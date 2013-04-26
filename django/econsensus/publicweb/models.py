@@ -211,9 +211,9 @@ if notification is not None:
         headers = {'Message-ID' : instance.get_message_id()}
 
         if kwargs.get('created', True):
-            all_users = instance.organization.users.all()
-            all_but_author = all_users.exclude(username=instance.author)
-            for user in all_users:
+            active_users = instance.organization.users.filter(is_active=True)
+            all_but_author = active_users.exclude(username=instance.author)
+            for user in active_users:
                 notification.observe(instance, user, 'decision_change')
             extra_context = {}
             extra_context.update({"observed": instance})

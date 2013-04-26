@@ -142,8 +142,12 @@ class DecisionList(ListView):
         self.organization = get_object_or_404(Organization, slug=slug)
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
+    def set_status(self, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        return self.status
+
+    def get(self, request, *args, **kwargs):
+        self.set_status(**kwargs)
         self.set_sorting(request)
         self.get_table_headers(request)
         self.set_paginate_by(request)
