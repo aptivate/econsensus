@@ -1,23 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load org_tags %}
+{% load url from future %}
 
 {% block title %}
-{% if organization %}{{ organization }}{% else %}Create Organization{% endif %}
+{% trans 'Add Organization' %}
 {% endblock %}
 
 {% block heading %}
 {% endblock %}
 
 {% block main_content %}
-<h2 class="page_title simple-form-header">{% if organization %}{{ organization }}{% else %}Create Organization{% endif %}</h2>
-<form id="short-form" action="." method="post">{% csrf_token %}
-{% for error in form.non_field_errors %}
-  <p class="error" >{{ error }}</p>
-{% endfor %}
-
-{{ form.as_p }}
-
-  <input class="button" type="submit" value="submit">
-</form>
+    <h2 class="page_title">{% trans 'Add Organization' %}</h2>
+    {% include 'organizations/organization_form_snippet.html' %}
 {% endblock %}
