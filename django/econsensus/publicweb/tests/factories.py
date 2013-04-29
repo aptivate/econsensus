@@ -2,7 +2,8 @@ import factory
 
 from django.contrib.auth.models import User
 from publicweb.models import Decision
-from organizations.models import Organization, OrganizationUser
+from organizations.models import Organization, OrganizationUser,\
+    OrganizationOwner
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -21,6 +22,16 @@ class OrganizationUserFactory(factory.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     organization = factory.SubFactory(OrganizationFactory)
+
+
+class OrganizationOwnerFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = OrganizationOwner
+
+    organization = factory.SubFactory(OrganizationFactory)
+    organization_user = factory.SubFactory(OrganizationUserFactory,
+                                           organization=factory.SelfAttribute(
+                                               '..organization')
+                                           )
 
 
 class DecisionFactory(factory.DjangoModelFactory):
