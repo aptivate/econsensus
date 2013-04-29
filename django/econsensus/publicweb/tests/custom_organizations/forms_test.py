@@ -6,27 +6,60 @@ from publicweb.tests.factories import UserFactory, \
 from custom_organizations.forms import CustomOrganizationAddForm,\
     CustomOrganizationUserForm, CustomOrganizationUserAddForm
 
+from django.template.defaultfilters import slugify
+
 from guardian.shortcuts import assign
 from django.forms.fields import BooleanField
-
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
 
 class TestCustomOrganizationAddForm(TestCase):
 
     def test_save_assigns_the_edit_decisions_feedback_permission_to_user(self):
+        """
+        Tests that the permission has been assigned to the user. Also
+        implicitly tests that the request.user is the user that is assigned
+        to the organization.
+        """
         # Note need to set is_active=True otherwise has_perm will be False
         user = UserFactory(is_active=True, email='test@test.com')
-        form = CustomOrganizationAddForm(RequestFactory())
-        form.cleaned_data = {
-            'email': user.email,
-            'name': 'Test',
-            'slug': '',
-        }
-        form.request = RequestFactory()
-        form.request.user = UserFactory.build()  # Different user
+        request = RequestFactory()
+        # With the new save method, the requesting user is the one who gets the
+        # new organiations permissions.
+        request.user = user
+        form = CustomOrganizationAddForm(request)
+        form.cleaned_data = {'name': 'Test'}
         org = form.save()
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
+
+    def test_excludes_all_fields_except_organization_name(self):
+        form = CustomOrganizationAddForm(RequestFactory())
+        self.assertListEqual(form.fields.keys(), ['name'])
+
+    def test_request_user_is_new_organizations_admin(self):
+        """
+        We are overriding django-organizations default behavior to find and
+        create users based on the requested email and are making the requesting
+        user the default admin of a new organization.
+        """
+        user = UserFactory()
+        request = RequestFactory()
+        request.user = user
+        form = CustomOrganizationAddForm(request)
+        form.cleaned_data = {'name': 'Test'}
+        org = form.save()
+        self.assertTrue(org.is_admin(user))
+
+    def test_slug_generated_from_name(self):
+        user = UserFactory()
+        request = RequestFactory()
+        request.user = user
+        form = CustomOrganizationAddForm(request)
+        org_name = "This is my org's name!!"
+        form.cleaned_data = {'name': org_name}
+        org = form.save()
+        expected_slug = slugify(org_name)
+        self.assertEqual(org.slug, expected_slug)
 
 
 class TestCustomOrganizationUserForm(TestCase):
