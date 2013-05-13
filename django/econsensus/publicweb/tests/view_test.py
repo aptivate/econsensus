@@ -100,8 +100,8 @@ class ViewTest(DecisionTestCase):
 
     def test_all_users_added_to_watchers(self):
         decision = self.create_decision_through_browser()
-        all_users = User.objects.all().exclude(is_active=False).count()
-        self.assertEqual(all_users, decision.watchers.all().count())
+        all_orgs_active_users = decision.organization.users.exclude(is_active=False).count()
+        self.assertEqual(all_orgs_active_users, decision.watchers.all().count())
 
     def test_user_can_unwatch(self):
         decision = self.create_decision_through_browser()
