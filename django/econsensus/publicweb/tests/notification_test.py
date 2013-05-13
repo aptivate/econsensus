@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
 from django.core.mail import EmailMessage
-from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
@@ -23,6 +22,10 @@ class NotificationTest(DecisionTestCase):
             user = User.objects.get(email=thismail.to[0])
             return_list.append(user.email)
         return return_list
+
+    def no_emails_to_orig_org_users(self, outbox, orig_org_user_email_set):
+        outbox_email_set = set(self.get_addresses_from_outbox(outbox))
+        return outbox_email_set.isdisjoint(orig_org_user_email_set)
 
     def get_addresses_from_queryset(self, queryset):
         return_list = list()
@@ -71,6 +74,139 @@ class NotificationTest(DecisionTestCase):
 
         mailed_users = self.get_addresses_from_outbox(outbox)
         self.assertIn(self.betty.email, mailed_users)
+
+    def test_changing_new_decisions_org_correct_email_content(self):
+        """
+        Check that the notification emails states that the Decision
+        has changed, not its status (altering Decision via admin 
+        screens now sets last_status=status as for user screens).
+        """
+        orig_org = self.bettysorg
+        orig_user = User.objects.get(username="nobbie")
+        new_org = Organization.objects.get(name="Ferocious Feral Furrballs")
+        self.login(orig_user)
+        decision = self.make_decision(organization=orig_org)
+        mail.outbox = []
+        admin_user = self.change_organization_via_admin_screens(decision, new_org)
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), new_org.users.all().count())
+        self.assertTrue(orig_user.email not in self.get_addresses_from_outbox(outbox))
+        first_email = outbox[0]
+        exp_subject_snippet = "] Change to "
+        exp_body_snippet = "This is to let you know that %s has changed the " \
+            "following item." % admin_user.username
+        self.assertTrue(first_email.subject.find(exp_subject_snippet) >= 0)
+        self.assertTrue(first_email.body.find(exp_body_snippet) >= 0)
+
+    def test_changing_decisions_org_alters_watchers(self):
+        """
+        If a Decision's Organization is changed, ensure that members of the 
+        orig Organization no longer get email notifications about it. 
+        Check that all current members of the new Organization do get notified 
+        appropriately upon changes to the Decision, its Feedbacks, and all of 
+        their Comments.
+        To avoid hiding bugs in who gets what notification, use a different 
+        user per action (some actions only prompt notification to the 
+        author)
+        """
+        orig_org = self.bettysorg
+        new_org = Organization.objects.get(name="Ferocious Feral Furrballs")
+        # TODO: deduce suitable members to use rather than hardcoding and then asserting suitability
+        orig_org_members_names = ['nobbie', 'ollie', 'pollie', 'queenie', 'robbie']
+        orig_org_members_users = [User.objects.get(username=name) for name in orig_org_members_names]
+        orig_org_user_email_set = set([user.email for user in orig_org_members_users])
+        orig_org_members = dict(zip(orig_org_members_names, orig_org_members_users))
+        new_org_members_names = ['andy', 'betty', 'charlie', 'debbie', 'ernie']
+        new_org_members_users = [User.objects.get(username=name) for name in new_org_members_names]
+        new_org_members = dict(zip(new_org_members_names, new_org_members_users))
+        new_org_members_count = new_org.users.all().count()
+        for user in orig_org_members.values():
+            self.assertTrue(orig_org.is_member(user))
+            self.assertFalse(new_org.is_member(user))
+            assign('edit_decisions_feedback', user, orig_org)
+        for user in new_org_members.values():
+            self.assertTrue(orig_org.is_member(user))
+            self.assertTrue(new_org.is_member(user))
+            assign('edit_decisions_feedback', user, new_org)
+
+        # Make a decision under original org and edit it in various
+        # ways using various users 
+        self.login(orig_org_members['nobbie'])
+        decision = self.make_decision(organization=orig_org)
+        self.login(orig_org_members['ollie'])
+        self.update_decision_through_browser(
+            decision.id, 
+            description=decision.description + ' updated')
+        self.login(orig_org_members['pollie'])
+        feedback = self.make_feedback(decision=decision)
+        self.login(orig_org_members['queenie'])
+        self.update_feedback_through_browser(
+            feedback.id,
+            description = feedback.description + ' updated')
+        self.login(orig_org_members['robbie'])
+        comment = self.make_comment(
+            object_pk=feedback.id,
+            content_type=ContentType.objects.get(name='feedback')) 
+        mail.outbox = []
+
+        # Move the decision to the new org
+        # TODO: we should send a special notification to the original
+        # org users telling them of the move (see 
+        # https://aptivate.kanbantool.com/boards/5986-econsensus#tasks-1533249)
+        self.change_organization_via_admin_screens(decision, new_org)
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), new_org_members_count)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
+        mail.outbox = []
+
+        # Edit the decision in various ways using various users of the 
+        # new organization 
+        self.login(new_org_members['andy'])
+        self.update_decision_through_browser(
+            decision.id, 
+            description=decision.description + ' updated again')
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), new_org_members_count)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
+        mail.outbox = []
+
+        self.login(new_org_members['betty'])
+        self.update_feedback_through_browser(
+            feedback.id, 
+            description=feedback.description+' updated again')
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), new_org_members_count)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
+        mail.outbox = []
+
+        # Can't edit Comments via screens yet, but lets check that 
+        # we've future proofed for this
+        self.login(new_org_members['charlie'])
+        comment.comment += ' updated'
+        comment.save()
+        outbox = getattr(mail, 'outbox')
+        self.assertEqual(len(outbox), new_org_members_count)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
+        mail.outbox = []
+
+        self.login(new_org_members['debbie'])
+        feedback_2 = self.make_feedback(decision=decision)
+        outbox = getattr(mail, 'outbox')
+        # New feedback prompts notifications to all watchers of decision minus 
+        # the feedback author
+        self.assertEqual(len(outbox), new_org_members_count - 1)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
+        mail.outbox = []
+
+        self.login(new_org_members['ernie'])
+        comment_2 = self.make_comment(
+            object_pk=feedback.id,
+            content_type=ContentType.objects.get(name='feedback')) 
+        outbox = getattr(mail, 'outbox')
+        # New comment prompts notification to all watchers of decision minus 
+        # the comment author
+        self.assertEqual(len(outbox), new_org_members_count - 1)
+        self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
         
     def test_notifications_dont_contain_amp(self):
         """

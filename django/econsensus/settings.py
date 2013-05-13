@@ -276,3 +276,5 @@ else:
             LOGGING['handlers']['file']['filename'] = LOG_FILE
             if not os.path.exists(LOG_FILE):
                 open(LOG_FILE, 'w').close()
+
+TEST_RUNNER = 'test_runner.DiscoveryRunner'

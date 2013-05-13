@@ -42,8 +42,9 @@ class DecisionAdmin(admin.ModelAdmin):
         }
 
     def save_model(self, request, obj, form, change):
-        #obj.author = 
-        obj.save(request.user)
+        obj.editor = request.user
+        obj.last_status = obj.status
+        obj.save()
 
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('description','resolved')

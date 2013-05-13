@@ -9,10 +9,11 @@ Organization List
 {% endblock %}
 
 {% block heading %}
-Your Organizations
+Organizations
 {% endblock %}
 
 {% block main_content %}
+<a title="{% trans 'Add new organization' %}" href="{% url 'organization_add' %}">{% trans "Add" %}</a>
 <ul>
     {% for organization in organizations %}
     <li><a href="{% url 'publicweb_item_list' organization.slug 'proposal'%}">{{ organization }}</a>
@@ -23,6 +24,5 @@ Your Organizations
     <p>{% trans "You do not belong to any organizations."%}</p>
     {% endfor %}
 </ul>
-    <p>Create a new organization <a href="{% url 'organization_add' %}">{% trans "here" %}.</a></p>
 
 {% endblock %}

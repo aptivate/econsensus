@@ -206,8 +206,11 @@ class DecisionsTest(DecisionTestCase):
         self.client.post(reverse('publicweb_decision_update', args=[decision.id]), 
                                 post_dict,
                                 follow=True )
-        
-        count_all_but_author = User.objects.exclude(username=decision.author).exclude(is_active=False).count()
+        count_all_but_author = User.objects\
+                                   .filter(organization=decision.organization)\
+                                   .filter(is_active=True)\
+                                   .exclude(username=decision.author)\
+                                   .count()
         self.assertEqual(count_all_but_author, decision.watchers.all().count())
         
         self.assertNotIn(self.user, decision.watchers.all())
