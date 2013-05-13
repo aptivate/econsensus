@@ -2,8 +2,7 @@ from django import forms
 
 from organizations.models import Organization
 from organizations.utils import create_organization
-from organizations.forms import OrganizationForm, OrganizationUserForm, \
-        OrganizationUserAddForm
+from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 
 
