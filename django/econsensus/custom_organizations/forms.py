@@ -2,7 +2,8 @@ from django import forms
 
 from organizations.models import Organization
 from organizations.utils import create_organization
-from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
+from organizations.forms import OrganizationForm, OrganizationUserForm, \
+        OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 
 
@@ -34,6 +35,15 @@ class CustomOrganizationAddForm(forms.ModelForm):
                organization)
         return organization
 
+class CustomOrganizationForm(forms.ModelForm):
+
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(CustomOrganizationForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Organization
+        exclude = ('slug', 'users', 'is_active')
 
 class CustomOrganizationUserForm(OrganizationUserForm):
     is_editor = forms.BooleanField(required=False)

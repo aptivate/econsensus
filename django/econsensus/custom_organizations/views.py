@@ -1,11 +1,14 @@
-from organizations.views import OrganizationCreate, \
+from organizations.views import OrganizationCreate, OrganizationUpdate, \
     OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
 from guardian.shortcuts import remove_perm
-from forms import CustomOrganizationAddForm, CustomOrganizationUserForm, \
-    CustomOrganizationUserAddForm
+from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
+        CustomOrganizationUserForm, CustomOrganizationUserAddForm
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
+
+class CustomOrganizationUpdate(OrganizationUpdate):
+    form_class = CustomOrganizationForm
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
