@@ -15,9 +15,7 @@
 
 {% block main_content %}
 <ul>
-	{% if organization and organization|is_admin:user %}
     <li><a href="{% url 'organization_edit' organization.pk %}">Edit</a></li>
-  {% endif %}
   {% if organization and organization|is_owner:user %}
    	<li><a href="{% url 'organization_delete' organization.pk %}">Delete</a></li>
   {% endif %}
