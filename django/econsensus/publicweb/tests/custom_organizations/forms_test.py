@@ -54,15 +54,23 @@ class TestCustomOrganizationAddForm(TestCase):
         self.assertTrue(org.is_admin(user))
 
     def test_slug_generated_from_name(self):
+        """
+        An unique slug should be generated from the new Organization's name.
+        """
+        org_name = "This is my org's name!!"
+        expected_slug = slugify(org_name)
+
+        org1 = OrganizationFactory(name=org_name)
+        self.assertEqual(org1.slug, expected_slug)
+
         user = UserFactory()
         request = RequestFactory()
         request.user = user
         form = CustomOrganizationAddForm(request)
-        org_name = "This is my org's name!!"
         form.cleaned_data = {'name': org_name}
         org = form.save()
-        expected_slug = slugify(org_name)
-        self.assertEqual(org.slug, expected_slug)
+        self.assertNotEqual(org.slug, expected_slug)
+        self.assertTrue(org.slug.find(expected_slug) >= 0)
 
 
 class TestCustomOrganizationUserForm(TestCase):
