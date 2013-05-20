@@ -75,16 +75,23 @@ class TestCustomOrganizationAddForm(TestCase):
 
 class TestCustomOrganizationUserForm(TestCase):
 
-    # What's a good way to check the required property?
     def test_new_is_editor_field_is_present_and_boolean_type(self):
+        """
+        Check that the form contains a boolean for is_editor.
+        """
         form = CustomOrganizationUserForm()
         self.assertTrue('is_editor' in form.fields)
-        self.assertTrue(isinstance(form.fields['is_editor'],
-                                   BooleanField))
+        self.assertTrue(
+            isinstance(form.fields['is_editor'], BooleanField)
+        )
 
     def test_is_editor_is_true_adds_permission_to_instance(self):
-        org_owner_factory = OrganizationOwnerFactory()
-        org_user = org_owner_factory.organization_user
+        """
+        When is_editor is ticked, the correct permission is set for that user
+        for that organization.
+        """
+        org_owner = OrganizationOwnerFactory()
+        org_user = org_owner.organization_user
         user = org_user.user
         org = org_user.organization
         # Check that permission is False
@@ -98,8 +105,13 @@ class TestCustomOrganizationUserForm(TestCase):
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
 
     def test_is_editor_is_false_removes_permission_from_instance(self):
-        org_owner_factory = OrganizationOwnerFactory()
-        org_user = org_owner_factory.organization_user
+        """
+        When is_editor gets unticked, the permission is removed. 
+        Also implicitly tests is_editor form field's required property because 
+        for a BooleanField, False is empty.
+        """
+        org_owner = OrganizationOwnerFactory()
+        org_user = org_owner.organization_user
         user = org_user.user
         org = org_user.organization
         assign(GUARDIAN_PERMISSION, user, org)
