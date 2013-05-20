@@ -33,6 +33,9 @@ class TestCustomOrganizationAddForm(TestCase):
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
 
     def test_excludes_all_fields_except_organization_name(self):
+        """
+        The form should only ask for the organization's name. 
+        """
         form = CustomOrganizationAddForm(RequestFactory())
         self.assertListEqual(form.fields.keys(), ['name'])
 
