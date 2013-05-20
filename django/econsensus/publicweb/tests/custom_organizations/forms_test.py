@@ -4,7 +4,8 @@ from publicweb.tests.factories import UserFactory, \
     OrganizationOwnerFactory, OrganizationFactory
 
 from custom_organizations.forms import CustomOrganizationAddForm,\
-    CustomOrganizationUserForm, CustomOrganizationUserAddForm
+    CustomOrganizationUserForm, CustomOrganizationUserAddForm, \
+    CustomOrganizationForm
 
 from django.template.defaultfilters import slugify
 
@@ -13,6 +14,16 @@ from django.forms.fields import BooleanField
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
 
+class TestCustomOrganizationForm(TestCase):
+
+    def test_excludes_all_fields_except_organization_name(self):
+        """
+        The form should only ask for the organization's name. 
+        """
+        form = CustomOrganizationForm(RequestFactory())
+        self.assertListEqual(form.fields.keys(), ['name'])
+
+    
 class TestCustomOrganizationAddForm(TestCase):
 
     def test_save_assigns_the_edit_decisions_feedback_permission_to_user(self):
