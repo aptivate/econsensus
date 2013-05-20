@@ -21,11 +21,11 @@ class TestCustomOrganizationAddForm(TestCase):
         implicitly tests that the request.user is the user that is assigned
         to the organization.
         """
-        # Note need to set is_active=True otherwise has_perm will be False
+        # Note: need to set is_active=True otherwise has_perm will be False
         user = UserFactory(is_active=True, email='test@test.com')
         request = RequestFactory()
         # With the new save method, the requesting user is the one who gets the
-        # new organiations permissions.
+        # new organization's permissions.
         request.user = user
         form = CustomOrganizationAddForm(request)
         form.cleaned_data = {'name': 'Test'}
@@ -38,7 +38,7 @@ class TestCustomOrganizationAddForm(TestCase):
 
     def test_request_user_is_new_organizations_admin(self):
         """
-        We are overriding django-organizations default behavior to find and
+        We are overriding django-organizations' default behavior to find and
         create users based on the requested email and are making the requesting
         user the default admin of a new organization.
         """
