@@ -484,6 +484,6 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
         except:
             return reverse('organization_list')
