@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^organizations/', include('custom_organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
     url(r'^pages/', include('django.contrib.flatpages.urls')),
+    url(r'^search/', include('haystack.urls')),
     url(r'', include('publicweb.urls')),
 )
 
