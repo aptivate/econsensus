@@ -16,3 +16,7 @@ django-registration
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
 django-guardian
 factory-boy
+django-haystack
+requests
+pyelasticsearch
+simplejson
