@@ -27,3 +27,7 @@ django-dynamic-fixture==1.6.5
 django-selenium==0.9.6
 django-parsley==0.0.2a0
 Markdown==2.3.1
+django-haystack
+requests
+pyelasticsearch
+simplejson
