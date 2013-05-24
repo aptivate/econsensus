@@ -53,6 +53,8 @@ First install the requirements:
           python-dev libxml2-dev libyaml-dev mysql-server mysql-client \
           libmysqlclient-dev build-essential libxslt1-dev mercurial
 
+TODO: instructions for installing elasticsearch and its requirements
+
 Then check out the code:
 
     $ # for the latest stable code:
