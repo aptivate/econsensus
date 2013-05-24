@@ -1,0 +1,6 @@
+{{ object.author }}
+{{ object.description }}
+
+{% for feedback in object.feedback_set.all %}
+    {{ feedback.description }}
+{% endfor %}
