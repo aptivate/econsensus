@@ -11,6 +11,8 @@ First install the requirements:
           python-dev libxml2-dev libyaml-dev mysql-server mysql-client \
           libmysqlclient-dev build-essential libxslt1-dev
 
+TODO: instructions for installing elasticsearch and its requirements
+
 Then check out the code:
 
     $ git clone https://github.com/aptivate/econsensus.git
