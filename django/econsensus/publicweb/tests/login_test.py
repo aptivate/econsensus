@@ -1,8 +1,8 @@
-from open_consent_test_case import EconsensusTestCase
+from open_consent_test_case import EconsensusFixtureTestCase
 from django.core.urlresolvers import reverse
 from publicweb.models import Decision
 
-class LoginTest(EconsensusTestCase):       
+class LoginTest(EconsensusFixtureTestCase):       
     def test_non_login_is_redirected(self):
         self.client.logout()
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])

@@ -1,8 +1,8 @@
-from open_consent_test_case import EconsensusTestCase
+from open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.models import Decision, Feedback
 from django.utils.timezone import now
 
-class DecisionTestCase(EconsensusTestCase):
+class DecisionTestCase(EconsensusFixtureTestCase):
     def create_decisions_with_different_statuses(self):
         self.create_and_return_decision(description='Issue Proposal')
         
