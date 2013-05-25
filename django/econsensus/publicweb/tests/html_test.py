@@ -1,12 +1,14 @@
 from django.core.urlresolvers import reverse
-from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from django.test.client import RequestFactory
-from organizations.models import Organization
+from django.contrib.contenttypes.models import ContentType
+
 from organizations.views import OrganizationDetail
+from guardian.shortcuts import assign
+
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
+
 from decision_test_case import EconsensusTestCase
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
@@ -61,6 +63,19 @@ class HtmlTest(EconsensusTestCase):
         self.assertContains(response, 'text<br />text', 1, 
                             msg_prefix="Failed to line break text")
     
+    def test_comment_linebreaks(self):
+        decision = self.make_decision()
+        feedback = self.make_feedback(decision=decision, author=self.user)
+        self.make_comment(comment="comment\ntext",
+                          object_pk=feedback.id,
+                          content_type=ContentType.objects.get_for_model(Feedback)
+                          )
+
+        path = reverse('publicweb_feedback_detail', args=[feedback.id])
+        response = self.client.get(path)
+        self.assertContains(response, 'comment<br />text', 1,
+                            msg_prefix="Failed to line break text")
+
     def test_organization_name_in_header(self):
         path = reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
@@ -75,7 +90,8 @@ class HtmlTest(EconsensusTestCase):
         decision = Decision.objects.get(description='Lorem Ipsum')
         self.assertEqual(decision.author, self.user)
         self.user = self.login('charlie')
-        
+        #allow charlie to edit        
+        assign('edit_decisions_feedback', self.user, self.bettysorg)             
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
@@ -95,7 +111,7 @@ class HtmlTest(EconsensusTestCase):
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
         betty = User.objects.get(username='betty')
-        self.assertContains(response, betty.first_name)
+        self.assertContains(response, betty.username)
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
@@ -123,11 +139,14 @@ class HtmlTest(EconsensusTestCase):
     def test_site_contains_version_number(self):
         path = reverse('publicweb_root')
         response = self.client.get(path, follow=True)
-        self.assertContains(response, '(v0.0.1)')
+        self.assertContains(response, '(v0.4.0)')
         
     def test_editor_shown(self):
         decision = self.create_decision_through_browser()
         self.login('charlie')
+        #allow charlie to edit        
+        assign('edit_decisions_feedback', self.user, self.bettysorg)
+
         decision = self.update_decision_through_browser(decision.id)
         path = reverse('publicweb_decision_detail', args=[decision.id])
         response = self.client.get(path, follow=True)
@@ -143,6 +162,7 @@ class HtmlTest(EconsensusTestCase):
         self.assertRegexpMatches(rendered_response.content, "<h1>[\s\S]*%s[\s\S]*</h1>" % self.bettysorg)
         
     def test_cannot_view_decisions_when_not_member(self):
+
         request = self.factory.request()
         request.user = self.betty
         request.session = self.client.session
@@ -157,9 +177,9 @@ class HtmlTest(EconsensusTestCase):
         self.assertContains(response, decision.description)
         
         members = [x.username for x in decision.organization.users.all()]
-        non_members = User.objects.exclude(username__in=members)
+        non_members = User.objects.exclude(username__in=members).exclude(username='AnonymousUser')
         self.assertTrue(non_members)
-        
+                
         self.login(non_members[0].username)
         request.user = self.user
         kwargs = {'org_slug' : decision.organization.slug,

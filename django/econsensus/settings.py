@@ -137,12 +137,21 @@ INSTALLED_APPS = (
     'keyedcache',
     'livesettings',
     'organizations',
+    'custom_organizations',
+    'guardian',    
     'publicweb',
     'signals',
     'tinymce',
     'south',
-    'tagging'
+    'tagging',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend'
+)
+
+ANONYMOUS_USER_ID = -1
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -230,6 +239,9 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
+# Override invitation email templates
+INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
+
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
@@ -264,3 +276,5 @@ else:
             LOGGING['handlers']['file']['filename'] = LOG_FILE
             if not os.path.exists(LOG_FILE):
                 open(LOG_FILE, 'w').close()
+
+TEST_RUNNER = 'test_runner.DiscoveryRunner'

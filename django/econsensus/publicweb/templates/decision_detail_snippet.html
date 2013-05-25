@@ -1,5 +1,10 @@
 {% load url from future %}
 {% load i18n %}
+{% load guardian_tags %}
+
+{% if organization %}
+{% get_obj_perms request.user for organization as "organization_permissions" %}
+{% endif %}
 <div id="decision_snippet_envelope">
 	<h2 class="page_title {{ object.status }}">{{ object.status|capfirst }}: <span>{{ object.excerpt|truncatewords:7 }} (#{{ object.id }})</span></h2>
 
@@ -68,22 +73,25 @@
 		{% endif %}
 		{% endif %}
 		{% if object.deadline or object.decided_date or object.effective_date or object.review_date or object.expiry_date %}
-			</div>{% endif %}
-			<dl class="stats">
-			<dt class="consent">{% trans "consent" %}</dt>
-			<dd>{{ object.get_feedback_statistics.consent }}</dd>
-			<dt class="concerns">{% trans "concerns" %}</dt>
-			<dd>{{ object.get_feedback_statistics.concerns }}</dd>
-			<dt class="danger">{% trans "danger" %}</dt>
-			<dd>{{ object.get_feedback_statistics.danger }}</dd>
-			<dt class="question">{% trans "question" %}</dt>
-			<dd>{{ object.get_feedback_statistics.question }}</dd>
-			<dt class="comment">{% trans "comment" %}</dt>
-			<dd>{{ object.get_feedback_statistics.comment }}</dd>
+        </div>{% endif %}
+        <dl class="stats">
+        	{% with statistics=object.get_feedback_statistics %}
+            {% for rating in rating_names %}
+                {% if "edit_decisions_feedback" in organization_permissions %}
+                <a href="{% url 'publicweb_feedback_create' object.id %}?rating={{rating}}">
+                    {% include "feedback_rating_count_snippet.html" %}
+                </a>
+                {% else %}
+                {% include "feedback_rating_count_snippet.html" %}
+                {% endif %}
+            {% endfor %}
+            {% endwith %}
 		</dl>
+{% if "edit_decisions_feedback" in organization_permissions %}		
 			<div class="controls">
 				<a class="edit" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
 			</div>
+{% endif %}
 		</div>
 	</div>
 </div>

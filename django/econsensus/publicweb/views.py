@@ -14,10 +14,15 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
+
+from guardian.decorators import permission_required_or_403
+
 from models import Decision, Feedback
+
 from publicweb.forms import DecisionForm, FeedbackForm
 
 class ExportCSV(View):
@@ -91,7 +96,7 @@ class ExportCSV(View):
         remove_field(comment_field_names, 'content_type')
         remove_field(comment_field_names, 'object_pk')
 
-        decision_column_titles = ["Decision.%s" % field_name for field_name in decision_field_names]
+        decision_column_titles = ["Issue.%s" % field_name for field_name in decision_field_names]
         feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
         comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
 
@@ -124,6 +129,7 @@ class DecisionDetail(DetailView):
         context = super(DecisionDetail, self).get_context_data(*args, **kwargs)
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
+        context['rating_names'] = [unicode(x) for x in Feedback.rating_names]
         return context
 
 
@@ -136,8 +142,12 @@ class DecisionList(ListView):
         self.organization = get_object_or_404(Organization, slug=slug)
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
+    def set_status(self, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        return self.status
+
+    def get(self, request, *args, **kwargs):
+        self.set_status(**kwargs)
         self.set_sorting(request)
         self.get_table_headers(request)
         self.set_paginate_by(request)
@@ -180,7 +190,9 @@ class DecisionList(ListView):
                     }
     sort_by_count_fields = ['feedback']
     sort_by_alpha_fields = ['excerpt']
-    sort_table_headers = {'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+    
+    sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+                          'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
                           'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
                           'archived': ['id', 'excerpt', 'creation', 'archived_date']}
 
@@ -314,6 +326,7 @@ class DecisionCreate(CreateView):
     status = Decision.PROPOSAL_STATUS
 
     @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'slug', 'org_slug')))
     def dispatch(self, *args, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
         slug = kwargs.get('org_slug', None)
@@ -355,6 +368,7 @@ class DecisionUpdate(UpdateView):
     form_class = DecisionForm
 
     @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))    
     def dispatch(self, *args, **kwargs):
         return super(DecisionUpdate, self).dispatch(*args, **kwargs)
 
@@ -392,8 +406,18 @@ class FeedbackCreate(CreateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(FeedbackCreate, self).dispatch(*args, **kwargs)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))    
+    def dispatch(self, request, *args, **kwargs):
+        self.rating_initial = Feedback.COMMENT_STATUS
+        rating = request.GET.get('rating')
+        if rating:
+            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
+        return super(FeedbackCreate, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super(FeedbackCreate, self).get_initial().copy()
+        initial['rating'] = self.rating_initial
+        return initial
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -402,7 +426,7 @@ class FeedbackCreate(CreateView):
         return super(FeedbackCreate, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', args=[self.object.decision.pk])
+        return reverse('publicweb_item_detail', args=[self.kwargs['parent_pk']])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -420,13 +444,21 @@ class FeedbackUpdate(UpdateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
+    
+    def post(self, *args, **kwargs):
+        if self.request.POST.get('submit', None) == "Cancel":
+            self.object = self.get_object()
+            return HttpResponseRedirect(self.get_success_url())
+        return super(FeedbackUpdate, self).post(*args, **kwargs)
 
-    def form_valid(self, *args, **kwargs):
+    def form_valid(self, form, *args, **kwargs):
+        form.instance.editor = self.request.user
         if not notification.is_observing(self.object.decision, self.request.user):
             notification.observe(self.object.decision, self.request.user, 'decision_change')
-        return super(FeedbackUpdate, self).form_valid(*args, **kwargs)
+        return super(FeedbackUpdate, self).form_valid(form, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(FeedbackUpdate, self).get_context_data(**kwargs)
@@ -450,9 +482,8 @@ class OrganizationRedirectView(RedirectView):
         return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
 
     def get_redirect_url(self):
-        users_orgs = Organization.objects.get_for_user(self.request.user)
-        if len(users_orgs) == 1:
-            single_org = users_orgs[0]
-            return reverse('publicweb_item_list', args = [single_org.slug, 'proposal'])
-        else:
+        try:
+            users_org = Organization.objects.get(users=self.request.user)
+            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+        except:
             return reverse('organization_list')

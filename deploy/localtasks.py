@@ -1,19 +1,12 @@
 # functions just for this project
-import os, sys
+import os
+import sys
 import subprocess
 
 import tasklib
 
-def deploy(environment=None, svnuser=None, svnpass=None):
-    if environment == None:
-        environment = tasklib._infer_environment()
-
-    tasklib.create_ve()
-    tasklib.create_private_settings()
-    tasklib.link_local_settings(environment)
-    tasklib.update_db()
-
-    load_admin_user(environment)
+def post_deploy(environment=None, svnuser=None, svnpass=None):
+    load_auth_user(environment)
     load_django_site_data(environment)
         
 def load_sample_data(environment, force=False):
@@ -27,25 +20,29 @@ def load_sample_data(environment, force=False):
 
         tasklib._manage_py(['loaddata', "sample_data.json"])
 
-def load_admin_user(environment):
-    """load admin user based on environment. """
-    # TODO: maybe check if the admin user already exists before replacing it ...
+def load_auth_user(environment, force=False):
+    """load auth user fixture based on environment. """
+    if force == False:
+        auth_user_needs_initializing = int(tasklib._manage_py(['auth_user_needs_initializing'])[0].strip())
+        if not auth_user_needs_initializing:
+            print "Environment '", environment, "' already has auth.user initialized."
+            return
+
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
-    admin_user_path = os.path.join(local_fixtures_directory,
-                                        environment +'_admin_user.json')
-    if os.path.exists(admin_user_path):
-        tasklib._manage_py(['loaddata', admin_user_path])
+    user_path = os.path.join(local_fixtures_directory,
+                                        environment +'_auth_user.json')
+    if os.path.exists(user_path):
+        tasklib._manage_py(['loaddata', user_path])
     else:
-        tasklib._manage_py(['loaddata', "default_admin_user.json"])
+        tasklib._manage_py(['loaddata', "default_auth_user.json"])
 
 def load_django_site_data(environment, force=False):
-    """load data for django sites framework. """
+    """Load data for django sites framework. """
     if force == False:
-        # first check if it has already been loaded
-        output_lines = tasklib._manage_py(['dumpdata', 'sites'])
-        if output_lines[0] != '[]':
-            print "Environment '", environment, "' already has site data loaded."
+        site_needs_initializing = int(tasklib._manage_py(['site_needs_initializing'])[0].strip())
+        if not site_needs_initializing:
+            print "Environment '", environment, "' already has site data initialized."
             return
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')

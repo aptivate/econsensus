@@ -1,0 +1,12 @@
+{% load url from future %}
+<form method="post">{% csrf_token %}
+    {% for field in form %}
+        {{ field.errors }}
+        {{ field }}
+        {{ field.label_tag }}
+    {% endfor %}
+    <br />
+    <br />
+    <input class="button" type="submit" value="submit">
+    <a class="button" href="{% url 'organization_list' %}">Cancel</a>
+</form>

@@ -1,1 +1,1 @@
-[{{observed.decision.id}}\{{observed.id}}] {{ observed.author }} {{ observed.rating_text|capfirst }}: {{ observed.decision.excerpt }}
+[EC#{{observed.decision.id}}\{{observed.id}}] {{ observed.author.first_name }} {{ observed.author.last_name }} {{ observed.get_rating_display|capfirst }}: {{ observed.decision.excerpt }}

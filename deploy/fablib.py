@@ -129,6 +129,7 @@ def deploy(revision=None, keep=None):
     # (do this so that apache carries on serving other sites on this server
     # and the maintenance page for this vhost)
     link_webserver_conf(unlink=True)
+
     with settings(warn_only=True):
         webserver_cmd('reload')
     checkout_or_update(revision)
@@ -178,9 +179,9 @@ def create_copy_for_rollback(keep):
     _create_dir_if_not_exists(prev_dir)
     # cp -a
     sudo_or_run('cp -a %s %s' % (env.vcs_root, prev_dir))
+    # dump database (provided local_settings has been set up properly)
     if (env.project_type == 'django' and
             files.exists(os.path.join(env.django_root, 'local_settings.py'))):
-        # dump database (provided local_settings has been set up properly)
         with cd(prev_dir):
             # just in case there is some other reason why the dump fails
             with settings(warn_only=True):
@@ -530,7 +531,7 @@ def _webserver_conf_path():
             }
     key = env.webserver + '_' + _linux_type()
     if key in webserver_conf_dir:
-        return os.path.join(webserver_conf_dir[key], 
+        return os.path.join(webserver_conf_dir[key],
                 env.project_name+'_'+env.environment+'.conf')
     else:
         utils.abort('webserver %s is not supported (linux type %s)' %
@@ -573,5 +574,3 @@ def webserver_cmd(cmd):
             sudo(cmd_strings[key] + ' ' + cmd)
         else:
             utils.abort('webserver %s is not supported' % env.webserver)
-
-

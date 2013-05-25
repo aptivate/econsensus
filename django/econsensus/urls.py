@@ -5,7 +5,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.core.urlresolvers import reverse_lazy
 from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
-from django.contrib.auth import urls
+from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 
 admin.autodiscover()
 
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^settings/', include('livesettings.urls')),
     url(r'^notification/', include('notification.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
-    url(r'^organizations/', include('organizations.urls')),
+    url(r'^organizations/', include('custom_organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
     url(r'', include('econsensus.publicweb.urls')),
 )
@@ -27,6 +27,10 @@ urlpatterns += patterns('',
         {'form_class':RegistrationFormUniqueEmail,
         'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+        {'authentication_form': CustomAuthenticationForm}),
+    url(r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset',
+        {'password_reset_form': CustomPasswordResetForm}),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
 )

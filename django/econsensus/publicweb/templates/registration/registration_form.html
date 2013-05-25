@@ -24,7 +24,7 @@ Registration
 {% endblock %}
 
 {% block main_content %}
-<form id="login-form" method="post" action=".">
+<form id="short-form" method="post" action=".">
   {% csrf_token %}
   {{ form.as_p }}
 

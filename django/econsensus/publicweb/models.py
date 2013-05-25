@@ -11,13 +11,17 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.db.models import Count
 
 from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
+
+from custom_notification.utils import send_observation_notices_for
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -32,11 +36,13 @@ add_introspection_rules([], ["^tagging\.fields\.TagField"])
 class Decision(models.Model):
 
     TAGS_HELP_FIELD_TEXT = "Enter a list of tags separated by spaces."
+    DISCUSSION_STATUS = 'discussion'
     PROPOSAL_STATUS = 'proposal'
     DECISION_STATUS = 'decision'
     ARCHIVED_STATUS = 'archived'
 
     STATUS_CHOICES = (
+                  (DISCUSSION_STATUS, _('discussion')),
                   (PROPOSAL_STATUS, _('proposal')),
                   (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
@@ -135,20 +141,11 @@ class Decision(models.Model):
         return re.sub('\w+@', "%s@" % self.organization.slug, default_from_email)
     
     def get_feedback_statistics(self):
-        statistics = {'all': 0,
-                      'question': 0,
-                      'danger': 0,
-                      'concerns': 0,
-                      'comment': 0,
-                      'consent': 0
-                     }
-        
-        statistics['question'] = self.feedback_set.filter(rating=Feedback.QUESTION_STATUS).count()
-        statistics['danger'] = self.feedback_set.filter(rating=Feedback.DANGER_STATUS).count()
-        statistics['concerns'] = self.feedback_set.filter(rating=Feedback.CONCERNS_STATUS).count()
-        statistics['comment'] = self.feedback_set.filter(rating=Feedback.COMMENT_STATUS).count()
-        statistics['consent'] = self.feedback_set.filter(rating=Feedback.CONSENT_STATUS).count()
-        statistics['all'] = self.feedback_set.count()
+        statistics = dict([(unicode(x),0) for x in Feedback.rating_names])
+        raw_data = self.feedback_set.values('rating').annotate(Count('rating'))
+        for x in raw_data:
+            key = unicode(Feedback.rating_names[x['rating']])
+            statistics[key] = x['rating__count']
         return statistics
 
     def get_message_id(self):
@@ -159,29 +156,47 @@ class Decision(models.Model):
 
     def save(self, *args, **kwargs):
         self.excerpt = self._get_excerpt()
+        if self.id:
+            if self.__class__.objects.get(id=self.id).organization.id != self.organization.id:
+                self.watchers.all().delete()
+                org_users = self.organization.users.all()
+                for user in org_users:
+                    notification.observe(self, user, 'decision_change')
+                for feedback in self.feedback_set.all():
+                    feedback.watchers.all().delete()
+                    for user in org_users:
+                        notification.observe(feedback, user, 'feedback_change')
+                    for comment in feedback.comments.all():
+                        comment_watchers = notification.ObservedItem.objects.filter(
+                            content_type = ContentType.objects.get(name='comment'),
+                            object_id = comment.id)
+                        comment_watchers.delete()
+                        for user in org_users:
+                            notification.observe(comment, user, 'comment_change')
+
         super(Decision, self).save(*args, **kwargs)
         
 class Feedback(models.Model):
 
-    QUESTION_STATUS = 0
-    DANGER_STATUS = 1
-    CONCERNS_STATUS = 2
-    CONSENT_STATUS = 3
-    COMMENT_STATUS = 4
+    rating_names = (_('question'), _('danger'), _('concerns'), _('consent'), _('comment'))
 
-    RATING_CHOICES = ( 
-                  (QUESTION_STATUS, _('question')),
-                  (DANGER_STATUS, _('danger')),
-                  (CONCERNS_STATUS, _('concerns')),
-                  (CONSENT_STATUS, _('consent')),
-                  (COMMENT_STATUS, _('comment')),
-                  )
+    RATING_CHOICES = [(rating_names.index(x), x) for x in rating_names]
+    
+    QUESTION_STATUS = rating_names.index('question')
+    DANGER_STATUS = rating_names.index('danger')
+    CONCERNS_STATUS = rating_names.index('concerns')
+    CONSENT_STATUS = rating_names.index('consent')
+    COMMENT_STATUS = rating_names.index('comment')
     
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
-    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")    
+    author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
+    editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     decision = models.ForeignKey('Decision', verbose_name=_('Decision'))
     resolved = models.BooleanField(verbose_name=_('Resolved'))
     rating = models.IntegerField(choices=RATING_CHOICES, default=COMMENT_STATUS)
+
+    watchers = generic.GenericRelation(notification.ObservedItem)
+    comments = generic.GenericRelation(Comment, object_id_field='object_pk')
 
     @models.permalink
     def get_absolute_url(self):
@@ -192,29 +207,16 @@ class Feedback(models.Model):
         return ('publicweb_item_detail', [self.decision.id])
     
     def get_author_name(self):
-        if hasattr(self.author, 'get_full_name') and self.author.get_full_name():
-            return self.author.get_full_name()
-        elif hasattr(self.author, 'username') and self.author.username:
+        if hasattr(self.author, 'username') and self.author.username:
             return self.author.username
         else:
             return "An Anonymous Contributor"
-
-    def rating_text(self):
-        return self.RATING_CHOICES[self.rating][1]
 
     def get_message_id(self):
         """
         Generates a message id that can be used in email headers
         """
         return "feedback-%s@%s" % (self.id, Site.objects.get_current().domain)
-
-def rating_int(string):
-    try:
-        index = [y[1] for y in Feedback.RATING_CHOICES].index(string)
-    except ValueError:
-        return None
-    
-    return Feedback.RATING_CHOICES[index][0]
 
 if notification is not None:
     @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
@@ -229,15 +231,15 @@ if notification is not None:
         headers = {'Message-ID' : instance.get_message_id()}
 
         if kwargs.get('created', True):
-            all_users = instance.organization.users.all()
-            all_but_author = all_users.exclude(username=instance.author)
-            for user in all_users:
+            active_users = instance.organization.users.filter(is_active=True)
+            all_but_author = active_users.exclude(username=instance.author)
+            for user in active_users:
                 notification.observe(instance, user, 'decision_change')
             extra_context = {}
             extra_context.update({"observed": instance})
             notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            send_observation_notices_for(instance, headers=headers, from_email=instance.get_email())
             
     @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
     def feedback_signal_handler(sender, **kwargs):
@@ -260,7 +262,8 @@ if notification is not None:
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            if instance.author != instance.editor:
+                send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
             
             
     @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
@@ -284,5 +287,5 @@ if notification is not None:
             extra_context = dict({"observed": instance})
             notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
         else:
-            notification.send_observation_notices_for(instance, headers=headers)
+            send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
             

@@ -10,7 +10,7 @@ STATIC_URL = '/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-LOG_FILE = '/var/log/httpd/econsensus.log'
+LOG_FILE = '/tmp/econsensus.log'
 
 DATABASES = {
     'default': {

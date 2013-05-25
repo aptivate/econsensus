@@ -1,19 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load org_tags %}
+{% load url from future %}
 
 {% block title %}
-Organization Form
+{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}
 {% endblock %}
 
 {% block heading %}
-Organization Form
 {% endblock %}
 
 {% block main_content %}
-<h1>{{ organization }}</h1>
-<form action="." method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="submit">
-</form>
+<h2 class="page_title">{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}</h2>
+    {% include 'organizations/organization_form_snippet.html' %}
 {% endblock %}

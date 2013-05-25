@@ -358,9 +358,9 @@ def link_local_settings(environment):
         matching_lines = [line for line in settings_file
             if line.find('local_settings')]
     if not matching_lines:
-        sys.exit("Fatal error: settings.py doesn't seem to import " +
-            "local_settings.*: %s" % settings_file)
-
+        print "Fatal error: settings.py doesn't seem to import " \
+            "local_settings.*: %s" % settings_file
+        sys.exit(1)
     # die if the correct local settings does not exist
     if not env['quiet']:
         print "### creating link to local_settings.py"
