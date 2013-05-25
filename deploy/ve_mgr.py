@@ -13,7 +13,7 @@ def find_package_dir_in_ve(ve_dir, package):
     if path.isdir(package_dir):
         return package_dir
     elif path.isfile(egglink):
-        return open(egglink, 'r').readline()
+        return open(egglink, 'r').readline().strip()
     else:
         return None
 
@@ -75,16 +75,28 @@ def in_virtualenv():
 
 class UpdateVE(object):
 
-    def __init__(self, ve_root, requirements):
-        assert requirements is not None
+    def __init__(self, ve_root=None, requirements=None):
 
-        self.requirements = requirements
+        if requirements:
+            self.requirements = requirements
+        else:
+            try:
+                from project_settings import requirements_file
+            except ImportError:
+                print >> sys.stderr, "could not find requirements_file in project_settings.py"
+                raise
+            self.requirements = requirements_file
+
         if ve_root:
             self.ve_root = ve_root
         else:
-            from .project_settings import ve_relative_dir
-            self.ve_root = path.join(
-                path.dirname(__file__), os.pardir, ve_relative_dir)
+            try:
+                from project_settings import ve_dir
+            except ImportError:
+                print >> sys.stderr, "could not find ve_dir in project_settings.py"
+                raise
+            self.ve_root = ve_dir
+
         self.ve_timestamp = path.join(self.ve_root, 'timestamp')
 
     def update_ve_timestamp(self):

@@ -5,8 +5,8 @@ import os
 from os import path
 import sys
 import subprocess
-from .project_settings import ve_dir
-from .ve_mgr import check_python_version, find_package_dir_in_ve
+from project_settings import ve_dir
+from ve_mgr import check_python_version, find_package_dir_in_ve
 
 # check python version is high enough
 check_python_version(2, 6, __file__)
@@ -14,7 +14,7 @@ check_python_version(2, 6, __file__)
 if not path.exists(ve_dir):
     print "Expected virtualenv does not exist"
     print "(required for correct version of fabric and dye)"
-    print "Please run './bootstrap.sh' to create virtualenv"
+    print "Please run './bootstrap.py' to create virtualenv"
     sys.exit(1)
 
 fab_bin = path.join(ve_dir, 'bin', 'fab')
@@ -35,6 +35,8 @@ fab_call = [fab_bin]
 fab_call += ['-f', fabfile]
 # add any arguments passed to this script
 fab_call += sys.argv[1:]
+
+#print "Running fab.py in ve: %s" % ' '.join(fab_call)
 
 # exit with the fabric exit code
 sys.exit(subprocess.call(fab_call, env=osenv))

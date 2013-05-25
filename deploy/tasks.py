@@ -4,8 +4,8 @@
 import os
 import sys
 import subprocess
-from .project_settings import ve_dir
-from .ve_mgr import check_python_version
+from project_settings import ve_dir
+from ve_mgr import check_python_version
 
 # check python version is high enough
 check_python_version(2, 6, __file__)
@@ -13,7 +13,7 @@ check_python_version(2, 6, __file__)
 if not os.path.exists(ve_dir):
     print "Expected virtualenv does not exist"
     print "(required for correct version of fabric and dye)"
-    print "Please run './bootstrap.sh' to create virtualenv"
+    print "Please run './bootstrap.py' to create virtualenv"
     sys.exit(1)
 
 # depending on how you've installed dye, you may need to edit this line

@@ -5,19 +5,13 @@ import sys
 import subprocess
 from os import path
 
-
 PROJECT_ROOT = path.abspath(path.dirname(__file__))
 DEPLOY_DIR = path.abspath(path.join(PROJECT_ROOT, os.pardir, os.pardir, 'deploy'))
 sys.path.append(DEPLOY_DIR)
 import ve_mgr
 
-REQUIREMENTS = path.join(DEPLOY_DIR, 'pip_packages.txt')
-
 # check python version is high enough
-MIN_PYTHON_MAJOR_VERSION = 2
-MIN_PYTHON_MINOR_VERSION = 6
-ve_mgr.check_python_version(
-    MIN_PYTHON_MAJOR_VERSION, MIN_PYTHON_MINOR_VERSION, __file__)
+ve_mgr.check_python_version(2, 6, __file__)
 
 # ignore the usual virtualenv
 # note that for runserver Django will start a child process, so that it
@@ -28,7 +22,11 @@ if '--ignore-ve' in sys.argv:
     os.environ['IGNORE_DOTVE'] = 'true'
 
 if 'IGNORE_DOTVE' not in os.environ:
-    VE_ROOT = path.join(PROJECT_ROOT, '.ve')
+    try:
+        from project_settings import ve_dir
+    except ImportError:
+        print >> sys.stderr, "could not find ve_dir in project_settings.py"
+        return 1
 
     def go_to_ve():
         """
@@ -40,9 +38,9 @@ if 'IGNORE_DOTVE' not in os.environ:
         """
         if 'IN_VIRTUALENV' not in os.environ:
             if sys.platform == 'win32':
-                python = path.join(VE_ROOT, 'Scripts', 'python.exe')
+                python = path.join(ve_dir, 'Scripts', 'python.exe')
             else:
-                python = path.join(VE_ROOT, 'bin', 'python')
+                python = path.join(ve_dir, 'bin', 'python')
 
             # add environment variable to say we are now in virtualenv
             new_env = os.environ.copy()
@@ -51,7 +49,7 @@ if 'IGNORE_DOTVE' not in os.environ:
                     env=new_env)
             sys.exit(retcode)
 
-    updater = ve_mgr.UpdateVE(VE_ROOT, REQUIREMENTS)
+    updater = ve_mgr.UpdateVE()
     # manually update virtualenv?
     update_ve = 'update_ve' in sys.argv or 'update_ve_quick' in sys.argv
     # destroy the old virtualenv so we have a clean virtualenv?

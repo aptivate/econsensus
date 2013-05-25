@@ -1,19 +1,11 @@
 #!/usr/bin/env python
 # a script to set up the virtualenv so we can use fabric and tasks
-
-import os
 import sys
 import getopt
 import ve_mgr
 
 # check python version is high enough
-MIN_PYTHON_MAJOR_VERSION = 2
-MIN_PYTHON_MINOR_VERSION = 6
-update_ve.check_python_version(
-    MIN_PYTHON_MAJOR_VERSION, MIN_PYTHON_MINOR_VERSION, __file__)
-
-DEPLOY_DIR = os.path.abspath(os.path.dirname(__file__))
-REQUIREMENTS = os.path.join(DEPLOY_DIR, 'bootstrap_requirements.txt')
+ve_mgr.check_python_version(2, 6, __file__)
 
 
 def main(argv):
@@ -32,15 +24,14 @@ def main(argv):
         if o in ("-v", "--verbose"):
             verbose = True
 
-    current_dir = os.path.dirname(__file__)
-    ve_dir = os.path.join(current_dir, '.ve.deploy')
-
-    updater = ve_mgr.UpdateVE(ve_dir, REQUIREMENTS)
+    updater = ve_mgr.UpdateVE()
     updater.update_ve()
 
     # TODO: could now print instructions for local deploy and fab deploy ...
     if verbose:
         print "Now you can run tasks.py or fab.py"
+
+    return 0
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
