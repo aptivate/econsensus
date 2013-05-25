@@ -1,4 +1,6 @@
 # this is for settings to be used by tasks.py
+import os
+from os import path
 
 ###############################
 # THESE SETTINGS MUST BE EDITED
@@ -10,7 +12,7 @@ project_name = "econsensus"
 
 # The django apps that are part of this project - used for running tests
 # and migrations
-django_apps  = ['publicweb', ]
+django_apps = ['publicweb']
 
 # repository type can be "cvs", "svn" or "git"
 repo_type = "git"
@@ -28,27 +30,54 @@ project_type = "django"
 # does this virtualenv for python packages
 use_virtualenv = True
 
-# the path from the project root to the django root dir
-django_relative_dir   = "django/" + project_name
+################################
+# PATHS TO IMPORTANT DIRECTORIES
+################################
+
+# set the deploy directory to be the one containing this file
+deploy_dir = path.dirname(__file__)
+
+vcs_root = path.abspath(path.join(deploy_dir, os.pardir))
+
+# the path from the VCS root to the django root dir
+django_dir = path.join(vcs_root, "django", project_name)
+#django_dir = path.join(vcs_root, "django", "website")
+
+# the path from the VCS root to the virtualenv dir
+ve_dir = path.join(django_dir, '.ve')
+
+# requirements can be in a single file, or in a directory
+# the requirements file
+requirements_per_env = False
+requirements_file = path.join(deploy_dir, 'pip_packages.txt')
 
 test_cmd = ' manage.py test -v0 ' + ' '.join(django_apps)
-
 
 # servers, for use by fabric
 
 # production server - if commented out then the production task will abort
 host_list = {
-        'production':   ['lin-' + project_name + '.aptivate.org:48001',],
-        'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org',],
-        'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org',],
-        #'dev_server':   ['fen-vz-' + project_name + '-dev.fen.aptivate.org',],
-        }
+    'production':   ['lin-' + project_name + '.aptivate.org:48001'],
+    'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org'],
+    'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org'],
+    #'dev_server':   ['fen-vz-' + project_name + '-dev.fen.aptivate.org',],
+}
+
+# this is the default git branch to use on each server
+default_branch = {
+    'production':   'master',
+    'staging':      'master',
+    'staging_test': 'master',
+    'dev_server':   'develop',
+}
 
 # where on the server the django apps are deployed
 server_home = '/var/django'
 
 # the top level directory on the server
-project_dir = project_name
+# underneath it there will be dev/ containing the live instance
+# and previous/ containing old copies for rollback
+server_project_home = path.join(server_home, project_name)
 
 # which web server to use (or None)
 webserver = 'apache'
