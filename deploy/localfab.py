@@ -1,3 +1,4 @@
+import os
 from fabric.api import env, require, settings, sudo
 from fabric.contrib import files
 
@@ -30,18 +31,19 @@ def deploy(revision=None):
     fablib.link_webserver_conf()
     fablib.webserver_cmd('reload')
 
-def load_fixtures():
-    """load fixtures for this environment"""
+
+def load_sample_data():
+    """load sample data for this environment"""
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
-        sudo(env.tasks_bin + ' load_admin_user:' + env.environment)
-        sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
         sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
+
 
 def add_cron_email():
     require('tasks_bin', provided_by=env.valid_envs)
     with settings(warn_only=True):
         sudo(env.tasks_bin + ' add_cron_email:' + env.environment)
+
 
 def correct_log_perms():
     require('project_root', provided_by=env.valid_envs)

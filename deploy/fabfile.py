@@ -1,10 +1,10 @@
-import os, sys
+import os
+import sys
 import errno
 
 from fabric.api import env
-from fabric.api import *
+#from fabric.api import *
 from fabric import utils
-from fabric.decorators import hosts
 
 # deliberately import * - so fabric will treat it as a name
 from fablib import *
@@ -31,6 +31,7 @@ else:
 # import the project settings
 import project_settings
 
+
 #
 # These commands set up the environment variables
 # to be used by later commands
@@ -54,7 +55,8 @@ def dev():
     3) ROOT_DIR below points to an absolute path for fabric deployment to act within
     4) Override env.repository below if necessary
     """
-    ROOT_DIR = '/tmp/fabtesting/'#'/home/joanna/Code/aptivate/fabtesting/'
+    ROOT_DIR = '/tmp/fabtesting/'
+    #ROOT_DIR = '/home/joanna/Code/aptivate/fabtesting/'
     try:
         os.makedirs(ROOT_DIR)
     except OSError as exc:
@@ -68,6 +70,7 @@ def dev():
     env.use_apache = False
     env.branch = 'develop'
     _local_setup()
+
 
 def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
@@ -103,19 +106,3 @@ def production():
 localfab = None
 if os.path.isfile(os.path.join(localfabdir, 'localfab.py')):
     from localfab import *
-
-
-def load_fixtures():
-    """load fixtures for this environment"""
-    require('tasks_bin', provided_by=env.valid_envs)
-    with settings(warn_only=True):
-        sudo(env.tasks_bin + ' load_admin_user:' + env.environment)
-        sudo(env.tasks_bin + ' load_django_site_data:' + env.environment)
-        sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
-
-
-def load_sample_data():
-    """load sample data for this environment"""
-    require('tasks_bin', provided_by=env.valid_envs)
-    with settings(warn_only=True):
-        sudo(env.tasks_bin + ' load_sample_data:' + env.environment)
