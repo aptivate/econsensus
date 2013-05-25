@@ -11,6 +11,7 @@ django/econsensus/log/econsensus.log
 reports/*
 .settings/*
 .pydevproject
+.ropeproject
 .DS_Store
 
 /.metadata
