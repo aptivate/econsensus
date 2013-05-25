@@ -26,7 +26,7 @@ if 'IGNORE_DOTVE' not in os.environ:
         from project_settings import ve_dir
     except ImportError:
         print >> sys.stderr, "could not find ve_dir in project_settings.py"
-        return 1
+        sys.exit(1)
 
     def go_to_ve():
         """
