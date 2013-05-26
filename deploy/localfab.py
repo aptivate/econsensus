@@ -7,14 +7,16 @@ from fabric.contrib import files
 # provides as fabric commands
 import fablib
 
+
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
-    require('project_root', provided_by=env.valid_envs)
+    require('vcs_root', provided_by=env.valid_envs)
+    fablib.check_for_local_changes()
     fablib.link_webserver_conf(unlink=True)
     with settings(warn_only=True):
         fablib.webserver_cmd('reload')
-    if not files.exists(env.project_root):
-        sudo('mkdir -p %(project_root)s' % env)
+    if not files.exists(env.vcs_root):
+        sudo('mkdir -p %(vcs_root)s' % env)
     fablib.checkout_or_update(revision)
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
@@ -25,11 +27,11 @@ def deploy(revision=None):
     fablib.update_db()
     if env.environment == 'production':
         fablib.setup_db_dumps()
-    load_fixtures()
     correct_log_perms()
 
     fablib.link_webserver_conf()
     fablib.webserver_cmd('reload')
+    fablib.touch()
 
 
 def load_sample_data():
@@ -46,7 +48,7 @@ def add_cron_email():
 
 
 def correct_log_perms():
-    require('project_root', provided_by=env.valid_envs)
+    require('django_root', provided_by=env.valid_envs)
     log_path = os.path.join(env.django_root, 'log', 'econsensus.log')
     sudo('chown apache %s' % log_path)
     sudo('chown apache /var/log/httpd')
