@@ -5,11 +5,15 @@ import os
 from os import path
 import sys
 import subprocess
-from project_settings import ve_dir
 from ve_mgr import check_python_version, find_package_dir_in_ve
 
 # check python version is high enough
 check_python_version(2, 6, __file__)
+
+if 'VIRTUAL_ENV' in os.environ:
+    ve_dir = os.environ['VIRTUAL_ENV']
+else:
+    from project_settings import ve_dir
 
 if not path.exists(ve_dir):
     print "Expected virtualenv does not exist"
@@ -33,6 +37,7 @@ osenv['DEPLOYDIR'] = path.dirname(__file__)
 fab_call = [fab_bin]
 # tell it to use the fabfile from dye
 fab_call += ['-f', fabfile]
+
 # add any arguments passed to this script
 fab_call += sys.argv[1:]
 

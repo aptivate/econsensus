@@ -4,11 +4,15 @@
 import os
 import sys
 import subprocess
-from project_settings import ve_dir
 from ve_mgr import check_python_version
 
 # check python version is high enough
 check_python_version(2, 6, __file__)
+
+if 'VIRTUAL_ENV' in os.environ:
+    ve_dir = os.environ['VIRTUAL_ENV']
+else:
+    from project_settings import ve_dir
 
 if not os.path.exists(ve_dir):
     print "Expected virtualenv does not exist"
