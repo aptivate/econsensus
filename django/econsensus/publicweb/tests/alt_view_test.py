@@ -8,6 +8,7 @@ from publicweb.models import Decision
 from publicweb.forms import DecisionForm, FeedbackForm
 from organizations.models import Organization
 
+from publicweb.tests.econsensus_testcase import EconsensusTestCase
 from publicweb.tests.factories import DecisionFactory, OrganizationFactory, \
     OrganizationUserFactory, UserFactory
 
@@ -63,7 +64,7 @@ class TestDecisionDetailView(TestCase):
         self.assertEqual(context['tab'], manual_status)
 
 
-class TestDecisionUpdateView(TestCase):
+class TestDecisionUpdateView(EconsensusTestCase):
 
     def test_user_can_unwatch_a_decision(self):
         """
@@ -108,6 +109,27 @@ class TestDecisionUpdateView(TestCase):
         form.cleaned_data = {'watch': True}
         decision_update_view.form_valid(form)
         self.assertEqual(decision.editor, user2)
+
+    def test_decision_editor_set_on_update_via_admin(self):
+        user = UserFactory(username='creator')
+        decision = DecisionFactory(
+            author = user, 
+            editor = user,
+            description = "Lorem Ipsum"
+        )
+
+        new_organization = OrganizationFactory()
+        admin_user = UserFactory(
+            username = 'admin_editor',
+            is_staff = True, 
+            is_superuser = True)
+        admin_user.set_password('test')
+        admin_user.save()
+        self.assertEqual(self.client.login(username=admin_user.username, password='test'), True)
+        self.change_decision_via_admin(decision, new_organization)
+
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEquals(decision.editor, admin_user)
 
 
 class TestFeedbackCreateView(TestCase):
