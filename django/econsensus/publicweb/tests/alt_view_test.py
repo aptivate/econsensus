@@ -106,7 +106,6 @@ class TestDecisionUpdateView(TestCase):
         decision_update_view.last_status = 'dummy'
         form = DecisionForm(instance=decision)
         form.cleaned_data = {'watch': True}
-        # Run the form_valid method to stop observing
         decision_update_view.form_valid(form)
         self.assertEqual(decision.editor, user2)
 
