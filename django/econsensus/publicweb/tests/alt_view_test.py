@@ -26,21 +26,25 @@ class TestDecisionListView(TestCase):
         default_status = Decision.PROPOSAL_STATUS
         self.assertEqual(dl.status, default_status)
 
-    def test_status_set_in_get_and_get_context_data(self):
+    def test_status_is_set_in_context_data_and_limits_object_list(self):
         """
         More integrated test, that goes through dispatch, get, and
-        get_context_data method to get the response object.
+        get_context_data method to get the response object and test it.
         """
-        org = OrganizationFactory()
+        decision = DecisionFactory(status=Decision.DECISION_STATUS)
+        org = decision.organization
+        archive = DecisionFactory(organization=org, status=Decision.ARCHIVED_STATUS)
+
         kwargs = {'org_slug': org.slug,
-                  'status': Decision.PROPOSAL_STATUS}
+                  'status': archive.status}
         request = RequestFactory().get('/')
         request.user = UserFactory.build()
         request.session = {}
-        dl = DecisionList.as_view()
-        response = dl(request, **kwargs)
-        self.assertEqual(response.context_data['tab'],
-                         Decision.PROPOSAL_STATUS)
+        response = DecisionList.as_view()(request, **kwargs)
+        self.assertIn('tab', response.context_data.keys())
+        self.assertEqual(response.context_data['tab'], archive.status)
+        self.assertIn(archive, response.context_data['object_list'])
+        self.assertNotIn(decision, response.context_data['object_list'])
 
 
 class TestDecisionDetailView(TestCase):
