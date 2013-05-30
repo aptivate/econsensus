@@ -123,8 +123,8 @@ class TestFeedbackCreateView(TestCase):
         form = FeedbackForm()
         form.cleaned_data = {}
         feedback_create_view.form_valid(form)
-        feedback_author = decision.feedback_set.get().author
-        self.assertEqual(feedback_author, user)
+        feedback = decision.feedback_set.get()
+        self.assertEqual(feedback.author, user)
 
 
 class TestDecisionModel(TestCase):
