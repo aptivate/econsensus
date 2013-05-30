@@ -1185,14 +1185,10 @@ ul.errorlist {
     float: right;
 }
 
-#short-form .label {
-    float: left;
-}
-
 #short-form p {
     float: left;
-    line-height: 3.3em;
-    width: 100%;
+    margin-top:10px;
+    margin-bottom:10px;
 }
 
 #short-form label {
@@ -1201,6 +1197,7 @@ ul.errorlist {
     font-size: 1.3em;
     color:#333;
     width: 8em;
+    padding-top:11px;
 }
 
 #short-form input {
