@@ -14,13 +14,10 @@
 {% endblock %}
 
 {% block main_content %}
-<ul>
-    <li><a href="{% url 'organization_edit' organization.pk %}">Edit</a></li>
-  {% if organization and organization|is_owner:user %}
-   	<li><a href="{% url 'organization_delete' organization.pk %}">Delete</a></li>
-  {% endif %}
-    <li><a href="{% url 'organization_user_add' organization.pk %}">Add a member</a></li>
-</ul>
 {% organization_users organization %}
+<ul>
+<br />
+    <li><a href="{% url 'organization_user_add' organization.pk %}">Add a new member</a></li>
 {% endblock %}
+</ul>
 
