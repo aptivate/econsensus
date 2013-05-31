@@ -1,12 +1,21 @@
 {% load url from future %}
+<!-- a quick and dirty fix, hmm -->
+<br />
+<br />
+Enter the name of your organization and then click "OK"
+<br />
+<br />
 <form method="post">{% csrf_token %}
     {% for field in form %}
         {{ field.errors }}
         {{ field }}
-        {{ field.label_tag }}
     {% endfor %}
     <br />
     <br />
-    <input class="button" type="submit" value="submit">
-    <a class="button" href="{% url 'organization_list' %}">Cancel</a>
+    <input class="button" type="submit" value="OK" style="float:left;margin:0 0.5em">
 </form>
+
+<form method="GET" action="{% url 'organization_list' %}" style="float:left">
+    <input class="button" type="submit" value="Cancel">
+</form>
+<br />

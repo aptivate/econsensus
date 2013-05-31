@@ -9,20 +9,33 @@ Organization List
 {% endblock %}
 
 {% block heading %}
-Organizations
+Your Organizations
 {% endblock %}
 
 {% block main_content %}
-<a title="{% trans 'Add new organization' %}" href="{% url 'organization_add' %}">{% trans "Add" %}</a>
+<br />
+<br />
 <ul>
     {% for organization in organizations %}
-    <li><a href="{% url 'publicweb_item_list' organization.slug 'proposal'%}">{{ organization }}</a>
+    <li>Use <a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization }}</a>   
     {% if organization.owner == user %}<span class="org-owner">Owner</span>{% endif %}
-    {% if organization|is_admin:user %}<span class="org-admin">| <a href="{{ organization.get_absolute_url }}">Admin</a></span>{% endif %}
+    {% if organization|is_admin:user %}<span class="org-admin">| 
+    <!--
+    <a href="{{ organization.get_absolute_url }}">Admin</a> 
+    -->
+    Admin options
+    (<a href="{{ organization.get_absolute_url }}">edit members</a>, <a href="{% url 'organization_edit' organization.pk %}">rename</a>{% if organization and organization|is_owner:user %}, <a href="{% url 'organization_delete' organization.pk %}">delete</a>{% endif %})</span>
+    {% endif %}
     </li>
     {% empty %}
-    <p>{% trans "You do not belong to any organizations."%}</p>
+    <p>{% trans "You do not currently belong to any organizations."%}</p>
+    <br />
+    <p>{% trans "You can only create discussions, proposals and decisions by belonging to an organization."%}</p>
+    <br />
+    <p>{% trans "Use the link below to create your new organization - you can then invite other users to join you and start the econsensus process."%}</p>
     {% endfor %}
 </ul>
 
+<br />
+<a title="{% trans 'Create new organization' %}" href="{% url 'organization_add' %}">{% trans "Create new organization" %}</a>
 {% endblock %}

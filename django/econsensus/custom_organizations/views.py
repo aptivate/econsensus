@@ -4,11 +4,18 @@ from guardian.shortcuts import remove_perm
 from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
         CustomOrganizationUserForm, CustomOrganizationUserAddForm
 
+from django.core.urlresolvers import reverse
+
+
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
 
 class CustomOrganizationUpdate(OrganizationUpdate):
     form_class = CustomOrganizationForm
+
+    def get_success_url(self):
+        return reverse("organization_list")
+
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
