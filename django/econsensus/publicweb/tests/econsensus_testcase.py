@@ -4,8 +4,23 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from publicweb.models import Decision
+from publicweb.tests.factories import UserFactory
 
 class EconsensusTestCase(TestCase):
+
+    def login_admin_user(self):
+        admin_user = UserFactory(
+            username = 'admin_editor',
+            is_staff = True, 
+            is_superuser = True)
+        admin_user.set_password('test')
+        admin_user.save()
+        self.assertEqual(
+            self.client.login(username=admin_user.username, password='test'), 
+            True,
+            "Failed to log in admin user"
+        )
+        return admin_user
 
     def change_decision_via_admin(self, decision, new_organization=None):
         """
@@ -29,7 +44,10 @@ class EconsensusTestCase(TestCase):
 
         url = reverse('admin:publicweb_decision_change', args=[decision.id])
         response = self.client.post(url, data, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(
+            response.template_name, 
+            'admin/decision_change_list.html',
+            "Failed to edit Decision via admin screen")
 
         decision = Decision.objects.get(id=decision.id)
         if new_organization:

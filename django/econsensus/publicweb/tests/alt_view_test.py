@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
+from guardian.shortcuts import assign
+
 from publicweb.views import DecisionDetail, DecisionList, DecisionUpdate, \
     FeedbackCreate, OrganizationRedirectView
 from publicweb.models import Decision
@@ -119,17 +121,45 @@ class TestDecisionUpdateView(EconsensusTestCase):
         )
 
         new_organization = OrganizationFactory()
-        admin_user = UserFactory(
-            username = 'admin_editor',
-            is_staff = True, 
-            is_superuser = True)
-        admin_user.set_password('test')
-        admin_user.save()
-        self.assertEqual(self.client.login(username=admin_user.username, password='test'), True)
+        admin_user = self.login_admin_user()
         self.change_decision_via_admin(decision, new_organization)
 
         decision = Decision.objects.get(id=decision.id)
         self.assertEquals(decision.editor, admin_user)
+
+    def test_decision_last_status_set_on_update(self):
+        status = Decision.DECISION_STATUS
+        user = UserFactory()
+        decision = DecisionFactory(author = user,
+                                   editor = user,
+                                   description = 'Lorem',
+                                   status = status)
+        self.assertEquals(decision.last_status, 'new')
+
+        request = RequestFactory().get('/')
+        assign('edit_decisions_feedback', user, decision.organization)
+        request.user = user
+        request.method = 'POST'
+        request.POST = {'status': decision.status, 'description': decision.description}
+        kwargs = {'pk': decision.id}
+        DecisionUpdate.as_view()(request, **kwargs)
+
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEqual(decision.last_status, status)
+
+    def test_decision_last_status_set_on_update_via_admin(self):
+        status = Decision.DECISION_STATUS
+        user = UserFactory()
+        decision = DecisionFactory(
+            author = user,
+            editor = user,
+            description = "Lorem",
+            status = status)
+        self.assertEquals(decision.last_status, 'new')
+        self.login_admin_user()
+        self.change_decision_via_admin(decision)
+        decision = Decision.objects.get(id=decision.id)
+        self.assertEqual(decision.last_status, status)
 
 
 class TestFeedbackCreateView(TestCase):
