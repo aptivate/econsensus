@@ -73,9 +73,9 @@ class TestDecisionUpdateView(EconsensusTestCase):
         There appears to be a duplicate test for the same
         in decisions_test.py
         """
-        org_user_factory = OrganizationUserFactory()
-        org = org_user_factory.organization
-        user = org_user_factory.user
+        org_user = OrganizationUserFactory()
+        org = org_user.organization
+        user = org_user.user
         decision = DecisionFactory(organization=org)
         # Confirm decision has a single watcher
         self.assertEqual(decision.watchers.count(), 1)
@@ -187,9 +187,9 @@ class TestDecisionModel(TestCase):
         entirely tested already in the model tests in tests/decisions_test.py
         Suggest, moving this test to there.
         """
-        org_user_factory = OrganizationUserFactory()
-        org = org_user_factory.organization
-        user_in_org = org_user_factory.user
+        org_user = OrganizationUserFactory()
+        org = org_user.organization
+        user_in_org = org_user.user
         UserFactory()  # Create one user not linked to the org for completeness
         user_inactive = UserFactory(is_active=False)
         # Link the inactive user with the existing org and confirm it worked
@@ -219,12 +219,12 @@ class TestOrganizationRedirectView(TestCase):
         they should be redirected to the proposal page for that one
         organization and not the organization list page.
         '''
-        org_user_factory = OrganizationUserFactory(user=self.user)
+        org_user = OrganizationUserFactory(user=self.user)
         org_redirect_view = OrganizationRedirectView()
         org_redirect_view.request = self.login_request
         response = org_redirect_view.get_redirect_url()
         expected_url = reverse('publicweb_item_list',
-                               args=[org_user_factory.organization.slug,
+                               args=[org_user.organization.slug,
                                      'proposal'])
         self.assertEqual(response, expected_url)
 
