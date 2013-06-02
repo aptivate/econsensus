@@ -187,23 +187,21 @@ class TestDecisionModel(TestCase):
         entirely tested already in the model tests in tests/decisions_test.py
         Suggest, moving this test to there.
         """
-        org_user = OrganizationUserFactory()
-        org = org_user.organization
-        user_in_org = org_user.user
-        UserFactory()  # Create one user not linked to the org for completeness
-        user_inactive = UserFactory(is_active=False)
-        # Link the inactive user with the existing org and confirm it worked
-        OrganizationUserFactory(user=user_inactive, organization=org)
-        user_status_list = [user.user.is_active
-                            for user in org.organization_users.all()]
-        assert user_status_list.count(True) == 1
-        assert user_status_list.count(False) == 1
-        # The Test
+        org = OrganizationFactory()
+        active_org_user1 = OrganizationUserFactory(
+            organization=org)
+        active_org_user2 = OrganizationUserFactory(
+            organization=org)
+        inactive_org_user = OrganizationUserFactory(
+            user = UserFactory(is_active=False),
+            organization = org)
+        active_other_org_user = OrganizationUserFactory()
+        
         decision = DecisionFactory(organization=org)
-        self.assertEqual(decision.watchers.count(), 1,
-                         "There should be one watcher.")
-        self.assertEqual(decision.watchers.get().user, user_in_org,
-                         "The watcher user should be the active user.")
+        watching_user_ids = decision.watchers.values_list('user_id', flat=True)
+        self.assertIn(active_org_user1.user.id, watching_user_ids)
+        self.assertIn(active_org_user2.user.id, watching_user_ids)
+        self.assertEqual(len(watching_user_ids), 2)
 
 
 class TestOrganizationRedirectView(TestCase):
