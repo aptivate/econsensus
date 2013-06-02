@@ -69,10 +69,6 @@ class TestDecisionDetailView(TestCase):
 class TestDecisionUpdateView(EconsensusTestCase):
 
     def test_user_can_unwatch_a_decision(self):
-        """
-        There appears to be a duplicate test for the same
-        in decisions_test.py
-        """
         org_user = OrganizationUserFactory()
         org = org_user.organization
         user = org_user.user
