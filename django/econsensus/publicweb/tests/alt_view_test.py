@@ -216,11 +216,11 @@ class TestOrganizationRedirectView(TestCase):
         org_user = OrganizationUserFactory(user=self.user)
         org_redirect_view = OrganizationRedirectView()
         org_redirect_view.request = self.login_request
-        response = org_redirect_view.get_redirect_url()
+        url = org_redirect_view.get_redirect_url()
         expected_url = reverse('publicweb_item_list',
                                args=[org_user.organization.slug,
                                      'proposal'])
-        self.assertEqual(response, expected_url)
+        self.assertEqual(url, expected_url)
 
     def test_redirect_for_many_organizations(self):
         '''
@@ -232,5 +232,5 @@ class TestOrganizationRedirectView(TestCase):
         OrganizationUserFactory(user=self.user)
         org_redirect_view = OrganizationRedirectView()
         org_redirect_view.request = self.login_request
-        response = org_redirect_view.get_redirect_url()
-        self.assertEquals(response, reverse('organization_list'))
+        url = org_redirect_view.get_redirect_url()
+        self.assertEquals(url, reverse('organization_list'))
