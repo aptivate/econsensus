@@ -32,6 +32,10 @@ body {
 ol, ul {
 	list-style: none;
 }
+ul.bulleted {
+    list-style: none outside disc;
+    padding-left: 1em;
+}
 blockquote, q {
 	quotes: none;
 }
