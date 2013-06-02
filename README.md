@@ -4,14 +4,28 @@ Econsensus
 Econsensus is an open source web application tool for consensus decision-making within one or more organizations, 
 used and written by [Aptivate](http://aptivate.org).
 
-Documentation and assistance
-============================
-
 Please read the [documentation](http://old.aptivate.org/econsensus) and feel free to join the 
 [discussion](https://groups.google.com/forum/?fromgroups#!forum/econsensusdiscuss).
 
-Install a development instance
-==============================
+If you'd like to contribute to this project, please read the rest of this section, otherwise 
+if you just want to install and try it out, skip to the next section.
+
+If you'd like to contribute to this project, first of all welcome! Secondly, please follow the workflow below:
+- fork the repository on github into your own github account
+- follow the instructions below to install a development instance, but instead of cloning from the aptivate 
+repository, clone from the 'develop' branch of your forked repository - always work on the develop branch because 
+that's more up-to-date than master.
+- now create a branch of your local develop branch as follows:
+    $ git branch my_branch
+- and check it out:
+    $ git checkout my_branch
+- once you're done committing, use the github button to submit a pull request on your branch to the aptivate 
+develop branch
+- we'll get notified of your pull request and will be be in touch asap
+Thank you for your interest.
+
+Install an instance
+===================
 
 This is based on using Ubuntu >= 10.04, but should also work on Debian Squeeze.
 
@@ -23,7 +37,10 @@ First install the requirements:
 
 Then check out the code:
 
+    $ # for the latest stable code:
     $ git clone https://github.com/aptivate/econsensus.git
+    $ # for contributors, get the develop branch from your forked repository:
+    $ git clone https://github.com/my_user_account/econsensus.git -b develop
 
 Then you should be able to do:
 
@@ -38,8 +55,8 @@ development server:
     $ cd django/econsensus/
     $ ./manage.py runserver
     
-Use the development instance
-============================
+Use the instance
+================
 
 You should now be able to access the django admin screens at:
 
