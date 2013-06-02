@@ -97,3 +97,17 @@ class OrganizationTest(DecisionTestCase):
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
+
+    def test_org_details_page_restricted(self):
+        '''
+        Organization details page should be restricted to admin users.
+        '''
+        # non-admin user gets a 403
+        path = reverse('organization_detail', args=[self.bettysorg.id])
+        self.login('charlie')
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 403)
+        # admin user gets a 200
+        self.login('betty')
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200)
