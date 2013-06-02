@@ -24,7 +24,7 @@ Your Organizations
     <a href="{{ organization.get_absolute_url }}">Admin</a> 
     -->
     Admin options
-    (<a href="{{ organization.get_absolute_url }}">edit members</a>, <a href="{% url 'organization_edit' organization.pk %}">rename</a>{% if organization and organization|is_owner:user %}, <a href="{% url 'organization_delete' organization.pk %}">delete</a>{% endif %})</span>
+    (<a href="{% url 'organization_user_list' organization.pk %}">edit members</a>, <a href="{% url 'organization_edit' organization.pk %}">rename</a>{% if organization and organization|is_owner:user %}, <a href="{% url 'organization_delete' organization.pk %}">delete</a>{% endif %})</span>
     {% endif %}
     </li>
     {% empty %}
