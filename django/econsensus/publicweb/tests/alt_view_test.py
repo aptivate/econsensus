@@ -169,7 +169,7 @@ class TestOrganizationRedirectView(TestCase):
         response = org_redirect_view.get_redirect_url()
         expected_url = reverse('publicweb_item_list',
                                args=[org_user_factory.organization.slug,
-                                     'proposal'])
+                                     'discussion'])
         self.assertEqual(response, expected_url)
 
     def test_redirect_for_many_organizations(self):

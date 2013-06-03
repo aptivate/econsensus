@@ -139,7 +139,7 @@ class ViewTest(DecisionTestCase):
         response = self.client.post(path, post_dict, follow=True)
         self.assertRedirects(response,
                              reverse('publicweb_item_list',
-                                     args=[org.slug, 'proposal']))
+                                     args=[org.slug, 'discussion']))
 
     def test_redirect_for_many_organizations(self):
         '''
