@@ -1,8 +1,17 @@
+
+from django.contrib.sites.models import get_current_site
+from django.shortcuts import redirect
+
 from organizations.views import OrganizationCreate, OrganizationUpdate, \
-    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
+    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete, OrganizationUserRemind
 from guardian.shortcuts import remove_perm
 from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
         CustomOrganizationUserForm, CustomOrganizationUserAddForm
+
+
+
+from organizations.backends import invitation_backend
+
 
 from django.core.urlresolvers import reverse
 
@@ -15,6 +24,16 @@ class CustomOrganizationUpdate(OrganizationUpdate):
 
     def get_success_url(self):
         return reverse("organization_list")
+
+class CustomOrganizationUserRemind(OrganizationUserRemind):
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        invitation_backend().send_reminder(self.object.user,
+                **{'domain': get_current_site(self.request),
+                    'organization': self.organization, 'sender': request.user})
+        return redirect(reverse("organization_user_list", args=[str(self.organization.id)]))
+
 
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
