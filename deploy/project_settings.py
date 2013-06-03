@@ -35,25 +35,25 @@ use_virtualenv = True
 ################################
 
 # set the deploy directory to be the one containing this file
-deploy_dir = path.dirname(__file__)
+local_deploy_dir = path.dirname(__file__)
 
-local_vcs_root = path.abspath(path.join(deploy_dir, os.pardir))
+local_vcs_root = path.abspath(path.join(local_deploy_dir, os.pardir))
 
 # the path from the VCS root to the django root dir
-django_dir = path.join(local_vcs_root, "django", project_name)
-#django_dir = path.join(local_vcs_root, "django", "website")
+relative_django_dir = path.join('django', project_name)
+#relative_django_dir = path.join('django', 'website')
 
-# the directory the settings live in
-django_settings_dir = path.join(django_dir, project_name)
-#django_settings_dir = django_dir
+# the directory the settings live in, relative to the vcs root
+relative_django_settings_dir = path.join(relative_django_dir, project_name)
+#relative_django_settings_dir = relative_django_dir
 
 # the path from the VCS root to the virtualenv dir
-ve_dir = path.join(django_dir, '.ve')
+relative_ve_dir = path.join(relative_django_dir, '.ve')
 
 # requirements can be in a single file, or in a directory
 # the requirements file
 requirements_per_env = False
-requirements_file = path.join(deploy_dir, 'pip_packages.txt')
+local_requirements_file = path.join(local_deploy_dir, 'pip_packages.txt')
 
 test_cmd = ' manage.py test -v0 ' + ' '.join(django_apps)
 
@@ -64,8 +64,8 @@ host_list = {
     'production':   ['lin-' + project_name + '.aptivate.org:48001'],
     'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org'],
     'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org'],
-    #'dev_server':   ['fen-vz-' + project_name + '-dev.fen.aptivate.org',],
-    'localhost': ['localhost'],
+    'localhost':   ['10.0.156.233'],
+    #'localhost': ['localhost'],
 }
 
 # this is the default git branch to use on each server
