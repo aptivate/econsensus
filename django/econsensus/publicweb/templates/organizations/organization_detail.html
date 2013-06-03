@@ -14,6 +14,14 @@
 {% endblock %}
 
 {% block main_content %}
+<ul>
+{% for organization_user in organization_users %}
+{% if organization_user.user.is_active %}
+<li>{{ organization_user.user }}</li>
+{% endif %}
+{% endfor %}
+</ul>
+
 {% organization_users organization %}
 <ul>
 <br />

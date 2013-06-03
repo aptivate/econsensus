@@ -4,7 +4,8 @@ from views import CustomOrganizationCreate, \
                     CustomOrganizationUpdate,\
                     CustomOrganizationUserCreate,\
                     CustomOrganizationUserUpdate,\
-                    CustomOrganizationUserDelete
+                    CustomOrganizationUserDelete,\
+                    CustomOrganizationUserRemind
 
 urlpatterns = patterns('',    
     # Use custom urganization user URLs
@@ -22,5 +23,8 @@ urlpatterns = patterns('',
     url(r'^(?P<organization_pk>[\d]+)/people/(?P<user_pk>[\d]+)/delete/$',
         view=login_required(CustomOrganizationUserDelete.as_view()),
         name="organization_user_delete"),                       
+    url(r'^(?P<organization_pk>[\d]+)/people/(?P<user_pk>[\d]+)/remind/$',
+        view=login_required(CustomOrganizationUserRemind.as_view()),
+        name="organization_user_remind"),
     url(r'', include('organizations.urls')),
 )
