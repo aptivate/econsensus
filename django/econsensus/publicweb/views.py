@@ -472,7 +472,7 @@ class FeedbackUpdate(UpdateView):
 class OrganizationRedirectView(RedirectView):
     '''
     If the user only belongs to one organization then
-    take them to that organizations proposal page, otherwise
+    take them to that organizations default Decision list page, otherwise
     take them to the organization list page.
     '''
     permanent = False
