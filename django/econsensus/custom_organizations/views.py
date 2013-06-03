@@ -1,8 +1,10 @@
 from organizations.views import OrganizationCreate, OrganizationUpdate, \
-    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete
+    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete, \
+    OrganizationDetail
 from guardian.shortcuts import remove_perm
 from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
         CustomOrganizationUserForm, CustomOrganizationUserAddForm
+from organizations.mixins import AdminRequiredMixin
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
@@ -29,3 +31,5 @@ class CustomOrganizationUserDelete(OrganizationUserDelete):
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
         return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
     
+class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
+    pass
