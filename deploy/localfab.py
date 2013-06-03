@@ -10,13 +10,13 @@ import fablib
 
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
-    require('vcs_root', provided_by=env.valid_envs)
+    require('vcs_root_dir', provided_by=env.valid_envs)
     fablib.check_for_local_changes()
     fablib.link_webserver_conf(unlink=True)
     with settings(warn_only=True):
         fablib.webserver_cmd('reload')
-    if not files.exists(env.vcs_root):
-        sudo('mkdir -p %(vcs_root)s' % env)
+    if not files.exists(env.vcs_root_dir):
+        sudo('mkdir -p %(vcs_root_dir)s' % env)
     fablib.checkout_or_update(revision)
     fablib.create_deploy_virtualenv()
     # Use tasks.py deploy:env to actually do the deployment, including
