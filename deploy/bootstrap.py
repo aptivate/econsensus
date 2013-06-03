@@ -25,6 +25,7 @@ def main(argv):
             verbose = True
 
     updater = ve_mgr.UpdateVE()
+    updater.update_git_submodule()
     updater.update_ve()
 
     # TODO: could now print instructions for local deploy and fab deploy ...

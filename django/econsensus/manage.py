@@ -66,6 +66,7 @@ if 'IGNORE_DOTVE' not in os.environ:
             print "VirtualEnv does not need to be updated"
             print "use --force to force an update"
             sys.exit(0)
+        updater.update_git_submodule()
         updater.update_ve()
 
     # else if it appears that the virtualenv is out of date:

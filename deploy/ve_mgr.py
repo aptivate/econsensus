@@ -122,6 +122,21 @@ class UpdateVE(object):
         else:
             return False
 
+    def update_git_submodule(self):
+        """ pip can include directories, and we sometimes add directories as
+        submodules.  And pip install will fail if those directories are empty.
+        So we need to set up the submodules first. """
+        try:
+            from project_settings import local_vcs_root, repo_type
+        except ImportError:
+            print >> sys.stderr, "could not find ve_dir in project_settings.py"
+            raise
+        if repo_type != 'git':
+            return
+        subprocess.call(
+                ['git', 'submodule', 'update', '--init'],
+                cwd=local_vcs_root)
+
     def update_ve(self, update_ve_quick=False, destroy_old_ve=False, force_update=False):
 
         if not path.exists(self.requirements):
