@@ -49,8 +49,8 @@ def add_cron_email():
 
 
 def correct_log_perms():
-    require('django_root', provided_by=env.valid_envs)
-    log_path = os.path.join(env.django_root, 'log', 'econsensus.log')
+    require('django_dir', provided_by=env.valid_envs)
+    log_path = os.path.join(env.django_dir, 'log', 'econsensus.log')
     sudo('touch %s' % log_path)
     sudo('chown apache %s' % log_path)
     sudo('chown apache /var/log/httpd')
