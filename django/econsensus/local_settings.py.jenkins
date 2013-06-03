@@ -30,3 +30,4 @@ INSTALLED_APPS = (
       'django_jenkins',
     )  + INSTALLED_APPS
 
+PROJECT_APPS = ('publicweb',)
