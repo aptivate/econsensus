@@ -13,7 +13,8 @@ check_python_version(2, 6, __file__)
 if 'VIRTUAL_ENV' in os.environ:
     ve_dir = os.environ['VIRTUAL_ENV']
 else:
-    from project_settings import ve_dir
+    from project_settings import local_vcs_root, relative_ve_dir
+    ve_dir = path.join(local_vcs_root, relative_ve_dir)
 
 if not path.exists(ve_dir):
     print "Expected virtualenv does not exist"

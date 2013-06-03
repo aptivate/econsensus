@@ -2,6 +2,7 @@
 # a script to set up the virtualenv so we can use fabric and tasks
 
 import os
+from os import path
 import sys
 import subprocess
 from ve_mgr import check_python_version
@@ -12,7 +13,8 @@ check_python_version(2, 6, __file__)
 if 'VIRTUAL_ENV' in os.environ:
     ve_dir = os.environ['VIRTUAL_ENV']
 else:
-    from project_settings import ve_dir
+    from project_settings import local_vcs_root, relative_ve_dir
+    ve_dir = path.join(local_vcs_root, relative_ve_dir)
 
 if not os.path.exists(ve_dir):
     print "Expected virtualenv does not exist"
@@ -21,9 +23,9 @@ if not os.path.exists(ve_dir):
     sys.exit(1)
 
 # depending on how you've installed dye, you may need to edit this line
-tasks = os.path.join(ve_dir, 'bin', 'tasks.py')
+tasks = path.join(ve_dir, 'bin', 'tasks.py')
 
-current_dir = os.path.dirname(__file__)
+current_dir = path.dirname(__file__)
 
 # call the tasks.py in the virtual env
 tasks_call = [tasks]
