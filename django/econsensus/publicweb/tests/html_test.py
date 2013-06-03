@@ -139,7 +139,7 @@ class HtmlTest(EconsensusTestCase):
     def test_site_contains_version_number(self):
         path = reverse('publicweb_root')
         response = self.client.get(path, follow=True)
-        self.assertContains(response, '(v0.4.0)')
+        self.assertContains(response, '(v0.4.')
         
     def test_editor_shown(self):
         decision = self.create_decision_through_browser()
