@@ -36,6 +36,7 @@ Invited members
 {% if not organization_user.user.is_active %}
 <li>{{ organization_user.user.email }} <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></li>
 
+
 {% endif %}
 {% endfor %}
 </ul>
@@ -44,6 +45,8 @@ Invited members
 <ul>
 <br />
     <li><a href="{% url 'organization_user_add' organization.pk %}">Add a new member</a></li>
+<br />
+    <li><a href="{% url 'organization_list' %}">Back to your organizations</a> </li>
 </ul>
 
 {% endblock %}
