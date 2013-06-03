@@ -91,9 +91,10 @@ class UpdateVE(object):
             self.ve_root = ve_root
         else:
             try:
-                from project_settings import ve_dir
+                from project_settings import local_vcs_root, relative_ve_dir
+                ve_dir = path.join(local_vcs_root, relative_ve_dir)
             except ImportError:
-                print >> sys.stderr, "could not find ve_dir in project_settings.py"
+                print >> sys.stderr, "could not find local_vcs_root/relative_ve_dir in project_settings.py"
                 raise
             self.ve_root = ve_dir
 
