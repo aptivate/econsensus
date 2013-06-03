@@ -15,11 +15,11 @@ from django.contrib.contenttypes.models import ContentType
 
 from organizations.models import Organization
 
-from publicweb.tests.decision_test_case import EconsensusTestCase
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 
-class CommandTest(EconsensusTestCase):
+class CommandTest(EconsensusFixtureTestCase):
 
     poplib.POP3 = dummy_poplib.POP3
     poplib.POP3_SSL = dummy_poplib.POP3_SSL

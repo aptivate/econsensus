@@ -5,9 +5,9 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import management
 
-from publicweb.tests.open_consent_test_case import EconsensusTestCase
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 
-class SiteDataCommandTest(EconsensusTestCase):
+class SiteDataCommandTest(EconsensusFixtureTestCase):
 
 
     def setUp(self):

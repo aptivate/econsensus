@@ -5,9 +5,9 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import management
 
-from publicweb.tests.open_consent_test_case import EconsensusTestCase
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 
-class UserDataCommandTest(EconsensusTestCase):
+class UserDataCommandTest(EconsensusFixtureTestCase):
 
     fixtures = ['default_auth_user.json']
     # django-guardian will have created an AnonymousUser at table creation
