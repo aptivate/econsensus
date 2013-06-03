@@ -18,6 +18,7 @@ def deploy(revision=None):
     if not files.exists(env.vcs_root):
         sudo('mkdir -p %(vcs_root)s' % env)
     fablib.checkout_or_update(revision)
+    fablib.create_deploy_virtualenv()
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
     # env.use_virtualenv as tasks.py knows nothing about it.
@@ -50,6 +51,7 @@ def add_cron_email():
 def correct_log_perms():
     require('django_root', provided_by=env.valid_envs)
     log_path = os.path.join(env.django_root, 'log', 'econsensus.log')
+    sudo('touch %s' % log_path)
     sudo('chown apache %s' % log_path)
     sudo('chown apache /var/log/httpd')
     sudo('touch /var/log/httpd/econsensus.log')
