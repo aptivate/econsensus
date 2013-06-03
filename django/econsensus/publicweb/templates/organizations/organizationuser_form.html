@@ -1,28 +1,47 @@
-{% extends "base.html" %}
+{% extends "base_org_admin.html" %}
+{% load url from future %}
+
 {% load i18n %}
 {% load org_tags %}
 
+
 {% block title %}
-Organisation User Form
+User form
 {% endblock %}
 
 {% block heading %}
-Organisation User Form
+{% if organization_user.user %}
+Details for {{ organization_user.user }}
+{% else %}
+Add new user 
+{% endif %}
 {% endblock %}
 
 {% block main_content %}
-{% if profile %}
-<h1>Update your profile</h1>
-{% else %}
-<h1> {{ organization_user }} @ {{ organization }}</h1>
-{% endif %}
 {% if user == organization_user.user %}This is you!{% endif %}
+
+<br />
+<br />
+{% if not organization_user.user %}
+<p>
+Users who do not have an econsensus account will be emailed an invite <br /> to sign up before they join your organisation. 
+<br />
+<br />
+If they already have an account they will be able to use your <br />organization immediately.
+</p>
+{% else %}
+<p>
+Change user persmissions below 
+</p>
+{% endif %}
+<br />
+
 <form action="." method="post">{% csrf_token %}
     {{ form.non_field_errors }}
 	{% if form.email %}
     <div class="fieldWrapper">
     	{{ form.email.errors }}
-    	<label for="id_email">Email:</label>
+    	<label for="id_email">Enter email: </label>
     	{{ form.email }}
     </div>
     {% endif %}
@@ -36,6 +55,11 @@ Organisation User Form
     	<label for="id_email">Is Editor:</label>
     	{{ form.is_editor }}
     </div>        
-    <input type="submit" value="submit">
+<br />
+    <input type="submit" value="submit" style="float:left;margin:0 0.5em">
 </form>
+<form method="GET" action="{% url 'organization_user_list' organization.pk %}" style="float:left">
+    <input class="button" type="submit" value="Cancel">
+</form>
+
 {% endblock %}

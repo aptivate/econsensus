@@ -4,7 +4,7 @@
 {% load org_tags %}
 
 {% block title %}
-{{ organization }}'s Members
+{{ organization }}'s members
 {% endblock %}
 
 
@@ -13,6 +13,8 @@
 {% endblock %}
 
 {% block main_content %}
+<br />
+<br />
 <ul>
 {% for organization_user in organization_users %}
 {% if organization_user.user.is_active %}
@@ -27,11 +29,12 @@
 Invited members  
 </h2>
 
-
+<br />
+<br />
 <ul>
 {% for organization_user in organization_users %}
 {% if not organization_user.user.is_active %}
-<li>{{ organization_user.user.email }} <a href="{% url 'organization_user_edit' organization.id organization_user.user.id %}">edit</a> | <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></li>
+<li>{{ organization_user.user.email }} <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></li>
 
 {% endif %}
 {% endfor %}
