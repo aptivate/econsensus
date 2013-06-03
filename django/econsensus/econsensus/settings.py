@@ -3,7 +3,7 @@
 import os
 import private_settings #@UnresolvedImport
 
-PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
+DJANGO_HOME = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -52,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_HOME, 'media')
+MEDIA_ROOT = os.path.join(DJANGO_HOME, 'media')
 
 MEDIA_URL = '/media/'
 
@@ -60,7 +60,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_HOME, 'static')
+STATIC_ROOT = os.path.join(DJANGO_HOME, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -105,8 +105,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_HOME, "templates"),
-    os.path.join(PROJECT_HOME, "publicweb/templates"),
+    os.path.join(DJANGO_HOME, "templates"),
+    os.path.join(DJANGO_HOME, "publicweb/templates"),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -138,7 +138,7 @@ INSTALLED_APPS = (
     'livesettings',
     'organizations',
     'custom_organizations',
-    'guardian',    
+    'guardian',
     'publicweb',
     'signals',
     'tinymce',
@@ -159,9 +159,9 @@ ANONYMOUS_USER_ID = -1
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
-LOG_FILE = os.path.join(PROJECT_HOME, 'log', 'econsensus.log')
+LOG_FILE = os.path.join(DJANGO_HOME, 'log', 'econsensus.log')
 if not os.path.exists(LOG_FILE):
-    open(LOG_FILE, 'w').close() 
+    open(LOG_FILE, 'w').close()
 
 LOGGING = {
     'version': 1,
@@ -224,7 +224,7 @@ TINYMCE_DEFAULT_CONFIG = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-#Emails from organizations will be built around this address 
+#Emails from organizations will be built around this address
 DEFAULT_FROM_EMAIL = 'econsensus@econsensus.org'
 
 #Required for djangoregistration:
@@ -249,12 +249,12 @@ INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBa
 try:
     import local_settings
 except ImportError:
-    print """ 
+    print """
     -------------------------------------------------------------------------
     You need to create a local_settings.py file.
     -------------------------------------------------------------------------
     """
-    import sys 
+    import sys
     sys.exit(1)
 else:
     # Import any symbols that begin with A-Z. Append to lists any symbols that
