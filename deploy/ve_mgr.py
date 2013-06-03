@@ -81,11 +81,11 @@ class UpdateVE(object):
             self.requirements = requirements
         else:
             try:
-                from project_settings import requirements_file
+                from project_settings import local_requirements_file
             except ImportError:
-                print >> sys.stderr, "could not find requirements_file in project_settings.py"
+                print >> sys.stderr, "could not find local_requirements_file in project_settings.py"
                 raise
-            self.requirements = requirements_file
+            self.requirements = local_requirements_file
 
         if ve_root:
             self.ve_root = ve_root
