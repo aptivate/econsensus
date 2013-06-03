@@ -66,7 +66,7 @@ class TestCustomOrganizationAddForm(TestCase):
 
     def test_slug_generated_from_name(self):
         """
-        An unique slug should be generated from the new Organization's name.
+        An unique slug should be generated for each Organization from its name.
         """
         org_name = "This is my org's name!!"
         expected_slug = slugify(org_name)
@@ -79,9 +79,9 @@ class TestCustomOrganizationAddForm(TestCase):
         request.user = user
         form = CustomOrganizationAddForm(request)
         form.cleaned_data = {'name': org_name}
-        org = form.save()
-        self.assertNotEqual(org.slug, expected_slug)
-        self.assertTrue(org.slug.find(expected_slug) >= 0)
+        org2 = form.save()
+        self.assertNotEqual(org2.slug, org1.slug)
+        self.assertTrue(org2.slug.startswith(org1.slug))
 
 
 class TestCustomOrganizationUserForm(TestCase):
