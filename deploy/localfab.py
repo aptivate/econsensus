@@ -24,8 +24,6 @@ def deploy(revision=None):
     # env.use_virtualenv as tasks.py knows nothing about it.
     fablib._tasks('deploy:' + env.environment)
     fablib.rm_pyc_files()
-    fablib.collect_static_files()
-    fablib.update_db()
     if env.environment == 'production':
         fablib.setup_db_dumps()
     correct_log_perms()
