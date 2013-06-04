@@ -9,7 +9,7 @@
 
 
 {% block heading %}
-{{ organization }}'s members
+{{ organization }}'s live users
 {% endblock %}
 
 {% block main_content %}
@@ -24,20 +24,20 @@
 {% endfor %}
 </ul>
 
+{% for organization_user in inactive_users %}
+{% if forloop.first %}
 <br />
 <h2 class="page_title">
-Invited members  
+Pending users  
 </h2>
 
 <br />
 <br />
 <ul>
-{% for organization_user in organization_users %}
-{% if not organization_user.user.is_active %}
+{% endif %}
 <li>{{ organization_user.user.email }} <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></li>
 
 
-{% endif %}
 {% endfor %}
 </ul>
 
