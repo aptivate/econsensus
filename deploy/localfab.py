@@ -30,7 +30,7 @@ def deploy(revision=None):
 
     fablib.link_webserver_conf()
     fablib.webserver_cmd('reload')
-    fablib.touch()
+    fablib.touch_wsgi()
 
 
 def load_sample_data():
