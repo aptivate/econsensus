@@ -37,10 +37,10 @@ if 'IGNORE_DOTVE' not in os.environ and 'VIRTUAL_ENV' not in os.environ:
 # run django - the usual manage.py stuff
 if __name__ == "__main__":
     sys.path.append(DEPLOY_DIR)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "econsensus.settings")
 
     try:
-        import settings  # pylint: disable=W402
+        from econsensus import settings  # pylint: disable=W402
     except ImportError as e:
         raise ImportError("%s\n\nFailed to import settings module: "
             "does it contain errors? Did you run tasks.py deploy:dev?"
