@@ -25,14 +25,15 @@ def main(argv):
             verbose = True
 
     updater = ve_mgr.UpdateVE()
+    updater.process_flags(sys.argv)
     updater.update_git_submodule()
-    updater.update_ve()
+    retcode = updater.update_ve()
 
     # TODO: could now print instructions for local deploy and fab deploy ...
-    if verbose:
+    if retcode == 0 and verbose:
         print "Now you can run tasks.py or fab.py"
 
-    return 0
+    return retcode
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

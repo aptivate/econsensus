@@ -75,7 +75,7 @@ def in_virtualenv():
 
 class UpdateVE(object):
 
-    def __init__(self, ve_root=None, requirements=None):
+    def __init__(self, ve_dir=None, requirements=None):
 
         if requirements:
             self.requirements = requirements
@@ -87,8 +87,8 @@ class UpdateVE(object):
                 raise
             self.requirements = local_requirements_file
 
-        if ve_root:
-            self.ve_root = ve_root
+        if ve_dir:
+            self.ve_dir = ve_dir
         else:
             try:
                 from project_settings import local_vcs_root, relative_ve_dir
@@ -96,17 +96,39 @@ class UpdateVE(object):
             except ImportError:
                 print >> sys.stderr, "could not find local_vcs_root/relative_ve_dir in project_settings.py"
                 raise
-            self.ve_root = ve_dir
+            self.ve_dir = ve_dir
 
-        self.ve_timestamp = path.join(self.ve_root, 'timestamp')
+        self.ve_timestamp = path.join(self.ve_dir, 'timestamp')
+        self.force_update = False
+        self.full_rebuild = False
+        self.fake_update = False
+        self.clean_ve = False
+
+    def process_flags(self, argv):
+        if '--force' in argv:
+            self.force_update = True
+        if '--full-rebuild' in argv:
+            self.full_rebuild = True
+        if '--fake' in argv:
+            self.fake_update = True
+        if '--clean' in argv:
+            self.clean_ve = True
+
+        # check for incompatible flags
+        if self.full_rebuild and self.fake_update:
+            print >> sys.stderr, "Cannot use both --full-rebuild and --fake"
+        if self.full_rebuild and self.clean_ve:
+            print >> sys.stderr, "Cannot use both --full-rebuild and --clean"
+        if self.clean_ve and self.fake_update:
+            print >> sys.stderr, "Cannot use both --clean and --fake"
 
     def update_ve_timestamp(self):
-        os.utime(self.ve_root, None)
+        os.utime(self.ve_dir, None)
         file(self.ve_timestamp, 'w').close()
 
     def virtualenv_needs_update(self):
         # timestamp of last modification of .ve/ directory
-        ve_dir_mtime = path.exists(self.ve_root) and path.getmtime(self.ve_root) or 0
+        ve_dir_mtime = path.exists(self.ve_dir) and path.getmtime(self.ve_dir) or 0
         # timestamp of last modification of .ve/timestamp file (touched by this
         # script
         ve_timestamp_mtime = path.exists(self.ve_timestamp) and path.getmtime(self.ve_timestamp) or 0
@@ -138,34 +160,73 @@ class UpdateVE(object):
                 ['git', 'submodule', 'update', '--init'],
                 cwd=local_vcs_root)
 
-    def update_ve(self, update_ve_quick=False, destroy_old_ve=False, force_update=False):
+    def delete_virtualenv(self):
+        """ delete the virtualenv """
+        if path.exists(self.ve_dir):
+            shutil.rmtree(self.ve_dir)
+
+    def update_ve(self):
 
         if not path.exists(self.requirements):
             print >> sys.stderr, "Could not find requirements: file %s" % self.requirements
-            sys.exit(1)
+            return 1
+
+        if self.clean_ve:
+            self.delete_virtualenv()
+            return 0
+
+        if self.fake_update:
+            self.update_ve_timestamp()
+            return 0
 
         update_required = self.virtualenv_needs_update()
 
-        if not update_required and not force_update:
+        if not update_required and not self.force_update:
             # Nothing to be done
-            return False
+            print "VirtualEnv does not need to be updated"
+            print "use --force to force an update"
+            return 0
 
         # if we need to create the virtualenv, then we must do that from
         # outside the virtualenv. The code inside this if statement will only
         # be run outside the virtualenv.
-        if destroy_old_ve and path.exists(self.ve_root):
-            shutil.rmtree(self.ve_root)
-        if not path.exists(self.ve_root):
+        if self.full_rebuild and path.exists(self.ve_dir):
+            shutil.rmtree(self.ve_dir)
+        if not path.exists(self.ve_dir):
             import virtualenv
             virtualenv.logger = virtualenv.Logger(consumers=[])
-            virtualenv.create_environment(self.ve_root, site_packages=False)
+            virtualenv.create_environment(self.ve_dir, site_packages=False)
 
         # install the pip requirements and exit
-        pip_path = path.join(self.ve_root, 'bin', 'pip')
+        pip_path = path.join(self.ve_dir, 'bin', 'pip')
         # use cwd to allow relative path specs in requirements file, e.g. ../tika
         pip_retcode = subprocess.call(
                 [pip_path, 'install', '--requirement=%s' % self.requirements],
                 cwd=os.path.dirname(self.requirements))
         if pip_retcode == 0:
             self.update_ve_timestamp()
-        sys.exit(pip_retcode)
+        return pip_retcode
+
+    def go_to_ve(self, file_path, args):
+        """
+        If running inside virtualenv already, then just return and carry on.
+
+        If not inside the virtualenv then call the virtualenv python, pass it
+        the original file and all the arguments to it, so this file will be run
+        inside the virtualenv.
+        """
+        if 'VIRTUAL_ENV' in os.environ:
+            # we are in the virtualenv - so carry on to the main code
+            return
+
+        if sys.platform == 'win32':
+            python = path.join(self.ve_dir, 'Scripts', 'python.exe')
+        else:
+            python = path.join(self.ve_dir, 'bin', 'python')
+
+        # add environment variable to say we are now in virtualenv
+        new_env = os.environ.copy()
+        new_env['VIRTUAL_ENV'] = self.ve_dir
+        retcode = subprocess.call([python, file_path] + args, env=new_env)
+        # call the original using the virtualenv and exit
+        sys.exit(retcode)
