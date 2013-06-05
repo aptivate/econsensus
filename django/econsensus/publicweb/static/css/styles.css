@@ -33,7 +33,7 @@ ol, ul {
 	list-style: none;
 }
 ul.bulleted {
-    list-style: none outside disc;
+    list-style: disc outside none;
     padding-left: 1em;
 }
 blockquote, q {
