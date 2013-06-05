@@ -6,21 +6,28 @@ from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 
 
-class CustomOrganizationAddForm(forms.ModelForm):
-
+# Completely override OrganizationForm and OrganizationAddForm from 
+# organizations.forms because we don't want to allow ownership changes via UI, 
+# and we want the owner of new Organizations to be the creating user.
+class CustomOrganizationForm(forms.ModelForm):
     """
-    Completely override organizations.forms.OrganizationAddForm
-    The slug, will be auto-generated from the name, and the user is the
-    request user.
+    For editing Organizations.
     """
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
-        super(CustomOrganizationAddForm, self).__init__(*args, **kwargs)
+        super(CustomOrganizationForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Organization
         exclude = ('slug', 'users', 'is_active')
+
+class CustomOrganizationAddForm(CustomOrganizationForm):
+    """
+    For creating new Organizations.
+    Set the owner to be the request user. The slug, will be auto-generated 
+    from the name.
+    """
 
     def save(self, **kwargs):
         is_active = True
@@ -33,16 +40,6 @@ class CustomOrganizationAddForm(forms.ModelForm):
                organization.owner.organization_user.user,
                organization)
         return organization
-
-class CustomOrganizationForm(forms.ModelForm):
-
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        super(CustomOrganizationForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = Organization
-        exclude = ('slug', 'users', 'is_active')
 
 class CustomOrganizationUserForm(OrganizationUserForm):
     is_editor = forms.BooleanField(required=False)
