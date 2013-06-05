@@ -57,7 +57,7 @@ class LoginTestNonFixture(TestCase):
             {'username': org_user.user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('publicweb_item_list', 
-            args=[org_user.organization.slug, Decision.PROPOSAL_STATUS]) 
+            args=[org_user.organization.slug, Decision.DISCUSSION_STATUS]) 
         self.assertRedirects(response, expected_url)
 
     def test_single_org_redirect_on_login_with_root_next_query(self):
@@ -69,7 +69,7 @@ class LoginTestNonFixture(TestCase):
             {'username': org_user.user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('publicweb_item_list', 
-            args=[org_user.organization.slug, Decision.PROPOSAL_STATUS]) 
+            args=[org_user.organization.slug, Decision.DISCUSSION_STATUS]) 
         self.assertRedirects(response, expected_url)
        
     def test_single_org_redirect_on_login_with_orgadd_next_query(self):
