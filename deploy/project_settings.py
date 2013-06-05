@@ -64,7 +64,7 @@ host_list = {
     'production':   ['lin-' + project_name + '.aptivate.org:48001'],
     'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org'],
     'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org'],
-    'localhost':   ['10.0.156.233'],
+    'localhost':   ['localhost:2222'],  # vagrant
     #'localhost': ['localhost'],
 }
 
