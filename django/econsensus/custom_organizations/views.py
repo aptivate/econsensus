@@ -2,11 +2,18 @@
 from django.contrib.sites.models import get_current_site
 from django.shortcuts import redirect
 
-from organizations.views import OrganizationCreate, OrganizationUpdate, \
-    OrganizationUserCreate, OrganizationUserUpdate, OrganizationUserDelete, OrganizationUserRemind
+from organizations.views import OrganizationCreate,\
+                                OrganizationUpdate,\
+                                OrganizationDetail,\
+                                OrganizationUserCreate,\
+                                OrganizationUserUpdate,\
+                                OrganizationUserDelete,\
+                                OrganizationUserRemind
+
 from guardian.shortcuts import remove_perm
 from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
         CustomOrganizationUserForm, CustomOrganizationUserAddForm
+from organizations.mixins import AdminRequiredMixin
 
 
 
@@ -42,16 +49,18 @@ class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     def get_initial(self):
         super(CustomOrganizationUserUpdate, self).get_initial()
         is_editor = self.object.user.has_perm('edit_decisions_feedback', self.object.organization)
-        self.initial = {"is_editor":is_editor}
+        self.initial = {"is_editor": is_editor}
         return self.initial
 
 class CustomOrganizationUserCreate(OrganizationUserCreate):
     form_class = CustomOrganizationUserAddForm
 
-#Delete unused permissions!
+# Delete unused permissions!
 class CustomOrganizationUserDelete(OrganizationUserDelete):
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
         return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
     
+class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
+    pass

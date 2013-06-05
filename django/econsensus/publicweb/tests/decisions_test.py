@@ -187,34 +187,6 @@ class DecisionsTest(DecisionTestCase):
         self.assertTrue("watcher" not in decision_form.fields,
                           "Decision form should not contain watchers")
         
-    def test_unwatch(self):
-        """
-        Test that the user can unwatch an item by deselecting 
-        the 'watch' checkbox.
-        """
-        decision = self.create_and_return_decision()
-        
-        post_dict = self.get_default_decision_form_dict()
-        post_dict.update({'description': 'Make Eggs',
-                            'watch': False,
-                            'feedback_set-TOTAL_FORMS': '3',
-                            'feedback_set-INITIAL_FORMS': '0',
-                            'feedback_set-MAX_NUM_FORMS': '',
-                            'feedback_set-0-description': 'The eggs are bad',
-                            'feedback_set-1-description': 'No one wants them'})
-        
-        self.client.post(reverse('publicweb_decision_update', args=[decision.id]), 
-                                post_dict,
-                                follow=True )
-        count_all_but_author = User.objects\
-                                   .filter(organization=decision.organization)\
-                                   .filter(is_active=True)\
-                                   .exclude(username=decision.author)\
-                                   .count()
-        self.assertEqual(count_all_but_author, decision.watchers.all().count())
-        
-        self.assertNotIn(self.user, decision.watchers.all())
-
     def test_form_has_watch(self):
         decision_form = DecisionForm()
         self.assertTrue("watch" in decision_form.fields,

@@ -6,10 +6,8 @@
 {% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}
 {% endblock %}
 
-{% block heading %}
-{% endblock %}
+{% block heading %}{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}{% endblock %}
 
 {% block main_content %}
-<h2 class="page_title">{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}</h2>
-    {% include 'organizations/organization_form_snippet.html' %}
+{% include 'organizations/organization_form_snippet.html' %}
 {% endblock %}

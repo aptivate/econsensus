@@ -22,6 +22,6 @@ class FormTest(DecisionTestCase):
         organizations = Organization.objects.filter(slug=new_org_slug)
         self.assertEqual(organizations.count(), 1, "The Organization wasn't created")
         new_organization = organizations[0]
-        self.assertEqual(new_organization.owner.organization_user.user, self.user, "New Organization has wrong owner")
+        self.assertTrue(new_organization.is_owner(self.user), "New Organization has wrong owner")
         self.assertTrue(new_organization.owner.organization_user.is_admin, "Owner of new Organization is not admin")
         self.assertTrue(self.user.has_perm('edit_decisions_feedback', new_organization), "Owner of new Organization is not editor")
