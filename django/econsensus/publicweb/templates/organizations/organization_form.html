@@ -3,10 +3,10 @@
 {% load url from future %}
 
 {% block title %}
-{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}
+{% if organization %}{{ organization.name }}{% else %}{% trans 'Create New Organization' %}{% endif %}
 {% endblock %}
 
-{% block heading %}{% if organization %}{{ organization.name }}{% else %}{% trans 'Add Organization' %}{% endif %}{% endblock %}
+{% block heading %}{% if organization %}{{ organization.name }}{% else %}{% trans 'Create New Organization' %}{% endif %}{% endblock %}
 
 {% block main_content %}
 {% include 'organizations/organization_form_snippet.html' %}
