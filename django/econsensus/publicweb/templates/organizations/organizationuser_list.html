@@ -9,7 +9,7 @@
 
 
 {% block heading %}
-{{ organization }}'s members
+{{ organization }}'s live users
 {% endblock %}
 
 {% block main_content %}
@@ -17,34 +17,52 @@
 <br />
 <ul>
 {% for organization_user in organization_users %}
+{% if forloop.first %}<table class="org_list"><tbody>{% endif %}
 {% if organization_user.user.is_active %}
-<li>{{ organization_user.user }} {{ organization_user.user.email }} <a href="{% url 'organization_user_edit' organization.id organization_user.user.id %}">edit</a> | <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a></li>
+
+<tr>
+    <td><h3>{{ organization_user.user }}</h3></td>
+    <td> {{ organization_user.user.email }}</td> 
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'organization_user_edit' organization.id organization_user.user.id %}">edit</a> | <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a></td>
+</tr>
 
 {% endif %}
+{% if forloop.last %}</tr></tbody></table>{% endif %}
+
 {% endfor %}
-</ul>
+
 
 <br />
+    <li><a href="{% url 'organization_user_add' organization.pk %}">Add a new member</a></li>
+
+</ul>
+
+{% for organization_user in inactive_users %}
+{% if forloop.first %}
+<br />
 <h2 class="page_title">
-Invited members  
+Pending users  
 </h2>
 
 <br />
 <br />
 <ul>
-{% for organization_user in organization_users %}
-{% if not organization_user.user.is_active %}
-<li>{{ organization_user.user.email }} <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></li>
-
-
+<table class="org_list"><tbody>
 {% endif %}
+<tr>
+    <td style="text-align: left"> {{ organization_user.user.email }}</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></td>
+</tr>
+
+
+{% if forloop.last %}</tr></tbody></table>{% endif %}
+
 {% endfor %}
 </ul>
 
 
 <ul>
 <br />
-    <li><a href="{% url 'organization_user_add' organization.pk %}">Add a new member</a></li>
 <br />
     <li><a href="{% url 'organization_list' %}">Back to your organizations</a> </li>
 </ul>
