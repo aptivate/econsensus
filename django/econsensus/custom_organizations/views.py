@@ -31,7 +31,7 @@ class CustomOrganizationUpdate(OrganizationUpdate):
         return reverse("organization_list")
 
 
-class CustomOrganizationUserList(OrganizationUserList):
+class CustomOrganizationUserList(AdminRequiredMixin, OrganizationUserList):
     def get(self, request, *args, **kwargs):
         self.organization = self.get_organization()
         self.object_list = self.organization.organization_users.all()
