@@ -1,7 +1,10 @@
-
 from django.contrib.sites.models import get_current_site
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
+from guardian.shortcuts import remove_perm
+
+from organizations.backends import invitation_backend
 from organizations.views import OrganizationCreate,\
                                 OrganizationUpdate,\
                                 OrganizationDetail,\
@@ -10,18 +13,23 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserDelete,\
                                 OrganizationUserRemind,\
                                 OrganizationUserList
-
-from guardian.shortcuts import remove_perm
-from forms import CustomOrganizationAddForm, CustomOrganizationForm, \
-        CustomOrganizationUserForm, CustomOrganizationUserAddForm
 from organizations.mixins import AdminRequiredMixin
 
+from custom_organizations.forms import CustomOrganizationForm,\
+                                    CustomOrganizationAddForm,\
+                                    CustomOrganizationUserForm,\
+                                    CustomOrganizationUserAddForm
 
 
-from organizations.backends import invitation_backend
+class CustomOrganizationCreate(OrganizationCreate):
+    form_class = CustomOrganizationAddForm
 
+class CustomOrganizationUpdate(OrganizationUpdate):
+    form_class = CustomOrganizationForm
 
-from django.core.urlresolvers import reverse
+    def get_success_url(self):
+        return reverse("organization_list")
+
 
 class CustomOrganizationUserList(OrganizationUserList):
     def get(self, request, *args, **kwargs):
@@ -34,16 +42,6 @@ class CustomOrganizationUserList(OrganizationUserList):
                 organization=self.organization)
         return self.render_to_response(context)
 
-
-class CustomOrganizationCreate(OrganizationCreate):
-    form_class = CustomOrganizationAddForm
-
-class CustomOrganizationUpdate(OrganizationUpdate):
-    form_class = CustomOrganizationForm
-
-    def get_success_url(self):
-        return reverse("organization_list")
-
 class CustomOrganizationUserRemind(OrganizationUserRemind):
 
     def post(self, request, *args, **kwargs):
@@ -52,8 +50,6 @@ class CustomOrganizationUserRemind(OrganizationUserRemind):
                 **{'domain': get_current_site(self.request),
                     'organization': self.organization, 'sender': request.user})
         return redirect(reverse("organization_user_list", args=[str(self.organization.id)]))
-
-
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
