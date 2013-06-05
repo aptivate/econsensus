@@ -8,11 +8,11 @@ from guardian.shortcuts import assign
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
 from publicweb.forms import DecisionForm
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 
-from decision_test_case import EconsensusTestCase
 #HTML tests test the html code, for example the content of 
 #dynamic pages based on POST data
-class HtmlTest(EconsensusTestCase):
+class HtmlTest(EconsensusFixtureTestCase):
 
     def test_add_decision(self):
         """
@@ -139,7 +139,7 @@ class HtmlTest(EconsensusTestCase):
     def test_site_contains_version_number(self):
         path = reverse('publicweb_root')
         response = self.client.get(path, follow=True)
-        self.assertContains(response, '(v0.4.0)')
+        self.assertContains(response, '(v0.4.')
         
     def test_editor_shown(self):
         decision = self.create_decision_through_browser()

@@ -4,13 +4,13 @@ Tests for the csv export functionality
 TODO: Check that when you add or update a decision it is reflected in the output.		      
 """
 
-from open_consent_test_case import EconsensusTestCase
+from open_consent_test_case import EconsensusFixtureTestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from organizations.models import Organization
 
-class CsvTest(EconsensusTestCase):
+class CsvTest(EconsensusFixtureTestCase):
     fixtures = ['organizations.json', 'users.json']
 
     def setUp(self):

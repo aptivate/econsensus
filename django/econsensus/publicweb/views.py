@@ -472,7 +472,7 @@ class FeedbackUpdate(UpdateView):
 class OrganizationRedirectView(RedirectView):
     '''
     If the user only belongs to one organization then
-    take them to that organizations proposal page, otherwise
+    take them to that organizations default Decision list page, otherwise
     take them to the organization list page.
     '''
     permanent = False
@@ -484,6 +484,6 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
         except:
             return reverse('organization_list')

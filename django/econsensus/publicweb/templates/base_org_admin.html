@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+		{% block topbar %}
+			<div id="navigation-wrapper">
+				<div id="navigation">
+					<ul>
+						<li></li>
+					</ul>
+				</div>
+				<div class="search">
+					<form id="search_form" action="search" method="get">
+						<p>
+							<input id="search" type="text" maxlength="128" value="" name="search"/>
+							<input id="search_button" type="submit" value="Search"/>
+						</p>
+					</form>
+				</div>
+				
+			</div>
+		{% endblock %}
+

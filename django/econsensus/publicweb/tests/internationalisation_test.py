@@ -1,13 +1,15 @@
 # coding: utf-8
 
-from open_consent_test_case import EconsensusTestCase
 from django.core.urlresolvers import reverse
 from django.utils import translation
+
 from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
-from publicweb.models import Decision
 
-class InternationalisationTest(EconsensusTestCase):
+from publicweb.models import Decision
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
+
+class InternationalisationTest(EconsensusFixtureTestCase):
     
     def test_all_text_translated_when_viewing_decision_list(self):
         Decision.objects.all().delete()

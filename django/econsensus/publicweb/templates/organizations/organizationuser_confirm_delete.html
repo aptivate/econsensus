@@ -1,19 +1,36 @@
-{% extends "base.html" %}
+{% extends "base_org_admin.html" %}
+{% load url from future %}
 {% load i18n %}
 {% load org_tags %}
 
 {% block title %}
-Confirm Delete
+Confirm delete
 {% endblock %}
 
 {% block heading %}
-Confirm Delete
+{% if organization_user.user.is_active %}
+Confirm delete for {{ organization_user.user }}
+{% else %}
+Confirm delete for {{ organization_user.user.email }}
+{% endif %}
 {% endblock %}
 
 {% block main_content %}
-<h1>{{ organization }}</h1>
+<br />
+<br />
+Deleting a user will only remove the user from your organization, {{ organization }}
+<br />
+<br />
+The user will not be removed from econsensus
+<br />
+<br />
 <form action="." method="post">{% csrf_token %}
     {{ form }}
-    <input type="submit" value="Delete">
+    <input type="submit" value="Delete" style="float:left;margin:0 0.5em">
 </form>
+
+<form method="GET" action="{% url 'organization_user_list' organization.pk%}" style="float:left">
+    <input class="button" type="submit" value="Cancel">
+</form>
+<br />
 {% endblock %}
