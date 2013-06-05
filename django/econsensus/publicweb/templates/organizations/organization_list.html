@@ -18,7 +18,7 @@ Your Organizations
 {% for organization in organizations %}
 {% if forloop.first %}<table class="org_list"><tbody>{% endif %}
     <tr>
-        <td><h3>{{ organization.name }}</h3></td>
+        <td><h3><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a></h3></td>
         <td>
             <a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">View</a>
             {% if organization|is_admin:user %}<span class="org-admin">| Admin options: <a href="{% url 'organization_user_list' organization.pk %}">edit members</a> or <a href="{% url 'organization_edit' organization.pk %}">rename</a></span>{% endif %}
