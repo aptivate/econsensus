@@ -1,6 +1,5 @@
 import os
 import sys
-import getopt
 import shutil
 import subprocess
 from os import path
@@ -76,7 +75,7 @@ def in_virtualenv():
 
 class UpdateVE(object):
 
-    def __init__(self, argv=None, ve_dir=None, requirements=None):
+    def __init__(self, ve_dir=None, requirements=None):
 
         if requirements:
             self.requirements = requirements
@@ -100,50 +99,6 @@ class UpdateVE(object):
             self.ve_dir = ve_dir
 
         self.ve_timestamp = path.join(self.ve_dir, 'timestamp')
-        self.force_update = False
-        self.full_rebuild = False
-        self.fake_update = False
-        self.clean_ve = False
-
-        if argv:
-            try:
-                opts, args = getopt.getopt(argv[1:], 'hfrkc',
-                    ['help', 'force', 'full-rebuild', 'fake', 'clean'])
-            except getopt.error, msg:
-                print 'Bad options: %s' % msg
-                self.print_help_text()
-                raise
-            # process options
-            for o, a in opts:
-                if o in ("-h", "--help"):
-                    self.print_help_text()
-                    sys.exit()
-                if o in ("-f", "--force"):
-                    self.force_update = True
-                if o in ("-r", "--full-rebuild"):
-                    self.full_rebuild = True
-                if o in ("-k", "--fake"):
-                    self.fake_update = True
-                if o in ("-c", "--clean"):
-                    self.clean_ve = True
-
-            # check for incompatible flags
-            if self.force_update and self.fake_update:
-                raise getopt.GetoptError("Cannot use both --force and --fake")
-            if self.full_rebuild and self.fake_update:
-                raise getopt.GetoptError("Cannot use both --full-rebuild and --fake")
-            if self.full_rebuild and self.clean_ve:
-                raise getopt.GetoptError("Cannot use both --full-rebuild and --clean")
-            if self.clean_ve and self.fake_update:
-                raise getopt.GetoptError("Cannot use both --clean and --fake")
-
-    def print_help_text(self):
-        print "Command line options:"
-        print "    -h, --help           # print this help text"
-        print "    -f, --force          # do the virtualenv update even if it is up to date"
-        print "    -r, --full-rebuild   # delete the virtualenv before rebuilding"
-        print "    -k, --fake           # just update the virtualenv timestamps"
-        print "    -c, --clean          # delete the virtualenv"
 
     def update_ve_timestamp(self):
         os.utime(self.ve_dir, None)
@@ -172,8 +127,6 @@ class UpdateVE(object):
         """ pip can include directories, and we sometimes add directories as
         submodules.  And pip install will fail if those directories are empty.
         So we need to set up the submodules first. """
-        if self.fake_update:
-            return
         try:
             from project_settings import local_vcs_root, repo_type
         except ImportError:
@@ -190,23 +143,15 @@ class UpdateVE(object):
         if path.exists(self.ve_dir):
             shutil.rmtree(self.ve_dir)
 
-    def update_ve(self):
+    def update_ve(self, full_rebuild, force_update):
 
         if not path.exists(self.requirements):
             print >> sys.stderr, "Could not find requirements: file %s" % self.requirements
             return 1
 
-        if self.clean_ve:
-            self.delete_virtualenv()
-            return 0
-
-        if self.fake_update:
-            self.update_ve_timestamp()
-            return 0
-
         update_required = self.virtualenv_needs_update()
 
-        if not update_required and not self.force_update:
+        if not update_required and not force_update:
             # Nothing to be done
             print "VirtualEnv does not need to be updated"
             print "use --force to force an update"
@@ -215,7 +160,7 @@ class UpdateVE(object):
         # if we need to create the virtualenv, then we must do that from
         # outside the virtualenv. The code inside this if statement will only
         # be run outside the virtualenv.
-        if self.full_rebuild and path.exists(self.ve_dir):
+        if full_rebuild and path.exists(self.ve_dir):
             shutil.rmtree(self.ve_dir)
         if not path.exists(self.ve_dir):
             import virtualenv
