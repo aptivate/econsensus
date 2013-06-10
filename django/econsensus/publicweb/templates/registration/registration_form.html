@@ -6,7 +6,7 @@ login
 {% endblock %}
 
 {% block title %}
-Registration
+Econsensus Registration
 {% endblock %}
 
 {% block user_access %}
@@ -20,14 +20,20 @@ Registration
 {% endblock %}
 
 {% block heading %}
-Registration
+Econsensus Registration
 {% endblock %}
 
 {% block main_content %}
 <form id="short-form" method="post" action=".">
   {% csrf_token %}
-  {{ form.as_p }}
-
+  {% for field in form %}
+  <div class="field">
+    <p class="label">{{ field.label_tag }}</p>
+    <p class="field_value">{{ field }}</p>
+    <p class="errorlist">{{ field.errors.as_text }}</p>
+  </div>
+  {% endfor %}
+  
 <div class="button_group">
   <input class="button" type="submit" value="{% trans 'Submit' %}" />
 </div>

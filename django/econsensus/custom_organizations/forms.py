@@ -1,9 +1,29 @@
 from django import forms
 
-from organizations.models import Organization
+from organizations.models import Organization, get_user_model
 from organizations.utils import create_organization
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
+
+# Override the UserRegistrationForm so we can pick and choose
+# which fields to use and change the labels
+class CustomUserRegistrationForm(forms.ModelForm):
+    """Form class for completing a user's registration and activating the
+    User."""
+    email = forms.CharField(max_length=30, label = "E-mail")
+    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(max_length=30,
+            widget=forms.PasswordInput, label = "Password (again)")
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserRegistrationForm, self).__init__(*args, **kwargs)
+        self.initial['username'] = ''
+
+    class Meta:
+        model = get_user_model()
+        exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
+                'date_joined', 'groups', 'user_permissions', 'first_name',
+                'last_name')
 
 
 # Completely override OrganizationForm and OrganizationAddForm from 
