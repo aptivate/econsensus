@@ -42,7 +42,7 @@ class DecisionsTest(DecisionTestCase):
 
         self.assertEqual(expected, actual)
             
-        # Test that the decision add view validates and rejects and empty post
+        # Test that the decision add view validates and rejects an empty post
         post_dict = self.get_default_decision_form_dict()
 
         response = self.client.post(path, post_dict)
@@ -50,7 +50,7 @@ class DecisionsTest(DecisionTestCase):
         self.assertFalse(response.context['form'].is_valid())
         
         # Test that providing a short name is enough to complete the form,
-        # save the object and send us back to the home page
+        # save the object and send us to the list screen of the relevant status
         
         post_dict = self.get_default_decision_form_dict()
 
@@ -62,7 +62,9 @@ class DecisionsTest(DecisionTestCase):
                                     follow=True)
         
         
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS]))
+        self.assertRedirects(
+            response, 
+            reverse('publicweb_item_list', args=[self.bettysorg.slug, post_dict['status']]))
 
     def get_default_decision_form_dict(self):
         return {'status': Decision.DECISION_STATUS}

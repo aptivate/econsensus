@@ -122,7 +122,7 @@ class HtmlTest(EconsensusFixtureTestCase):
                      'meeting_people': test_string, 
                      'status': Decision.PROPOSAL_STATUS}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.DECISION_STATUS]))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, post_dict['status']]))
         decision = Decision.objects.get(meeting_people=test_string)
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
