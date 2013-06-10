@@ -709,7 +709,8 @@ def deploy(environment=None):
     create_ve()
     update_db()
 
-    collect_static()
+    if environment != 'dev':
+        collect_static()
 
     if hasattr(localtasks, 'post_deploy'):
         localtasks.post_deploy(environment)
