@@ -6,7 +6,7 @@ from views import DecisionCreate, DecisionUpdate, \
                     DecisionDetail, DecisionList, \
                     ExportCSV, FeedbackCreate, \
                     FeedbackSnippetCreate, FeedbackUpdate, \
-                    OrganizationRedirectView
+                    OrganizationRedirectView, YourDetails
 
 from models import Feedback
 
@@ -60,6 +60,11 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^decision/detail/snippet/(?P<pk>[\d]+)/$',
         DecisionDetail.as_view(template_name = 'decision_detail_snippet.html'),
         name='publicweb_decision_snippet_detail'),                       
+    #other urls
+    url(r'^your_details/$',
+        YourDetails.as_view(),
+        name='your_details'),
+
 
     #item urls
     url(r'^item/detail/(?P<pk>[\d]+)/$',

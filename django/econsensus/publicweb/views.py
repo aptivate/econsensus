@@ -3,18 +3,20 @@ from notification import models as notification
 from organizations.models import Organization
 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic.base import View, RedirectView
+from django.views.generic.base import View, RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
+
 
 import unicodecsv
 
@@ -23,7 +25,22 @@ from guardian.decorators import permission_required_or_403
 
 from models import Decision, Feedback
 
-from publicweb.forms import DecisionForm, FeedbackForm
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+
+class YourDetails(FormView):
+    template_name = 'your_details.html'
+    form_class = YourDetailsForm
+
+    def get(self, *args, **kwargs):
+        form = YourDetailsForm()
+        form.fields["username"].initial = "hghg"
+        return super(YourDetails, self).get(*args, **kwargs)
+
+#         response = HttpResponse("HELLO")
+#         return response
+        
+
+
 
 class ExportCSV(View):
     @method_decorator(login_required)

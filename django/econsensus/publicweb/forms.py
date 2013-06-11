@@ -2,11 +2,25 @@
 
 from django import forms
 from models import Decision, Feedback
+from django.contrib.auth.models import User
+
 
 from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
+
+class YourDetailsForm(forms.ModelForm):
+
+    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(max_length=30,
+            widget=forms.PasswordInput, label = "Password (again)")
+
+    class Meta:
+        model = User
+        exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
+                'date_joined', 'groups', 'user_permissions', 'first_name',
+                'last_name')
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
