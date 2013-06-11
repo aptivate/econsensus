@@ -5,6 +5,8 @@ from organizations.models import Organization
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response
+
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
@@ -31,11 +33,13 @@ class YourDetails(FormView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
 
-    def get(self, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         form = YourDetailsForm()
-        form.fields["username"].initial = "hghg"
-        return super(YourDetails, self).get(*args, **kwargs)
-
+        form.fields["username"].initial = request.user.username 
+        return render_to_response('your_details.html', {
+           'form': form
+           })
+#        return super(YourDetails, self).get(*args, **kwargs)
 #         response = HttpResponse("HELLO")
 #         return response
         
