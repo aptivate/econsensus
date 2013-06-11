@@ -10,9 +10,10 @@ user clicks outside the area
     });
     
     $(".show").live("click", function(e) {
-    var this_comment_form  = $(this).parent().siblings().find(".form_comment");
+      var this_comment_form  = $(this).parent().siblings().find(".form_comment");
       $(".form_comment").hide();
       this_comment_form.show();
+      this_comment_form.find("textarea").focus();
       e.stopPropagation();
       e.preventDefault();
     });
