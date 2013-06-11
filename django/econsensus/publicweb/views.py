@@ -5,7 +5,7 @@ from organizations.models import Organization
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -36,7 +36,7 @@ class YourDetails(FormView):
     def get(self, request, *args, **kwargs):
         form = YourDetailsForm()
         form.fields["username"].initial = request.user.username 
-        return render_to_response('your_details.html', {
+        return render(request, 'your_details.html', {
            'form': form
            })
 #        return super(YourDetails, self).get(*args, **kwargs)
