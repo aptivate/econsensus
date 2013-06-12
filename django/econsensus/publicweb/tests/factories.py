@@ -1,9 +1,11 @@
 import factory
 
 from django.contrib.auth.models import User
-from publicweb.models import Decision
+
 from organizations.models import Organization, OrganizationUser,\
     OrganizationOwner
+
+from publicweb.models import Decision
 
 
 class UserFactory(factory.DjangoModelFactory):

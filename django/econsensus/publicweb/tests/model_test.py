@@ -1,8 +1,8 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from publicweb.models import Decision, Feedback
-from decision_test_case import DecisionTestCase
-from django.contrib.auth.models import User
+from publicweb.tests.decision_test_case import DecisionTestCase
 
 class ModelTest(DecisionTestCase):
 
