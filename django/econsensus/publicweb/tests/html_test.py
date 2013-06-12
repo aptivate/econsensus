@@ -99,19 +99,6 @@ class HtmlTest(EconsensusFixtureTestCase):
         self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
-    
-    def test_feedback_author_shown(self):
-        decision = self.make_decision(description="Lorem Ipsum")
-        feedback = Feedback(description="Dolor sit")
-        feedback.author = self.user
-        feedback.decision = decision
-        feedback.save()
-        
-        self.user = self.login('charlie')        
-        path = reverse('publicweb_item_detail', args=[decision.id])
-        response = self.client.get(path)
-        betty = User.objects.get(username='betty')
-        self.assertContains(response, betty.username)
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
