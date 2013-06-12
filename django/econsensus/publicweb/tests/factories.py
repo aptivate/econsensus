@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from organizations.models import Organization, OrganizationUser,\
     OrganizationOwner
 
-from publicweb.models import Decision
+from publicweb.models import Decision, Feedback
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -40,3 +40,9 @@ class DecisionFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Decision
 
     organization = factory.SubFactory(OrganizationFactory)
+
+class FeedbackFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Feedback
+
+    decision = factory.SubFactory(DecisionFactory)
+

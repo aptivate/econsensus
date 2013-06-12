@@ -1,10 +1,21 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from publicweb.models import Decision, Feedback
 from publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.tests.factories import FeedbackFactory, UserFactory
 
-class ModelTest(DecisionTestCase):
+class ModelTest(TestCase):
+    def test_get_author_name(self):
+        feedback = Feedback(author=None)
+        self.assertEqual(feedback.get_author_name(), "An Anonymous Contributor")
+
+        user = UserFactory()
+        feedback = FeedbackFactory(author=user)
+        self.assertEqual(feedback.get_author_name(), user.username)
+
+class ModelTestSlow(DecisionTestCase):
 
 #Generic test functions:
     def model_has_attribute(self, model, attr):
@@ -68,13 +79,6 @@ class ModelTest(DecisionTestCase):
         decision = self.make_decision()
         feedback = Feedback(description="Feedback test data", decision=decision)
         self.model_has_attribute(feedback, "author")
-
-    def test_get_author_name(self):
-        decision = self.make_decision()
-        feedback = Feedback(description="Feedback test data", decision=decision, author=self.betty)
-        self.assertEqual(feedback.get_author_name(), self.betty.username)
-        feedback = Feedback(description="Feedback test data", decision=decision, author=None)
-        self.assertEqual(feedback.get_author_name(), "An Anonymous Contributor")
 
     def test_decision_has_meeting_people(self):
         decision = self.make_decision()
