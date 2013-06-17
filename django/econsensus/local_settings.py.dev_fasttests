@@ -3,9 +3,6 @@ import private_settings
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = 'item/list/proposal/'
-
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 DATABASES = {
