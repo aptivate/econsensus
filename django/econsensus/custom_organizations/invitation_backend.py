@@ -1,6 +1,6 @@
 from organizations.backends.tokens import RegistrationTokenGenerator
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.http import Http404
 from django.utils.translation import ugettext as _
 

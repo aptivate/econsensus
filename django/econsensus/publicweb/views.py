@@ -35,6 +35,7 @@ class YourDetails(UpdateView):
     form_class = YourDetailsForm
 
     def get(self, request, *args, **kwargs):
+        slug = kwargs.get('org_slug', None)
         self.object = User.objects.get(username=self.request.user)
         #form = YourDetailsForm()
         form_class = self.get_form_class()
