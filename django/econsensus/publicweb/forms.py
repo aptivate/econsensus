@@ -12,15 +12,14 @@ from widgets import JQueryUIDateWidget
 
 class YourDetailsForm(forms.ModelForm):
 
-    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
-    password_confirm = forms.CharField(max_length=30,
-            widget=forms.PasswordInput, label = "Password (again)")
+    #password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    #password_confirm = forms.CharField(max_length=30,
+    #        widget=forms.PasswordInput, label = "Password (again)")
 
     class Meta:
         model = User
         exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
-                'date_joined', 'groups', 'user_permissions', 'first_name',
-                'last_name')
+                'date_joined', 'groups', 'user_permissions', 'password')
 
 class FeedbackForm(forms.ModelForm):
     class Meta:

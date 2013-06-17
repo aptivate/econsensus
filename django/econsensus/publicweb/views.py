@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response, render
 
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -29,19 +30,39 @@ from models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 
-class YourDetails(FormView):
+class YourDetails(UpdateView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
 
     def get(self, request, *args, **kwargs):
-        form = YourDetailsForm()
-        form.fields["username"].initial = request.user.username 
+        self.object = User.objects.get(username=self.request.user)
+        #form = YourDetailsForm()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        context = self.get_context_data(object=self.object, form=form)
+        #form.fields["username"].initial = request.user.username 
+        #form.fields["username"].initial = request.user.email
+        #return self.render_to_response(context)
         return render(request, 'your_details.html', {
            'form': form
            })
 #        return super(YourDetails, self).get(*args, **kwargs)
 #         response = HttpResponse("HELLO")
 #         return response
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('your_details')
+
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        messages.add_message(self.request, messages.INFO, 'Your details have been updated successfully.')
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_object(self, queryset=None):
+        return self.request.user
         
 
 
