@@ -4,13 +4,30 @@ from organizations.models import Organization, get_user_model
 from organizations.utils import create_organization
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
+from registration.forms import RegistrationFormUniqueEmail
+
+# Create another Registration form so we can add extra fields 
+# to the sign up process
+class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
+    """Form class for completing a user's registration and activating the
+    User."""
+    first_name = forms.CharField(max_length=30, label = "First name")
+    last_name = forms.CharField(max_length=30, label = "Last name")
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserSignupRegistrationForm, self).__init__(*args, **kwargs)
+        self.initial['username'] = ''
+        self.fields.keyOrder = ['username', 'first_name', 'last_name',
+                                'email', 'password1', 'password2']
+
+
 
 # Override the UserRegistrationForm so we can pick and choose
 # which fields to use and change the labels
 class CustomUserRegistrationForm(forms.ModelForm):
     """Form class for completing a user's registration and activating the
     User."""
-    email = forms.CharField(max_length=30, label = "E-mail")
+    email = forms.CharField(label = "E-mail")
     password = forms.CharField(max_length=30, widget=forms.PasswordInput)
     password_confirm = forms.CharField(max_length=30,
             widget=forms.PasswordInput, label = "Password (again)")
@@ -22,8 +39,7 @@ class CustomUserRegistrationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
-                'date_joined', 'groups', 'user_permissions', 'first_name',
-                'last_name')
+                'date_joined', 'groups', 'user_permissions')
 
 
 # Completely override OrganizationForm and OrganizationAddForm from 

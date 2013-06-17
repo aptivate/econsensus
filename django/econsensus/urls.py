@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
+from custom_organizations.forms import CustomUserSignupRegistrationForm
+import custom_organizations.registration_signal
 
 admin.autodiscover()
 
@@ -24,7 +26,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('',
     url(r'^accounts/register/$', 'registration.views.register',
-        {'form_class':RegistrationFormUniqueEmail,
+        {'form_class':CustomUserSignupRegistrationForm,
         'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
