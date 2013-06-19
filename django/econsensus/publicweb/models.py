@@ -9,6 +9,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_noop
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes import generic
@@ -213,7 +214,11 @@ class Decision(models.Model):
 
 class Feedback(models.Model):
 
-    rating_names = (_('question'), _('danger'), _('concerns'), _('consent'), _('comment'))
+    rating_names = (ugettext_noop('question'),
+                    ugettext_noop('danger'),
+                    ugettext_noop('concerns'),
+                    ugettext_noop('consent'),
+                    ugettext_noop('comment'))
 
     RATING_CHOICES = [(rating_names.index(x), x) for x in rating_names]
     
