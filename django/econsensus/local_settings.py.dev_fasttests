@@ -5,6 +5,8 @@ TEMPLATE_DEBUG = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
+thisdir = os.path.abspath(os.path.dirname(__file__))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
