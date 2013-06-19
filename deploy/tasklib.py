@@ -608,6 +608,9 @@ def run_tests(*extra_args):
     ./tasks.py run_tests:myapp
     ./tasks.py run_tests:myapp.ModelTests,myapp.ViewTests.my_view_test
     """
+    if not env['quiet']:
+        print "### Running tests"
+
     args = ['test', '-v0']
 
     if extra_args:
@@ -635,11 +638,13 @@ def quick_test(*extra_args):
     """
     original_environment = _infer_environment()
 
-    link_local_settings('dev_fasttests')
-    create_ve()
-    update_db()
-    run_tests(*extra_args)
-    link_local_settings(original_environment)
+    try:
+        link_local_settings('dev_fasttests')
+        create_ve()
+        update_db()
+        run_tests(*extra_args)
+    finally:
+        link_local_settings(original_environment)
 
 
 def _install_django_jenkins():
