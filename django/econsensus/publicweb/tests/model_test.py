@@ -17,13 +17,25 @@ class DecisionLastModifiedTest(TestCase):
     """
     def setUp(self):
         self.user = UserFactory()
-        self.decision = DecisionFactory(author=self.user)
+        self.decision = DecisionFactory()
 
     def last_modified(self):
         """
         Gets the last modified date of the test decision.
         """
         return Decision.objects.get(id=self.decision.id).last_modified
+
+    def test_edit_decision_editor(self):
+        orig_last_modified = self.last_modified()
+        self.decision.editor = UserFactory()
+        self.decision.save()
+        self.assertEquals(orig_last_modified, self.last_modified())
+
+    def test_edit_decision_description(self):
+        orig_last_modified = self.last_modified()
+        self.decision.description += "x"
+        self.decision.save()
+        self.assertTrue(orig_last_modified < self.last_modified())
 
     def test_add_feedback_triggers_update(self):
         orig_last_modified = self.last_modified()
