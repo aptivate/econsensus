@@ -93,8 +93,8 @@ class Decision(models.Model):
 
     objects = DecisionManager()
 
-    # Names of fields used to check for modifications
-    FIELDS = ('description', 'decided_date', 'effective_date', 'review_date',
+    # Fields that'll trigger last_modified update upon change
+    TRIGGER_FIELDS = ('description', 'decided_date', 'effective_date', 'review_date',
               'expiry_date', 'deadline', 'archived_date', 'budget', 'people',
               'meeting_people', 'status', 'excerpt', 'creation')
 
@@ -182,7 +182,7 @@ class Decision(models.Model):
         send_observation_notices_for(self, headers=headers, from_email=self.get_email())
 
     def _is_same(self, other):
-        for field in self.FIELDS:
+        for field in self.TRIGGER_FIELDS:
             if getattr(self, field) != getattr(other, field):
                 return False
         return True
