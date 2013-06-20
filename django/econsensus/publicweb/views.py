@@ -35,6 +35,10 @@ class YourDetails(UpdateView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(YourDetails, self).dispatch(*args, **kwargs)
+
     # we need to override get_form so we can pass the user into the form
     def get_form(self, form_class):
         form = super(YourDetails, self).get_form(form_class)
