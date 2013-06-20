@@ -7,7 +7,7 @@ from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 from custom_organizations.forms import CustomUserSignupRegistrationForm
-import custom_organizations.registration_signal
+import publicweb.registration_signal
 
 admin.autodiscover()
 
