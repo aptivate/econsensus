@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans Your account details %}
+{% endblock %}
+
+
+{% block heading %}
+{% trans Your account details %}
+{% endblock %}
+
+{% block main_content %}
+<br />
+
+{% if messages %}
+<br />
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+<br />
+{% endif %}
+<form id="short-form" method="post" action=".">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="field">
+    <p class="label">{{ field.label_tag }}</p>
+    <p class="field_value">{{ field }}</p>
+    <p class="errorlist">{{ field.errors.as_text }}</p>
+  </div>
+  {% endfor %}
+  
+<div class="button_group">
+  <input class="button" type="submit" value="{% trans 'Update' %}" />
+</div>
+</form>
+{% endblock %}
