@@ -30,11 +30,12 @@ from models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 
+# The class that handles the My Account bit of the code
 class YourDetails(UpdateView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
 
-
+    # we need to override get_form so we can pass the user into the form
     def get_form(self, form_class):
         form = super(YourDetails, self).get_form(form_class)
         form.instance.user = self.request.user
@@ -43,19 +44,12 @@ class YourDetails(UpdateView):
     def get(self, request, *args, **kwargs):
         slug = kwargs.get('org_slug', None)
         self.object = User.objects.get(username=self.request.user)
-        #form = YourDetailsForm(request.GET)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(object=self.object, form=form)
-        #form.fields["username"].initial = request.user.username 
-        #form.fields["username"].initial = request.user.email
-        #return self.render_to_response(context)
         return render(request, 'your_details.html', {
            'form': form
            })
-#        return super(YourDetails, self).get(*args, **kwargs)
-#         response = HttpResponse("HELLO")
-#         return response
 
     def get_success_url(self, *args, **kwargs):
         return reverse('your_details')
@@ -65,7 +59,7 @@ class YourDetails(UpdateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.save()
-        messages.add_message(self.request, messages.INFO, 'Your details have been updated successfully.')
+        messages.add_message(self.request, messages.INFO, _('Your details have been updated successfully.'))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_object(self, queryset=None):
