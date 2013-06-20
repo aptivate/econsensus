@@ -5,14 +5,18 @@ from organizations.utils import create_organization
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 from registration.forms import RegistrationFormUniqueEmail
+from django.utils.translation import ugettext as _
+
 
 # Create another Registration form so we can add extra fields 
-# to the sign up process
+# to the sign up process (first_name and last_name)
+# These fields are caught by the new_user signal
+# and saved into the User model
 class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
     """Form class for completing a user's registration and activating the
     User."""
-    first_name = forms.CharField(max_length=30, label = "First name")
-    last_name = forms.CharField(max_length=30, label = "Last name")
+    first_name = forms.CharField(max_length=30, label = _("First name"))
+    last_name = forms.CharField(max_length=30, label = _("Last name"))
 
     def __init__(self, *args, **kwargs):
         super(CustomUserSignupRegistrationForm, self).__init__(*args, **kwargs)
@@ -27,10 +31,10 @@ class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
 class CustomUserRegistrationForm(forms.ModelForm):
     """Form class for completing a user's registration and activating the
     User."""
-    email = forms.CharField(label = "E-mail")
+    email = forms.CharField(label = _("E-mail"))
     password = forms.CharField(max_length=30, widget=forms.PasswordInput)
     password_confirm = forms.CharField(max_length=30,
-            widget=forms.PasswordInput, label = "Password (again)")
+            widget=forms.PasswordInput, label = _("Password (again)"))
 
     def __init__(self, *args, **kwargs):
         super(CustomUserRegistrationForm, self).__init__(*args, **kwargs)
