@@ -34,10 +34,16 @@ class YourDetails(UpdateView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
 
+
+    def get_form(self, form_class):
+        form = super(YourDetails, self).get_form(form_class)
+        form.instance.user = self.request.user
+        return form
+
     def get(self, request, *args, **kwargs):
         slug = kwargs.get('org_slug', None)
         self.object = User.objects.get(username=self.request.user)
-        #form = YourDetailsForm()
+        #form = YourDetailsForm(request.GET)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(object=self.object, form=form)
