@@ -63,6 +63,7 @@ Then check out the code:
 Then you should be able to do:
 
     $ cd econsensus
+    $ deploy/bootstrap.py
     $ deploy/tasks.py deploy:dev
 
 This should set up the database you need, install the python packages 
