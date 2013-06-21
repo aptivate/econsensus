@@ -11,6 +11,7 @@ Usage:
 Options for the plain command:
     -f, --force            # do the virtualenv update even if it is up to date
     -r, --full-rebuild     # delete the virtualenv before rebuilding
+    -q, --quiet            # don't ask for user input
 """
 # a script to set up the virtualenv so we can use fabric and tasks
 import sys
@@ -39,8 +40,8 @@ def main(argv):
 
     if argv:
         try:
-            opts, args = getopt.getopt(argv[1:], 'hfr',
-                ['help', 'force', 'full-rebuild'])
+            opts, args = getopt.getopt(argv[1:], 'hfqr',
+                ['help', 'force', 'quiet', 'full-rebuild'])
         except getopt.error, msg:
             return print_error_msg('Bad options: %s' % msg)
         # process options
