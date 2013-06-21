@@ -71,7 +71,7 @@ host_list = {
 # this is the default git branch to use on each server
 default_branch = {
     'production':   'master',
-    'staging':      'master',
+    'staging':      'develop',
     'staging_test': 'master',
     'dev_server':   'develop',
     'localhost':    'dye',
