@@ -66,10 +66,10 @@ Then you should be able to do:
     $ deploy/bootstrap.py
     $ deploy/tasks.py deploy:dev
 
-This should set up the database you need, install the python packages 
-required, create an initial admin user for use of the django admin screens 
-and a few other details. You should now be able to run the 
-development server:
+This will create the virtualenv and install the python packages required, then 
+create the database with an initial admin user for use of the django admin screens 
+and a few other details (see https://github.com/aptivate/dye/blob/master/README.md for 
+more details). You should now be able to run the development server:
 
     $ cd django/econsensus/
     $ ./manage.py runserver
