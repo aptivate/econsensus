@@ -355,7 +355,8 @@ class DecisionCreate(CreateView):
         return context
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_list', args=[self.organization.slug, self.status])
+        status = getattr(self, 'object', self).status
+        return reverse('publicweb_item_list', args=[self.organization.slug, status])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -472,7 +473,7 @@ class FeedbackUpdate(UpdateView):
 class OrganizationRedirectView(RedirectView):
     '''
     If the user only belongs to one organization then
-    take them to that organizations proposal page, otherwise
+    take them to that organizations default Decision list page, otherwise
     take them to the organization list page.
     '''
     permanent = False
@@ -484,6 +485,6 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'proposal'])
+            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
         except:
             return reverse('organization_list')

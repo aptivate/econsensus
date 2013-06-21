@@ -210,8 +210,8 @@ class TestOrganizationRedirectView(TestCase):
     def test_redirect_for_one_organization(self):
         '''
         If the user is a member of only one organization then on login
-        they should be redirected to the proposal page for that one
-        organization and not the organization list page.
+        they should be redirected to the default Decision status list for 
+        that one organization and not the organization list page.
         '''
         org_user = OrganizationUserFactory(user=self.user)
         org_redirect_view = OrganizationRedirectView()
@@ -219,7 +219,7 @@ class TestOrganizationRedirectView(TestCase):
         url = org_redirect_view.get_redirect_url()
         expected_url = reverse('publicweb_item_list',
                                args=[org_user.organization.slug,
-                                     'proposal'])
+                                     'discussion'])
         self.assertEqual(url, expected_url)
 
     def test_redirect_for_many_organizations(self):

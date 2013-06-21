@@ -1,5 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_org_admin.html" %}
 {% load i18n %}
+{% load url from future %}
+
 
 {% block title %}
 Confirm Delete
@@ -12,8 +14,12 @@ Confirm Delete
 {% block main_content %}
 <h1>{{ account }}</h1>
 <h3>Are you sure you want to delete this organization?</h3>
+<br />
 <form action="." method="post">{% csrf_token %}
     {{ form }}
-    <input type="submit" value="Delete">
+    <input type="submit" value="Delete" style="float:left;margin:0 0.5em">
+</form>
+<form method="GET" action="{% url 'organization_list' %}" style="float:left">
+    <input class="button" type="submit" value="Cancel">
 </form>
 {% endblock %}

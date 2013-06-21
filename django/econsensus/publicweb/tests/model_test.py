@@ -1,10 +1,69 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.test import TestCase
+
+from notification import models as notification
 
 from publicweb.models import Decision, Feedback
-from decision_test_case import DecisionTestCase
-from django.contrib.auth.models import User
+from publicweb.tests.decision_test_case import DecisionTestCase
+from publicweb.tests.factories import DecisionFactory, \
+                                        FeedbackFactory, \
+                                        UserFactory, \
+                                        CommentFactory
 
-class ModelTest(DecisionTestCase):
+class DecisionLastModifiedTest(TestCase):
+    """
+    Tests updating of 'last_modified' date on Decision.
+    """
+    def setUp(self):
+        self.user = UserFactory()
+        self.decision = DecisionFactory()
+
+    def last_modified(self):
+        """
+        Gets the last modified date of the test decision.
+        """
+        return Decision.objects.get(id=self.decision.id).last_modified
+
+    def test_edit_decision_editor(self):
+        orig_last_modified = self.last_modified()
+        self.decision.editor = UserFactory()
+        self.decision.save()
+        self.assertEquals(orig_last_modified, self.last_modified())
+
+    def test_edit_decision_description(self):
+        orig_last_modified = self.last_modified()
+        self.decision.description += "x"
+        self.decision.save()
+        self.assertTrue(orig_last_modified < self.last_modified())
+
+    def test_add_feedback_triggers_update(self):
+        orig_last_modified = self.last_modified()
+        feedback = FeedbackFactory(decision=self.decision, author=self.user)
+        self.assertTrue(orig_last_modified < self.last_modified())
+
+    def test_add_comment_triggers_update(self):
+        feedback = FeedbackFactory(decision=self.decision, author=self.user)
+        orig_last_modified = self.last_modified()
+        comment = CommentFactory(content_object=feedback, user=self.user)
+        self.assertTrue(orig_last_modified < self.last_modified())
+
+    def test_add_watcher_triggers_no_update(self):
+        orig_last_modified = self.last_modified()
+        notification.observe(self.decision, UserFactory(), 'decision_change')
+        self.decision.save()
+        self.assertTrue(orig_last_modified == self.last_modified())
+
+class ModelTest(TestCase):
+    def test_get_author_name(self):
+        feedback = Feedback(author=None)
+        self.assertEqual(feedback.get_author_name(), "An Anonymous Contributor")
+
+        user = UserFactory()
+        feedback = FeedbackFactory(author=user)
+        self.assertEqual(feedback.get_author_name(), user.username)
+
+class ModelTestSlow(DecisionTestCase):
 
 #Generic test functions:
     def model_has_attribute(self, model, attr):
@@ -91,5 +150,5 @@ class ModelTest(DecisionTestCase):
         self.assertTrue("danger" in statistics)
         self.assertTrue("question" in statistics)
         self.assertTrue("comment" in statistics)
-        
+
         

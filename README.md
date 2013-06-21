@@ -12,17 +12,35 @@ if you just want to install and try it out, skip to the next section.
 
 If you'd like to contribute to this project, first of all welcome! Secondly, please follow the workflow below:
 - fork the repository on github into your own github account
-- follow the instructions below to install a development instance, but instead of cloning from the aptivate 
-repository, clone from the 'develop' branch of your forked repository - always work on the develop branch because 
+- follow the instructions below to install a development instance, but instead of cloning from the aptivate repository, clone from the 'develop' branch of your forked repository - always work on the develop branch because 
 that's more up-to-date than master.
 - now create a branch of your local develop branch as follows:
+ 
     $ git branch my_branch
+
 - and check it out:
+
     $ git checkout my_branch
-- once you're done committing, use the github button to submit a pull request on your branch to the aptivate 
+    
+- please run the tests as you develop, and certainly before submitting your changes to us:
+
+    $ cd django/econsensus
+    
+    $ rm local_settings.py
+    
+    $ ln -s local_settings.py.dev_fasttests local_settings.py
+    
+    $ ./manage.py test publicweb
+    
+- once you're done committing and all the tests are passing, push your branch to your account on github:
+
+    $ git push origin my_branch
+    
+- find your branch my_branch on your github account and use the github button to submit a pull request to the aptivate 
 develop branch
-- we'll get notified of your pull request and will be be in touch asap
-Thank you for your interest.
+- we'll get notified of your pull request and will be in touch asap
+
+Thank you for your interest!
 
 Install an instance
 ===================

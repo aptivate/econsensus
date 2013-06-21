@@ -32,6 +32,10 @@ body {
 ol, ul {
 	list-style: none;
 }
+ul.bulleted {
+    list-style: disc outside none;
+    padding-left: 1em;
+}
 blockquote, q {
 	quotes: none;
 }
@@ -268,6 +272,13 @@ input {
 #content h2.page_title.feedback {
 	margin-bottom:10px;
 	width:inherit;
+}
+#content table.org_list>tbody>tr>td:first-child {
+    padding-right: 2em;
+    text-align: right;
+}
+#content table.org_list>tbody>tr>td:last-child {
+    vertical-align: middle;
 }
 
 /* pagination */
@@ -1185,14 +1196,10 @@ ul.errorlist {
     float: right;
 }
 
-#short-form .label {
-    float: left;
-}
-
 #short-form p {
     float: left;
-    line-height: 3.3em;
-    width: 100%;
+    margin-top:10px;
+    margin-bottom:10px;
 }
 
 #short-form label {
@@ -1201,6 +1208,7 @@ ul.errorlist {
     font-size: 1.3em;
     color:#333;
     width: 8em;
+    padding-top:11px;
 }
 
 #short-form input {
