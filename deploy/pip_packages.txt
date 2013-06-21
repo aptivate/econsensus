@@ -11,7 +11,7 @@ django-debug-toolbar
 django-tagging
 hg+https://bitbucket.org/bkroeze/django-livesettings
 django-keyedcache
-django-registration
+django-registration==0.8.0
 -e ../django/django-organizations
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
 django-guardian
