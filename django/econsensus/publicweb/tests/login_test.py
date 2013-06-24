@@ -87,8 +87,6 @@ class LoginTestNonFixture(TestCase):
         user = UserFactory()
         org_user1 = OrganizationUserFactory(user=user)
         org_user2 = OrganizationUserFactory(user=user)
-        OrganizationOwnerFactory(organization=org_user1.organization)
-        OrganizationOwnerFactory(organization=org_user2.organization)
         user.set_password('test')
         user.save()
         response = self.client.post(reverse('auth_login'),
@@ -101,8 +99,6 @@ class LoginTestNonFixture(TestCase):
         user = UserFactory()
         org_user1 = OrganizationUserFactory(user=user)
         org_user2 = OrganizationUserFactory(user=user)
-        OrganizationOwnerFactory(organization=org_user1.organization)
-        OrganizationOwnerFactory(organization=org_user2.organization)
         user.set_password('test')
         user.save()
         response = self.client.post(reverse('auth_login')+'?next=/',
