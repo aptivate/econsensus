@@ -4,7 +4,7 @@ from django.test import TestCase
 from publicweb.models import Decision
 from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests.factories import UserFactory, \
-        OrganizationUserFactory
+        OrganizationUserFactory, OrganizationOwnerFactory
 
 class LoginTest(EconsensusFixtureTestCase):       
     def test_non_login_is_redirected(self):
@@ -87,6 +87,8 @@ class LoginTestNonFixture(TestCase):
         user = UserFactory()
         org_user1 = OrganizationUserFactory(user=user)
         org_user2 = OrganizationUserFactory(user=user)
+        OrganizationOwnerFactory(organization=org_user1.organization)
+        OrganizationOwnerFactory(organization=org_user2.organization)
         user.set_password('test')
         user.save()
         response = self.client.post(reverse('auth_login'),
@@ -99,6 +101,8 @@ class LoginTestNonFixture(TestCase):
         user = UserFactory()
         org_user1 = OrganizationUserFactory(user=user)
         org_user2 = OrganizationUserFactory(user=user)
+        OrganizationOwnerFactory(organization=org_user1.organization)
+        OrganizationOwnerFactory(organization=org_user2.organization)
         user.set_password('test')
         user.save()
         response = self.client.post(reverse('auth_login')+'?next=/',
