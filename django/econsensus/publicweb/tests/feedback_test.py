@@ -26,6 +26,7 @@ class FeedbackTest(DecisionTestCase):
         form.fields['description'] = "New Updated description."
         form.fields['rating'] = 4
         form.fields['resolved'] = False
+        form.fields['minor_edit'] = False
         # Empty the test outbox
         mail.outbox = []
         response = self.client.post(reverse('publicweb_feedback_update',

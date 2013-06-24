@@ -424,10 +424,29 @@ class FeedbackNotificationTest(TestCase):
         feedbackAuthor = UserFactory(email="rob@bobbins.org")
         self.feedback = FeedbackFactory(decision=decision,
                                         description="Not so fast",
-                                        author=feedbackAuthor)
+                                        author=feedbackAuthor,
+                                        editor=feedbackAuthor)
 
     def test_edit_triggers_email(self):
         mail.outbox = []
         self.feedback.description = "Not so slow"
+        self.feedback.save()
+        self.assertGreater(len(mail.outbox), 0)
+
+    def test_minor_edit_triggers_no_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not too fast"
+        self.feedback.minor_edit = True
+        self.feedback.save()
+        self.assertEqual(len(mail.outbox), 0)
+
+    # It is an arguable point whether this logic should be in the UI
+    # or the back end. However, whilst it's in the latter, we'll have a
+    # test for it here.
+    def test_minor_edit_by_non_author_triggers_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not so quick"
+        self.feedback.minor_edit = True
+        self.feedback.editor = UserFactory(email="hob@bobbins.org")
         self.feedback.save()
         self.assertGreater(len(mail.outbox), 0)
