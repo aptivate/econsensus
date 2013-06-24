@@ -9,6 +9,7 @@ from django.forms.fields import ChoiceField
 from widgets import JQueryUIDateWidget
 
 class FeedbackForm(forms.ModelForm):
+    minor_edit = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Feedback
         exclude = ("decision",)
@@ -16,6 +17,7 @@ class FeedbackForm(forms.ModelForm):
 class DecisionForm(forms.ModelForm):
     
     watch = forms.BooleanField(required=False, initial=True)
+    minor_edit = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Decision
         exclude = ('organization',)

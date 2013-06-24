@@ -84,7 +84,7 @@ class TestDecisionUpdateView(EconsensusTestCase):
         decision_update_view.get_object = lambda: decision
         decision_update_view.last_status = 'dummy'
         form = DecisionForm(instance=decision)
-        form.cleaned_data = {'watch': False}
+        form.cleaned_data = {'watch': False, 'minor_edit': False}
         # Run the form_valid method to stop observing
         decision_update_view.form_valid(form)
         self.assertEqual(decision.watchers.count(), 0)
@@ -104,7 +104,7 @@ class TestDecisionUpdateView(EconsensusTestCase):
         decision_update_view.get_object = lambda: decision
         decision_update_view.last_status = 'dummy'
         form = DecisionForm(instance=decision)
-        form.cleaned_data = {'watch': True}
+        form.cleaned_data = {'watch': True, 'minor_edit': False}
         decision_update_view.form_valid(form)
         self.assertEqual(decision.editor, user2)
 

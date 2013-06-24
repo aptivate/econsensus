@@ -1,16 +1,21 @@
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
+from notification import models as notification
 from guardian.shortcuts import assign
 from organizations.models import Organization
 
 from publicweb.models import Decision
 from decision_test_case import DecisionTestCase
 from django.utils import timezone
+
+from publicweb.tests.factories import DecisionFactory, UserFactory, \
+        FeedbackFactory
 
 class NotificationTest(DecisionTestCase):
     """
@@ -390,3 +395,46 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
+
+class DecisionNotificationTest(TestCase):
+    def setUp(self):
+        user = UserFactory()
+        self.decision = DecisionFactory(author=user, description="Eat Cheese")
+        watcher = UserFactory(email="bob@bobbins.org")
+        notification.observe(self.decision, watcher, 'decision_change')
+
+    def test_edit_triggers_email(self):
+        mail.outbox = []
+        self.decision.description = "Make Cheese"
+        self.decision.save()
+        self.assertGreater(len(mail.outbox), 0)
+
+    def test_minor_edit_triggers_no_email(self):
+        mail.outbox = []
+        self.decision.description = "Eat Cheese!"
+        self.decision.minor_edit = True
+        self.decision.save()
+        self.assertEqual(len(mail.outbox), 0)
+
+class FeedbackNotificationTest(TestCase):
+    def setUp(self):
+        mail.outbox = []
+        self.user = UserFactory(email="bob@bobbins.org")
+        decision = DecisionFactory(author=self.user)
+        feedbackAuthor = UserFactory(email="rob@bobbins.org")
+        self.feedback = FeedbackFactory(decision=decision,
+                                        description="Not so fast",
+                                        author=feedbackAuthor)
+
+    def test_edit_triggers_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not so slow"
+        self.feedback.save()
+        self.assertGreater(len(mail.outbox), 0)
+
+    def test_minor_edit_triggers_no_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not too fast"
+        self.feedback.minor_edit = True
+        self.feedback.save()
+        self.assertEqual(len(mail.outbox), 0)
