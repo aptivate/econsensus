@@ -1,0 +1,33 @@
+# vi: ft=python
+
+import private_settings
+import os
+import warnings
+import exceptions
+
+#ignore the following error when using ipython:
+#/django/db/backends/sqlite3/base.py:50: RuntimeWarning:
+#SQLite received a naive datetime (2012-11-02 11:20:15.156506) while time zone support is active.
+warnings.filterwarnings("ignore", category=exceptions.RuntimeWarning, module='django.db.backends.sqlite3', lineno=50)
+
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(PROJECT_HOME,'econsensus-messages')
+
+thisdir = os.path.abspath(os.path.dirname(__file__))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': "econsensus_dye",                      # Or path to database file if using sqlite3.
+        'USER': 'econsensus_dye',                      # Not used with sqlite3.
+        'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
