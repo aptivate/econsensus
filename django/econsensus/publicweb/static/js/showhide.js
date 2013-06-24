@@ -13,6 +13,9 @@ user clicks outside the area
       var this_comment_form  = $(this).parent().siblings().find(".form_comment");
       $(".form_comment").hide();
       this_comment_form.show();
+      // Ensure "Post" button is on screen
+      this_comment_form.find(".button").focus();
+      // Move focus to where user will type
       this_comment_form.find("textarea").focus();
       e.stopPropagation();
       e.preventDefault();
