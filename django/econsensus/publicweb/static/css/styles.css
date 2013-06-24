@@ -974,16 +974,6 @@ div#tags {
 	margin-right:20px;
 }
 
-.formset_item .form_row .controls div {
-	padding: 0 6px 4px 6px;
-	float: right;
-}
-
-.formset_item .form_row .controls div.minor_edit {
-	padding: 0;
-	float: left;
-}
-
 .feedback_edit a {
 	float: right;
 }

@@ -458,7 +458,6 @@ class FeedbackUpdate(UpdateView):
 
     def form_valid(self, form, *args, **kwargs):
         form.instance.editor = self.request.user
-        form.instance.minor_edit = form.cleaned_data['minor_edit']
         if not notification.is_observing(self.object.decision, self.request.user):
             notification.observe(self.object.decision, self.request.user, 'decision_change')
         return super(FeedbackUpdate, self).form_valid(form, *args, **kwargs)

@@ -431,10 +431,3 @@ class FeedbackNotificationTest(TestCase):
         self.feedback.description = "Not so slow"
         self.feedback.save()
         self.assertGreater(len(mail.outbox), 0)
-
-    def test_minor_edit_triggers_no_email(self):
-        mail.outbox = []
-        self.feedback.description = "Not too fast"
-        self.feedback.minor_edit = True
-        self.feedback.save()
-        self.assertEqual(len(mail.outbox), 0)

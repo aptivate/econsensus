@@ -245,12 +245,6 @@ class Feedback(models.Model):
     watchers = generic.GenericRelation(notification.ObservedItem)
     comments = generic.GenericRelation(Comment, object_id_field='object_pk')
 
-    def __init__(self, *args, **kwargs):
-        # Unpersisted flag for suppressing notifications at save time
-        self.minor_edit = False
-
-        super(Feedback, self).__init__(*args, **kwargs)
-
     @models.permalink
     def get_absolute_url(self):
         return ('publicweb_feedback_detail', [self.id])
@@ -312,7 +306,7 @@ def feedback_signal_handler(sender, **kwargs):
         extra_context = dict({"observed": instance})
         notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
     else:
-        if instance.author != instance.editor and not instance.minor_edit:
+        if instance.author != instance.editor:
             send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
 
 @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
