@@ -53,7 +53,6 @@ def main(argv):
                 force_update = True
             if o in ("-r", "--full-rebuild"):
                 full_rebuild = True
-                clean_ve = True
         if len(args) > 1:
             return print_error_msg(
                     "Can only have one argument - you had %s" % (' '.join(args)))
@@ -78,7 +77,7 @@ def main(argv):
         return updater.delete_virtualenv()
     else:
         updater.update_git_submodule()
-        return updater.update_ve(force_update, full_rebuild)
+        return updater.update_ve(full_rebuild, force_update)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
