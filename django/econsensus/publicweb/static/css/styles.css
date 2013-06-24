@@ -926,11 +926,16 @@ p.title {
 	float: right;
 	}
 	
-.decision_controls div#watch {
+.decision_controls div.watch {
 	padding: 0;
 	float: left;
 }
-	
+
+.decision_controls div.minor_edit {
+	padding: 0;
+	float: left;
+}
+
 .decision_meta #tags #id_tags {
 	width:90%;
 }

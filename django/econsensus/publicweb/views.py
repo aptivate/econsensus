@@ -376,6 +376,7 @@ class DecisionUpdate(UpdateView):
     def form_valid(self, form):
         form.instance.editor = self.request.user
         form.instance.last_status = self.last_status
+        form.instance.minor_edit = form.cleaned_data['minor_edit']
         if not form.cleaned_data['watch'] and notification.is_observing(self.object, self.request.user):
             notification.stop_observing(self.object, self.request.user)
         elif form.cleaned_data['watch'] and not notification.is_observing(self.object, self.request.user):
