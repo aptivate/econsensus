@@ -9,9 +9,9 @@ from registration.forms import RegistrationFormUniqueEmail
 from django.utils.translation import ugettext_lazy as _
 
 
-# Create another Registration form so we can add extra fields 
+# Subclass the default Registration form so we can add extra fields 
 # to the sign up process (first_name and last_name)
-# These fields are caught by the new_user signal
+# These fields are caught by the user_registered signal
 # and saved into the User model
 class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
     """Form class for completing a user's registration and activating the
