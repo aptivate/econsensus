@@ -117,6 +117,15 @@ input {
     padding: 5px 10px;
 }
 
+.loose.button {
+    border: medium none;
+    font-weight: bold;
+    padding: 5px 10px;
+    float: left;
+    margin:0 0.5em
+}
+
+
 .button:hover {
     cursor: pointer;
 }
@@ -181,7 +190,7 @@ input {
 }
 
 #user_access {
-	width:20em;
+	width:26em;
 	display:block;
 	position:relative;
 	float:right;

@@ -4,7 +4,7 @@ from django.test import TestCase
 from publicweb.models import Decision
 from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests.factories import UserFactory, \
-        OrganizationUserFactory
+        OrganizationUserFactory, OrganizationOwnerFactory
 
 class LoginTest(EconsensusFixtureTestCase):       
     def test_non_login_is_redirected(self):

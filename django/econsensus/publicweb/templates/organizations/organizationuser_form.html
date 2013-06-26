@@ -56,10 +56,10 @@ Change user persmissions below
     	{{ form.is_editor }}
     </div>        
 <br />
-    <input type="submit" value="OK" style="float:left;margin:0 0.5em">
+    <input class="loose button" type="submit" value="OK">
 </form>
-<form method="GET" action="{% url 'organization_user_list' organization.pk %}" style="float:left">
-    <input class="button" type="submit" value="Cancel">
+<form method="GET" action="{% url 'organization_user_list' organization.pk %}">
+    <input class="loose button" type="submit" value="Cancel">
 </form>
 <br />
 

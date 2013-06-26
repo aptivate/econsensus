@@ -3,18 +3,23 @@ from notification import models as notification
 from organizations.models import Organization
 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response, render
+
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic.base import View, RedirectView
+from django.views.generic.base import View, RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
+
 
 import unicodecsv
 
@@ -23,7 +28,49 @@ from guardian.decorators import permission_required_or_403
 
 from models import Decision, Feedback
 
-from publicweb.forms import DecisionForm, FeedbackForm
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+
+# The class that handles the My Account bit of the code
+class YourDetails(UpdateView):
+    template_name = 'your_details.html'
+    form_class = YourDetailsForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(YourDetails, self).dispatch(*args, **kwargs)
+
+    # we need to override get_form so we can pass the user into the form
+    def get_form(self, form_class):
+        form = super(YourDetails, self).get_form(form_class)
+        form.instance.user = self.request.user
+        return form
+
+    def get(self, request, *args, **kwargs):
+        slug = kwargs.get('org_slug', None)
+        self.object = User.objects.get(username=self.request.user)
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        context = self.get_context_data(object=self.object, form=form)
+        return render(request, 'your_details.html', {
+           'form': form
+           })
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('your_details')
+
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        messages.add_message(self.request, messages.INFO, _('Your details have been updated successfully.'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_object(self, queryset=None):
+        return self.request.user
+        
+
+
 
 class ExportCSV(View):
     @method_decorator(login_required)
