@@ -1,34 +1,28 @@
-# Create your views here.
-from notification import models as notification
-from organizations.models import Organization
+import unicodecsv
 
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, render
-
+from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from django.contrib import messages
+from django.core.exceptions import MultipleObjectsReturned
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render_to_response, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, FormView
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import MultipleObjectsReturned
-
-
-import unicodecsv
-
+from django.views.generic.list import ListView
 
 from guardian.decorators import permission_required_or_403
-
-from models import Decision, Feedback
+from notification import models as notification
+from organizations.models import Organization
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+from publicweb.models import Decision, Feedback
+
 
 # The class that handles the My Account bit of the code
 class YourDetails(UpdateView):
