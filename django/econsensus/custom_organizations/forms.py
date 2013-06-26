@@ -5,7 +5,7 @@ from organizations.utils import create_organization
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 from registration.forms import RegistrationFormUniqueEmail
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 
 # Create another Registration form so we can add extra fields 
@@ -32,7 +32,8 @@ class CustomUserRegistrationForm(forms.ModelForm):
     """Form class for completing a user's registration and activating the
     User."""
     email = forms.CharField(label = _("E-mail"))
-    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    password = forms.CharField(max_length=30, widget=forms.PasswordInput, 
+                label = _("Password"))
     password_confirm = forms.CharField(max_length=30,
             widget=forms.PasswordInput, label = _("Password (again)"))
 
