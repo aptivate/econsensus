@@ -2,6 +2,7 @@ from django import forms
 
 from organizations.models import Organization, get_user_model
 from organizations.utils import create_organization
+from organizations.backends.forms import UserRegistrationForm
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 from registration.forms import RegistrationFormUniqueEmail
@@ -26,9 +27,8 @@ class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
 
 
 
-# Override the UserRegistrationForm so we can pick and choose
-# which fields to use and change the labels
-class CustomUserRegistrationForm(forms.ModelForm):
+# Subclass the UserRegistrationForm so we can change the labels
+class CustomUserRegistrationForm(UserRegistrationForm):
     """Form class for completing a user's registration and activating the
     User."""
     email = forms.CharField(label = _("E-mail"))
@@ -36,16 +36,6 @@ class CustomUserRegistrationForm(forms.ModelForm):
                 label = _("Password"))
     password_confirm = forms.CharField(max_length=30,
             widget=forms.PasswordInput, label = _("Password (again)"))
-
-    def __init__(self, *args, **kwargs):
-        super(CustomUserRegistrationForm, self).__init__(*args, **kwargs)
-        self.initial['username'] = ''
-
-    class Meta:
-        model = get_user_model()
-        exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
-                'date_joined', 'groups', 'user_permissions')
-
 
 # Completely override OrganizationForm and OrganizationAddForm from 
 # organizations.forms because we don't want to allow ownership changes via UI, 
