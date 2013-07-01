@@ -24,7 +24,6 @@ from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 from publicweb.models import Decision, Feedback
 
 
-# The class that handles the My Account bit of the code
 class YourDetails(UpdateView):
     template_name = 'your_details.html'
     form_class = YourDetailsForm
@@ -40,7 +39,6 @@ class YourDetails(UpdateView):
         return form
 
     def get(self, request, *args, **kwargs):
-        slug = kwargs.get('org_slug', None)
         self.object = User.objects.get(username=self.request.user)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
@@ -62,8 +60,6 @@ class YourDetails(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-        
-
 
 
 class ExportCSV(View):

@@ -10,7 +10,6 @@ from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
 
-# The My Account form so users can change their details
 class YourDetailsForm(forms.ModelForm):
 
     class Meta:
