@@ -9,11 +9,11 @@
             "is_active": true, 
             "is_superuser": true, 
             "is_staff": true, 
-            "last_login": "2011-09-01 15:46:32", 
+            "last_login": "2011-09-01T15:46:32Z", 
             "groups": [], 
             "user_permissions": [], 
             "password": "sha1$17cb5$fcc8d5c3d4ceb210732615893834dd04c814a2a0", 
-            "date_joined": "2011-09-01 15:45:42"
+            "date_joined": "2011-09-01T15:45:42Z"
         }
     },
     {
@@ -26,11 +26,11 @@
             "is_active": true, 
             "is_superuser": false, 
             "is_staff": false, 
-            "last_login": "2011-09-01 15:46:32", 
+            "last_login": "2011-09-01T15:46:32Z", 
             "groups": [], 
             "user_permissions": [], 
             "password": "sha1$2aaa2$fb900f0e8e07b7fcf4785b881ca24581ee93b968", 
-            "date_joined": "2011-09-01 15:45:42"
+            "date_joined": "2011-09-01T15:45:42Z"
         }
     }
 ]
