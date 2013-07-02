@@ -242,6 +242,8 @@ logging.getLogger('keyedcache').setLevel(logging.INFO)
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 
+TEST_RUNNER = 'test_runner.DiscoveryRunner'
+
 #--------------------------------
 # local settings import
 #from http://djangosnippets.org/snippets/1873/
@@ -276,5 +278,3 @@ else:
             LOGGING['handlers']['file']['filename'] = LOG_FILE
             if not os.path.exists(LOG_FILE):
                 open(LOG_FILE, 'w').close()
-
-TEST_RUNNER = 'test_runner.DiscoveryRunner'
