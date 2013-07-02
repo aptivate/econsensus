@@ -159,7 +159,7 @@ class Decision(models.Model):
         """
         Generates a message id that can be used in email headers
         """
-        return "decision-%s@%s" % (self.id, Site.objects.get_current().domain)
+        return "<decision-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
     def _update_notification_for_org_change(self):
         self.watchers.all().delete()
@@ -256,7 +256,7 @@ class Feedback(models.Model):
         """
         Generates a message id that can be used in email headers
         """
-        return "feedback-%s@%s" % (self.id, Site.objects.get_current().domain)
+        return "<feedback-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):
