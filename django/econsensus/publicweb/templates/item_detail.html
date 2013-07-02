@@ -218,7 +218,7 @@
 				object_id = wrapper.parent().attr("id").slice(2),
 				snippet_update_url = snippet_update_url_template.replace('0', object_id);
 	
-			$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+			// $('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
 			replaceWithRemote(snippet_update_url, wrapper);
 			e.preventDefault();
 		});
