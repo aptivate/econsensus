@@ -2,7 +2,7 @@ from django.contrib.auth.models import Permission
 from decision_test_case import DecisionTestCase
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from guardian.shortcuts import remove_perm, assign
+from guardian.shortcuts import remove_perm, assign_perm
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -30,7 +30,7 @@ class OrganizationTest(DecisionTestCase):
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)
         #give perm
-        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
@@ -55,7 +55,7 @@ class OrganizationTest(DecisionTestCase):
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)
         #give perm
-        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)
@@ -75,7 +75,7 @@ class OrganizationTest(DecisionTestCase):
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)
         #give perm
-        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)     
@@ -93,7 +93,7 @@ class OrganizationTest(DecisionTestCase):
         response = self.client.get(path)
         self.assertEquals(response.status_code, 403)
         #give perm
-        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
         # get a 200
         response = self.client.get(path)
         self.assertEquals(response.status_code, 200)

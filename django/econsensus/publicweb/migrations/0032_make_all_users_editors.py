@@ -11,7 +11,7 @@ class Migration(DataMigration):
         #all of the Organizations to which they belong.
         #Note that we pull Organization directly, not from orm[],
         #therefore we assume organization model will always have .users
-        from guardian.shortcuts import assign
+        from guardian.shortcuts import assign_perm
         from django.contrib.auth.models import Permission
         from organizations.models import Organization
         try:
@@ -21,7 +21,7 @@ class Migration(DataMigration):
             raise
         for org in Organization.objects.all():
             for user in org.users.all():
-                assign(perm.codename, user, org)
+                assign_perm(perm.codename, user, org)
                 
     def backwards(self, orm):
         #Remove the permission from every users organizations

@@ -5,7 +5,7 @@ from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 from organizations.models import Organization
 
 from publicweb.models import Decision
@@ -123,11 +123,11 @@ class NotificationTest(DecisionTestCase):
         for user in orig_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertFalse(new_org.is_member(user))
-            assign('edit_decisions_feedback', user, orig_org)
+            assign_perm('edit_decisions_feedback', user, orig_org)
         for user in new_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertTrue(new_org.is_member(user))
-            assign('edit_decisions_feedback', user, new_org)
+            assign_perm('edit_decisions_feedback', user, new_org)
 
         # Make a decision under original org and edit it in various
         # ways using various users 
@@ -294,12 +294,12 @@ class NotificationTest(DecisionTestCase):
         decision = self.create_decision_through_browser()
         # Charlie adds feedback to it
         self.login('charlie')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)        
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
         # Betty changes the feedback...
         self.login('betty')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)        
         self.update_feedback_through_browser(feedback.id)
         # Check email
         outbox = getattr(mail, 'outbox')
@@ -383,7 +383,7 @@ class NotificationTest(DecisionTestCase):
         mail.outbox = []
         
         self.login('charlie')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)        
         feedback = self.update_feedback_through_browser(feedback.id)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)

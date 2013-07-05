@@ -3,7 +3,7 @@ from django import forms
 from organizations.models import Organization
 from organizations.utils import create_organization
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
-from guardian.shortcuts import assign, remove_perm
+from guardian.shortcuts import assign_perm, remove_perm
 
 
 # Completely override OrganizationForm and OrganizationAddForm from 
@@ -36,7 +36,7 @@ class CustomOrganizationAddForm(CustomOrganizationForm):
                                            self.cleaned_data['name'],
                                            '',  # Empty slug to be autofilled
                                            is_active=is_active)
-        assign('edit_decisions_feedback',
+        assign_perm('edit_decisions_feedback',
                organization.owner.organization_user.user,
                organization)
         return organization
@@ -46,7 +46,7 @@ class CustomOrganizationUserForm(OrganizationUserForm):
 
     def save(self, commit=True):
         if self.cleaned_data['is_editor']:
-            assign('edit_decisions_feedback', self.instance.user, self.instance.organization)
+            assign_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         return super(CustomOrganizationUserForm, self).save(commit=commit)
@@ -57,7 +57,7 @@ class CustomOrganizationUserAddForm(OrganizationUserAddForm):
     def save(self, commit=True):
         self.instance = super(CustomOrganizationUserAddForm, self).save(commit=commit)
         if self.cleaned_data['is_editor']:
-            assign('edit_decisions_feedback', self.instance.user, self.instance.organization)
+            assign_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         return self.instance
