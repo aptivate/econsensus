@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Comment" %}{% endblock %}
+
+{% block heading %}{% trans "Comment" %}{% endblock %}
+
+{% block main_content %}
+    {% include "feedback_comment_snippet.html" %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% load i18n %}
+{% load comments %}
+
+{% with object.get_parent_url as next %}
+    {% render_comment_form for object %}
+{% endwith %}

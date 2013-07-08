@@ -1033,9 +1033,9 @@ div#tags {
 	margin-top: 1em;
 	}
 
-.form_comment {
+.showable {
 	display :none;
-	}
+}
 
 .form_comment textarea {
 	width: 100%;
