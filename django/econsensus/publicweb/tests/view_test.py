@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 
 from publicweb.views import DecisionDetail, DecisionList, DecisionUpdate, \
     FeedbackCreate, OrganizationRedirectView
@@ -133,7 +133,7 @@ class TestDecisionUpdateView(EconsensusTestCase):
         self.assertEquals(decision.last_status, 'new')
 
         request = RequestFactory().get('/')
-        assign('edit_decisions_feedback', user, decision.organization)
+        assign_perm('edit_decisions_feedback', user, decision.organization)
         request.user = user
         request.method = 'POST'
         request.POST = {'status': decision.status, 'description': decision.description}

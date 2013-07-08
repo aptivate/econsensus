@@ -1,6 +1,6 @@
 from decision_test_case import DecisionTestCase
 from django.core.urlresolvers import reverse
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 from publicweb.forms import FeedbackForm
 from publicweb import models
 from django.core import mail
@@ -21,7 +21,7 @@ class FeedbackTest(DecisionTestCase):
         self.assertEqual(feedback.author, self.betty)
         # edit feedback, not as author
         self.login(self.charlie)
-        assign('edit_decisions_feedback', self.user, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
         form = FeedbackForm(instance=feedback)
         form.fields['description'] = "New Updated description."
         form.fields['rating'] = 4

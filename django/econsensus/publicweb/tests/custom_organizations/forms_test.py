@@ -9,7 +9,7 @@ from custom_organizations.forms import CustomOrganizationAddForm,\
 
 from django.template.defaultfilters import slugify
 
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 from django.forms.fields import BooleanField
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
@@ -125,7 +125,7 @@ class TestCustomOrganizationUserForm(TestCase):
         org_user = org_owner.organization_user
         user = org_user.user
         org = org_user.organization
-        assign(GUARDIAN_PERMISSION, user, org)
+        assign_perm(GUARDIAN_PERMISSION, user, org)
         # Confirm user has the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
         form = CustomOrganizationUserForm(data={'is_admin': True},
@@ -181,7 +181,7 @@ class TestCustomOrganizationUserAddForm(TestCase):
         """
         org = OrganizationFactory()
         user = UserFactory(email='test@test.com')
-        assign(GUARDIAN_PERMISSION, user, org)
+        assign_perm(GUARDIAN_PERMISSION, user, org)
         # Confirm the user has the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
         request = RequestFactory()
