@@ -1033,6 +1033,10 @@ div#tags {
 	margin-top: 1em;
 	}
 
+.contrib_comment {
+	margin-bottom: 0.25em;
+}
+
 .form_comment {
 	display :none;
 	}
