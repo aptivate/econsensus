@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.test import TestCase
 
 from notification import models as notification
@@ -11,6 +12,9 @@ from publicweb.tests.factories import DecisionFactory, \
                                         UserFactory, \
                                         CommentFactory
 
+import datetime
+import minimock
+
 class DecisionLastModifiedTest(TestCase):
     """
     Tests updating of 'last_modified' date on Decision.
@@ -18,6 +22,19 @@ class DecisionLastModifiedTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.decision = DecisionFactory()
+
+        # Ensure value of "now" always increases by amount sufficient
+        # to show up as a change, even if db resolution for datetime
+        # is one second.
+        def now_iter(start):
+            t = start
+            while True:
+                t += datetime.timedelta(hours=1)
+                yield t
+        minimock.mock("timezone.now", returns_iter=now_iter(timezone.now()), tracker=None)
+
+    def tearDown(self):
+        minimock.restore()
 
     def last_modified(self):
         """
