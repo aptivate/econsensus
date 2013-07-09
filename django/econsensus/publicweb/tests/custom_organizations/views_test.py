@@ -10,7 +10,7 @@ from custom_organizations.forms import CustomOrganizationAddForm, \
     CustomOrganizationForm, CustomOrganizationUserForm, \
     CustomOrganizationUserAddForm
 
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
 
@@ -66,7 +66,7 @@ class TestCustomOrganizationUserDelete(TestCase):
         org_user = OrganizationUserFactory()
         org = org_user.organization
         user = org_user.user
-        assign(GUARDIAN_PERMISSION, user, org)
+        assign_perm(GUARDIAN_PERMISSION, user, org)
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
         org_user_delete_view.get_object = lambda: org_user
         request = RequestFactory()

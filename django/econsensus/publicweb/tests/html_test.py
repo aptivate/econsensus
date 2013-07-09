@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from organizations.views import OrganizationDetail
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
@@ -91,7 +91,7 @@ class HtmlTest(EconsensusFixtureTestCase):
         self.assertEqual(decision.author, self.user)
         self.user = self.login('charlie')
         #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)             
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)             
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
@@ -132,7 +132,7 @@ class HtmlTest(EconsensusFixtureTestCase):
         decision = self.create_decision_through_browser()
         self.login('charlie')
         #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
 
         decision = self.update_decision_through_browser(decision.id)
         path = reverse('publicweb_decision_detail', args=[decision.id])

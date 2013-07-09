@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from mechanize import ParseString
 from organizations.models import Organization
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 
 from publicweb.models import Decision, Feedback
 from publicweb.tests.econsensus_testcase import EconsensusTestCase
@@ -22,7 +22,7 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         self.betty = User.objects.get(username="betty")
         self.charlie = User.objects.get(username="charlie")
         self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
-        assign('edit_decisions_feedback', self.betty, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
         
         self.factory = RequestFactory()
         self.login('betty')
