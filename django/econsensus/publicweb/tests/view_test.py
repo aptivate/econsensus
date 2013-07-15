@@ -26,7 +26,7 @@ class TestDecisionListView(TestCase):
     def test_set_status_uses_default_when_no_kwarg_is_passed(self):
         dl = DecisionList()
         dl.set_status()
-        default_status = Decision.PROPOSAL_STATUS
+        default_status = DecisionList.DEFAULT
         self.assertEqual(dl.status, default_status)
 
     def test_status_is_set_in_context_data_and_limits_object_list(self):
@@ -219,7 +219,7 @@ class TestOrganizationRedirectView(TestCase):
         url = org_redirect_view.get_redirect_url()
         expected_url = reverse('publicweb_item_list',
                                args=[org_user.organization.slug,
-                                     'discussion'])
+                                     DecisionList.DEFAULT])
         self.assertEqual(url, expected_url)
 
     def test_redirect_for_many_organizations(self):
