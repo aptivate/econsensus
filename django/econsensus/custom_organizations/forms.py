@@ -6,6 +6,8 @@ from organizations.backends.forms import UserRegistrationForm
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
 from guardian.shortcuts import assign, remove_perm
 from registration.forms import RegistrationFormUniqueEmail
+from registration.signals import user_registered
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -25,6 +27,12 @@ class CustomUserSignupRegistrationForm(RegistrationFormUniqueEmail):
         self.fields.keyOrder = ['username', 'first_name', 'last_name',
                                 'email', 'password1', 'password2']
 
+@receiver(user_registered)
+def user_created(sender, user, request, **kwargs):
+    form = CustomUserSignupRegistrationForm(request.POST)
+    user.first_name = form.data['first_name']
+    user.last_name = form.data['last_name']
+    user.save()
 
 
 # Subclass the UserRegistrationForm so we can change the labels
