@@ -18,7 +18,7 @@ class YourDetailsForm(forms.ModelForm):
                 'date_joined', 'groups', 'user_permissions', 'password')
 
     def clean_email(self):
-        if self.instance.user.email == self.cleaned_data['email']:
+        if self.instance.email == self.cleaned_data['email']:
             return self.cleaned_data['email']
         if User.objects.filter(email__iexact=self.cleaned_data['email']):
             raise forms.ValidationError(_("This email address is already in use. Please supply a different email address."))

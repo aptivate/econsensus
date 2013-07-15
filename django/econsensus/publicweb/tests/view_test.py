@@ -1,13 +1,16 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.contrib.auth.models import User
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from guardian.shortcuts import assign
 
 from publicweb.views import DecisionDetail, DecisionList, DecisionUpdate, \
-    FeedbackCreate, OrganizationRedirectView
+    FeedbackCreate, OrganizationRedirectView, YourDetails
 from publicweb.models import Decision
-from publicweb.forms import DecisionForm, FeedbackForm
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 from organizations.models import Organization
 
 from publicweb.tests.econsensus_testcase import EconsensusTestCase
@@ -64,6 +67,57 @@ class TestDecisionDetailView(TestCase):
         context = dd.get_context_data()
         self.assertIn('tab', context.keys())
         self.assertEqual(context['tab'], manual_status)
+
+
+class TestYourDetailsView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory(
+            username = 'bob',
+            email = 'bob@example.com',
+            first_name = 'Bob',
+            last_name = 'Dylan',
+            is_staff = True)
+        self.request = RequestFactory().get('blah')
+        self.request.user = self.user
+        self.view = YourDetails()
+
+    def test_get_object(self):
+        self.view.request = self.request
+        self.assertEqual(self.view.get_object(), self.user)
+
+    def test_form_contains_correct_fields(self):
+        self.view.request = self.request
+        self.view.object = self.user
+        self.form = self.view.get_form(self.view.get_form_class())
+        self.assertEqual(
+            sorted(self.form.fields.keys()),
+            sorted(['username', 'email', 'first_name', 'last_name']))
+
+    def test_change_first_name(self):
+        self.request.method = 'POST'
+        self.view.request = self.request
+        self.view.object = self.user
+        # RequestFactory doesn't support middleware eg. message middleware
+        setattr(self.request, 'session', 'session')
+        messages = FallbackStorage(self.request)
+        setattr(self.request, '_messages', messages)
+        self.view.request.POST = {
+            'username': self.user.username,
+            'email': self.user.email,
+            'first_name': 'Robert',
+            'is_staff': False
+        }
+        self.form = self.view.get_form(self.view.get_form_class())
+        self.assertTrue(self.form.is_valid(), msg="Form is not valid: %s" % self.form.errors)
+        self.view.form_valid(self.form)
+        self.assertEqual(self.user.first_name, 'Robert')
+        self.assertEqual(self.user.username, 'bob')
+        self.assertEqual(self.user.email, 'bob@example.com')
+        self.assertEqual(self.user.last_name, '')
+        self.assertEqual(self.user.is_staff, True)
+        expected_messages = [_('Your details have been updated successfully.')]
+        self.assertEqual([str(item) for item in self.request._messages], expected_messages)
 
 
 class TestDecisionUpdateView(EconsensusTestCase):
