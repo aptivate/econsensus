@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
