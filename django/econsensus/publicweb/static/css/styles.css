@@ -1248,6 +1248,12 @@ p.error404 {
 	margin-bottom : 40px;
 }
 
+/* Styling of admin-defined pages */
+#flatpage ul {
+    list-style: disc outside none;
+    padding-left: 1em;
+}
+
 /* Media Queries*/
 
 @media screen and (max-width:800px) {
