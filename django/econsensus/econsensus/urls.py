@@ -24,6 +24,10 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
+)
+
+urlpatterns += patterns('',
     url(r'^accounts/register/$', RegistrationView.as_view(
          form_class=RegistrationFormUniqueEmail),
          name='registration_register'),
