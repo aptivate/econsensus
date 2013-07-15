@@ -1097,6 +1097,15 @@ div#tags {
 	float: right;
 }
 
+#footer .flatpagelinks a {
+	font-size: 1.2em;
+	padding-right: 0.5em;
+}
+
+#footer .flatpagelinks a:hover {
+	background-color: #ededed;
+}
+
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
