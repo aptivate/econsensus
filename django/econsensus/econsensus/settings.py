@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'tagging',
+    'custom_flatpages',
 )
 
 AUTHENTICATION_BACKENDS = (
