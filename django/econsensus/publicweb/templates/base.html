@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load org_filters %}
 {% load guardian_tags %}
+{% load flatpages %}
 
 {% if organization %}
 {% get_obj_perms request.user for organization as "organization_permissions" %}
@@ -89,6 +90,12 @@
 		<div id="footer">
 			{% block footer_content%}{% endblock %}
 			<p class="aptivate">{% trans "Econsensus" %} {{ version }} {% trans "is an open source project developed by" %} <a href="http://www.aptivate.org/"><span class="user-org not_translated">Aptivate</span></a></p>
+			{% get_flatpages as flatpages %}
+			{% for page in flatpages %}
+				{% ifequal '/about/' page.url %}
+					<p><a href="{% url 'django.contrib.flatpages.views.flatpage' url=page.url %}">{% trans 'About this site' %}</a></p>
+				{% endifequal %}
+			{% endfor %}
 		</div>
 	</div><!-- footer end -->
 
