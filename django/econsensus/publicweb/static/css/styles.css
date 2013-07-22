@@ -282,6 +282,9 @@ input {
 	margin-bottom:10px;
 	width:inherit;
 }
+#content table.org_list>tbody>tr>td {
+    padding-right: 0.7em;
+}
 #content table.org_list>tbody>tr>td:first-child {
     padding-right: 2em;
     text-align: right;
