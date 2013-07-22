@@ -2,11 +2,28 @@
 
 from django import forms
 from models import Decision, Feedback
+from django.contrib.auth.models import User
+
 
 from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
+
+class YourDetailsForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        exclude = ('is_staff', 'is_superuser', 'is_active', 'last_login',
+                'date_joined', 'groups', 'user_permissions', 'password')
+
+    def clean_email(self):
+        if self.instance.email == self.cleaned_data['email']:
+            return self.cleaned_data['email']
+        if User.objects.filter(email__iexact=self.cleaned_data['email']):
+            raise forms.ValidationError(_("This email address is already in use. Please supply a different email address."))
+        return self.cleaned_data['email']
+
 
 class FeedbackForm(forms.ModelForm):
     class Meta:

@@ -1,29 +1,27 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block body_class%}
-login
-{% endblock %}
-
 {% block title %}
-Registration
+{% trans "Your account details" %}
 {% endblock %}
 
-{% block user_access %}
-{% endblock %}
-
-{% block topbar%}
-{% endblock %}
-
-{% block head %}
-{{ form.media }}
-{% endblock %}
 
 {% block heading %}
-Registration
+{% trans "Your account details" %}
 {% endblock %}
 
 {% block main_content %}
+<br />
+
+{% if messages %}
+<br />
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+<br />
+{% endif %}
 <form id="short-form" method="post" action=".">
   {% csrf_token %}
   {% for field in form %}
@@ -35,7 +33,7 @@ Registration
   {% endfor %}
   
 <div class="button_group">
-  <input class="button" type="submit" value="{% trans 'Submit' %}" />
+  <input class="button" type="submit" value="{% trans 'Update' %}" />
 </div>
 </form>
 {% endblock %}

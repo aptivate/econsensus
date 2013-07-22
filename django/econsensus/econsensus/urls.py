@@ -7,6 +7,7 @@ from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 from registration.backends.default.views import RegistrationView
+from custom_organizations.forms import CustomUserSignupRegistrationForm
 
 admin.autodiscover()
 
@@ -25,8 +26,9 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('',
     url(r'^accounts/register/$', RegistrationView.as_view(
-         form_class=RegistrationFormUniqueEmail),
-         name='registration_register'),
+        form_class = CustomUserSignupRegistrationForm,
+        template_name = 'organizations/register_form.html'), 
+        name = 'registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'authentication_form': CustomAuthenticationForm}),
