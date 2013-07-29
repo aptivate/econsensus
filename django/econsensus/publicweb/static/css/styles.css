@@ -715,6 +715,26 @@ a.edit.button {
 	text-decoration:none;
 }
 
+a.edit.button.discussion {
+    background-color: #3E6EA3;
+    color:#fff;
+}
+
+a.edit.button.proposal {
+    background-color: #FFCC00;
+    color:#333;
+}
+
+a.edit.button.decision {
+    background-color: #90AA27;
+    color:#fff;
+}
+
+a.edit.button.archived {
+    background-color: #666666;
+    color:#fff;
+}
+
 #decision_detail .dates {
 	float:left;
 	margin:0;

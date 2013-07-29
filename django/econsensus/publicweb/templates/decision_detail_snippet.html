@@ -89,7 +89,7 @@
 		</dl>
 {% if "edit_decisions_feedback" in organization_permissions %}		
 			<div class="controls">
-				<a class="edit button" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
+				<a class="edit button {{ object.status }}" href="{% url 'publicweb_decision_update' object.id %}">Edit</a>
 			</div>
 {% endif %}
 		</div>
