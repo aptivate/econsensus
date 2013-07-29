@@ -711,6 +711,10 @@ a.edit, a.show {
 	font-size:0.8em;
 }
 
+a.edit.button {
+	text-decoration:none;
+}
+
 #decision_detail .dates {
 	float:left;
 	margin:0;
