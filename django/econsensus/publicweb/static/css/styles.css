@@ -705,14 +705,10 @@ span.excerpt {
 	bottom:10px;
 }
 
-a.edit, a.show {
-	text-decoration:underline;
+a.button.edit, a.button.show {
 	font-weight:bold;
 	font-size:0.8em;
-}
-
-a.edit.button {
-	text-decoration:none;
+	margin: 0 0
 }
 
 a.edit.button.discussion {
