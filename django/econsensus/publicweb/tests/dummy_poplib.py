@@ -17,10 +17,10 @@ class POP3(object):
         self.password = password
     
     def retr(self, num):
-        return self.mailbox
+        return self.mailbox[num - 1]
     
     def stat(self):
-        return (1, 0)
+        return (len(self.mailbox), 0)
     
     def dele(self, num):
         pass

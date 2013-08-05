@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 mail = message_from_string(msg) 
 
                 if re.search("Precedence: bulk", msg):
-                    return
+                    continue
                 
                 try:
                     self._process_email(mail, verbosity)
