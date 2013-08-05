@@ -15,6 +15,7 @@ from django.utils import timezone
 from livesettings import config_value
 from publicweb.models import Decision, Feedback
 from organizations.models import Organization
+from django.conf import settings
 
 class Command(BaseCommand):
     args = ''
@@ -53,6 +54,10 @@ class Command(BaseCommand):
                 mail = message_from_string(msg) 
 
                 if re.search("Precedence: bulk", msg):
+                    log_auto_replies = getattr(settings, 'LOG_AUTO_REPLIES', 
+                      False)
+                    if log_auto_replies:
+                        logger.error(msg)
                     continue
                 
                 try:
