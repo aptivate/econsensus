@@ -117,6 +117,15 @@ input {
     padding: 5px 10px;
 }
 
+.loose.button {
+    border: medium none;
+    font-weight: bold;
+    padding: 5px 10px;
+    float: left;
+    margin:0 0.5em
+}
+
+
 .button:hover {
     cursor: pointer;
 }
@@ -181,7 +190,7 @@ input {
 }
 
 #user_access {
-	width:20em;
+	width:26em;
 	display:block;
 	position:relative;
 	float:right;
@@ -272,6 +281,9 @@ input {
 #content h2.page_title.feedback {
 	margin-bottom:10px;
 	width:inherit;
+}
+#content table.org_list>tbody>tr>td {
+    padding-right: 0.7em;
 }
 #content table.org_list>tbody>tr>td:first-child {
     padding-right: 2em;

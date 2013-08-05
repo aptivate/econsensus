@@ -17,9 +17,9 @@ Confirm Delete
 <br />
 <form action="." method="post">{% csrf_token %}
     {{ form }}
-    <input type="submit" value="Delete" style="float:left;margin:0 0.5em">
+    <input class = "loose button" type="submit" value="Delete">
 </form>
-<form method="GET" action="{% url 'organization_list' %}" style="float:left">
-    <input class="button" type="submit" value="Cancel">
+<form method="GET" action="{% url 'organization_list' %}">
+    <input class="loose button" type="submit" value="Cancel">
 </form>
 {% endblock %}

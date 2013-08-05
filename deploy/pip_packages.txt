@@ -11,12 +11,13 @@ lxml==2.2.4
 BeautifulSoup==3.2.0
 South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
-django-debug-toolbar
-django-tagging
+django-debug-toolbar==0.9.4
+django-tagging==0.3.1
 hg+https://bitbucket.org/bkroeze/django-livesettings
-django-keyedcache
-django-registration
+django-keyedcache==1.4-6
+django-registration==1.0
 -e ../django/django-organizations
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
-django-guardian
-factory-boy
+django-guardian==1.1.1
+factory-boy==2.1.1
+MiniMock==1.2.8
