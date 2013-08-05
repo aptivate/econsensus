@@ -211,6 +211,9 @@ LOGGING = {
     }
 }
 
+# Set this to true to log emails marked as auto-replies. Default is False
+LOG_AUTO_REPLIES = True
+ 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
