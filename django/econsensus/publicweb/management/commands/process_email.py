@@ -49,8 +49,12 @@ class Command(BaseCommand):
         if all_msgs:
             self._print_if_verbose(verbosity, "Processing contents of mailbox.")  
             for i in all_msgs:
-                msg = mailbox.retr(i)[1]
-                mail = message_from_string("\n".join(msg))
+                msg = "\n".join(mailbox.retr(i)[1])
+                mail = message_from_string(msg) 
+
+                if re.search("Precedence: bulk", msg):
+                    return
+                
                 try:
                     self._process_email(mail, verbosity)
                 except Exception as e:
