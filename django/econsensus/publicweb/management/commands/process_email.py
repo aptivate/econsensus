@@ -53,7 +53,9 @@ class Command(BaseCommand):
                 msg = "\n".join(mailbox.retr(i)[1])
                 mail = message_from_string(msg) 
 
-                if re.search("Precedence: bulk", msg):
+                if 'Precedence' in mail and \
+                    (mail['Precedence'] == "bulk" or 
+                     mail['Precedence'] == "auto_reply"):
                     log_auto_replies = getattr(settings, 'LOG_AUTO_REPLIES', 
                       False)
                     if log_auto_replies:

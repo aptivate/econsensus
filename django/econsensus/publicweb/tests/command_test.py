@@ -429,6 +429,29 @@ class CommandTest(EconsensusFixtureTestCase):
         self.assertListEqual(old_proposals, list(Decision.objects.all()))
         self.assertListEqual([], mail.outbox)
     
+    def test_emails_with_precedence_auto_reply_header_are_ignored(self):
+        old_proposals = list(Decision.objects.all())
+        mail.outbox = []
+        payload = "Sample payload"
+        
+        # This message is legitimate except for the precedence header.
+        # An exception is not expected when processing it. 
+        msg = MIMEText(payload)
+        msg['Subject'] = 'Proposal gleda raspored'
+        msg['From'] = self.betty.email
+        msg['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+        msg['Precedence'] = 'auto_reply'
+        
+        poplib.POP3.mailbox = (([''], [msg.as_string()], ['']),)
+        
+        try:
+            management.call_command('process_email')
+        except Exception, e:
+            self.fail("Exception: %s" % e)
+            
+        self.assertListEqual(old_proposals, list(Decision.objects.all()))
+        self.assertListEqual([], mail.outbox)
+    
     def test_emails_sent_after_messages_with_bulk_header_are_processes(self):
         expected_proposals = list(Decision.objects.all())
         mail.outbox = []
