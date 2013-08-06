@@ -938,11 +938,16 @@ p.title {
 	float: right;
 	}
 	
-.decision_controls div#watch {
+.decision_controls div.watch {
 	padding: 0;
 	float: left;
 }
-	
+
+.decision_controls div.minor_edit {
+	padding: 0;
+	float: left;
+}
+
 .decision_meta #tags #id_tags {
 	width:90%;
 }
@@ -979,6 +984,16 @@ div#tags {
 	float: right;
 	margin: 5px;
 	margin-right:20px;
+}
+
+.formset_item .form_row .controls div {
+	padding: 0 6px 4px 6px;
+	float: right;
+}
+
+.formset_item .form_row .controls div.minor_edit {
+	padding: 0;
+	float: left;
 }
 
 .feedback_edit a {
