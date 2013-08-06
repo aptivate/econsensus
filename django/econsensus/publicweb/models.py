@@ -99,6 +99,12 @@ class Decision(models.Model):
               'expiry_date', 'deadline', 'archived_date', 'budget', 'people',
               'meeting_people', 'status', 'excerpt', 'creation')
 
+    def __init__(self, *args, **kwargs):
+        # Unpersisted flag for suppressing notifications at save time
+        self.minor_edit = False
+
+        super(Decision, self).__init__(*args, **kwargs)
+
     #methods
     def unresolvedfeedback(self):
         answer = _("No")
@@ -197,7 +203,8 @@ class Decision(models.Model):
             prev = self.__class__.objects.get(id=self.id)
             if prev.organization.id != self.organization.id:
                 self._update_notification_for_org_change()
-            self._send_change_notifications()
+            if not self.minor_edit:
+                self._send_change_notifications()
             if not self._is_same(prev):
                 self._update_last_modified()
         super(Decision, self).save(*args, **kwargs)
@@ -237,6 +244,12 @@ class Feedback(models.Model):
 
     watchers = generic.GenericRelation(notification.ObservedItem)
     comments = generic.GenericRelation(Comment, object_id_field='object_pk')
+
+    def __init__(self, *args, **kwargs):
+        # Unpersisted flag for suppressing notifications at save time
+        self.minor_edit = False
+
+        super(Feedback, self).__init__(*args, **kwargs)
 
     @models.permalink
     def get_absolute_url(self):
@@ -299,7 +312,8 @@ def feedback_signal_handler(sender, **kwargs):
         extra_context = dict({"observed": instance})
         notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
     else:
-        if instance.author != instance.editor:
+        # An edit by someone other than the author never counts as minor
+        if instance.author != instance.editor or not instance.minor_edit:
             send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
 
 @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
