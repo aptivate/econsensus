@@ -1202,6 +1202,15 @@ ul.errorlist {
     width: 400px;
 }
 
+#short-form .checkbox input {
+	width: auto;
+}
+
+#short-form .checkbox label {
+    padding-top: 0;
+}
+
+
 #short-form.login .helptext {
     display: none;
 }

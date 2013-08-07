@@ -3,7 +3,7 @@
 #https://code.djangoproject.com/ticket/17921
 
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
-from remember_me.forms import AuthenticationRememberMeForm 
+from remember_me.forms import AuthenticationRememberMeForm
 
 class CustomAuthenticationForm(AuthenticationRememberMeForm):
     error_css_class = 'error'
