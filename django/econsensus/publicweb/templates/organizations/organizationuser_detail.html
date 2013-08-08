@@ -17,6 +17,7 @@ Organization User Detail
 <ul>
     <li>Name: {{ organization_user.name }}</li>
     <li>Email: {{ organization_user.user.email }}</li>
+    <li>Username: {{ organization_user.user }}</li>
 </ul>
 <ul>
     <li><a href="{% url 'organization_user_edit' organization.pk organization_user.user.pk %}">Edit</a></li>

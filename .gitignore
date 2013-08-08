@@ -6,6 +6,8 @@ django/econsensus/.ve
 django/econsensus/distribute-*.tar.gz
 django/econsensus/econsensus-messages
 django/econsensus/log/error.log
+django/econsensus/log/econsensus.log
+*.sqlite
 reports/*
 .settings/*
 .pydevproject

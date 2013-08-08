@@ -1,17 +1,21 @@
-from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
+from django.contrib.admin.options import ModelAdmin
+from django.contrib.admin.sites import AdminSite
 from django.contrib.comments import Comment
+from django.contrib.sites.models import Site
+from django.utils import timezone
 
 from mechanize import ParseString
 from organizations.models import Organization
 from guardian.shortcuts import assign
 
 from publicweb.models import Decision, Feedback
+from publicweb.tests.econsensus_testcase import EconsensusTestCase
 
-class EconsensusTestCase(TestCase):
+class EconsensusFixtureTestCase(EconsensusTestCase):
     fixtures = ['organizations.json', 'users.json']
 
     def setUp(self):
@@ -59,7 +63,10 @@ class EconsensusTestCase(TestCase):
         return self.make_model_instance(Feedback, **kwargs)
         
     def make_comment(self, **kwargs):
-        required = {'comment': 'Default comment text'}    
+        required = {'comment': 'Default comment text',
+                    'user': self.user,
+                    'submit_date': timezone.now(),
+                    'site':Site.objects.get_current()}
         for (key,value) in required.items():
             if key not in kwargs.keys():
                 kwargs[key] = value
@@ -86,8 +93,8 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
     
-    def update_decision_through_browser(self, idd):
-        description = 'Aenean eros nibh'
+    def update_decision_through_browser(self, idd, 
+            description = 'Aenean eros nibh'):
         path = reverse('publicweb_decision_update', args=[idd])
         post_dict = {'description': description, 
                      'status': Decision.PROPOSAL_STATUS,
@@ -103,10 +110,23 @@ class EconsensusTestCase(TestCase):
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
     
-    def update_feedback_through_browser(self, idd):
-        description = 'nibh ut dignissim. Sed a aliquet quam'
+    def update_feedback_through_browser(self, idd, 
+            description = 'nibh ut dignissim. Sed a aliquet quam'):
         path = reverse('publicweb_feedback_update', args=[idd])
         post_dict = {'description': description, 
                      'rating': Feedback.COMMENT_STATUS }
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
+
+
+    def change_organization_via_admin_screens(self, decision, new_organization=None):
+        orig_user = self.user
+
+        admin_user = User.objects.filter(is_staff=True, is_superuser=True)[0]
+        self.login(admin_user.username)
+
+        self.change_decision_via_admin(decision, new_organization)
+
+        self.login(orig_user)
+        return admin_user
+

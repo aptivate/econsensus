@@ -32,6 +32,10 @@ body {
 ol, ul {
 	list-style: none;
 }
+ul.bulleted {
+    list-style: disc outside none;
+    padding-left: 1em;
+}
 blockquote, q {
 	quotes: none;
 }
@@ -276,6 +280,13 @@ input {
 	margin-top:10px;
 	width:inherit;
 }
+#content table.org_list>tbody>tr>td:first-child {
+    padding-right: 2em;
+    text-align: right;
+}
+#content table.org_list>tbody>tr>td:last-child {
+    vertical-align: middle;
+}
 
 .page_title.actionitem, 
 .page_title.feedback {
@@ -332,9 +343,17 @@ input {
 	color: #000;
 }
 
-.summary-header .sort-asc, .sort-desc {
+.summary-header .sort-asc, .summary-header .sort-desc {
     color: #3E6EA3;
-}  
+}
+
+.discussion-list .sort-asc, .discussion-list .sort-desc {
+    color: #000;
+}
+
+.discussion-list th > a > span {
+    color: #FFF;
+}
 
 .summary-item a.iconified {
 	color: #3E6EA3;
@@ -524,8 +543,9 @@ li.summary-item {
 a.button.add_discussion,
 a.button.add_decision,
 a.button.add_proposal,
-a.button.add_feedback,
-a.button.add_actionitem {
+a.button.add_actionitem,
+a.button.add_discussion,
+a.button.add_feedback {
     background-image: url("../images/icon-add.png");
     background-position: 3px center;
     background-repeat: no-repeat;
@@ -547,6 +567,7 @@ a.button.add_proposal {
 
 a.button.add_discussion {
     background-color: #3E6EA3;
+    color:#fff;
 }
 
 a.button.add_actionitem {
@@ -710,17 +731,6 @@ a.edit, a.show {
 	margin-bottom:1.5em;
 }
 
-.discussion-detail .meta {
-	display: none;
-}
-
-.discussion-detail .feedback_type {
-	display: none;
-}
-
-.discussion-detail .formset_item .form_item.rating {
-	display: none;
-}
 #decision_detail.proposal .date {width:100%;}
 
 #decision_detail .date strong {
@@ -783,6 +793,10 @@ p.title {
 
 #decision_update_form.archived {
 	border-color: #666666;
+}
+
+#decision_update_form.discussion {
+	border-color: #3E6EA3;
 }
 
 .decision_summary {
@@ -1050,6 +1064,10 @@ div#tags {
 	margin-top: 1em;
 	}
 
+.contrib_comment {
+	margin-bottom: 0.25em;
+}
+
 .form_comment {
 	display :none;
 	}
@@ -1213,14 +1231,10 @@ ul.errorlist {
     float: right;
 }
 
-#short-form .label {
-    float: left;
-}
-
 #short-form p {
     float: left;
-    line-height: 3.3em;
-    width: 100%;
+    margin-top:10px;
+    margin-bottom:10px;
 }
 
 #short-form label {
@@ -1229,6 +1243,7 @@ ul.errorlist {
     font-size: 1.3em;
     color:#333;
     width: 8em;
+    padding-top:11px;
 }
 
 #short-form input {

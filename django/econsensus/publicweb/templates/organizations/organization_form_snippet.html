@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load url from future %}
+<!-- a quick and dirty fix, hmm -->
+<br />
+<br />
+{% if organization %}
+<p>{% trans 'Enter the new name for your organization and then click "OK"' %}</p>
+{% else %}
+<p>{% trans "If you create an organization, you will be the owner of that organization. This means that: "%}</p>
+
+<ul class="bulleted">
+    <li> {% trans "you will always be an admin for your organization. This gives you the ability to invite and remove people from your organization, and change their permissions." %} </li>
+    <li> {% trans "you have the right to delete the organization." %}</li>
+</ul>
+
+<p>{% trans "This is all available in the organization admin interface, which will become available once you have created the organization." %}</p>
+<br />
+<p>{% trans 'Enter the name of your organization and then click "OK"' %}</p>
+{% endif %}
+<br />
+<form method="post">{% csrf_token %}
+    {% for field in form %}
+        {{ field.errors }}
+        {{ field }}
+    {% endfor %}
+    <br />
+    <br />
+    <input class="button" type="submit" value="OK" style="float:left;margin:0 0.5em">
+</form>
+
+<form method="GET" action="{% url 'organization_list' %}" style="float:left">
+    <input class="button" type="submit" value="Cancel">
+</form>
+<br />

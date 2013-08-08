@@ -1,8 +1,8 @@
-from open_consent_test_case import EconsensusTestCase
+from open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.models import Decision, Feedback
 from django.utils.timezone import now
 
-class DecisionTestCase(EconsensusTestCase):
+class DecisionTestCase(EconsensusFixtureTestCase):
     def create_decisions_with_different_statuses(self):
         self.create_and_return_decision(description='Issue Proposal')
         
@@ -12,8 +12,8 @@ class DecisionTestCase(EconsensusTestCase):
         self.create_and_return_decision(description='Issue Archived',
                                         status=Decision.ARCHIVED_STATUS)
 
-        self.create_and_return_decision(description='Issue Archived',
-                                        status=Decision.DISCUSION_STATUS)
+        self.create_and_return_decision(description='Issue Discussion',
+                                        status=Decision.DISCUSSION_STATUS)
 
     def create_and_return_example_decision_with_feedback(self):
         decision = self.create_and_return_decision()

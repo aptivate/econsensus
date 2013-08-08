@@ -30,3 +30,5 @@ INSTALLED_APPS = (
       'django_jenkins',
     )  + INSTALLED_APPS
 
+PROJECT_APPS = ('publicweb',)
+JENKINS_TEST_RUNNER = 'jenkins_test_runner.DiscoveryCITestSuiteRunner'

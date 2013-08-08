@@ -146,8 +146,12 @@ class DecisionList(ListView):
         self.organization = get_object_or_404(Organization, slug=slug)
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
+    def set_status(self, **kwargs):
         self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        return self.status
+
+    def get(self, request, *args, **kwargs):
+        self.set_status(**kwargs)
         self.set_sorting(request)
         self.get_table_headers(request)
         self.set_paginate_by(request)
@@ -468,7 +472,6 @@ class FeedbackUpdate(UpdateView):
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
 
-
 class EconsensusActionitemCreateView(ActionItemCreateView):
     template_name = 'actionitem_create_snippet.html'
 
@@ -670,4 +673,21 @@ class EconsensusActionitemListView(ActionItemListView):
 
     # END PAGINATION ##########################################################
 
+class OrganizationRedirectView(RedirectView):
+    '''
+    If the user only belongs to one organization then
+    take them to that organizations default Decision list page, otherwise
+    take them to the organization list page.
+    '''
+    permanent = False
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrganizationRedirectView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self):
+        try:
+            users_org = Organization.objects.get(users=self.request.user)
+            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
+        except:
+            return reverse('organization_list')

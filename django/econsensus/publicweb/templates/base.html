@@ -17,6 +17,7 @@
 	<!--[if !IE]><!-->
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/tables.css"/>
 	<!--<![endif]-->
+    <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" type="image/x-icon" />
 	{% block head_content%}{% endblock %}
 </head>
 <body class="{% block body_class%}base{% endblock %}">
@@ -31,11 +32,8 @@
 
 			{% block user_access %}
 				<div id="user_access">
-				{% if organization and organization|is_admin:user %}
-					<a href='{{ organization.get_absolute_url }}'>{% trans "Admin" %} |</a>
-				{% endif %}
 					{% if user.is_authenticated %}
-						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %} |</a>
+						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %}</a> |
 						<a href='{% url 'auth_logout' %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
 					{% else %}
 						<a href='{% url 'auth_login' %}'> {%trans "Login" %}</a>
@@ -49,7 +47,7 @@
 				<div id="navigation">
 					<ul>
 					{% if organization %}					
-						<li {% if tab == "discussion" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{% trans "Discussion" %}</a></li>
+						<li {% if tab == "discussion" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{% trans "Discussions" %}</a></li>
 						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'proposal'%}">{% trans "Proposals" %}</a></li>
 						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'decision'%}">{% trans "Decisions" %}</a></li>
 						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'archived'%}">{% trans "Archived" %}</a></li>
