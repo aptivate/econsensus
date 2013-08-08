@@ -15,6 +15,11 @@ from actionitems.views import ActionItemUpdateView
 from models import Feedback
 
 urlpatterns = patterns('econsensus.publicweb.views',
+                       
+    url(r'^your_details/$',
+        YourDetails.as_view(),
+        name='your_details'),
+
     url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
         ExportCSV.as_view(),
         name='publicweb_export_csv'),

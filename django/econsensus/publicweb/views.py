@@ -53,7 +53,6 @@ class YourDetails(UpdateView):
     def get_success_url(self):
         return reverse('your_details')
 
->>>>>>> refs/heads/develop_main
 
 class ExportCSV(View):
     @method_decorator(login_required)
