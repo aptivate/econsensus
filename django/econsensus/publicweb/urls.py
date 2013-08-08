@@ -7,7 +7,8 @@ from views import DecisionCreate, DecisionUpdate, \
                     ExportCSV, FeedbackCreate, \
                     FeedbackSnippetCreate, FeedbackUpdate, \
                     EconsensusActionitemCreateView, EconsensusActionitemUpdateView, \
-                    EconsensusActionitemListView, OrganizationRedirectView
+                    EconsensusActionitemListView, OrganizationRedirectView, \
+                    YourDetails
 
 from actionitems.views import ActionItemUpdateView
 

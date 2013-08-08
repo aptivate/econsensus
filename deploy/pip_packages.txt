@@ -1,4 +1,7 @@
-Django==1.4
+fabric==1.4
+virtualenv
+-e git+git://github.com/aptivate/dye.git@a74e9733852274c3df14a2cab494d2368cdd93d0#egg=dye
+Django==1.4.5
 mysql-python==1.2.3
 django-tinymce==1.5.1a2
 mechanize==0.2.5
@@ -7,13 +10,14 @@ lxml==2.2.4
 BeautifulSoup==3.2.0
 South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
-django-debug-toolbar
-django-tagging
+django-debug-toolbar==0.9.4
+django-tagging==0.3.1
 hg+https://bitbucket.org/bkroeze/django-livesettings
-django-keyedcache
-django-registration
+django-keyedcache==1.4-6
+django-registration==1.0
 -e ../django/django-organizations
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
-django-guardian
 git+git://github.com/birdsarah/django-actionitems.git
-factory-boy
+django-guardian==1.1.1
+factory-boy==2.1.1
+MiniMock==1.2.8
