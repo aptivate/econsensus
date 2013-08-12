@@ -206,7 +206,6 @@
                 new_rating_name);
         });
 	
-<<<<<<< HEAD
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
 		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
@@ -214,9 +213,7 @@
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
 	
-=======
         {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
->>>>>>> master
 		$("#feedback_add_anchor form").live("submit", function (e) {
 			var $form = $(this),
 				parameters = $form.serialize();
