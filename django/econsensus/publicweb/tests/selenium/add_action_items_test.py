@@ -4,9 +4,7 @@ from organizations.models import Organization
 from publicweb.models import Decision
 from guardian.shortcuts import assign_perm
 from selenium.webdriver.support.wait import WebDriverWait
-from publicweb.tests.selenium.selenium_testcase import SeleniumTestCase 
-from actionitems.models import ActionItem
-import time
+from publicweb.tests.selenium.selenium_testcase import SeleniumTestCase
         
 class AddActionItemsTest(SeleniumTestCase):
     def setUp(self):
@@ -93,3 +91,31 @@ class AddActionItemsTest(SeleniumTestCase):
               "ol.actionitem_list > li").text
         
         self.assertEqual(expected_text, actual_text)
+
+    def test_action_item_form_save_with_invalid_data_displays_errors(self):
+        expected_text = ('This field is required.')
+        
+        decision = G(Decision, organization=self.organization, 
+              author=self.user, editor=self.user)
+        driver = self.selenium
+        driver.get("%s/item/detail/%d/" % (
+           self.live_server_url, decision.id))
+        
+        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_id("id_deadline"))
+        
+        self.selenium.find_element_by_name('description').send_keys("test")
+        
+        driver.find_element_by_css_selector(".actionitem_save").click()
+        
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_css_selector(".errorlist > li"),
+            "Check the data being submitted is valid")
+        
+        actual_text = driver.find_element_by_css_selector(
+              ".errorlist > li").text
+        
+        self.assertEqual(expected_text, actual_text)
+    
