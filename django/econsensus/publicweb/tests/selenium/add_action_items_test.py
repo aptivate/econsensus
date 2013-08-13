@@ -6,6 +6,7 @@ from guardian.shortcuts import assign_perm
 from selenium.webdriver.support.wait import WebDriverWait
 from publicweb.tests.selenium.selenium_testcase import SeleniumTestCase 
 from actionitems.models import ActionItem
+import time
         
 class AddActionItemsTest(SeleniumTestCase):
     def setUp(self):
@@ -36,7 +37,7 @@ class AddActionItemsTest(SeleniumTestCase):
                  By.CSS_SELECTOR, "#actionitem_add_anchor > .add_actionitem"))
     
     def test_action_item_form_cancel_recreates_button_without_adding_new_item(self):
-        expected_action_items = list(ActionItem.objects.all())
+        expected_text = "No action items."
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
@@ -54,11 +55,41 @@ class AddActionItemsTest(SeleniumTestCase):
         WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector("a.button.add_actionitem"))
         
-        actual_action_items = list(ActionItem.objects.all())
+        actual_text = driver.find_element_by_css_selector(
+              "ol.actionitem_list > li").text
+              
         self.assertTrue(
              self.is_element_present(
                  By.CSS_SELECTOR, "#actionitem_add_anchor > .add_actionitem"))
         self.assertFalse(
             self.is_element_present(
                 By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
-        self.assertListEqual(expected_action_items, actual_action_items)
+        self.assertEqual(expected_text, actual_text)
+    
+    def test_action_item_form_save_with_valid_form_creates_action_item(self):
+        expected_text = ('me is responsible for: test\nNo deadline\nEdit')
+        
+        decision = G(Decision, organization=self.organization, 
+              author=self.user, editor=self.user)
+        driver = self.selenium
+        driver.get("%s/item/detail/%d/" % (
+           self.live_server_url, decision.id))
+        
+        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_id("id_deadline"))
+        
+        self.selenium.find_element_by_name('description').send_keys("test")
+        self.selenium.find_element_by_name('responsible').send_keys("me")
+        
+        driver.find_element_by_css_selector(".actionitem_save").click()
+        
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_css_selector("#actionitem_add_anchor"),
+            "Check the data being submitted is valid")
+        
+        actual_text = driver.find_element_by_css_selector(
+              "ol.actionitem_list > li").text
+        
+        self.assertEqual(expected_text, actual_text)
