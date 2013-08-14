@@ -65,7 +65,7 @@ class AddFeedbackTest(SeleniumTestCase):
                 By.CSS_SELECTOR, "#feedback_add_anchor > form"))
         self.assertEqual(expected_text, actual_text)
     
-    def test_feedback_form_save_with_valid_form_creates_feedback(self):
+    def test_feedback_form_save_creates_feedback(self):
         expected_text = ('Consent\ntest says:\ntest\nEdit Comment')
         
         decision = G(Decision, organization=self.organization, 
