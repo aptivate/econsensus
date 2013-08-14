@@ -13,8 +13,7 @@ class EditActionItemsTest(SeleniumTestCase):
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
-        assign_perm('edit_decisions_feedback',
-               self.user, self.organization)
+        assign_perm('edit_decisions_feedback', self.user, self.organization)
             
     def test_action_item_form_replaces_feedback_item(self):
         # self.selenium is the name of the web driver for the class

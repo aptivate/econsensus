@@ -13,8 +13,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
-        assign_perm('edit_decisions_feedback',
-               self.user, self.organization)
+        assign_perm('edit_decisions_feedback', self.user, self.organization)
     
     def test_clicking_on_question_link_adds_form_for_question_feedback(self):
         decision = G(Decision, organization=self.organization, 
