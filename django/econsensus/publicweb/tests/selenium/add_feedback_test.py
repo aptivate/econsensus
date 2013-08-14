@@ -15,7 +15,7 @@ class AddFeedbackTest(SeleniumTestCase):
         assign_perm('edit_decisions_feedback',
                self.user, self.organization)
             
-    def test_feedback_form_replaces_add_action_item_button(self):
+    def test_feedback_form_replaces_add_feedback_button(self):
         # self.selenium is the name of the web driver for the class
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
@@ -65,7 +65,7 @@ class AddFeedbackTest(SeleniumTestCase):
                 By.CSS_SELECTOR, "#feedback_add_anchor > form"))
         self.assertEqual(expected_text, actual_text)
     
-    def test_action_item_form_save_with_valid_form_creates_action_item(self):
+    def test_feedback_form_save_with_valid_form_creates_feedback(self):
         expected_text = ('Consent\ntest says:\ntest\nEdit Comment')
         
         decision = G(Decision, organization=self.organization, 
