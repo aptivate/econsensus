@@ -7,7 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-class AddFeedbackTest(SeleniumTestCase):
+class EditFeedbackTest(SeleniumTestCase):
     def setUp(self):
         self.login()
         self.organization = G(Organization)
@@ -58,7 +58,7 @@ class AddFeedbackTest(SeleniumTestCase):
         driver.find_element_by_css_selector(".feedback_cancel").click()
 
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector("a.button.add_feedback"))
+            lambda x: x.find_element_by_css_selector(".feedback_type"))
         
         actual_text = driver.find_element_by_css_selector(
               "ol.feedback_list > li").text
