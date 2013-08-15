@@ -24,7 +24,6 @@ class AddFeedbackTest(SeleniumTestCase):
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
-        
         driver.find_element_by_css_selector(".description .edit").click()
         
         WebDriverWait(driver, 10).until(
