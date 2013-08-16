@@ -88,7 +88,7 @@ class EditFeedbackTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 20).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
         
