@@ -34,3 +34,4 @@ PROJECT_APPS = ('publicweb',)
 JENKINS_TEST_RUNNER = 'jenkins_test_runner.DiscoveryCITestSuiteRunner'
 
 TEST_RUNNER = 'test_runner.SeleniumDiscoveryRunner'
+SELENIUM_DISPLAY = ":2"
