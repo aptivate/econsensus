@@ -14,24 +14,13 @@
 {% block head_content %}
 {{ object.media }}
 	<link href="{{ STATIC_URL }}jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/showhide.js"></script>
 
 	<script type="text/javascript">
 	<!--
-	jQuery(function ($) {
-        {% comment %}
-        Deprecation_Note_re_live_method: Note regarding use of .live():
-        ===============================================================
-        - .live() method deprecated from jQuery v1.7, removed jQuery v1.9.
-        - When upgrading, note that suggested replacement method .on() is not a complete 
-        solution because .live() attaches events to all elements that match now *and 
-        in the future* and I believe that on() only applies to current matches. This is 
-        significant because many jQuery context objects of .live() in this template do not 
-        exist on initial page load.
-        {% endcomment %}
-
+	$(function () {
 		/*
 		 * Common functions
 		 */
@@ -110,39 +99,38 @@
 		 * Proposal in-line editing
 		 */
 		// Override redirect to form and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".controls a.edit").live("click", function (e) {
+		$("#content").on("click", "#decision_snippet_envelope a.edit", function (e) {
 			replaceWithRemote("{% url 'publicweb_decision_snippet_update' object.id %}", "#decision_snippet_envelope");
 			e.preventDefault();
 		});
-	
+
+		var decision_update_form_parent = "#content";
 		// Override redirect to view and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('#decision_update_form input[value="Save"]').live("click", function (e) {
+		$(decision_update_form_parent).on("click", '#decision_update_form input[value="Save"]', function (e) {
 			updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
 							"{% url 'publicweb_decision_snippet_detail' object.id %}",
-							"form#decision_update_form");
+							"#decision_update_form");
 			e.preventDefault();
 		});
 
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('#decision_update_form input[value="Cancel"]').live("click", function (e) {
+        $(decision_update_form_parent).on("click", '#decision_update_form input[value="Cancel"]', function (e) {
             e.stopPropagation();
             replaceWithRemote("{% url 'publicweb_decision_snippet_detail' object.id %}", 
-                                "form#decision_update_form");
+                                "#decision_update_form");
             e.preventDefault();
         });
 
         //Action items inline editing
         var actionitem_add_url = "{% url 'actionitem_create' object.id %}",
-            actionitem_edit_url = "{% url 'actionitem_update' decisionpk=object.id pk=0 %}"
+            actionitem_edit_url = "{% url 'actionitem_update' decisionpk=object.id pk=0 %}",
+            actionitem_form_parent = "#actionitem_add_anchor";
         // Add
-		$(".button.add_actionitem").live("click", function (e) {
+		$(actionitem_form_parent).on("click", ".button.add_actionitem", function (e) {
             replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
 			e.preventDefault();
 		});
         //Edit
-		$(".edit.actionitem").live("click", function (e) {
+		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
             var actionitempk = $(this).parent().attr("id"),
 				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
             replaceWithRemote(snippet_update_url, "#"+actionitempk);
@@ -158,25 +146,23 @@
 			feedback_update_url_template = "{% url 'publicweb_feedback_update' 0 %}",
 			feedback_add_url = "{% url 'publicweb_feedback_snippet_create' object.id %}",
 			// .prop("outerHTML") will work in future (.outerHTML added to FF11)
-			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
+			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html(),
+			feedback_form_parent = $("#feedback_add_anchor");
 	
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+		$(feedback_form_parent).on("click", "input[value=\"Cancel\"]", function (e) {
 			e.stopPropagation();e.preventDefault();
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".button.add_feedback").live("click", function (e) {
+		$(feedback_form_parent).on("click", ".button.add_feedback", function (e) {
             replaceWithRemote(feedback_add_url, ".button.add_feedback");
             scrollToFeedbackAnchor();
 			e.preventDefault();
 		});
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $("#decision_detail .stats a dt").live("click", function (e) {
+        $("#decision_detail .stats a dt").click(function (e) {
             var feedback_create_section = $('#feedback_add_anchor');
 
             if (feedback_create_section.find('.button.add_feedback').length) {
@@ -197,8 +183,7 @@
 			e.preventDefault();
 		});
 
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('#id_rating').live("change", function (e) {
+        $(feedback_form_parent).on("change", "#id_rating", function (e) {
             var new_rating_value = $(this).val();
             var new_rating_name = e.currentTarget.form.rating.options[new_rating_value].text
             updateFeedbackFormRatingClassName(
@@ -208,13 +193,12 @@
 	
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
-		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+		$(feedback_form_parent).on("click", 'input[value="Cancel"]', function (e) {
 			e.stopPropagation();e.preventDefault();
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$("#feedback_add_anchor form").live("submit", function (e) {
+		$(feedback_form_parent).on("submit", "form", function (e) {
 			var $form = $(this),
 				parameters = $form.serialize();
 	
@@ -235,8 +219,7 @@
 		});
 	
 		// Override redirect to form and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".feedback_list .description .edit").live("click", function (e) {
+		$(".list.decision_feedback").on("click", ".feedback_list .description .edit", function (e) {
 			var wrapper = $(this).parents(".feedback_wrapper"),
 				object_id = wrapper.parent().attr("id").slice(2),
 				snippet_update_url = snippet_update_url_template.replace('0', object_id);
@@ -247,8 +230,7 @@
 		});
 	
 		// Override redirect to view and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('.feedback_list .feedback_form input[value="Cancel"]').live("click", function (e) {
+        $(".feedback_list").on("click", '.feedback_form input[value="Cancel"]', function (e) {
             e.stopPropagation();
             e.preventDefault();
 			var feedback_form = $(this).parents('.feedback_form');
@@ -258,8 +240,7 @@
             replaceWithRemote(snippet_detail_url, feedback_form);
             e.preventDefault();
         });
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('.feedback_list .feedback_form').live("submit", function (e) {
+		$(".feedback_list").on("submit", '.feedback_form', function (e) {
 			var $this = $(this),
 				object_id = $this.parent().attr("id").slice(2),
 				feedback_update_url = feedback_update_url_template.replace('0', object_id),
