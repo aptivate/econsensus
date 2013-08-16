@@ -38,7 +38,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -70,7 +70,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -101,7 +101,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -132,7 +132,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -164,7 +164,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -196,7 +196,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          
@@ -228,7 +228,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         driver.find_element_by_css_selector(".button.go.once").click()
         
-        WebDriverWait(driver, 60).until(
+        WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_css_selector(".button.add_feedback"),
             "Check the data being submitted is valid")
          

@@ -15,7 +15,7 @@ class EditActionItemsTest(SeleniumTestCase):
         self.organization.add_user(self.user)
         assign_perm('edit_decisions_feedback', self.user, self.organization)
             
-    def test_action_item_form_replaces_feedback_item(self):
+    def test_action_item_form_replaces_edit_link(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(ActionItem, origin=decision)

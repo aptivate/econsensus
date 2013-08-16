@@ -42,7 +42,7 @@ EXTRA_INSTALLED_APPS = (
     'debug_toolbar',
 )
 
-SELENIUM_DRIVER = "Chrome"
+SELENIUM_DRIVER = "Firefox"
 # This runner combines the django-selenium test runner with the discovery runner
 # It is used because it allows the WebDriver class used to be defined in 
 # settings.
