@@ -17,7 +17,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         link_css_selector = "#decision_detail .stats a dt.question"
@@ -50,7 +50,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         
@@ -82,7 +82,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         link_css_selector = "#decision_detail .stats a dt.concerns"
@@ -113,7 +113,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         link_css_selector = "#decision_detail .stats a dt.consent"
@@ -144,7 +144,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         
@@ -176,7 +176,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, rating=Feedback.QUESTION_STATUS, decision=decision)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         question_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"
@@ -208,7 +208,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, rating=Feedback.QUESTION_STATUS, decision=decision)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         danger_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"

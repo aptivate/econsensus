@@ -6,7 +6,6 @@ from publicweb.models import Decision
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-import time
 
 class AddFeedbackTypeLinkTest(SeleniumTestCase):
     def setUp(self):
@@ -19,7 +18,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -44,7 +43,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -69,7 +68,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -94,7 +93,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -119,7 +118,7 @@ class AddFeedbackTypeLinkTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         

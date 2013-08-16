@@ -14,10 +14,9 @@ class AddActionItemsTest(SeleniumTestCase):
         assign_perm('edit_decisions_feedback', self.user, self.organization)
             
     def test_action_item_form_replaces_add_action_item_button(self):
-        # self.selenium is the name of the web driver for the class
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -38,7 +37,7 @@ class AddActionItemsTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -68,7 +67,7 @@ class AddActionItemsTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -77,8 +76,8 @@ class AddActionItemsTest(SeleniumTestCase):
         WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_id("id_deadline"))
         
-        self.selenium.find_element_by_name('description').send_keys("test")
-        self.selenium.find_element_by_name('responsible').send_keys("me")
+        self.driver.find_element_by_name('description').send_keys("test")
+        self.driver.find_element_by_name('responsible').send_keys("me")
         
         driver.find_element_by_css_selector(".actionitem_save").click()
         
@@ -96,7 +95,7 @@ class AddActionItemsTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -105,7 +104,7 @@ class AddActionItemsTest(SeleniumTestCase):
         WebDriverWait(driver, 10).until(
             lambda x: x.find_element_by_id("id_deadline"))
         
-        self.selenium.find_element_by_name('description').send_keys("test")
+        self.driver.find_element_by_name('description').send_keys("test")
         
         driver.find_element_by_css_selector(".actionitem_save").click()
         

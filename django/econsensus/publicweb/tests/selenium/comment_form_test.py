@@ -18,7 +18,7 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
                 
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         driver.find_element_by_css_selector(".show").click()
@@ -38,7 +38,7 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         driver.find_element_by_css_selector(".show").click()
@@ -59,7 +59,7 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         driver.find_element_by_css_selector(".show").click()
@@ -80,7 +80,7 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         driver.find_element_by_css_selector(".show").click()
@@ -103,7 +103,7 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
         driver.find_element_by_css_selector(".show").click()

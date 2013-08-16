@@ -31,3 +31,4 @@ DATABASES = {
     }
 }
 
+TEST_RUNNER = 'test_runner.SeleniumDiscoveryRunner'

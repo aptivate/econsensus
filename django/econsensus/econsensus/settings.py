@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
+    'south',
     'registration',
     'notification',
     'custom_comments',
@@ -142,7 +143,6 @@ INSTALLED_APPS = (
     'publicweb',
     'signals',
     'tinymce',
-    'south',
     'tagging',
     'actionitems',
 )
@@ -244,8 +244,6 @@ logging.getLogger('keyedcache').setLevel(logging.INFO)
 
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
-
-TEST_RUNNER = 'test_runner.DiscoveryRunner'
 
 #--------------------------------
 # local settings import

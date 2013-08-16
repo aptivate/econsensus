@@ -15,10 +15,9 @@ class AddFeedbackTest(SeleniumTestCase):
         assign_perm('edit_decisions_feedback', self.user, self.organization)
             
     def test_feedback_form_replaces_add_feedback_button(self):
-        # self.selenium is the name of the web driver for the class
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -39,7 +38,7 @@ class AddFeedbackTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -69,7 +68,7 @@ class AddFeedbackTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         

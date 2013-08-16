@@ -5,7 +5,6 @@ from organizations.models import Organization
 from publicweb.models import Decision, Feedback
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 
 class EditFeedbackTest(SeleniumTestCase):
     def setUp(self):
@@ -20,7 +19,7 @@ class EditFeedbackTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -41,7 +40,7 @@ class EditFeedbackTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
@@ -76,7 +75,7 @@ class EditFeedbackTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.selenium
+        driver = self.driver
         driver.get("%s/item/detail/%d/" % (
            self.live_server_url, decision.id))
         
