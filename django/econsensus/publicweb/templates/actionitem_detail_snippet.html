@@ -1,12 +1,14 @@
 {% load url from future %}
 {% load i18n %}
 <li id="{{ actionitem.id }}">
-    {% if actionitem.done %}<del>{% endif %}
-        <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
-        {{ actionitem.title }} <br />
-        {% if actionitem.deadline %}{% trans "by " %}<span class="actionitem_responsible">{{ actionitem.deadline }}</span>
-        {% else %}{% trans "No deadline" %}
-        {% endif %}
-    {% if actionitem.done %}</del>{% endif %} <br />
-    <a class="edit actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
+    <div class="actionitem_feedback_wrapper">
+	    {% if actionitem.done %}<del>{% endif %}
+	        <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
+	        {{ actionitem.title }} <br />
+	        {% if actionitem.deadline %}{% trans "by " %}<span class="actionitem_responsible">{{ actionitem.deadline }}</span>
+	        {% else %}{% trans "No deadline" %}
+	        {% endif %}
+	    {% if actionitem.done %}</del>{% endif %} <br />
+	    <a class="edit actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
+    </div>
 </li>
