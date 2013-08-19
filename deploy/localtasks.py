@@ -2,6 +2,8 @@
 import os
 
 from dye import tasklib
+from dye.tasklib.django import _manage_py
+from dye.tasklib.util import _call_wrapper
 
 
 def post_deploy(environment=None, svnuser=None, svnpass=None):
@@ -13,18 +15,18 @@ def load_sample_data(environment, force=False):
     """load sample data if required."""
     if force is False:
         # first check if it has already been loaded
-        output_lines = tasklib._manage_py(['dumpdata', 'publicweb'])
+        output_lines = _manage_py(['dumpdata', 'publicweb'])
         if output_lines[0] != '[]':
             print "Environment '", environment, "' already has sample data loaded."
             return
 
-        tasklib._manage_py(['loaddata', "sample_data.json"])
+        _manage_py(['loaddata', "sample_data.json"])
 
 
 def load_auth_user(environment, force=False):
     """load auth user fixture based on environment. """
     if force is False:
-        auth_user_needs_initializing = int(tasklib._manage_py(['auth_user_needs_initializing'])[0].strip())
+        auth_user_needs_initializing = int(_manage_py(['auth_user_needs_initializing'])[0].strip())
         if not auth_user_needs_initializing:
             print "Environment '", environment, "' already has auth.user initialized."
             return
@@ -34,15 +36,15 @@ def load_auth_user(environment, force=False):
     user_path = os.path.join(local_fixtures_directory,
         environment + '_auth_user.json')
     if os.path.exists(user_path):
-        tasklib._manage_py(['loaddata', user_path])
+        _manage_py(['loaddata', user_path])
     else:
-        tasklib._manage_py(['loaddata', "default_auth_user.json"])
+        _manage_py(['loaddata', "default_auth_user.json"])
 
 
 def load_django_site_data(environment, force=False):
     """Load data for django sites framework. """
     if force is False:
-        site_needs_initializing = int(tasklib._manage_py(['site_needs_initializing'])[0].strip())
+        site_needs_initializing = int(_manage_py(['site_needs_initializing'])[0].strip())
         if not site_needs_initializing:
             print "Environment '", environment, "' already has site data initialized."
             return
@@ -51,9 +53,9 @@ def load_django_site_data(environment, force=False):
     site_fixture_path = os.path.join(local_fixtures_directory,
         environment + '_site.json')
     if os.path.exists(site_fixture_path):
-        tasklib._manage_py(['loaddata', site_fixture_path])
+        _manage_py(['loaddata', site_fixture_path])
     else:
-        tasklib._manage_py(['loaddata', "default_site.json"])
+        _manage_py(['loaddata', "default_site.json"])
 
 
 def create_ve():
@@ -74,7 +76,7 @@ def add_cron_email(environment):
     if os.path.exists(cron_file):
         return
     # has it been set up already?
-    cron_grep = tasklib._call_wrapper('sudo crontab -l | grep %s' % tasklib.env['django_dir'], shell=True)
+    cron_grep = _call_wrapper('sudo crontab -l | grep %s' % tasklib.env['django_dir'], shell=True)
     if cron_grep == 0:
         return
 
