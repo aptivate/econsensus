@@ -91,7 +91,7 @@ class AddActionItemsTest(SeleniumTestCase):
         self.assertEqual(expected_text, actual_text)
 
     def test_action_item_form_save_with_invalid_data_displays_errors(self):
-        expected_text = ('This field is required.')
+        expected_text = ('This value is required.')
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
@@ -109,11 +109,11 @@ class AddActionItemsTest(SeleniumTestCase):
         driver.find_element_by_css_selector(".actionitem_save").click()
         
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".errorlist > li"),
+            lambda x: x.find_element_by_css_selector(".parsley-error-list > li"),
             "Check the data being submitted is valid")
         
         actual_text = driver.find_element_by_css_selector(
-              ".errorlist > li").text
+              ".parsley-error-list > li").text
         
         self.assertEqual(expected_text, actual_text)
     

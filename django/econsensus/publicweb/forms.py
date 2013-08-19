@@ -9,6 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
+from parsley.decorators import parsleyfy
+from actionitems.models import ActionItem
+from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
 
 class YourDetailsForm(forms.ModelForm):
 
@@ -31,6 +34,7 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback
         exclude = ("decision",)
 
+@parsleyfy
 class DecisionForm(forms.ModelForm):
     
     watch = forms.BooleanField(required=False, initial=True)
@@ -49,8 +53,15 @@ class DecisionForm(forms.ModelForm):
 
 EXTRA_CHOICE = (3, _('All')) #pylint: disable=E1102
 
+@parsleyfy
+class EconsensusActionItemCreateForm(ActionItemCreateForm):
+    pass
 #TODO: Sort and filter forms have nothing to do with the app itself.
 #Move to site when site and app are split.
+
+@parsleyfy
+class EconsensusActionItemUpdateForm(ActionItemUpdateForm):
+    pass
 
 class FilterForm(forms.Form):
     #this seems clunky...

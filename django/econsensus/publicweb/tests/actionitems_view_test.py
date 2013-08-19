@@ -8,9 +8,10 @@ from decision_test_case import DecisionTestCase
 from publicweb.views import EconsensusActionitemCreateView, EconsensusActionitemUpdateView, EconsensusActionitemListView
 from organizations.models import Organization
 from actionitems.models import ActionItem
-from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
 
 from BeautifulSoup import BeautifulSoup
+from publicweb.forms import EconsensusActionItemCreateForm,\
+    EconsensusActionItemUpdateForm
 
 
 class ActionitemsViewTestFast(TestCase):
@@ -19,7 +20,7 @@ class ActionitemsViewTestFast(TestCase):
         assert EconsensusActionitemCreateView.model == ActionItem
 
     def test_create_formclass(self):
-        assert EconsensusActionitemCreateView.form_class == ActionItemCreateForm
+        assert EconsensusActionitemCreateView.form_class == EconsensusActionItemCreateForm
 
     def test_create_template(self):
         assert EconsensusActionitemCreateView.template_name == 'actionitem_create_snippet.html'
@@ -28,20 +29,22 @@ class ActionitemsViewTestFast(TestCase):
         assert EconsensusActionitemUpdateView.model == ActionItem
 
     def test_update_formclass(self):
-        assert EconsensusActionitemUpdateView.form_class == ActionItemUpdateForm
+        assert EconsensusActionitemUpdateView.form_class == EconsensusActionItemUpdateForm
 
     def test_update_template(self):
         assert EconsensusActionitemUpdateView.template_name == 'actionitem_update_snippet.html'
 
     def test_create_get_successurl(self):
         createview = EconsensusActionitemCreateView()
+        createview.object = ActionItem(id=1)
         createview.kwargs = {'pk': 1}
-        assert createview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
+        assert createview.get_success_url() == reverse('actionitem_detail', kwargs={'decisionpk': 1, 'pk': 1})
 
     def test_update_get_successurl(self):
         updateview = EconsensusActionitemUpdateView()
+        updateview.object = ActionItem(id=1)
         updateview.kwargs = {'decisionpk' : 1}
-        assert updateview.get_success_url() == reverse('publicweb_item_detail', kwargs={'pk': 1})
+        assert updateview.get_success_url() == reverse('actionitem_detail', kwargs={'decisionpk': 1, 'pk': 1})
 
     def test_create_get_origin(self):
         # Have get_origin get the pk from url

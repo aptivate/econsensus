@@ -26,7 +26,8 @@ from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
 
-from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
+    EconsensusActionItemCreateForm, EconsensusActionItemUpdateForm
 from publicweb.models import Decision, Feedback
 
 from publicweb.forms import DecisionForm, FeedbackForm
@@ -503,7 +504,7 @@ class FeedbackUpdate(UpdateView):
 
 class EconsensusActionitemCreateView(ActionItemCreateView):
     template_name = 'actionitem_create_snippet.html'
-
+    form_class = EconsensusActionItemCreateForm
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
     def dispatch(self, *args, **kwargs):
@@ -514,18 +515,31 @@ class EconsensusActionitemCreateView(ActionItemCreateView):
         return origin
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', kwargs=self.kwargs)
+        kwargs = {'decisionpk': self.kwargs.get('pk'),
+                  'pk': self.object.pk}
+        return reverse('actionitem_detail', kwargs=kwargs)
+
+class EconsensusActionitemDetailView(DetailView):
+    model = ActionItem
+    template_name = 'actionitem_detail_snippet.html'
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(EconsensusActionitemDetailView, self).dispatch(*args, **kwargs)
 
 class EconsensusActionitemUpdateView(ActionItemUpdateView):
     template_name = 'actionitem_update_snippet.html'
+    form_class = EconsensusActionItemUpdateForm
 
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, *args, **kwargs):        
         return super(EconsensusActionitemUpdateView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_detail', kwargs={'pk': self.kwargs['decisionpk']})
+        kwargs = {'decisionpk': self.kwargs.get('decisionpk'),
+                  'pk': self.object.pk}
+        return reverse('actionitem_detail', kwargs=kwargs)
 
 class EconsensusActionitemListView(ActionItemListView):
     template_name = 'decision_list.html'

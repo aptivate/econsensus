@@ -7,6 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from actionitems.models import ActionItem
 from django.utils.formats import date_format
+import time
 
 class EditActionItemsTest(SeleniumTestCase):
     def setUp(self):
@@ -31,10 +32,11 @@ class EditActionItemsTest(SeleniumTestCase):
         
         self.assertTrue(
             self.is_element_present(
-                By.CSS_SELECTOR, ".actionitem_list > form"))
+                By.CSS_SELECTOR, ".actionitem_list > li > form"))
         self.assertFalse(
              self.is_element_present(
-                 By.CSS_SELECTOR, ".actionitem_list > li"))
+                 By.CSS_SELECTOR, 
+                 ".actionitem_list > li > .actionitem_feedback_wrapper"))
     
     def test_action_item_form_cancel_recreates_item_without_changes(self):
         
@@ -64,16 +66,17 @@ class EditActionItemsTest(SeleniumTestCase):
         
         actual_text = driver.find_element_by_css_selector(
               "ol.actionitem_list > li").text
-              
+        
         self.assertTrue(
              self.is_element_present(
-                 By.CSS_SELECTOR, ".actionitem_list > li"))
+                 By.CSS_SELECTOR, 
+                 ".actionitem_list > li > .actionitem_feedback_wrapper"))
         self.assertFalse(
             self.is_element_present(
-                By.CSS_SELECTOR, ".actionitem_list > form"))
+                By.CSS_SELECTOR, ".actionitem_list > li > form"))
         self.assertEqual(expected_text, actual_text)
     
-    def test_action_item_form_save_with_valid_form_creates_action_item(self):        
+    def test_action_item_form_save_with_valid_form_updates_action_item(self):        
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         action_item = G(ActionItem, origin=decision)
@@ -98,16 +101,16 @@ class EditActionItemsTest(SeleniumTestCase):
         driver.find_element_by_css_selector(".actionitem_save").click()
         
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector("#actionitem_add_anchor"),
+            lambda x: x.find_element_by_css_selector(".actionitem_feedback_wrapper"),
             "Check the data being submitted is valid")
-        
+
         actual_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li").text
+              "ol.actionitem_list > li > .actionitem_feedback_wrapper").text
         
         self.assertEqual(expected_text, actual_text)
 
     def test_action_item_form_save_with_invalid_data_displays_errors(self):
-        expected_text = ('This field is required.')
+        expected_text = ('This value is required.')
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
@@ -127,10 +130,10 @@ class EditActionItemsTest(SeleniumTestCase):
         driver.find_element_by_css_selector(".actionitem_save").click()
         
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".errorlist > li"),
+            lambda x: x.find_element_by_css_selector(".parsley-error-list > li"),
             "Check the data being submitted is valid")
         
         actual_text = driver.find_element_by_css_selector(
-              ".errorlist > li").text
+              ".parsley-error-list > li").text
         
         self.assertEqual(expected_text, actual_text)

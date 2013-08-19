@@ -1216,11 +1216,11 @@ p.error input {
 	border-color : #C93A2A;
 }
 
-.form_item.error textarea {
+.form_item.error textarea, .parsley-error {
     border-color : #C93A2A;
 }
 
-ul.errorlist {
+ul.errorlist, .parsley-error-list {
 	clear: both;
 	color: #C93A2A;
 }

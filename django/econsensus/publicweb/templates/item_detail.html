@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/showhide.js"></script>
-
+    <script type="text/javascript" src="{{ STATIC_URL }}js/parsley.min.js"></script>
 	<script type="text/javascript">
 	<!--
 	$(function () {
@@ -123,19 +123,60 @@
         //Action items inline editing
         var actionitem_add_url = "{% url 'actionitem_create' object.id %}",
             actionitem_edit_url = "{% url 'actionitem_update' decisionpk=object.id pk=0 %}",
-            actionitem_form_parent = "#actionitem_add_anchor";
+            actionitem_detail_url = "{% url 'actionitem_detail' decisionpk=object.id pk=0 %}",
+            actionitem_form_parent = "#actionitem_add_anchor",
+            actionitem_button = $(".button.add_actionitem").clone().wrap('<div>').parent().html();
         // Add
 		$(actionitem_form_parent).on("click", ".button.add_actionitem", function (e) {
             replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
+            $('.actionitem-form').parsley({errors :{errorsWrapper: '<ul class="error_list"></ul>'}});
 			e.preventDefault();
 		});
         //Edit
 		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
-            var actionitempk = $(this).parent().attr("id"),
+            var actionitempk = $(this).parents("li").attr("id"),
 				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
-            replaceWithRemote(snippet_update_url, "#"+actionitempk);
+            replaceWithRemote(snippet_update_url, "#"+actionitempk+" .actionitem_feedback_wrapper");
 			e.preventDefault();
 		});
+		
+		$(actionitem_form_parent).on("submit", "form", function (e) {
+            var $form = $(actionitem_form_parent + " form"),
+                parameters = $form.serialize();
+            if($form.parsley('validate')) {
+	            $.post(actionitem_add_url,
+	                parameters,
+	                function (data) {
+	                    var $action_item = $(".list.decision_actionitem .actionitem_list");
+	    
+	                    $('.no_actionitem').remove();
+	                    if (data) {
+	                        $action_item.html($action_item.html()+data);
+	                    }
+	                    $form.replaceWith(actionitem_button);
+	                }
+	            );
+            }
+            e.preventDefault();
+        }); 
+
+		$(".list.decision_actionitem").on("submit", "form", function (e) {
+            var $form = $("ol.actionitem_list form"),
+                parameters = $form.serialize();
+            var actionitempk = $(this).parent().attr("id"),
+            snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk),
+            snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
+            if($form.parsley('validate')) {
+                $.post(snippet_update_url,
+                    parameters,
+                    function (data) {
+                        // Post successful, now fetch stored value and add it as a snippet
+                        replaceWithRemote(snippet_detail_url, $form.parent());
+                    }
+                );
+            }
+            e.preventDefault();
+        });   
         	
 		/*
 		 * Feedback in-line editing
@@ -159,6 +200,7 @@
 		$(feedback_form_parent).on("click", ".button.add_feedback", function (e) {
             replaceWithRemote(feedback_add_url, ".button.add_feedback");
             scrollToFeedbackAnchor();
+            
 			e.preventDefault();
 		});
 	
