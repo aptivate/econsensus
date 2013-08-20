@@ -62,6 +62,32 @@ class AddActionItemsTest(SeleniumTestCase):
                 By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
         self.assertEqual(expected_text, actual_text)
     
+    def test_action_item_form_cancel_only_closes_actionitem_form(self):
+        
+        decision = G(Decision, organization=self.organization, 
+              author=self.user, editor=self.user)
+        driver = self.driver
+        driver.get("%s/item/detail/%d/" % (
+           self.live_server_url, decision.id))
+        
+        driver.find_element_by_css_selector(".controls .edit").click()
+        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_id("id_deadline"))
+        
+        driver.find_element_by_css_selector(".actionitem_cancel").click()
+
+        WebDriverWait(driver, 10).until(
+            lambda x: x.find_element_by_css_selector("a.button.add_actionitem"))
+              
+        self.assertTrue(
+             self.is_element_present(
+                 By.CSS_SELECTOR, "#decision_update_form"))
+        self.assertFalse(
+            self.is_element_present(
+                By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
+    
     def test_action_item_form_save_with_valid_form_creates_action_item(self):
         expected_text = ('me is responsible for: test\nNo deadline\nEdit')
         

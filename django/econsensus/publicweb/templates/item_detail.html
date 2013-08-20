@@ -177,6 +177,24 @@
             }
             e.preventDefault();
         });   
+
+		// Handle cancel manually, because it doesn't get submitted with
+        // javascript submission
+        $(actionitem_form_parent).on("click", "a.actionitem_cancel", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $("#actionitem_add_anchor form").replaceWith(actionitem_button);
+        });
+
+        $(".list.decision_actionitem").on("click", "a.actionitem_cancel", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var actionitem_form = $(".list.decision_actionitem form");
+            var actionitempk = actionitem_form.parent('li').attr("id");
+            var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
+
+            replaceWithRemote(snippet_detail_url, actionitem_form.parent());
+        });
         	
 		/*
 		 * Feedback in-line editing
