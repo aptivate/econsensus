@@ -1,4 +1,5 @@
 {% load comments %}
+{% load i18n %}
 {% get_comment_form for object as form %}
 <div class="form_comment">
   <form action="{% comment_form_target %}" method="post">
@@ -20,7 +21,8 @@
       {% endif %}
     {% endfor %}
    	<div class="controls">  
-		<input class="button go" type="submit" name="submit" value="Post" />				    
+		<input class="button go" type="submit" name="submit" value="{% trans "Post" %}" />
+		<a class="button go cancel" href="#">{% trans "Cancel" %}</a>
 		{% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
 	</div>	           
   </form>

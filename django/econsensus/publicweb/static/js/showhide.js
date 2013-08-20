@@ -5,7 +5,7 @@ Objects are automatically hidden if the
 user clicks outside the area
 */
   $(document).ready(function() {
-    $("body").on("click", function() {
+    $(".controls .button.cancel").on("click", function() {
       $(".form_comment").hide();
     });
     
