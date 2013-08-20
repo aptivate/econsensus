@@ -7,7 +7,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from actionitems.models import ActionItem
 from django.utils.formats import date_format
-import time
 
 class EditActionItemsTest(SeleniumTestCase):
     def setUp(self):
