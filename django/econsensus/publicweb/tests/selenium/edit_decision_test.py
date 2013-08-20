@@ -126,10 +126,9 @@ class EditDescisionTest(SeleniumTestCase):
             "#decision_update_form input[value=\"Save\"]").click()
         
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".errorlist > li"),
-            "Check the data being submitted is valid")
+            lambda x: x.find_element_by_css_selector(".errorlist > li"))
         
         actual_text = driver.find_element_by_css_selector(
-              ".errorlist > li").text
+              ".parsley-error-list > li").text
         
         self.assertEqual(expected_text, actual_text)
