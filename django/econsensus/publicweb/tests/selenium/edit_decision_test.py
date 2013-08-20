@@ -5,8 +5,6 @@ from organizations.models import Organization
 from guardian.shortcuts import assign_perm
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
-from actionitems.models import ActionItem
-from django.utils.formats import date_format
 
 class EditDescisionTest(SeleniumTestCase):
     def setUp(self):
@@ -106,7 +104,7 @@ class EditDescisionTest(SeleniumTestCase):
         self.assertEqual(expected_text, actual_text)
 
     def test_decision_form_save_with_invalid_data_displays_errors(self):
-        expected_text = ('This field is required.')
+        expected_text = ('This value is required.')
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
@@ -126,7 +124,7 @@ class EditDescisionTest(SeleniumTestCase):
             "#decision_update_form input[value=\"Save\"]").click()
         
         WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".errorlist > li"))
+            lambda x: x.find_element_by_css_selector(".parsley-error-list > li"))
         
         actual_text = driver.find_element_by_css_selector(
               ".parsley-error-list > li").text

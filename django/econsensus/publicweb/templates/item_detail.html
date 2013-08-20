@@ -101,15 +101,18 @@
 		// Override redirect to form and put it inline
 		$("#content").on("click", "#decision_snippet_envelope a.edit", function (e) {
 			replaceWithRemote("{% url 'publicweb_decision_snippet_update' object.id %}", "#decision_snippet_envelope");
+			$('#decision_update_form').parsley();
 			e.preventDefault();
 		});
 
 		var decision_update_form_parent = "#content";
 		// Override redirect to view and put it inline
 		$(decision_update_form_parent).on("click", '#decision_update_form input[value="Save"]', function (e) {
-			updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
-							"{% url 'publicweb_decision_snippet_detail' object.id %}",
-							"#decision_update_form");
+			if($('#decision_update_form').parsley('validate')) {
+			 updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
+					"{% url 'publicweb_decision_snippet_detail' object.id %}",
+					"#decision_update_form");
+			}
 			e.preventDefault();
 		});
 
@@ -129,7 +132,7 @@
         // Add
 		$(actionitem_form_parent).on("click", ".button.add_actionitem", function (e) {
             replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
-            $('.actionitem-form').parsley({errors :{errorsWrapper: '<ul class="error_list"></ul>'}});
+            $('.actionitem-form').parsley();
 			e.preventDefault();
 		});
         //Edit
@@ -137,6 +140,7 @@
             var actionitempk = $(this).parents("li").attr("id"),
 				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
             replaceWithRemote(snippet_update_url, "#"+actionitempk+" .actionitem_feedback_wrapper");
+            $('.actionitem-form').parsley();
 			e.preventDefault();
 		});
 		
