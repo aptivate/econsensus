@@ -236,8 +236,6 @@ input {
     display: block;
     float: right;
     padding: 8px 10px;
-	display: none; /* pcb : disbled for the moment since it's nonfunctional */
-    
 }
 
 #navigation #search_form input#search {
