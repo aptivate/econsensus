@@ -448,7 +448,8 @@ p.no_items {
 
 /* list view colors */
 .archived-list .summary-list th,
-.archived-list .summary-list td {
+.archived-list .summary-list td,
+.summary-list td.archived {
 	border-color: #D1D7DF;
 }
 
@@ -457,7 +458,8 @@ p.no_items {
 }
 
 .proposal-list .summary-list th,
-.proposal-list .summary-list td {
+.proposal-list .summary-list td,
+.summary-list td.proposal {
 	border-color: #FFCC00;
 }
 
@@ -466,7 +468,8 @@ p.no_items {
 }
 
 .decision-list .summary-list th,
-.decision-list .summary-list td {
+.decision-list .summary-list td,
+.summary-list td.decision {
 	border-color: #AAD400;
 }
 
@@ -475,7 +478,8 @@ p.no_items {
 }
 
 .discussion-list .summary-list th,
-.discussion-list .summary-list td {
+.discussion-list .summary-list td,
+.summary-list td.discussion {
 	border-color: #3E6EA3;
 }
 
@@ -607,6 +611,12 @@ a.button.add_discussion {
 a.button.add_actionitem {
     background-color: #E02E78;
     color:#fff;
+}
+
+/* Search view */
+.summary-list.search-results th {
+    background-color:#D3CDC6;
+    border-color:#D3CDC6;
 }
 
 /* Decision View */

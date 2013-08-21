@@ -22,15 +22,25 @@
 
 {% block main_content %}
 {% if page.object_list %}
-    <table class="summary-list">
+    <table class="search-results summary-list">
+        <thead>
+            <tr class="summary-header">
+                <th class="id">{% trans "ID" %}</th>
+                <th class="excerpt">{% trans "Excerpt" %}</th>
+                <th class="status">{% trans "Status" %}</th>
+            </tr>
+        </thead>
         <tbody>
         {% for result in page.object_list %}
+            {% with object=result.object status=result.object.status %}
             <tr>
-                <td class="id">
-                    <a href="{{ result.object.get_absolute_url }}"><span class="iconified">{{ result.object.id }}</span></a>
+                <td class="id {{ status }}">
+                    <a href="{{ object.get_absolute_url }}"><span class="iconified">{{ object.id }}</span></a>
                 </td>
-                <td class="excerpt">{{ result.object.excerpt }}</td>
+                <td class="excerpt {{ status }}">{{ object.excerpt }}</td>
+                <td class="status {{ status }}">{{ status|capfirst }}</td>
             </tr>
+            {% endwith %}
         {% endfor %}
         </tbody>
     </table>
