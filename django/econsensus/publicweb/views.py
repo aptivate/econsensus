@@ -738,6 +738,11 @@ class DecisionSearchView(SearchView):
     def __init__(self, *args, **kwargs):
         super(DecisionSearchView, self).__init__(*args, **kwargs)
 
+    def get_results(self):
+        results = super(DecisionSearchView, self).get_results()
+        orgs = Organization.objects.filter(users=self.request.user)
+        return results.filter(organization__in=orgs)
+
     # Might have been logical to call this method "as_view", but
     # that might imply that we inherit from View...
     @classmethod
