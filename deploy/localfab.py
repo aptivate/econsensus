@@ -8,7 +8,7 @@ from fabric.contrib import files
 import fablib
 
 
-def deploy(revision=None):
+def deploy(revision=None, keep=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('vcs_root_dir', provided_by=env.valid_envs)
     fablib.check_for_local_changes()
@@ -17,6 +17,8 @@ def deploy(revision=None):
         fablib.webserver_cmd('reload')
     if not files.exists(env.vcs_root_dir):
         sudo('mkdir -p %(vcs_root_dir)s' % env)
+    if files.exists(env.vcs_root_dir):
+        fablib.create_copy_for_rollback(keep)
     fablib.checkout_or_update(revision)
     fablib.create_deploy_virtualenv()
     # Use tasks.py deploy:env to actually do the deployment, including
