@@ -1,6 +1,7 @@
 from django.contrib.comments.forms import CommentForm, COMMENT_MAX_LENGTH
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django import forms
+from parsley.decorators import parsleyfy
 
 
 """
@@ -8,6 +9,7 @@ The form is customised so that the id of every field is unique
 This ensures html validation passes (ie no duplicate ids) when
 there are multiple comment forms on a single page.
 """
+@parsleyfy
 class CustomCommentForm(CommentForm):
     def __init__(self, target_object, data=None, initial=None):
         super(CustomCommentForm, self).__init__(target_object, data, initial)
