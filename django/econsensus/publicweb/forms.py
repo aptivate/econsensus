@@ -10,7 +10,6 @@ from django.forms.fields import ChoiceField
 
 from widgets import JQueryUIDateWidget
 from parsley.decorators import parsleyfy
-from actionitems.models import ActionItem
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
 
 class YourDetailsForm(forms.ModelForm):
