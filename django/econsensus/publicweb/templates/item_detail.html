@@ -184,13 +184,13 @@
 
 		// Handle cancel manually, because it doesn't get submitted with
         // javascript submission
-        $(actionitem_form_parent).on("click", "a.actionitem_cancel", function (e) {
+        $(actionitem_form_parent).on("click", ".actionitem_cancel", function (e) {
             e.stopPropagation();
             e.preventDefault();
             $("#actionitem_add_anchor form").replaceWith(actionitem_button);
         });
 
-        $(".list.decision_actionitem").on("click", "a.actionitem_cancel", function (e) {
+        $(".list.decision_actionitem").on("click", ".actionitem_cancel", function (e) {
             e.stopPropagation();
             e.preventDefault();
             var actionitem_form = $(".list.decision_actionitem form");
