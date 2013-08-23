@@ -3,11 +3,13 @@ from django_dynamic_fixture import G
 from organizations.models import Organization
 from publicweb.models import Decision
 from guardian.shortcuts import assign_perm
-from selenium.webdriver.support.wait import WebDriverWait
 from publicweb.tests.selenium.selenium_testcase import SeleniumTestCase
+from publicweb.tests.selenium.pages.decision_detail import DecisionDetail,\
+    NewActionitemDetail
         
 class AddActionItemsTest(SeleniumTestCase):
     def setUp(self):
+        super(AddActionItemsTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
@@ -16,20 +18,16 @@ class AddActionItemsTest(SeleniumTestCase):
     def test_action_item_form_replaces_add_action_item_button(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+       
+        decision_page = NewActionitemDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector("a.button.add_actionitem").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.add_actionitem()
         
         self.assertTrue(
-            self.is_element_present(
+            decision_page.is_element_present(
                 By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
         self.assertFalse(
-             self.is_element_present(
+             decision_page.is_element_present(
                  By.CSS_SELECTOR, "#actionitem_add_anchor > .add_actionitem"))
     
     def test_action_item_form_cancel_recreates_button_without_adding_new_item(self):
@@ -37,109 +35,74 @@ class AddActionItemsTest(SeleniumTestCase):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
         
-        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        decision_page = NewActionitemDetail(self.driver, decision)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.add_actionitem()
         
-        driver.find_element_by_css_selector(".actionitem_cancel").click()
-
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector("a.button.add_actionitem"))
+        decision_page.cancel_changes()
         
-        actual_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li").text
+        actual_text = decision_page.get_element_text("ol.actionitem_list > li")
               
         self.assertTrue(
-             self.is_element_present(
-                 By.CSS_SELECTOR, "#actionitem_add_anchor > .add_actionitem"))
+             decision_page.is_element_present(
+                 By.CSS_SELECTOR, decision_page.edit_link_selector))
         self.assertFalse(
-            self.is_element_present(
-                By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
         self.assertEqual(expected_text, actual_text)
     
     def test_action_item_form_cancel_only_closes_actionitem_form(self):
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
         
-        driver.find_element_by_css_selector(".controls .edit").click()
-        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        decision_page = NewActionitemDetail(self.driver, decision)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
-        
-        driver.find_element_by_css_selector(".actionitem_cancel").click()
+        decision_page.edit_decision()
+        decision_page.add_actionitem()
 
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector("a.button.add_actionitem"))
+        decision_page.cancel_changes()
               
         self.assertTrue(
-             self.is_element_present(
-                 By.CSS_SELECTOR, "#decision_update_form"))
+             decision_page.is_element_present(
+                 By.CSS_SELECTOR, DecisionDetail.form_id))
         self.assertFalse(
-            self.is_element_present(
-                By.CSS_SELECTOR, "#actionitem_add_anchor > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
     
     def test_action_item_form_save_with_valid_form_creates_action_item(self):
         expected_text = ('me is responsible for: test\nNo deadline\nEdit')
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = NewActionitemDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        decision_page.add_actionitem()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.update_text_field('description', "test")
+        decision_page.update_text_field('responsible', "me")
+                
+        decision_page.submit_changes()
         
-        self.driver.find_element_by_name('description').send_keys("test")
-        self.driver.find_element_by_name('responsible').send_keys("me")
-        
-        driver.find_element_by_css_selector(".actionitem_save").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector("#actionitem_add_anchor"),
-            "Check the data being submitted is valid")
-        
-        actual_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li").text
+        actual_text = decision_page.get_element_text('ol.actionitem_list > li')
         
         self.assertEqual(expected_text, actual_text)
 
     def test_action_item_form_save_with_invalid_data_displays_errors(self):
-        expected_text = ('This value is required.')
+        expected_text = 'This value is required.'
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = NewActionitemDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector("a.button.add_actionitem").click()
+        decision_page.add_actionitem()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.update_text_field('description', "test")
         
-        self.driver.find_element_by_name('description').send_keys("test")
+        decision_page.submit_invalid_changes(decision_page.form_id)
         
-        driver.find_element_by_css_selector(".actionitem_save").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".parsley-error-list > li"),
-            "Check the data being submitted is valid")
-        
-        actual_text = driver.find_element_by_css_selector(
-              ".parsley-error-list > li").text
+        actual_text = decision_page.get_element_text('.parsley-error-list > li')
         
         self.assertEqual(expected_text, actual_text)
     

@@ -1,4 +1,5 @@
-from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import NoAlertPresentException,\
+    NoSuchElementException
 from django.contrib.auth.models import User
 from django_selenium.livetestcases import SeleniumLiveTestCase
 from publicweb.tests.selenium.pages.base import Login

@@ -3,11 +3,12 @@ from guardian.shortcuts import assign_perm
 from django_dynamic_fixture import G
 from organizations.models import Organization
 from publicweb.models import Decision, Feedback
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
+from publicweb.tests.selenium.pages.decision_detail import EditFeedbackDetail
 
 class EditFeedbackTest(SeleniumTestCase):
     def setUp(self):
+        super(EditFeedbackTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
@@ -19,80 +20,56 @@ class EditFeedbackTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
-        
-        driver.find_element_by_css_selector(".description .edit").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        decision_page = EditFeedbackDetail(self.driver, decision)
+        decision_page.edit_feedback()
         
         self.assertTrue(
-            self.is_element_present(
-                By.CSS_SELECTOR, "li > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
         self.assertFalse(
-             self.is_element_present(
-                 By.CSS_SELECTOR, ".description .edit"))
+            decision_page.is_element_present(
+                 By.CSS_SELECTOR, decision_page.edit_link_selector))
     
     def test_feedback_form_cancel_recreates_link_without_updating_item(self):        
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = EditFeedbackDetail(self.driver, decision)
         
-        expected_text = driver.find_element_by_css_selector(
-              "ol.feedback_list > li").text
+        expected_text = decision_page.get_element_text("ol.feedback_list > li")
+        decision_page.edit_feedback()
         
-        driver.find_element_by_css_selector(".description .edit").click()
+        decision_page.update_text_field('description', "test")
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        decision_page.cancel_changes()
         
-        driver.find_element_by_name('description').send_keys("test")
-        
-        driver.find_element_by_css_selector(".feedback_cancel").click()
-
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".feedback_type"))
-        
-        actual_text = driver.find_element_by_css_selector(
-              "ol.feedback_list > li").text
+        actual_text = decision_page.get_element_text("ol.feedback_list > li")
               
         self.assertTrue(
-             self.is_element_present(
-                 By.CSS_SELECTOR, ".description .edit"))
+            decision_page.is_element_present(
+                 By.CSS_SELECTOR, decision_page.edit_link_selector))
         self.assertFalse(
-            self.is_element_present(
-                By.CSS_SELECTOR, "li > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
         self.assertEqual(expected_text, actual_text)
     
     def test_feedback_form_updates_feedback(self):
-        expected_text = ('Comment\ntest says:\ntest\nEdit Comment')
+        expected_text = 'Comment\ntest says:\ntest\nEdit Comment'
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        G(Feedback, decision=decision, author=self.user)
         
-        driver.find_element_by_css_selector("a.button.add_feedback").click()
+        decision_page = EditFeedbackDetail(self.driver, decision)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        decision_page.edit_feedback()
         
-        driver.find_element_by_name('description').send_keys("test")
+        decision_page.clear_text_field('description')
+        decision_page.update_text_field('description', "test")
+                
+        decision_page.submit_changes()
         
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
-        
-        actual_text = driver.find_element_by_css_selector(
-              "ol.feedback_list > li").text
+        actual_text = decision_page.get_element_text("ol.feedback_list > li")
         
         self.assertEqual(expected_text, actual_text)

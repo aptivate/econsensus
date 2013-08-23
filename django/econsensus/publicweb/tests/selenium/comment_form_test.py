@@ -5,9 +5,11 @@ from guardian.shortcuts import assign_perm
 from publicweb.models import Decision, Feedback
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
+from publicweb.tests.selenium.pages.decision_detail import CommentDetail
 
 class CommentFormTest(SeleniumTestCase):
     def setUp(self):
+        super(CommentFormTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
@@ -17,41 +19,29 @@ class CommentFormTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
-                
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
-        driver.find_element_by_css_selector(".show").click()
+        decision_page = CommentDetail(self.driver, decision)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_name("comment").is_displayed())
-        
-        form_css_selector = ".contrib_comment_container > .form_comment > form"
+        decision_page.add_comment()
         
         self.assertTrue(
-            driver.find_element_by_css_selector(form_css_selector). \
-                is_displayed()
-                        )
+            decision_page.is_element_displayed(
+               By.CSS_SELECTOR, decision_page.form_id))
     
     def test_comment_form_cancel_hides_form(self):   
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = CommentDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector(".show").click()
+        decision_page.add_comment()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_name("comment").is_displayed())
+        decision_page.cancel_changes()
              
-        driver.find_element_by_css_selector(".controls .button.cancel").click()
-        
-        form_css_selector = ".contrib_comment_container > .form_comment > form"
         self.assertFalse(
-            driver.find_element_by_css_selector(form_css_selector). \
-                is_displayed()
+            decision_page.is_element_displayed(
+               By.CSS_SELECTOR, decision_page.form_id)
             )
     
     def test_clicking_outside_of_form_doesnt_hide_it(self):
@@ -59,65 +49,47 @@ class CommentFormTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = CommentDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector(".show").click()
+        decision_page.add_comment()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_name("comment").is_displayed())
+        decision_page.click_outside_form()
         
-        driver.find_element_by_css_selector("body").click()
-        
-        form_css_selector = ".contrib_comment_container > .form_comment > form"
-    
         self.assertTrue(
-                    driver.find_element_by_css_selector(form_css_selector). \
-                        is_displayed())
+            decision_page.is_element_displayed(
+               By.CSS_SELECTOR, decision_page.form_id))
     
     def test_posting_comment_adds_comment_to_feedback(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = CommentDetail(self.driver, decision)
         
-        driver.find_element_by_css_selector(".show").click()
+        decision_page.add_comment()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_name("comment").is_displayed())
+        decision_page.update_text_field('comment', "test")
         
-        driver.find_element_by_name("comment").send_keys("test")
-        
-        driver.find_element_by_css_selector(".button.go").click()
+        decision_page.submit_changes()
         
         self.assertTrue(
-            self.is_element_present(
+            decision_page.is_element_present(
                 By.CSS_SELECTOR, ".contrib_comment_list .contrib_comment"))
     
     def test_posting_comment_with_invalid_data_displays_errors(self):
-        expected_text = ('This field is required.')
+        expected_text = ('This value is required.')
         
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, decision=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
         
-        driver.find_element_by_css_selector(".show").click()
+        decision_page = CommentDetail(self.driver, decision)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_name("comment").is_displayed())
+        decision_page.add_comment()
+                
+        decision_page.submit_invalid_changes(decision_page.form_id)
         
-        driver.find_element_by_css_selector(".button.go").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".errorlist > li"),
-            "Check the data being submitted is valid")
-        
-        actual_text = driver.find_element_by_css_selector(
-              ".errorlist > li").text
+        actual_text = decision_page.get_element_text(decision_page.error_list)
         
         self.assertEqual(expected_text, actual_text)

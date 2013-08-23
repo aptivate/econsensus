@@ -3,9 +3,12 @@ from organizations.models import Organization
 from guardian.shortcuts import assign_perm
 from publicweb.models import Decision
 from publicweb.tests.selenium.selenium_testcase import SeleniumTestCase
+from publicweb.tests.selenium.pages.decision_detail import FeedbackDetail
+import time
 
 class HideActionItemsFeedbackTest(SeleniumTestCase):
     def setUp(self):
+        super(HideActionItemsFeedbackTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
@@ -15,52 +18,45 @@ class HideActionItemsFeedbackTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
 
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = FeedbackDetail(self.driver, decision)
+        decision_page.change_visibility(".page_title.feedback")
         
-        self.driver.find_element_by_css_selector(".page_title.feedback").click()
-        self.assertFalse(self.driver.find_element_by_css_selector(
-              '#feedback_add_anchor').is_displayed())
+        self.assertTrue(decision_page.is_element_hidden('#feedback_add_anchor'))
     
     def test_unhide_feedback_shows_all_below_title(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
 
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = FeedbackDetail(self.driver, decision)
+        decision_page.change_visibility(".page_title.feedback")
         
-        self.driver.find_element_by_css_selector(".page_title.feedback").click()
-        self.assertFalse(self.driver.find_element_by_css_selector(
-              '#feedback_add_anchor').is_displayed())
+        self.assertTrue(decision_page.is_element_hidden('#feedback_add_anchor'))
         
-        self.driver.find_element_by_css_selector(".page_title.feedback").click()
-        
-        self.assertTrue(self.driver.find_element_by_css_selector(
-              '#feedback_add_anchor').is_displayed())
+        decision_page.change_visibility(".page_title.feedback")
+        self.assertFalse(decision_page.is_element_hidden(
+              '#feedback_add_anchor'))
     
     def test_hide_action_item_hides_all_below_title(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
 
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = FeedbackDetail(self.driver, decision)
         
-        self.driver.find_element_by_css_selector(".page_title.actionitem").click()
-        self.assertFalse(self.driver.find_element_by_css_selector(
-              '#actionitem_add_anchor').is_displayed())
+        decision_page.change_visibility(".page_title.actionitem")
+        self.assertTrue(
+            decision_page.is_element_hidden('#actionitem_add_anchor'))
     
     def test_unhide_action_item_shows_all_below_title(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
 
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = FeedbackDetail(self.driver, decision)
+        decision_page.change_visibility(".page_title.actionitem")
         
-        self.driver.find_element_by_css_selector(".page_title.actionitem").click()
-        self.assertFalse(self.driver.find_element_by_css_selector(
-              '#actionitem_add_anchor').is_displayed())
+        self.assertTrue(
+             decision_page.is_element_hidden('#actionitem_add_anchor'))
         
-        self.driver.find_element_by_css_selector(".page_title.actionitem").click()
+        decision_page.change_visibility(".page_title.actionitem")
         
-        self.assertTrue(self.driver.find_element_by_css_selector(
-              '#actionitem_add_anchor').is_displayed())
+        self.assertFalse(
+             decision_page.is_element_hidden('#actionitem_add_anchor'))

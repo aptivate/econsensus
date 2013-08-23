@@ -3,13 +3,15 @@ from django_dynamic_fixture import G
 from publicweb.models import Decision
 from organizations.models import Organization
 from guardian.shortcuts import assign_perm
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from actionitems.models import ActionItem
 from django.utils.formats import date_format
+from publicweb.tests.selenium.pages.decision_detail import EditActionitemDetail,\
+    DecisionDetail
 
 class EditActionItemsTest(SeleniumTestCase):
     def setUp(self):
+        super(EditActionItemsTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
@@ -20,22 +22,15 @@ class EditActionItemsTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(ActionItem, origin=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
-        
-        driver.find_element_by_css_selector(".edit.actionitem").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page = EditActionitemDetail(self.driver, decision)
+        decision_page.edit_actionitem()
         
         self.assertTrue(
-            self.is_element_present(
-                By.CSS_SELECTOR, ".actionitem_list > li > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
         self.assertFalse(
-             self.is_element_present(
-                 By.CSS_SELECTOR, 
-                 ".actionitem_list > li > .actionitem_feedback_wrapper"))
+            decision_page.is_element_present(
+                 By.CSS_SELECTOR, decision_page.replaced_element))
     
     def test_action_item_form_cancel_recreates_item_without_changes(self):
         
@@ -44,35 +39,27 @@ class EditActionItemsTest(SeleniumTestCase):
         
         G(ActionItem, origin=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = EditActionitemDetail(self.driver, decision)
 
-        expected_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li").text
+        expected_text = decision_page.get_element_text(
+           "ol.actionitem_list > li")
         
-        driver.find_element_by_css_selector(".edit.actionitem").click()
+        decision_page.edit_actionitem()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.update_text_field('description', "test")
         
-        self.driver.find_element_by_name('description').send_keys("test")
-        
-        driver.find_element_by_css_selector(".actionitem_cancel").click()
+        decision_page.cancel_changes()
 
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".edit.actionitem"))
-        
-        actual_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li").text
+        actual_text = decision_page.get_element_text(
+              "ol.actionitem_list > li")
         
         self.assertTrue(
-             self.is_element_present(
+            decision_page.is_element_present(
                  By.CSS_SELECTOR, 
                  ".actionitem_list > li > .actionitem_feedback_wrapper"))
         self.assertFalse(
-            self.is_element_present(
-                By.CSS_SELECTOR, ".actionitem_list > li > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
         self.assertEqual(expected_text, actual_text)
     
     def test_action_item_form_cancel_only_closes_action_item_form(self):
@@ -82,29 +69,21 @@ class EditActionItemsTest(SeleniumTestCase):
         
         G(ActionItem, origin=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = EditActionitemDetail(self.driver, decision)
 
-        driver.find_element_by_css_selector(".controls .edit").click()        
-        driver.find_element_by_css_selector(".edit.actionitem").click()
+        decision_page.edit_decision()
+        decision_page.edit_actionitem()
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.update_text_field('description', "test")
         
-        self.driver.find_element_by_name('description').send_keys("test")
-        
-        driver.find_element_by_css_selector(".actionitem_cancel").click()
-
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".edit.actionitem"))
+        decision_page.cancel_changes()
         
         self.assertTrue(
-             self.is_element_present(
-                 By.CSS_SELECTOR, "#decision_update_form"))
+            decision_page.is_element_present(
+                 By.CSS_SELECTOR, DecisionDetail.form_id))
         self.assertFalse(
-            self.is_element_present(
-                By.CSS_SELECTOR, ".actionitem_list > li > form"))
+            decision_page.is_element_present(
+                By.CSS_SELECTOR, decision_page.form_id))
     
     def test_action_item_form_save_with_valid_form_updates_action_item(self):        
         decision = G(Decision, organization=self.organization, 
@@ -114,28 +93,17 @@ class EditActionItemsTest(SeleniumTestCase):
         expected_text = 'me is responsible for: test\nby %s\nEdit' % (
             date_format(action_item.deadline, "DATE_FORMAT"))
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = EditActionitemDetail(self.driver, decision)
+        decision_page.edit_actionitem()
+        decision_page.clear_text_field('description')
+        decision_page.clear_text_field('responsible')
+        decision_page.update_text_field('description', "test")
+        decision_page.update_text_field('responsible', "me")
         
-        driver.find_element_by_css_selector(".edit.actionitem").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
-        
-        self.driver.find_element_by_name('description').clear()
-        self.driver.find_element_by_name('responsible').clear()
-        self.driver.find_element_by_name('description').send_keys("test")
-        self.driver.find_element_by_name('responsible').send_keys("me")
-        
-        driver.find_element_by_css_selector(".actionitem_save").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".actionitem_feedback_wrapper"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
 
-        actual_text = driver.find_element_by_css_selector(
-              "ol.actionitem_list > li > .actionitem_feedback_wrapper").text
+        actual_text = decision_page.get_element_text(
+         decision_page.replaced_element)
         
         self.assertEqual(expected_text, actual_text)
 
@@ -146,24 +114,13 @@ class EditActionItemsTest(SeleniumTestCase):
               author=self.user, editor=self.user)
         G(ActionItem, origin=decision)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (
-           self.live_server_url, decision.id))
+        decision_page = EditActionitemDetail(self.driver, decision)
+        decision_page.edit_actionitem()
         
-        driver.find_element_by_css_selector(".edit.actionitem").click()
+        decision_page.clear_text_field('description')
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_deadline"))
+        decision_page.submit_invalid_changes(decision_page.form_id)
         
-        self.driver.find_element_by_name('description').clear()
-        
-        driver.find_element_by_css_selector(".actionitem_save").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".parsley-error-list > li"),
-            "Check the data being submitted is valid")
-        
-        actual_text = driver.find_element_by_css_selector(
-              ".parsley-error-list > li").text
+        actual_text = decision_page.get_element_text(decision_page.error_list)
         
         self.assertEqual(expected_text, actual_text)
