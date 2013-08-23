@@ -4,6 +4,7 @@
 {% load org_filters %}
 {% load guardian_tags %}
 {% load custom_flatpages %}
+{% load search_enabled %}
 
 {% if organization %}
 {% get_obj_perms request.user for organization as "organization_permissions" %}
@@ -69,12 +70,14 @@
 					{% endif %}
 				</div>
 				<div class="search">
+					{% ifcansearch %}
 					<form id="search_form" action="/search" method="get">
 						<p>
 							<input id="search" type="text" maxlength="128" value="" name="q"/>
 							<input id="search_button" type="submit" value="Search"/>
 						</p>
 					</form>
+					{% endifcansearch %}
 				</div>
 			</div>
 		{% endblock %}

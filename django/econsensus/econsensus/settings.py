@@ -150,15 +150,18 @@ INSTALLED_APPS = (
     'actionitems',
     'custom_flatpages',
     'haystack',
+    'custom_haystack'
 )
 
 ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'ENGINE': 'custom_haystack.backends.disabled_backend.DisabledEngine',
+        # To enable search, configure haystack to use a real engine
+        # 'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        # 'URL': 'http://127.0.0.1:9200/',
+        # 'INDEX_NAME': 'haystack',
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
