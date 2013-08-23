@@ -1,0 +1,12 @@
+{% load url from future %}
+{% load i18n %}
+{% load search_enabled %}
+
+{% ifcansearch %}
+<form id="search_form" action="{% url 'publicweb_decision_search' %}" method="get">
+    <p>
+        <input id="search" type="text" maxlength="128" value="{{query}}" name="q"/>
+        <input id="search_button" type="submit" value="{% trans 'Search' %}"/>
+    </p>
+</form>
+{% endifcansearch %}

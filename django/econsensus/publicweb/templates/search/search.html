@@ -10,14 +10,7 @@
         </ul>
     </div>
     <div class="search">
-        {% ifcansearch %}
-        <form id="search_form" action="/search" method="get">
-            <p>
-                <input id="search" type="text" maxlength="128" value="{{query}}" name="q"/>
-                <input id="search_button" type="submit" value="Search"/>
-            </p>
-        </form>
-        {% endifcansearch %}
+        {% include "search/form.html" %}
     </div>
 </div>
 
