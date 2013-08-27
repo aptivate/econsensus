@@ -45,7 +45,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.add_feedback_of_type(feedback_type)
         
-        initial_question_count = decision_page.get_number_of_feeback_type(
+        initial_danger_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
         decision_page.update_text_field('description', "test")
@@ -53,10 +53,10 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.submit_changes()
          
-        final_question_count = decision_page.get_number_of_feeback_type(
+        final_danger_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
-        self.assertGreater(final_question_count, initial_question_count)
+        self.assertGreater(final_danger_count, initial_danger_count)
     
     def test_adding_concerns_increments_concerns_count(self):
         feedback_type = "concerns"
@@ -67,7 +67,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.add_feedback_of_type(feedback_type)
         
-        initial_question_count = decision_page.get_number_of_feeback_type(
+        initial_concerns_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
         decision_page.update_text_field('description', "test")
@@ -75,10 +75,10 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.submit_changes()
          
-        final_question_count = decision_page.get_number_of_feeback_type(
+        final_concerns_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
-        self.assertGreater(final_question_count, initial_question_count)
+        self.assertGreater(final_concerns_count, initial_concerns_count)
     
     def test_adding_consent_increments_consent_count(self):
         feedback_type = "consent"
@@ -111,7 +111,7 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.add_feedback_of_type(feedback_type)
         
-        initial_question_count = decision_page.get_number_of_feeback_type(
+        initial_comment_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
         decision_page.update_text_field('description', "test")
@@ -119,10 +119,10 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         
         decision_page.submit_changes()
          
-        final_question_count = decision_page.get_number_of_feeback_type(
+        final_comment_count = decision_page.get_number_of_feeback_type(
             feedback_type)
         
-        self.assertGreater(final_question_count, initial_question_count)
+        self.assertGreater(final_comment_count, initial_comment_count)
         
     def test_changing_question_to_danger_decreases_question_count(self):
         decision = G(Decision, organization=self.organization, 
