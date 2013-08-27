@@ -155,15 +155,15 @@ INSTALLED_APPS = (
 
 ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
 
+# Search disabled by default.
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'custom_haystack.backends.disabled_backend.DisabledEngine',
-        # To enable search, configure haystack to use a real engine
-        # 'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        # 'URL': 'http://127.0.0.1:9200/',
-        # 'INDEX_NAME': 'haystack',
     },
 }
+
+# When search is enabled, updates to search index happens
+# in real time.
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTHENTICATION_BACKENDS = (
