@@ -137,8 +137,7 @@
 		});
         //Edit
 		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
-			var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
-            var actionitempk = actionitemid.split("_").pop();
+			var actionitempk = $(this).parents("li").attr("id").slice(7);
 			var snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
 
             replaceWithRemote(snippet_update_url, "#act_id_"+actionitempk+" .actionitem_feedback_wrapper");
@@ -171,8 +170,7 @@
                 parameters = $form.serialize();
             // This is necessary because otherwise javascript doesn't recognise
             // .split as a function. Don't know why this is.
-            var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
-            var actionitempk = actionitemid.split("_").pop(),
+            var actionitempk = $(this).parents("li").attr("id").slice(7);
             snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk),
             snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
             if($form.parsley('validate')) {
@@ -199,8 +197,7 @@
             e.stopPropagation();
             e.preventDefault();
             var actionitem_form = $(".list.decision_actionitem form");
-            var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
-            var actionitempk = actionitemid.split("_").pop();
+            var actionitempk = $(this).parents("li").attr("id").slice(7);
             var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
 
             replaceWithRemote(snippet_detail_url, actionitem_form.parent());
