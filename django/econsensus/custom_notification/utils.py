@@ -15,3 +15,12 @@ def send_observation_notices_for(observed, signal="post_save", extra_context=Non
         send([observed_item.user], observed_item.notice_type.label, extra_context, headers, from_email=from_email)
     return observed_items
 
+def send_notice_for(observed, user, label, signal="post_save", extra_context=None, headers=None, from_email=settings.DEFAULT_FROM_EMAIL):
+    """
+    Send a notice a user about an observed object, regardless
+    of whether the user is actually observing it.
+    """
+    if extra_context is None:
+        extra_context = {}
+    extra_context.update({"observed": observed})
+    send([user], label, extra_context, headers, from_email=from_email)
