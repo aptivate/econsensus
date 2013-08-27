@@ -137,9 +137,11 @@
 		});
         //Edit
 		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
-            var actionitempk = $(this).parents("li").attr("id"),
-				snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
-            replaceWithRemote(snippet_update_url, "#"+actionitempk+" .actionitem_feedback_wrapper");
+			var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
+            var actionitempk = actionitemid.split("_").pop();
+			var snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
+
+            replaceWithRemote(snippet_update_url, "#act_id_"+actionitempk+" .actionitem_feedback_wrapper");
             $('.actionitem-form').parsley();
 			e.preventDefault();
 		});
@@ -167,7 +169,10 @@
 		$(".list.decision_actionitem").on("submit", "form", function (e) {
             var $form = $("ol.actionitem_list form"),
                 parameters = $form.serialize();
-            var actionitempk = $(this).parent().attr("id"),
+            // This is necessary because otherwise javascript doesn't recognise
+            // .split as a function. Don't know why this is.
+            var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
+            var actionitempk = actionitemid.split("_").pop(),
             snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk),
             snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
             if($form.parsley('validate')) {
@@ -194,7 +199,8 @@
             e.stopPropagation();
             e.preventDefault();
             var actionitem_form = $(".list.decision_actionitem form");
-            var actionitempk = actionitem_form.parent('li').attr("id");
+            var actionitemid = "_".replace(/_/, $(this).parents("li").attr("id"));
+            var actionitempk = actionitemid.split("_").pop();
             var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
 
             replaceWithRemote(snippet_detail_url, actionitem_form.parent());

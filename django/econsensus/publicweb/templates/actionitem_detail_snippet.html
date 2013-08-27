@@ -1,6 +1,6 @@
 {% load url from future %}
 {% load i18n %}
-<li id="{{ actionitem.id }}">
+<li id="act_id_{{ actionitem.id }}">
     <div class="actionitem_feedback_wrapper">
 	    {% if actionitem.done %}<del>{% endif %}
 	        <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
