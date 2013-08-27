@@ -3,204 +3,145 @@ from django_dynamic_fixture import G
 from organizations.models import Organization
 from guardian.shortcuts import assign_perm
 from publicweb.models import Decision, Feedback
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support.select import Select
+from publicweb.tests.selenium.pages.decision_detail import (EditFeedbackDetail, 
+    NewFeedbackDetail)
 
 class FeedbackTypeCountTest(SeleniumTestCase):
     def setUp(self):
+        super(FeedbackTypeCountTest, self).setUp()
         self.login()
         self.organization = G(Organization)
         self.organization.add_user(self.user)
         assign_perm('edit_decisions_feedback', self.user, self.organization)
         
     def test_adding_question_increments_question_count(self):
+        feedback_type = "question"
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = NewFeedbackDetail(self.driver, decision)
         
-        link_css_selector = "#decision_detail .stats a dt.question"
-        driver.find_element_by_css_selector(link_css_selector).click()
+        decision_page.add_feedback_of_type(feedback_type)
         
-        question_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"
-                             "a/dt[@class='question']/following-sibling::dd")
-        question_element = driver.find_element_by_xpath(question_count_path)
+        initial_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        initial_question_count = int(question_element.text)
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', feedback_type)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
-        
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("question")
-        
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_question_count = int(question_element.text)
+        final_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
         self.assertGreater(final_question_count, initial_question_count)
  
     def test_adding_danger_increments_danger_count(self):
+        feedback_type = "danger"
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = NewFeedbackDetail(self.driver, decision)
         
+        decision_page.add_feedback_of_type(feedback_type)
         
-        link_css_selector = "#decision_detail .stats a dt.danger"
-        driver.find_element_by_css_selector(link_css_selector).click()
-        danger_count_path = ("//*[@id='decision_detail']//*[@class='stats']/a/"
-                             "dt[@class='danger']/following-sibling::dd")
-        danger_element = driver.find_element_by_xpath(danger_count_path)
-        initial_danger_count = int(danger_element.text)
+        initial_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', feedback_type)
         
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("danger")
-        
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_danger_count = int(danger_element.text)
+        final_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        self.assertGreater(final_danger_count, initial_danger_count)
+        self.assertGreater(final_question_count, initial_question_count)
     
     def test_adding_concerns_increments_concerns_count(self):
+        feedback_type = "concerns"
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = NewFeedbackDetail(self.driver, decision)
         
-        link_css_selector = "#decision_detail .stats a dt.concerns"
-        driver.find_element_by_css_selector(link_css_selector).click()
-        concerns_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"
-                               "a/dt[@class='concerns']/following-sibling::dd")
-        concerns_element = driver.find_element_by_xpath(concerns_count_path)
-        initial_concerns_count = int(concerns_element.text)
+        decision_page.add_feedback_of_type(feedback_type)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        initial_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("concerns")
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', feedback_type)
         
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_concerns_count = int(concerns_element.text)
+        final_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        self.assertGreater(final_concerns_count, initial_concerns_count)
+        self.assertGreater(final_question_count, initial_question_count)
     
     def test_adding_consent_increments_consent_count(self):
+        feedback_type = "consent"
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = NewFeedbackDetail(self.driver, decision)
         
-        link_css_selector = "#decision_detail .stats a dt.consent"
-        driver.find_element_by_css_selector(link_css_selector).click()
-        consent_count_path = ("//*[@id='decision_detail']//*[@class='stats']/a/"
-                             "dt[@class='consent']/following-sibling::dd")
-        consent_element = driver.find_element_by_xpath(consent_count_path)
-        initial_consent_count = int(consent_element.text)
+        decision_page.add_feedback_of_type(feedback_type)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        initial_consent_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("consent")
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', feedback_type)
         
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_consent_count = int(consent_element.text)
-        
+        final_consent_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
+
         self.assertGreater(final_consent_count, initial_consent_count)
     
     def test_adding_comment_increments_comment_count(self):
+        feedback_type = "comment"
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = NewFeedbackDetail(self.driver, decision)
         
+        decision_page.add_feedback_of_type(feedback_type)
         
-        link_css_selector = "#decision_detail .stats a dt.consent"
-        driver.find_element_by_css_selector(link_css_selector).click()
-        comment_count_path = ("//*[@id='decision_detail']//*[@class='stats']/a/"
-                             "dt[@class='comment']/following-sibling::dd")
-        comment_element = driver.find_element_by_xpath(comment_count_path)
-        initial_comment_count = int(comment_element.text)
+        initial_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', feedback_type)
         
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("comment")
-        
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_comment_count = int(comment_element.text)
+        final_question_count = decision_page.get_number_of_feeback_type(
+            feedback_type)
         
-        self.assertGreater(final_comment_count, initial_comment_count)
+        self.assertGreater(final_question_count, initial_question_count)
         
     def test_changing_question_to_danger_decreases_question_count(self):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, rating=Feedback.QUESTION_STATUS, decision=decision)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = EditFeedbackDetail(self.driver, decision)
         
-        question_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"
-                               "a/dt[@class='question']/following-sibling::dd")
-        question_element = driver.find_element_by_xpath(question_count_path)
-        initial_question_count = int(question_element.text)
+        initial_question_count = decision_page.get_number_of_feeback_type(
+            'question')
         
-        driver.find_element_by_css_selector(".description .edit").click()
+        decision_page.edit_feedback()
         
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', "danger")
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
-        
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("danger")
-        
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_question_count = int(question_element.text)
+        final_question_count = decision_page.get_number_of_feeback_type(
+            'question')
         
         self.assertLess(final_question_count, initial_question_count)
     
@@ -208,30 +149,19 @@ class FeedbackTypeCountTest(SeleniumTestCase):
         decision = G(Decision, organization=self.organization, 
               author=self.user, editor=self.user)
         G(Feedback, rating=Feedback.QUESTION_STATUS, decision=decision)
-        driver = self.driver
-        driver.get("%s/item/detail/%d/" % (self.live_server_url, decision.id))
+        decision_page = EditFeedbackDetail(self.driver, decision)
         
-        danger_count_path = ("//*[@id='decision_detail']//*[@class='stats']/"
-                               "a/dt[@class='danger']/following-sibling::dd")
-        danger_element = driver.find_element_by_xpath(danger_count_path)
-        initial_danger_count = int(danger_element.text)
+        initial_danger_count = decision_page.get_number_of_feeback_type(
+            'danger')
         
-        driver.find_element_by_css_selector(".description .edit").click()
+        decision_page.edit_feedback()
         
+        decision_page.update_text_field('description', "test")
+        decision_page.update_select_field('rating', "danger")
         
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_id("id_description"))
-        
-        driver.find_element_by_name('description').send_keys("test")
-        selector = Select(driver.find_element_by_name("rating"))
-        selector.select_by_visible_text("danger")
-        
-        driver.find_element_by_css_selector(".button.go.once").click()
-        
-        WebDriverWait(driver, 10).until(
-            lambda x: x.find_element_by_css_selector(".button.add_feedback"),
-            "Check the data being submitted is valid")
+        decision_page.submit_changes()
          
-        final_danger_count = int(danger_element.text)
+        final_danger_count = decision_page.get_number_of_feeback_type(
+            'danger')
         
         self.assertGreater(final_danger_count, initial_danger_count)
