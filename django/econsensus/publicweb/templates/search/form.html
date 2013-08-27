@@ -9,4 +9,13 @@
         <input id="search_button" type="submit" value="{% trans 'Search' %}"/>
     </p>
 </form>
+{% else %}
+{% comment %}
+Although invisible, the search form should still be present, in order to avoid
+confusing tests that make assumptions about the number and order of forms in
+a page.
+{% endcomment %}
+<form style="display: none" id="search_form" action="{% url 'publicweb_decision_search' %}" method="get">
+</form>
+
 {% endifcansearch %}
