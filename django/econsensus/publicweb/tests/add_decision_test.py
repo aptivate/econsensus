@@ -1,11 +1,5 @@
-from django.core.urlresolvers import reverse
-from django.test.client import RequestFactory
-from django.contrib.auth.models import User
-from organizations.models import Organization
-from publicweb.models import Decision
 from publicweb.views import DecisionCreate
 from decision_test_case import DecisionTestCase
-from guardian.shortcuts import assign
 
 class AddDecisionTest(DecisionTestCase):
     

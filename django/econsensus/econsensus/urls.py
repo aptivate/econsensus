@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse_lazy
 from organizations.backends import invitation_backend
 from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
+from registration.backends.default.views import RegistrationView
+from custom_organizations.forms import CustomUserSignupRegistrationForm
 
 admin.autodiscover()
 
@@ -19,13 +21,14 @@ urlpatterns = patterns('',
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^organizations/', include('custom_organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
-    url(r'', include('econsensus.publicweb.urls')),
+    url(r'', include('publicweb.urls')),
 )
 
 urlpatterns += patterns('',
-    url(r'^accounts/register/$', 'registration.views.register',
-        {'form_class':RegistrationFormUniqueEmail,
-        'backend':'registration.backends.default.DefaultBackend' }, name='registration_register'),
+    url(r'^accounts/register/$', RegistrationView.as_view(
+        form_class = CustomUserSignupRegistrationForm,
+        template_name = 'organizations/register_form.html'), 
+        name = 'registration_register'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'authentication_form': CustomAuthenticationForm}),
@@ -35,4 +38,3 @@ urlpatterns += patterns('',
 
 )
 
-urlpatterns += staticfiles_urlpatterns()

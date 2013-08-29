@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from organizations.views import OrganizationDetail
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign_perm
 
 from publicweb.views import DecisionDetail, DecisionList
 from publicweb.models import Decision, Feedback
@@ -91,7 +91,7 @@ class HtmlTest(EconsensusFixtureTestCase):
         self.assertEqual(decision.author, self.user)
         self.user = self.login('charlie')
         #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)             
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)             
         path = reverse('publicweb_decision_update', args=[decision.id])
         post_dict = {'status': Decision.PROPOSAL_STATUS,
                      'description': 'ullamcorper nunc'}
@@ -99,19 +99,6 @@ class HtmlTest(EconsensusFixtureTestCase):
         self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']))
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
-    
-    def test_feedback_author_shown(self):
-        decision = self.make_decision(description="Lorem Ipsum")
-        feedback = Feedback(description="Dolor sit")
-        feedback.author = self.user
-        feedback.decision = decision
-        feedback.save()
-        
-        self.user = self.login('charlie')        
-        path = reverse('publicweb_item_detail', args=[decision.id])
-        response = self.client.get(path)
-        betty = User.objects.get(username='betty')
-        self.assertContains(response, betty.username)
         
     def test_meeting_people_shown(self):
         test_string = 'vitae aliquet tellus'
@@ -122,7 +109,7 @@ class HtmlTest(EconsensusFixtureTestCase):
                      'meeting_people': test_string, 
                      'status': Decision.PROPOSAL_STATUS}
         response = self.client.post(path, post_dict)
-        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, Decision.DECISION_STATUS]))
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, post_dict['status']]))
         decision = Decision.objects.get(meeting_people=test_string)
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
@@ -145,7 +132,7 @@ class HtmlTest(EconsensusFixtureTestCase):
         decision = self.create_decision_through_browser()
         self.login('charlie')
         #allow charlie to edit        
-        assign('edit_decisions_feedback', self.user, self.bettysorg)
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
 
         decision = self.update_decision_through_browser(decision.id)
         path = reverse('publicweb_decision_detail', args=[decision.id])

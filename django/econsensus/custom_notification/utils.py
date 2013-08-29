@@ -11,7 +11,7 @@ def send_observation_notices_for(observed, signal="post_save", extra_context=Non
         extra_context = {}
     observed_items = ObservedItem.objects.all_for(observed, signal)
     for observed_item in observed_items:
-        extra_context.update({"observed": observed_item.observed_object})
+        extra_context.update({"observed": observed})
         send([observed_item.user], observed_item.notice_type.label, extra_context, headers, from_email=from_email)
     return observed_items
 

@@ -4,7 +4,6 @@
 {% load org_filters %}
 
 {% block title %}
-  {{ block.super }}
   {% if tab == 'proposal' %}{% trans "Proposals" %}
 	{% elif tab == 'archived' %}{% trans "Archive" %}
 	{% elif tab == 'decision' %}{% trans "Decisions Made" %}
