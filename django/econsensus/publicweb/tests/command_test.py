@@ -18,6 +18,7 @@ from organizations.models import Organization
 from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
+from publicweb.management.commands.process_email import is_autoreply
 
 class CommandTest(EconsensusFixtureTestCase):
 
@@ -452,7 +453,7 @@ class CommandTest(EconsensusFixtureTestCase):
         self.assertListEqual(old_proposals, list(Decision.objects.all()))
         self.assertListEqual([], mail.outbox)
     
-    def test_emails_sent_after_messages_with_bulk_header_are_processes(self):
+    def test_emails_sent_after_messages_with_bulk_header_are_processed(self):
         expected_proposals = list(Decision.objects.all())
         mail.outbox = []
         payload = "Sample payload"
@@ -488,3 +489,41 @@ class CommandTest(EconsensusFixtureTestCase):
         expected_proposals.append(new_decision)
               
         self.assertListEqual(expected_proposals, list(Decision.objects.all()))
+    
+    def test_email_without_precedence_header_isnt_treated_as_auto_reply(self):
+        payload = "Sample payload"
+        
+        # This message is legitimate except for the precedence header.
+        # An exception is not expected when processing it. 
+        msg1 = MIMEText("%s1" % payload)
+        msg1['Subject'] = 'Proposal gleda raspored'
+        msg1['From'] = self.betty.email
+        msg1['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+
+        self.assertFalse(is_autoreply(msg1))
+    
+    def test_email_with_precedence_header_bulk_is_treated_as_auto_reply(self):
+        payload = "Sample payload"
+        
+        # This message is legitimate except for the precedence header.
+        # An exception is not expected when processing it. 
+        msg1 = MIMEText("%s1" % payload)
+        msg1['Subject'] = 'Proposal gleda raspored'
+        msg1['From'] = self.betty.email
+        msg1['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+        msg1['Precedence'] = 'bulk'
+        
+        self.assertTrue(is_autoreply(msg1))
+    
+    def test_email_with_precedence_header_auto_reply_is_treated_as_auto_reply(self):
+        payload = "Sample payload"
+        
+        # This message is legitimate except for the precedence header.
+        # An exception is not expected when processing it. 
+        msg1 = MIMEText("%s1" % payload)
+        msg1['Subject'] = 'Proposal gleda raspored'
+        msg1['From'] = self.betty.email
+        msg1['To'] = '%s@econsensus.com>' % self.bettysorg.slug
+        msg1['Precedence'] = 'auto_reply'
+        
+        self.assertTrue(is_autoreply(msg1))

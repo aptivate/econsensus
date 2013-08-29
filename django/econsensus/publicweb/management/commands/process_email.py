@@ -17,6 +17,10 @@ from publicweb.models import Decision, Feedback
 from organizations.models import Organization
 from django.conf import settings
 
+def is_autoreply(mail):
+    return 'Precedence' in mail and (mail['Precedence'] == "bulk" or 
+         mail['Precedence'] == "auto_reply")
+
 class Command(BaseCommand):
     args = ''
     help = 'Checks for emails and posts content to site.'
@@ -53,13 +57,11 @@ class Command(BaseCommand):
                 msg = "\n".join(mailbox.retr(i)[1])
                 mail = message_from_string(msg) 
 
-                if 'Precedence' in mail and \
-                    (mail['Precedence'] == "bulk" or 
-                     mail['Precedence'] == "auto_reply"):
+                if is_autoreply(mail):
                     log_auto_replies = getattr(settings, 'LOG_AUTO_REPLIES', 
                       False)
                     if log_auto_replies:
-                        logger.error(msg)
+                        logger.info(msg)
                     continue
                 
                 try:
