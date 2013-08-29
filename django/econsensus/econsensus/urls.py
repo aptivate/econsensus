@@ -38,3 +38,4 @@ urlpatterns += patterns('',
 
 )
 
+urlpatterns += staticfiles_urlpatterns()
