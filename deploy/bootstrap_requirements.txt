@@ -1,0 +1,4 @@
+fabric==1.4
+-e git+git://github.com/aptivate/dye.git#egg=dye
+virtualenv
+distribute>=0.6.28

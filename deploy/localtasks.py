@@ -1,17 +1,17 @@
 # functions just for this project
 import os
-import sys
-import subprocess
 
-import tasklib
+from dye import tasklib
+
 
 def post_deploy(environment=None, svnuser=None, svnpass=None):
     load_auth_user(environment)
     load_django_site_data(environment)
-        
+
+
 def load_sample_data(environment, force=False):
     """load sample data if required."""
-    if force == False:
+    if force is False:
         # first check if it has already been loaded
         output_lines = tasklib._manage_py(['dumpdata', 'publicweb'])
         if output_lines[0] != '[]':
@@ -20,9 +20,10 @@ def load_sample_data(environment, force=False):
 
         tasklib._manage_py(['loaddata', "sample_data.json"])
 
+
 def load_auth_user(environment, force=False):
     """load auth user fixture based on environment. """
-    if force == False:
+    if force is False:
         auth_user_needs_initializing = int(tasklib._manage_py(['auth_user_needs_initializing'])[0].strip())
         if not auth_user_needs_initializing:
             print "Environment '", environment, "' already has auth.user initialized."
@@ -31,15 +32,16 @@ def load_auth_user(environment, force=False):
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
     user_path = os.path.join(local_fixtures_directory,
-                                        environment +'_auth_user.json')
+        environment + '_auth_user.json')
     if os.path.exists(user_path):
         tasklib._manage_py(['loaddata', user_path])
     else:
         tasklib._manage_py(['loaddata', "default_auth_user.json"])
 
+
 def load_django_site_data(environment, force=False):
     """Load data for django sites framework. """
-    if force == False:
+    if force is False:
         site_needs_initializing = int(tasklib._manage_py(['site_needs_initializing'])[0].strip())
         if not site_needs_initializing:
             print "Environment '", environment, "' already has site data initialized."
@@ -47,20 +49,23 @@ def load_django_site_data(environment, force=False):
     local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
                                            'fixtures')
     site_fixture_path = os.path.join(local_fixtures_directory,
-                                        environment +'_site.json')
+        environment + '_site.json')
     if os.path.exists(site_fixture_path):
         tasklib._manage_py(['loaddata', site_fixture_path])
     else:
         tasklib._manage_py(['loaddata', "default_site.json"])
 
+
 def create_ve():
     """Create the virtualenv"""
     tasklib.create_ve()
     tasklib.patch_south()
-    
+
+
 def update_ve():
     """ Update the virtualenv """
     create_ve()
+
 
 def add_cron_email(environment):
     """sets up a cron job for the email checking"""
@@ -81,6 +86,5 @@ def add_cron_email(environment):
         f.write('\n')
     finally:
         f.close()
-    
+
     os.chmod(cron_file, 0644)
-    

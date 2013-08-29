@@ -1,29 +1,47 @@
-# Create your views here.
-from notification import models as notification
-from organizations.models import Organization
+import unicodecsv
 
-from django.core.urlresolvers import reverse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import MultipleObjectsReturned
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import get_object_or_404 
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import MultipleObjectsReturned
-
-import unicodecsv
-
 
 from guardian.decorators import permission_required_or_403
+from notification import models as notification
+from organizations.models import Organization
 
-from models import Decision, Feedback
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+from publicweb.models import Decision, Feedback
 
-from publicweb.forms import DecisionForm, FeedbackForm
+
+class YourDetails(UpdateView):
+    template_name = 'your_details.html'
+    form_class = YourDetailsForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(YourDetails, self).dispatch(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.INFO, _('Your details have been updated successfully.'))
+        return super(YourDetails, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('your_details')
+
 
 class ExportCSV(View):
     @method_decorator(login_required)
@@ -355,7 +373,8 @@ class DecisionCreate(CreateView):
         return context
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_item_list', args=[self.organization.slug, self.status])
+        status = getattr(self, 'object', self).status
+        return reverse('publicweb_item_list', args=[self.organization.slug, status])
 
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
@@ -375,6 +394,7 @@ class DecisionUpdate(UpdateView):
     def form_valid(self, form):
         form.instance.editor = self.request.user
         form.instance.last_status = self.last_status
+        form.instance.minor_edit = form.cleaned_data['minor_edit']
         if not form.cleaned_data['watch'] and notification.is_observing(self.object, self.request.user):
             notification.stop_observing(self.object, self.request.user)
         elif form.cleaned_data['watch'] and not notification.is_observing(self.object, self.request.user):
@@ -456,6 +476,7 @@ class FeedbackUpdate(UpdateView):
 
     def form_valid(self, form, *args, **kwargs):
         form.instance.editor = self.request.user
+        form.instance.minor_edit = form.cleaned_data['minor_edit']
         if not notification.is_observing(self.object.decision, self.request.user):
             notification.observe(self.object.decision, self.request.user, 'decision_change')
         return super(FeedbackUpdate, self).form_valid(form, *args, **kwargs)
