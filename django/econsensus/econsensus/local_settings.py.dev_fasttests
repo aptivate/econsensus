@@ -1,3 +1,4 @@
+import private_settings
 import os
 
 DEBUG = True
@@ -9,41 +10,11 @@ thisdir = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(thisdir, "econsensus.sqlite"),                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',   # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'econsensus',                      # Or path to database file if using sqlite3.
+        'USER': 'econsensus',                      # Not used with sqlite3.
+        'PASSWORD': private_settings.DB_PASSWORD,   # Not used with sqlite3.
+        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3307',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-
-#-----------------------------------
-# Code to add django_debug_toolbar
-#-----------------------------------
-INTERNAL_IPS = ('127.0.0.1',)
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
-
-#-----------------------------------
-# The "extra" nomenclature is used to append values
-# to lists/dictionaries already defined in settings.py
-#-----------------------------------
-
-EXTRA_MIDDLEWARE_CLASSES = ( 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
-
-EXTRA_INSTALLED_APPS = ( 
-    'debug_toolbar',
-)
-
-SELENIUM_DRIVER = "Firefox"
-# This runner combines the django-selenium test runner with the discovery runner
-# It is used because it allows the WebDriver class used to be defined in 
-# settings.
-# There is a different runner that will be used for Jenkins
-TEST_RUNNER = 'test_runner.SeleniumDiscoveryRunner'

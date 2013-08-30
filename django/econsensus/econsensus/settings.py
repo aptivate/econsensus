@@ -242,6 +242,8 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
+TEST_RUNNER = 'test_runner.DiscoveryRunner' 
+ 
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 

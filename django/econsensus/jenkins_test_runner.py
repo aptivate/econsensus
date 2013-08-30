@@ -1,6 +1,6 @@
 from test_runner import DiscoveryRunner
-from django_selenium.jenkins_runner import JenkinsTestRunner
+from django_jenkins.runner import CITestSuiteRunner
 
 
-class DiscoveryCITestSuiteRunner(DiscoveryRunner, JenkinsTestRunner):
+class DiscoveryCITestSuiteRunner(DiscoveryRunner,  CITestSuiteRunner):
     pass
