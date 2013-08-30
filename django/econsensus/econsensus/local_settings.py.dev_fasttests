@@ -1,11 +1,10 @@
+import private_settings
 import os
 
 DEBUG = True
 TEMPLATE_DEBUG = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-
-thisdir = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
@@ -17,3 +16,25 @@ DATABASES = {
         'PORT': '3307',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+#-----------------------------------
+# Code to add django_debug_toolbar
+#-----------------------------------
+INTERNAL_IPS = ('127.0.0.1',)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
+#-----------------------------------
+# The "extra" nomenclature is used to append values
+# to lists/dictionaries already defined in settings.py
+#-----------------------------------
+
+EXTRA_MIDDLEWARE_CLASSES = ( 
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+EXTRA_INSTALLED_APPS = ( 
+    'debug_toolbar',
+)
