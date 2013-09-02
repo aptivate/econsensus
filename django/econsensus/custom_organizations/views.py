@@ -19,6 +19,7 @@ from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationAddForm,\
                                     CustomOrganizationUserForm,\
                                     CustomOrganizationUserAddForm
+from django.http import Http404
 
 
 class CustomOrganizationCreate(OrganizationCreate):
@@ -64,11 +65,24 @@ class CustomOrganizationUserCreate(OrganizationUserCreate):
     form_class = CustomOrganizationUserAddForm
 
 # Delete unused permissions!
+# And remove them as watchers on decisions for that organisation.
 class CustomOrganizationUserDelete(OrganizationUserDelete):
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
+        for decision in org_user.organization.decision_set.all():
+            decision.watchers.filter(user=org_user.user).delete()
         return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
     
 class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
     pass
+
+class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
+    """
+       This view is necessary because CustomOrganizationUserDelete redirects to
+       the CustomOrganizationUserList view, which regular users shouldn't be 
+       able to access. When they leave an organisation, we send them back to 
+       their organisations list.       
+    """
+    def get_success_url(self):
+        return reverse('organization_list')

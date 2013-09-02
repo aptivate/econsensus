@@ -1,16 +1,21 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from publicweb.tests.factories import OrganizationUserFactory
+from publicweb.tests.factories import OrganizationUserFactory, DecisionFactory,\
+    ObservedItemFactory
 
 from custom_organizations.views import CustomOrganizationCreate, \
     CustomOrganizationUpdate, CustomOrganizationUserUpdate, \
-    CustomOrganizationUserCreate, CustomOrganizationUserDelete
+    CustomOrganizationUserCreate, CustomOrganizationUserDelete,\
+    CustomOrganizationUserLeave
 from custom_organizations.forms import CustomOrganizationAddForm, \
     CustomOrganizationForm, CustomOrganizationUserForm, \
     CustomOrganizationUserAddForm
 
 from guardian.shortcuts import assign_perm
+from notification.models import ObservedItem
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseNotFound, Http404
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
 
@@ -73,3 +78,29 @@ class TestCustomOrganizationUserDelete(TestCase):
         request.user = user
         org_user_delete_view.delete(request)
         self.assertFalse(user.has_perm(GUARDIAN_PERMISSION, org))
+    
+    def test_delete_stops_users_watching_decisions_for_the_organization(self):
+        org_user_delete_view = CustomOrganizationUserDelete()
+        observed_item = ObservedItemFactory()
+        org = observed_item.observed_object.organization
+        user = observed_item.user
+        org_user = OrganizationUserFactory(organization=org, user=user)
+        decision = observed_item.observed_object
+        org_user_delete_view.get_object = lambda: org_user
+        request = RequestFactory()
+        request.user = user
+        org_user_delete_view.delete(request)
+        self.assertSequenceEqual([], decision.watchers.all())
+
+class TestCustomOrganizationUserLeave(TestCase):
+    def test_organisation_user_leave_view_redirects_to_organization_list(self):
+        org_user_leave_view = CustomOrganizationUserLeave()
+        observed_item = ObservedItemFactory()
+        org = observed_item.observed_object.organization
+        user = observed_item.user
+        org_user = OrganizationUserFactory(organization=org, user=user)
+        org_user_leave_view.get_object = lambda: org_user
+        request = RequestFactory()
+        request.user = user
+        response = org_user_leave_view.delete(request)
+        self.assertEqual(reverse('organization_list'), response['Location'])

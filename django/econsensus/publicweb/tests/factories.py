@@ -8,6 +8,7 @@ from organizations.models import Organization, OrganizationUser,\
     OrganizationOwner
 
 from publicweb.models import Decision, Feedback
+from notification.models import ObservedItem, NoticeType
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -50,3 +51,16 @@ class SiteFactory(factory.DjangoModelFactory):
 class CommentFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Comment
     site = factory.SubFactory(SiteFactory)
+
+class NoticeTypeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = NoticeType
+    default = 2
+    
+class ObservedItemFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ObservedItem
+    
+    user = factory.SubFactory(UserFactory)
+    observed_object = factory.SubFactory(DecisionFactory)
+    notice_type = factory.SubFactory(NoticeTypeFactory)
+      
+    
