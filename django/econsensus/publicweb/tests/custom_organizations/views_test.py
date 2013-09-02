@@ -104,3 +104,23 @@ class TestCustomOrganizationUserLeave(TestCase):
         request.user = user
         response = org_user_leave_view.delete(request)
         self.assertEqual(reverse('organization_list'), response['Location'])
+    
+    def test_organisation_users_leave_view_is_only_accesible_by_user(self):
+        org_user_leave_view = CustomOrganizationUserLeave()
+        
+        observed_item_1 = ObservedItemFactory()
+        org_1 = observed_item_1.observed_object.organization
+        user_1 = observed_item_1.user
+        org_user = OrganizationUserFactory(organization=org_1, user=user_1)
+        
+        observed_item_2 = ObservedItemFactory()
+        org_2 = observed_item_2.observed_object.organization
+        user_2 = observed_item_2.user
+        OrganizationUserFactory(organization=org_2, user=user_2)
+        
+        org_user_leave_view.get_object = lambda: org_user
+        request = RequestFactory()
+        request.user = user_2
+
+        self.assertRaises(Http404, org_user_leave_view.dispatch, request, 
+            organization_pk=org_1.pk, user_pk=user_1.pk)

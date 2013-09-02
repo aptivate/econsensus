@@ -86,3 +86,9 @@ class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
     """
     def get_success_url(self):
         return reverse('organization_list')
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.id != kwargs.get('user_pk'):
+            raise Http404
+        return super(CustomOrganizationUserLeave, self).dispatch(
+             request, *args, **kwargs) 
