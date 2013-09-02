@@ -1,6 +1,6 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from guardian.shortcuts import remove_perm
 
@@ -12,7 +12,7 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserUpdate,\
                                 OrganizationUserDelete,\
                                 OrganizationUserRemind,\
-                                OrganizationUserList
+                                OrganizationUserList, BaseOrganizationUserDelete
 from organizations.mixins import AdminRequiredMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
@@ -20,6 +20,7 @@ from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationUserForm,\
                                     CustomOrganizationUserAddForm
 from django.http import Http404
+from organizations.models import Organization
 
 
 class CustomOrganizationCreate(OrganizationCreate):
@@ -66,7 +67,26 @@ class CustomOrganizationUserCreate(OrganizationUserCreate):
 
 # Delete unused permissions!
 # And remove them as watchers on decisions for that organisation.
-class CustomOrganizationUserDelete(OrganizationUserDelete):
+class CustomOrganizationUserDelete(BaseOrganizationUserDelete):
+    def _is_admin(self, request, organization_pk):
+        organization = get_object_or_404(Organization, pk=organization_pk)
+        return organization.is_admin(request.user) or request.user.is_superuser
+                    
+    def _is_current_user(self, request, user_pk):
+        """
+        Checks the user being accessed is the one currently logged in
+        """
+        return request.user.id == int(user_pk)
+            
+    def dispatch(self, request, *args, **kwargs):
+        organization_pk = kwargs.get('organization_pk', None)
+        user_pk = kwargs.get('user_pk', None)
+        if not self._is_admin(request, organization_pk) and not \
+            self._is_current_user(request, user_pk):
+            raise Http404
+        return super(CustomOrganizationUserDelete, self).dispatch(
+             request, *args, **kwargs) 
+    
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
@@ -86,9 +106,3 @@ class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
     """
     def get_success_url(self):
         return reverse('organization_list')
-    
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.id != kwargs.get('user_pk'):
-            raise Http404
-        return super(CustomOrganizationUserLeave, self).dispatch(
-             request, *args, **kwargs) 
