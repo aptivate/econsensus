@@ -32,13 +32,13 @@
 	            <table class="summary-list">
                     <thead>
                         <tr class="summary-header">
-                            {% for header in header_list %}
-                            <th class="{{ header.attrs }}">
-                                <a href="{{ header.path }}">
-                                    <span class="{{ header.sortclass }}">
-                                        {{ header.title }}
-                                        {% if header.sortclass == 'sort-asc' %} ▲{% endif %} 
-                                        {% if header.sortclass == 'sort-desc' %} ▼{% endif %}
+                            {% for sort_link in sort_link_list %}
+                            <th class="{{ sort_link.attrs }}">
+                                <a href="{{ sort_link.path }}">
+                                    <span class="{{ sort_link.indicator }}">
+                                        {{ sort_link.title }}
+                                        {% if sort_link.indicator == 'sort-asc' %} ▲{% endif %} 
+                                        {% if sort_link.indicator == 'sort-desc' %} ▼{% endif %}
                                     </span>
                                 </a>
                             </th>

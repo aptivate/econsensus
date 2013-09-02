@@ -2,23 +2,22 @@ import unicodecsv
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import get_object_or_404 
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, FormView
-from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
+from sortable_listview import SortableListView
+from ordereddict import OrderedDict
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 from publicweb.models import Decision, Feedback
@@ -52,8 +51,8 @@ class ExportCSV(View):
         return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        ''' 
-        Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from 
+        '''
+        Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from
         Decision, Feedback and Comment.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
@@ -94,7 +93,7 @@ class ExportCSV(View):
             else: return s
 
         def remove_field(l, field_name):
-            if field_name in l: 
+            if field_name in l:
                 l.remove(field_name)
 
         def field_value(obj, field_name):
@@ -122,7 +121,7 @@ class ExportCSV(View):
         writer.writerow(decision_column_titles + feedback_column_titles + comment_column_titles)
         for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
             decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
-            writer.writerow(decision_data + [u""]*len(feedback_field_names) + [u""]*len(comment_field_names))    
+            writer.writerow(decision_data + [u""]*len(feedback_field_names) + [u""]*len(comment_field_names))
             for feedback in decision.feedback_set.all().order_by('id'):
                 feedback_data = [field_value(feedback, field_name) for field_name in feedback_field_names]
                 writer.writerow([u""]*len(decision_field_names) + feedback_data + [u""]*len(comment_field_names))
@@ -132,7 +131,7 @@ class ExportCSV(View):
                 ).order_by('id')
                 for comment in comments:
                     comment_data = [field_value(comment, field_name) for field_name in comment_field_names]
-                    writer.writerow([u""]*len(decision_field_names) + [u""]*len(feedback_field_names) + comment_data)    
+                    writer.writerow([u""]*len(decision_field_names) + [u""]*len(feedback_field_names) + comment_data)
         return response
 
 
@@ -151,7 +150,7 @@ class DecisionDetail(DetailView):
         return context
 
 
-class DecisionList(ListView):
+class DecisionList(SortableListView):
     model = Decision
 
     @method_decorator(login_required)
@@ -166,15 +165,17 @@ class DecisionList(ListView):
 
     def get(self, request, *args, **kwargs):
         self.set_status(**kwargs)
-        self.set_sorting(request)
-        self.get_table_headers(request)
+        self.set_table_headers(self.status)
         self.set_paginate_by(request)
         return super(DecisionList, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        if self.sort_field in self.sort_by_count_fields:
+        # self.sort_field is provided by SortableListView
+        sort_by_count_fields = ['feedback']
+        sort_by_alpha_fields = ['excerpt']
+        if self.sort_field in sort_by_count_fields:
             qs = Decision.objects.order_by_count(self.sort_field, self.sort_order)
-        elif self.sort_field in self.sort_by_alpha_fields:
+        elif self.sort_field in sort_by_alpha_fields:
             qs = Decision.objects.order_by_case_insensitive(self.sort_field, self.sort_order)
         else:
             qs = Decision.objects.order_null_last(self.sort_order + self.sort_field)
@@ -184,102 +185,42 @@ class DecisionList(ListView):
         context = super(DecisionList, self).get_context_data(**kwargs)
         context['organization'] = self.organization
         context['tab'] = self.status
+        # Needed for pagination
         context['sort'] = self.sort_order + self.sort_field
-        context['header_list'] = self.header_list
         context['num'] = self.paginate_by
         context['prevstring'] = self.build_prev_query_string(context)
         context['nextstring'] = self.build_next_query_string(context)
         return context
 
-    # SORTING ##########################################################
-
-    # sort_options
-    # * {'sort_field': 'default sort_order'}
-    # * if the column is not in this dict, the sort will default to -id
-    sort_options = {'id': '-',
-                    'excerpt': '',
-                    'feedback': '',
-                    'deadline': '',
-                    'last_modified': '-',
-                    'decided_date': '-',
-                    'review_date': '-',
-                    'creation': '-',
-                    'archived_date': '-'
-                    }
-    sort_by_count_fields = ['feedback']
-    sort_by_alpha_fields = ['excerpt']
-    
-    sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
-                          'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
-                          'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
-                          'archived': ['id', 'excerpt', 'creation', 'archived_date']}
-
-    def set_sorting(self, request):
-        sort_request = request.GET.get('sort', '-id')
-        if sort_request.startswith('-'):
-            self.sort_order = '-'
-            self.sort_field = sort_request.split('-')[1]
-        else:
-            self.sort_order = ''
-            self.sort_field = sort_request
-        #Invalid sort requests fail silently
-        if not self.sort_field in self.sort_options:
-            self.sort_order = '-'
-            self.sort_field = 'id'
-
-    def get_table_headers(self, request):
-        #TODO How to handle this with internationalization
-        header_titles = {'id': 'ID',
-                         'excerpt': 'Excerpt',
-                         'feedback': 'Feedback',
-                         'deadline': 'Deadline',
-                         'last_modified': 'Last Modified',
-                         'decided_date': 'Decided',
-                         'review_date': 'Review',
-                         'creation': 'Creation',
-                         'archived_date': 'Archived'}
-
-        self.header_list = []
-        for header in self.sort_table_headers[self.status]:
-                header = {'attrs': header, 'path': self.get_sort_query(request, header), 'sortclass': self.get_sort_class(header), 'title': header_titles[header]}
-                self.header_list.append(header)
-
-    def get_sort_class(self, field):
-        sort_class = ''
-        if self.sort_field == field:
-            sort_class = 'sort-asc'
-            if self.sort_order == '-':
-                sort_class = 'sort-desc'
-        return sort_class
-
-    def toggle_sort_order(self, sort_order):
-        if sort_order == '-':
-            toggled_sort_order = ''
-        if sort_order == '':
-            toggled_sort_order = '-'
-        return toggled_sort_order
-
-    def get_sort_query(self, request, field):
-        current_sort = self.sort_order + self.sort_field
-        default_sort = self.sort_options[field] + field
-
-        # Unless field is sort_field, when next_sort is inverse
-        if current_sort == default_sort:
-            next_sort = self.toggle_sort_order(self.sort_order) + self.sort_field
-        else:
-            next_sort = default_sort
-
-        # Exception of next_sort='-id'
-        if next_sort == '-id':
-            sort_query = ''
-        else:
-            sort_query = '?sort=' + next_sort
-
-        return request.path + sort_query
-
-    # END SORTING ##########################################################
-
-    # PAGINATION ##########################################################
+    def set_table_headers(self, status=None):
+        allowed_sort_fields = {'id': {'default_direction': '-',
+                                      'verbose_name': 'ID'},
+                               'excerpt': {'default_direction': '',
+                                           'verbose_name': 'Excerpt'},
+                               'feedback': {'default_direction': '',
+                                            'verbose_name': 'Feedback'},
+                               'deadline': {'default_direction': '',
+                                            'verbose_name': 'Deadline'},
+                               'last_modified': {'default_direction': '-',
+                                                 'verbose_name': 'Last Modified'},
+                               'decided_date': {'default_direction': '-',
+                                                'verbose_name': 'Decided'},
+                               'review_date': {'default_direction': '-',
+                                               'verbose_name': 'Review'},
+                               'creation': {'default_direction': '-',
+                                            'verbose_name': 'Created'},
+                               'archived_date': {'default_direction': '-',
+                                                 'verbose_name': 'Archived'},
+                               }
+        sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+                              'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+                              'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
+                              'archived': ['id', 'excerpt', 'creation', 'archived_date']}
+        desired_header_list = sort_table_headers[status]
+        self.allowed_sort_fields = OrderedDict()
+        for sort_field in desired_header_list:
+            self.allowed_sort_fields[sort_field] = allowed_sort_fields[sort_field]
+        return self.allowed_sort_fields
 
     def set_paginate_by(self, request):
         # NB Don't know how to handle invalid Page # - https://docs.djangoproject.com/en/1.4/ref/class-based-views/
@@ -387,7 +328,7 @@ class DecisionUpdate(UpdateView):
     form_class = DecisionForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))    
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(DecisionUpdate, self).dispatch(*args, **kwargs)
 
@@ -426,7 +367,7 @@ class FeedbackCreate(CreateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))    
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))
     def dispatch(self, request, *args, **kwargs):
         self.rating_initial = Feedback.COMMENT_STATUS
         rating = request.GET.get('rating')
@@ -464,10 +405,10 @@ class FeedbackUpdate(UpdateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
-    
+
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
             self.object = self.get_object()
