@@ -27,7 +27,15 @@ Login
 {% block main_content %}
 <form id="short-form" method="post" action=".">
   {% csrf_token %} 
-  {{ form.as_p }}
+  <p class="required">
+    {{ form.username.label_tag }} {{ form.username }}
+   </p>
+  <p class="required">
+    {{ form.password.label_tag }} {{ form.password }}
+   </p>
+   <p class="checkbox">
+    {{ form.remember_me.label_tag }} {{ form.remember_me }}
+   </p>
 
 <div class="button_group">
   <input class="button" type="submit" value="{% trans 'Log in' %}" />

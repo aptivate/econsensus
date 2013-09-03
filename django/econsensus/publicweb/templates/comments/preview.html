@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Preview your comment" %}{% endblock %}
+{% block title %}{% trans "Enter your comment" %}{% endblock %}
 {% block main_content %}
   {% load comments %}
   <form action="{% comment_form_target %}" method="post">
 	  {% csrf_token %}
-	  {% if next %}<div><input type="hidden" name="next" value="{{ next }}" /></div>{% endif %}
 	  {% if form.errors %}
-	  <h1>{% blocktrans count form.errors|length as counter %}Please correct the error below{% plural %}Please correct the errors below{% endblocktrans %}</h1> {% else %} <h1>{% trans "Preview your comment" %}</h1>
-	  <blockquote>{{ comment|linebreaks }}</blockquote>
-	  <p>
-	  {% trans "and" %} <input type="submit" name="submit" class="button go" value="{% trans "Post your comment" %}" id="submit" /> {% trans "or make changes" %}:
-	  </p>
+	  <h1>{% blocktrans count form.errors|length as counter %}Please correct the error below{% plural %}Please correct the errors below{% endblocktrans %}</h1>
 	  {% endif %}
 	  {% for field in form %}
 	    {% if field.is_hidden %}
@@ -21,13 +16,19 @@
 	    <p
 	      {% if field.errors %} class="error"{% endif %}
 	      {% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
-	      {{ field.label_tag }} {{ field }}
+	      {% if field.name == "comment" %}
+	      {% if user.is_authenticated %}
+	        {{ field }}
+	      {% else %}
+	        <p>You need to be logged in to leave comments.</p>
+	      {% endif %}
+	      {% endif %}
 	    </p>
 	  {% endif %}
 	{% endfor %}
 	<p class="submit">
-	  <input type="submit" name="submit" class="button go" value="{% trans "Post" %}" />
-	  <input type="submit" name="preview" class="button go" value="{% trans "Preview" %}" />
+	    <input class="button go" type="submit" name="submit" value="Post" />
+	    {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
 	</p>
 </form>
 {% endblock %}

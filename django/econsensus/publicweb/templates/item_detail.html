@@ -79,23 +79,26 @@
             form_element.addClass('rating_'+new_rating);
         }
 
-		function replaceWithRemote(url, selector) {
+		function replaceWithRemote(url, selector, callback) {
 			$.ajax(url,
 					{
 						cache: false,
-						success: function (data) { $(selector).replaceWith(data); },
+						success: function (data) {
+							$(selector).replaceWith(data);
+							if (callback) callback();
+						},
 						error: displayErrorMessage
 					});
 		}
 	
-		function updateAndReplace(update_url, replace_url, node) {
+		function updateAndReplace(update_url, replace_url, node, callback) {
 			var parameters = $(node).serialize();
 	
 			$.post(update_url,
 				parameters,
 				function (data) {
 					// Post successful, now fetch stored value and add it as a snippet
-					replaceWithRemote(replace_url, node);
+					replaceWithRemote(replace_url, node, callback);
 				}
 			);
         }
@@ -218,7 +221,7 @@
 				object_id = wrapper.parent().attr("id").slice(2),
 				snippet_update_url = snippet_update_url_template.replace('0', object_id);
 	
-			$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+			// $('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
 			replaceWithRemote(snippet_update_url, wrapper);
 			e.preventDefault();
 		});
@@ -242,7 +245,7 @@
 				feedback_update_url = feedback_update_url_template.replace('0', object_id),
 				snippet_detail_url = snippet_detail_url_template.replace('0', object_id);;
 	
-			updateAndReplace(feedback_update_url, snippet_detail_url, $this);
+			updateAndReplace(feedback_update_url, snippet_detail_url, $this, updateCounters);
 			e.preventDefault();
 		});
 	});

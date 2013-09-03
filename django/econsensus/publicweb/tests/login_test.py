@@ -5,6 +5,7 @@ from publicweb.models import Decision
 from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests.factories import UserFactory, \
         OrganizationUserFactory
+from remember_me.forms import AuthenticationRememberMeForm
 
 class LoginTest(EconsensusFixtureTestCase):       
     def test_non_login_is_redirected(self):
@@ -17,7 +18,7 @@ class LoginTest(EconsensusFixtureTestCase):
         self.client.logout()
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path)
-        self.assertRedirects(response, reverse('auth_login')+'?next='+path)
+        self.assertRedirects(response, reverse('remember_me_login')+'?next='+path)
 
     def test_add_decision_loads_when_logged_in(self):
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
@@ -26,7 +27,7 @@ class LoginTest(EconsensusFixtureTestCase):
         
     def test_can_post_through_login(self):
         self.client.logout()
-        path = reverse('auth_login')
+        path = reverse('remember_me_login')
         page = self.client.get(path)
         
         post_data = self.get_form_values_from_response(page, 1)
@@ -40,7 +41,13 @@ class LoginTest(EconsensusFixtureTestCase):
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
         response = self.client.get(path, follow=True)
         self.assertEquals(response.status_code, 200)
-
+    
+    def test_login_form_is_instance_of_authentication_remember_me_form(self):
+        self.client.logout()
+        path = reverse('remember_me_login')
+        page = self.client.get(path)
+        form = page.context['form']
+        self.assertIsInstance(form, AuthenticationRememberMeForm) 
 
 class LoginTestNonFixture(TestCase):
     """
@@ -53,7 +60,7 @@ class LoginTestNonFixture(TestCase):
         self.client.logout()
         org_user.user.set_password('test')
         org_user.user.save()
-        response = self.client.post(reverse('auth_login'),
+        response = self.client.post(reverse('remember_me_login'),
             {'username': org_user.user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('publicweb_item_list', 
@@ -65,7 +72,7 @@ class LoginTestNonFixture(TestCase):
         self.client.logout()
         org_user.user.set_password('test')
         org_user.user.save()
-        response = self.client.post(reverse('auth_login')+'?next=/',
+        response = self.client.post(reverse('remember_me_login')+'?next=/',
             {'username': org_user.user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('publicweb_item_list', 
@@ -77,7 +84,7 @@ class LoginTestNonFixture(TestCase):
         self.client.logout()
         org_user.user.set_password('test')
         org_user.user.save()
-        response = self.client.post(reverse('auth_login')+'?next=/organizations/add/',
+        response = self.client.post(reverse('remember_me_login')+'?next=/organizations/add/',
             {'username': org_user.user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('organization_add') 
@@ -89,7 +96,7 @@ class LoginTestNonFixture(TestCase):
         org_user2 = OrganizationUserFactory(user=user)
         user.set_password('test')
         user.save()
-        response = self.client.post(reverse('auth_login'),
+        response = self.client.post(reverse('remember_me_login'),
             {'username': user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('organization_list') 
@@ -101,7 +108,7 @@ class LoginTestNonFixture(TestCase):
         org_user2 = OrganizationUserFactory(user=user)
         user.set_password('test')
         user.save()
-        response = self.client.post(reverse('auth_login')+'?next=/',
+        response = self.client.post(reverse('remember_me_login')+'?next=/',
             {'username': user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('organization_list') 
@@ -113,7 +120,7 @@ class LoginTestNonFixture(TestCase):
         org_user2 = OrganizationUserFactory(user=user)
         user.set_password('test')
         user.save()
-        response = self.client.post(reverse('auth_login')+'?next=/organizations/add/',
+        response = self.client.post(reverse('remember_me_login')+'?next=/organizations/add/',
             {'username': user.username, 'password': 'test'},
             follow = True)
         expected_url = reverse('organization_add') 
