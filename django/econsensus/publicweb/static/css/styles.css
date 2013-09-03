@@ -282,6 +282,25 @@ input {
 	margin-bottom:10px;
 	width:inherit;
 }
+
+#your-organizations {
+	margin-top:1em;
+	margin-bottom:1em;
+}
+
+#your-organizations ul {
+	margin-bottom:1em;
+}
+
+#your-organizations p,
+#your-organizations li {
+	margin-bottom: 1em;
+}
+
+#your-organizations div {
+	margin-top:1em;
+}
+
 #content table.org_list>tbody>tr>td {
     padding-right: 0.7em;
 }
@@ -292,6 +311,7 @@ input {
 #content table.org_list>tbody>tr>td:last-child {
     vertical-align: middle;
 }
+
 
 /* pagination */
 .pagination {

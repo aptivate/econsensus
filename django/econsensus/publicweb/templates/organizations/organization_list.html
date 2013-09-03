@@ -13,8 +13,7 @@
 {% endblock %}
 
 {% block main_content %}
-<br />
-<br />
+<div id="your-organizations">
 {% for organization in organizations %}
 {% if forloop.first %}<table class="org_list"><tbody>{% endif %}
     <tr>
@@ -25,23 +24,18 @@
             {% if organization|is_owner:user %}<span class="org-owner">| Owner options: <a href="{% url 'organization_delete' organization.pk %}">delete</a></span>{% endif %}
         </td>
     </tr>
-{% if forloop.last %}</tr></tbody></table>{% endif %}
+{% if forloop.last %}</tbody></table>{% endif %}
 {% empty %}
 <p>{% trans "You do not currently belong to any organizations."%}</p>
-<br />
 <p>{% trans "You can only view and create discussions, proposals and decisions when you belong to an organization so try one of the following ..."%}</p>
 <ul class="bulleted">
-<br />
     <li>{% trans "create a new organization - use the link below - you can then invite other users to join you and start the econsensus process" %}</li>
-<br />
     <li>{% trans "or, contact an administrator of an existing organization and request to be added as a member - you'll need to supply the email address you registered this user with" %}</li>
-<br />
 </ul>
 {% endfor %}
-
-<br/>
-
+<div>
 <a title="{% trans 'Create New Organization' %}" href="{% url 'organization_add' %}">{% trans "Create New Organization" %}</a>
-
+</div>
+</div>
 
 {% endblock %}
