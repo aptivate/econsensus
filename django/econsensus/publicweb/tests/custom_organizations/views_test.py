@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from publicweb.tests.factories import OrganizationUserFactory, DecisionFactory,\
-    ObservedItemFactory, UserFactory
+    ObservedItemFactory, UserFactory, FeedbackFactory
 
 from custom_organizations.views import CustomOrganizationCreate, \
     CustomOrganizationUpdate, CustomOrganizationUserUpdate, \
@@ -216,6 +216,22 @@ class TestCustomOrganizationUserDelete(TestCase):
         request.user = user
         org_user_delete_view.delete(request)
         self.assertSequenceEqual([], decision.watchers.all())
+    
+    def test_delete_stops_users_watching_feedback_for_the_organization(self):
+        org_user_delete_view = CustomOrganizationUserDelete()
+        feedback = FeedbackFactory()
+        observed_item = ObservedItemFactory(observed_object=feedback)
+        org = observed_item.observed_object.decision.organization
+        user = feedback.author
+        org_user = OrganizationUserFactory(organization=org, user=user)
+        org_user_delete_view.get_object = lambda: org_user
+        request = RequestFactory()
+        request.user = user
+        org_user_delete_view.delete(request)
+        # Two observed items were created for different users
+        # Only the second one should remain after the delete request
+        self.assertSequenceEqual([observed_item], feedback.watchers.all())
+        
 
 class TestCustomOrganizationUserLeave(TestCase):
     

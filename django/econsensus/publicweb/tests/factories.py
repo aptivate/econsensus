@@ -43,8 +43,8 @@ class DecisionFactory(factory.DjangoModelFactory):
 
 class FeedbackFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Feedback
-
     decision = factory.SubFactory(DecisionFactory)
+    author = factory.SubFactory(UserFactory)
 
 class SiteFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Site

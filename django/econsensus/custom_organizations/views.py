@@ -21,6 +21,7 @@ from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationUserAddForm
 from django.http import Http404
 from organizations.models import Organization
+from publicweb.models import Feedback
 
 
 class CustomOrganizationCreate(OrganizationCreate):
@@ -90,8 +91,11 @@ class CustomOrganizationUserDelete(BaseOrganizationUserDelete):
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
-        for decision in org_user.organization.decision_set.all():
+        decisions = org_user.organization.decision_set.all()
+        for decision in decisions:
             decision.watchers.filter(user=org_user.user).delete()
+        for feedback in Feedback.objects.filter(decision__in=decisions):
+            feedback.watchers.filter(user=org_user.user).delete()
         return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
     
 class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
