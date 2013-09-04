@@ -15,16 +15,26 @@
 {% block main_content %}
 <div id="your-organizations">
 {% for organization in organizations %}
-{% if forloop.first %}<table class="org_list"><tbody>{% endif %}
-    <tr>
-        <td><h3><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a></h3></td>
-        <td>
-            <a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">View</a>
-            {% if organization|is_admin:user %}<span class="org-admin">| Admin options: <a href="{% url 'organization_user_list' organization.pk %}">edit members</a> or <a href="{% url 'organization_edit' organization.pk %}">rename</a></span>{% endif %}
-            {% if organization|is_owner:user %}<span class="org-owner">| Owner options: <a href="{% url 'organization_delete' organization.pk %}">delete</a></span>{% endif %}
-        </td>
-    </tr>
-{% if forloop.last %}</tbody></table>{% endif %}
+{% if forloop.first %}<ul class="org_list">{% endif %}
+    <li>
+        <h3><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a></h3>
+        <ul>
+            {% if organization|is_admin:user %}
+            <li>
+                <a href="{% url 'organization_edit' organization.pk %}">rename</a>
+            </li>
+            <li class="org-admin">
+                <a href="{% url 'organization_user_list' organization.pk %}">members</a>
+            </li>
+            {% endif %}
+            {% if organization|is_owner:user %}
+            <li>
+                <a href="{% url 'organization_delete' organization.pk %}">delete</a>
+            </li>
+            {% endif %}
+        </ul>
+    </li>
+{% if forloop.last %}</ul>{% endif %}
 {% empty %}
 <p>{% trans "You do not currently belong to any organizations."%}</p>
 <p>{% trans "You can only view and create discussions, proposals and decisions when you belong to an organization so try one of the following ..."%}</p>

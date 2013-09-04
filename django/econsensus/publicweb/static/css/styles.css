@@ -298,20 +298,23 @@ input {
 }
 
 #your-organizations div {
-	margin-top:1em;
+	margin-top:2em;
 }
 
-#content table.org_list>tbody>tr>td {
-    padding-right: 0.7em;
-}
-#content table.org_list>tbody>tr>td:first-child {
-    padding-right: 2em;
-    text-align: right;
-}
-#content table.org_list>tbody>tr>td:last-child {
-    vertical-align: middle;
+#your-organizations ul {
+	margin-left:1em;
 }
 
+#content ul.org_list ul li {
+	display:inline;
+    border-left:1px solid #666;
+    padding:0 0.5em;
+}
+
+#content ul.org_list ul li:first-child {
+	border-width:0;
+	padding-left:0;
+}
 
 /* pagination */
 .pagination {
