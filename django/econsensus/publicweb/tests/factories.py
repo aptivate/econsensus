@@ -7,7 +7,8 @@ from django.contrib.sites.models import Site
 from organizations.models import Organization, OrganizationUser,\
     OrganizationOwner
 
-from publicweb.models import Decision, Feedback
+from publicweb.models import Decision, Feedback, NotificationSettings,\
+    MAIN_ITEMS_NOTIFICATIONS_ONLY
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -50,3 +51,9 @@ class SiteFactory(factory.DjangoModelFactory):
 class CommentFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Comment
     site = factory.SubFactory(SiteFactory)
+
+class NotificationSettingsFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = NotificationSettings
+    user = factory.SubFactory(UserFactory)
+    organization = factory.SubFactory(Organization)
+    notification_level = MAIN_ITEMS_NOTIFICATIONS_ONLY

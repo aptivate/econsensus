@@ -20,3 +20,4 @@ git+git://github.com/aptivate/django-notification.git@emails-with-headers
 django-guardian==1.1.1
 factory-boy==2.1.1
 MiniMock==1.2.8
+-e git+git://github.com/IlyaSemenov/django-modelsettings.git#egg=dbsettings

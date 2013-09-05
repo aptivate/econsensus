@@ -32,6 +32,7 @@ from custom_notification.utils import send_observation_notices_for
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from dbsettings.models import Settings
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -270,6 +271,46 @@ class Feedback(models.Model):
         Generates a message id that can be used in email headers
         """
         return "<feedback-%s@%s>" % (self.id, Site.objects.get_current().domain)
+
+# The indexes are numeric because the notification levels are cumulative
+# This enables us to do if notification_level >= number
+NO_NOTIFICATIONS = 0
+NO_NOTIFICATIONS_TEXT = _("No email notifications")
+MAIN_ITEMS_NOTIFICATIONS_ONLY = 1
+MAIN_ITEMS_NOTIFICATIONS_ONLY_TEXT = _("Creation and status changes of main "
+   "items")
+FEEDBACK_ADDED_NOTIFICATIONS = 2
+FEEDBACK_ADDED_NOTIFICATIONS_TEXT = _("Changes of main items and creation of "
+                                      "feedback")
+FEEDBACK_MAJOR_CHANGES = 3
+FEEDBACK_MAJOR_CHANGES_TEXT = _("Major changes and replies to feedback")
+MINOR_CHANGES_NOTIFICATIONS = 4
+MINOR_CHANGES_NOTIFICATIONS_TEXT = _("Minor changes")
+NOTIFICATION_LEVELS = (
+          (NO_NOTIFICATIONS, NO_NOTIFICATIONS_TEXT),
+          (MAIN_ITEMS_NOTIFICATIONS_ONLY, MAIN_ITEMS_NOTIFICATIONS_ONLY_TEXT),
+          (FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_ADDED_NOTIFICATIONS_TEXT),
+          (FEEDBACK_MAJOR_CHANGES, FEEDBACK_MAJOR_CHANGES_TEXT),
+          (MINOR_CHANGES_NOTIFICATIONS, MINOR_CHANGES_NOTIFICATIONS_TEXT)        
+                      )
+
+class NotificationSettings(Settings):
+    user = models.ForeignKey(User)
+    organization = models.ForeignKey(Organization)
+    notification_level = models.IntegerField(choices=NOTIFICATION_LEVELS,
+        help_text=_("Levels are cumulative, so if, for example, you choose to "
+            "get notifications of replies to feedback, you will get "
+            "notifications of all changes to main items as well."))
+    
+    class Meta:
+        unique_together = ('user', 'organization')
+
+class OrganizationSettings(Settings):
+    organization = models.OneToOneField(Organization)
+    default_notification_level = models.IntegerField(choices=NOTIFICATION_LEVELS,
+        help_text=_("Levels are cumulative, so if, for example, you choose to "
+            "get notifications of replies to feedback, you will get "
+            "notifications of all changes to main items as well."))
 
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):

@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'tagging',
+    'dbsettings',
 )
 
 AUTHENTICATION_BACKENDS = (

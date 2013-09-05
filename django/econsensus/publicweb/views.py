@@ -13,7 +13,8 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView, FormView,\
+    ProcessFormView, ModelFormMixin
 from django.views.generic.list import ListView
 
 from guardian.decorators import permission_required_or_403
@@ -21,7 +22,7 @@ from notification import models as notification
 from organizations.models import Organization
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
-from publicweb.models import Decision, Feedback
+from publicweb.models import Decision, Feedback, NotificationSettings
 
 
 class YourDetails(UpdateView):
@@ -508,3 +509,9 @@ class OrganizationRedirectView(RedirectView):
             return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
         except:
             return reverse('organization_list')
+
+class UserNotificationSettings(ModelFormMixin, ProcessFormView):
+    model = NotificationSettings
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.model()

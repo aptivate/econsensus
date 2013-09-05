@@ -1,14 +1,14 @@
-from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.core.urlresolvers import reverse_lazy
 from organizations.backends import invitation_backend
-from registration.forms import RegistrationFormUniqueEmail
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 from registration.backends.default.views import RegistrationView
 from custom_organizations.forms import CustomUserSignupRegistrationForm
+import dbsettings
 
+dbsettings.add_to_admin(admin.site)
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -32,7 +32,8 @@ urlpatterns += patterns('',
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'authentication_form': CustomAuthenticationForm}),
-    url(r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset',
+    url(r'^accounts/password/reset/$', 
+        'django.contrib.auth.views.password_reset',
         {'password_reset_form': CustomPasswordResetForm}),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
