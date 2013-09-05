@@ -924,29 +924,34 @@ p.title {
 }
 
 
-.decision_controls {
+.update-controls {
 	float: right;
 	clear: right;
 	padding-bottom:6px;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 	margin-right: 0.5em;
+    width:100%;
 }
 
-.decision_controls div {
-	padding: 0 6px 4px 6px;
+.update-controls div.update-buttons {
 	float: right;
 	}
-	
-.decision_controls div.watch {
-	padding: 0;
-	float: left;
+
+.update-controls div.update-buttons div {
+    padding: 0 6px 4px 6px;
+	float: right;
 }
 
-.decision_controls div.minor_edit {
-	padding: 0;
-	float: left;
+.update-controls div.update-options {
+    float: left;
+    }
+
+.update-controls div.update-options div {
+    float: left;
+    padding:0 0 0 1em;
 }
+
 
 .decision_meta #tags #id_tags {
 	width:90%;
@@ -1451,12 +1456,6 @@ p.error404 {
 		font-size:1.1em;
 	}
 	
-	#decision_update_form {
-		float:none;
-		width:auto;
-		padding:10px 10px 3em;
-	}
-
 	#decision_update_form #decision {
 		padding: 0;
 	}
@@ -1465,6 +1464,8 @@ p.error404 {
 	form .decision_meta {
 		float:none;
 		width:100%;
+		padding-top:0;
+		padding-bottom:0;
 	}
 
 	.form_item, .decision_meta .form_item {
@@ -1489,6 +1490,11 @@ p.error404 {
 	.summary-list {
 		padding: 10px 10px 0 10px;
 	}
+
+    .update-controls div.update-options {
+        width:100%;
+        margin-bottom:1em;
+    }
 }
 
 @media screen and (max-width:400px) {

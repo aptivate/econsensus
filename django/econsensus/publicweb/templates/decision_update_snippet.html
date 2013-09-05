@@ -83,19 +83,23 @@
 				</div>
 			</div>
 		</div>
-		<div class="watch">
-		    {{ form.watch.errors }}
-		    <label for="id_watch">{% trans "Watch" %}?</label>
-		    {{ form.watch }}
-		</div>		
-		<div class="decision_controls">
-		    {% if form.instance.id %}
-		    <div class="minor_edit" title="{% trans "Minor edits will not cause notification emails to be sent" %}">
-			<label for="id_minor_edit">{% trans "Minor Edit" %}?</label>
-			{{ form.minor_edit }}
-		    </div>
-		    {% endif %}
-		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Cancel" %}" /></div>
-		    <div><input class="go button" name = "submit" type="submit" value="{% trans "Save" %}" /></div>		    
+		<div class="update-controls">
+            <div class="update-options">
+	            <div class="watch">
+	                {{ form.watch.errors }}
+	                {{ form.watch }}
+	                <label for="id_watch">{% trans "Watch this" %}</label>
+	            </div>
+	            {% if form.instance.id %}
+	            <div class="minor_edit" title="{% trans "Minor edits will not cause notification emails to be sent" %}">
+	                {{ form.minor_edit }}
+	                <label for="id_minor_edit">{% trans "This is a minor edit" %}</label>
+	            </div>
+                {% endif %}
+            </div>
+            <div class="update-buttons"> 
+		        <div><input class="go button" name="submit" type="submit" value="{% trans "Cancel" %}" /></div>
+		        <div><input class="go button" name="submit" type="submit" value="{% trans "Save" %}" /></div>
+		    </div>		    
 		</div>
 </form>
