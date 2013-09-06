@@ -2,10 +2,8 @@ import unicodecsv
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404 
@@ -13,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
 from guardian.decorators import permission_required_or_403
