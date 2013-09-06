@@ -1097,12 +1097,16 @@ div#tags {
 	float: right;
 }
 
-#footer .flatpagelinks a {
+#footer ul.flatpagelinks li {
+    float: left;
+}
+
+#footer ul.flatpagelinks li a {
 	font-size: 1.2em;
 	padding-right: 0.5em;
 }
 
-#footer .flatpagelinks a:hover {
+#footer ul.flatpagelinks li a:hover {
 	background-color: #ededed;
 }
 
