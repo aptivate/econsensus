@@ -36,13 +36,12 @@ def get_topflatpages(parser, token):
 
         {% get_topflatpages for someuser as flatpages %}
     """
-    bits = token.split_contents()
+    pieces = token.split_contents()
     syntax_message = ("%(tag_name)s expects a syntax of %(tag_name)s "
                        "for user as context_name" %
-                       dict(tag_name=bits[0]))
-   # Must have at 5 bits in the tag
-    if len(bits) != 5 or bits[1] != 'for' or bits[3] != 'as':
-            raise template.TemplateSyntaxError(syntax_message)
-    user = bits[2]
-    context_name = bits[4]
+                       dict(tag_name=pieces[0]))
+    if len(pieces) != 5 or pieces[1] != 'for' or pieces[3] != 'as':
+        raise template.TemplateSyntaxError(syntax_message)
+    user = pieces[2]
+    context_name = pieces[4]
     return TopFlatpageNode(context_name, user)
