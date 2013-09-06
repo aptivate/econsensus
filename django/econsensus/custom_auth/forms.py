@@ -2,9 +2,10 @@
 #However the people at django don't want to put it on their own forms:
 #https://code.djangoproject.com/ticket/17921
 
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from remember_me.forms import AuthenticationRememberMeForm
 
-class CustomAuthenticationForm(AuthenticationForm):
+class CustomAuthenticationForm(AuthenticationRememberMeForm):
     error_css_class = 'error'
     required_css_class = 'required'
 

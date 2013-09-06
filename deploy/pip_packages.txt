@@ -21,3 +21,4 @@ django-guardian==1.1.1
 factory-boy==2.1.1
 mock==1.0.1
 -e git+git://github.com/IlyaSemenov/django-modelsettings.git#egg=dbsettings
+django-remember_me

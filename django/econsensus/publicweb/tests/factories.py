@@ -4,11 +4,13 @@ from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.sites.models import Site
 
-from organizations.models import Organization, OrganizationUser,\
-    OrganizationOwner
+from organizations.models import (Organization, OrganizationUser,
+    OrganizationOwner)
 
 from publicweb.models import Decision, Feedback, NotificationSettings,\
     MAIN_ITEMS_NOTIFICATIONS_ONLY
+from notification.models import (ObservedItem, NoticeType, 
+    NOTICE_MEDIA_DEFAULTS, NOTICE_MEDIA)
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -42,8 +44,8 @@ class DecisionFactory(factory.DjangoModelFactory):
 
 class FeedbackFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Feedback
-
     decision = factory.SubFactory(DecisionFactory)
+    author = factory.SubFactory(UserFactory)
 
 class SiteFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Site
@@ -57,3 +59,14 @@ class NotificationSettingsFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     organization = factory.SubFactory(Organization)
     notification_level = MAIN_ITEMS_NOTIFICATIONS_ONLY
+
+class NoticeTypeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = NoticeType
+    default = NOTICE_MEDIA_DEFAULTS[NOTICE_MEDIA[0][0]]
+    
+class ObservedItemFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ObservedItem
+    
+    user = factory.SubFactory(UserFactory)
+    observed_object = factory.SubFactory(DecisionFactory)
+    notice_type = factory.SubFactory(NoticeTypeFactory)

@@ -13,8 +13,19 @@ from publicweb.tests.factories import DecisionFactory, \
                                         CommentFactory
 
 import datetime
-import minimock
+from mock import patch, MagicMock
 
+# Ensure value of "now" always increases by amount sufficient
+# to show up as a change, even if db resolution for datetime
+# is one second.
+def now_iter(start):
+    t = start
+    while True:
+        t += datetime.timedelta(hours=1)
+        yield t
+
+magic_mock = MagicMock(wraps=timezone.now, side_effect=now_iter(timezone.now()))
+@patch("django.utils.timezone.now", new=magic_mock)
 class DecisionLastModifiedTest(TestCase):
     """
     Tests updating of 'last_modified' date on Decision.
@@ -22,19 +33,6 @@ class DecisionLastModifiedTest(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.decision = DecisionFactory()
-
-        # Ensure value of "now" always increases by amount sufficient
-        # to show up as a change, even if db resolution for datetime
-        # is one second.
-        def now_iter(start):
-            t = start
-            while True:
-                t += datetime.timedelta(hours=1)
-                yield t
-        minimock.mock("timezone.now", returns_iter=now_iter(timezone.now()), tracker=None)
-
-    def tearDown(self):
-        minimock.restore()
 
     def last_modified(self):
         """
@@ -47,7 +45,7 @@ class DecisionLastModifiedTest(TestCase):
         self.decision.editor = UserFactory()
         self.decision.save()
         self.assertEquals(orig_last_modified, self.last_modified())
-
+        
     def test_edit_decision_description(self):
         orig_last_modified = self.last_modified()
         self.decision.description += "x"
@@ -56,13 +54,13 @@ class DecisionLastModifiedTest(TestCase):
 
     def test_add_feedback_triggers_update(self):
         orig_last_modified = self.last_modified()
-        feedback = FeedbackFactory(decision=self.decision, author=self.user)
+        FeedbackFactory(decision=self.decision, author=self.user)
         self.assertTrue(orig_last_modified < self.last_modified())
 
     def test_add_comment_triggers_update(self):
         feedback = FeedbackFactory(decision=self.decision, author=self.user)
         orig_last_modified = self.last_modified()
-        comment = CommentFactory(content_object=feedback, user=self.user)
+        CommentFactory(content_object=feedback, user=self.user)
         self.assertTrue(orig_last_modified < self.last_modified())
 
     def test_add_watcher_triggers_no_update(self):

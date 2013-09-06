@@ -2,10 +2,8 @@ import unicodecsv
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404 
@@ -521,5 +519,5 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView):
         self.object.root = root 
         self.object.user = request.user
         self.object.organization = Organization.objects.get(users=self.request.user)
-        self.object.
+        self.object.notification_level = request.POST['notification_level']
         self.object.save()

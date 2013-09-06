@@ -282,15 +282,38 @@ input {
 	margin-bottom:10px;
 	width:inherit;
 }
-#content table.org_list>tbody>tr>td {
-    padding-right: 0.7em;
+
+#your-organizations {
+	margin-top:1em;
+	margin-bottom:1em;
 }
-#content table.org_list>tbody>tr>td:first-child {
-    padding-right: 2em;
-    text-align: right;
+
+#your-organizations ul {
+	margin-bottom:1em;
 }
-#content table.org_list>tbody>tr>td:last-child {
-    vertical-align: middle;
+
+#your-organizations p,
+#your-organizations li {
+	margin-bottom: 1em;
+}
+
+#your-organizations div {
+	margin-top:2em;
+}
+
+#your-organizations ul {
+	margin-left:1em;
+}
+
+#content ul.org_list ul li {
+	display:inline;
+    border-left:1px solid #666;
+    padding:0 0.5em;
+}
+
+#content ul.org_list ul li:first-child {
+	border-width:0;
+	padding-left:0;
 }
 
 /* pagination */
@@ -1201,6 +1224,15 @@ ul.errorlist {
     padding: 20px;
     width: 400px;
 }
+
+#short-form .checkbox input {
+	width: auto;
+}
+
+#short-form .checkbox label {
+    padding-top: 0;
+}
+
 
 #short-form.login .helptext {
     display: none;

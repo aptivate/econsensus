@@ -144,8 +144,7 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'tagging',
-    'dbsettings',
-)
+    'dbsettings',)
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
