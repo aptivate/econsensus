@@ -23,6 +23,7 @@ from organizations.models import Organization
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
 from publicweb.models import Decision, Feedback, NotificationSettings
+from dbsettings.models import Root
 
 
 class YourDetails(UpdateView):
@@ -515,3 +516,10 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView):
     
     def post(self, request, *args, **kwargs):
         self.object = self.model()
+        root = Root()
+        root.save()
+        self.object.root = root 
+        self.object.user = request.user
+        self.object.organization = Organization.objects.get(users=self.request.user)
+        self.object.
+        self.object.save()

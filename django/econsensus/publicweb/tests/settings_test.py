@@ -6,7 +6,7 @@ from organizations.models import Organization
 from django.db.models.fields.related import OneToOneField
 from publicweb.tests.factories import NotificationSettingsFactory, UserFactory,\
     OrganizationFactory
-from minimock import Mock, mock, TraceTracker
+from mock import Mock, patch
 from django.test.client import RequestFactory
 from notification.models import ObservedItem
 from publicweb.views import UserNotificationSettings
@@ -46,23 +46,23 @@ class SettingsTest(SimpleTestCase):
         user = UserFactory.build(id=1)
         organization = OrganizationFactory.build(id=2)
         
-        user_objects = Mock('User.objects')
+        user_objects = Mock(User.objects)
         def get_user(**kwargs):
             return user
         user_objects.get = get_user
-        mock('User.objects', mock_object=user_objects)
         
-        organization_objects = Mock('Organization.objects')
+        organization_objects = Mock(Organization.objects)
         def get_organization(**kwargs):
             return organization
         organization_objects.get = get_organization
-        mock('Organization.objects', mock_object=organization_objects)
+        organization_objects.filter = get_organization
         
-        observed_item = Mock('ObservedItem', tracker=TraceTracker())
-        mock('ObservedItem', mock_object=observed_item)
         
-        notification_settings = Mock('NotificationSettings')
-        mock('NotificationSettings', mock_object=notification_settings)
+        observed_item = Mock(ObservedItem)
+        
+        
+        notification_settings = Mock(NotificationSettings)
+        
         
         request = RequestFactory().post('/', 
             {
@@ -73,7 +73,12 @@ class SettingsTest(SimpleTestCase):
         
         request.user = user
         notification_settings_view.request = request
-        notification_settings_view.post(request)
+        with patch('django.contrib.auth.models.User.objects', new=user_objects):
+            with patch('publicweb.models.Organization.objects', new=organization_objects):
+                with patch('notification.models.ObservedItem', new=observed_item):
+                    with patch('publicweb.models.NotificationSettings', 
+                               new=notification_settings):
+                        notification_settings_view.post(request)
 
-        self.assertFalse(observed_item.mock_tracker.check('Called ObservedItem.save'))
+        self.assertFalse(observed_item.save.called)
         
