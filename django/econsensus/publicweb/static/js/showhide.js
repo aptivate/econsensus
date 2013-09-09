@@ -9,7 +9,7 @@ with activation via a show button
       e.preventDefault();
     });
     
-    $(".controls input[value=\"Post\"]").on("click", function(e) {
+    $(".controls .form_submit").on("click", function(e) {
     	var this_comment_form  = $(this).parent().parent();
     	if(!this_comment_form.parsley('validate'))
     	{
