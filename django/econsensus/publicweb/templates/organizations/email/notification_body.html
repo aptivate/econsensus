@@ -1,6 +1,7 @@
 {% load url from future %}
+{% load publicweb_filters %}
 
-You have been made a member of {{ organization }} on {{ domain.name }}{% if sender %} by {{ sender.username }}{% endif %}.
+You have been made a member of {{ organization }} on {{ domain.name }}{% if sender %} by {{ sender|get_user_name_for_notification }}{% endif %}.
 
 Follow this link to see all your organizations.
 

@@ -18,3 +18,9 @@ def get_rating_name(value):
 def get_user_name_from_comment(value):
     return (value.user and value.user.username) or value.user_name or "An Anonymous Contributor"
 
+@register.filter
+def get_user_name_for_notification(user):
+    if user.first_name and user.last_name:
+        return user.first_name + " " + user.last_name
+    else:
+        return user.username
