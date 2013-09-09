@@ -49,3 +49,5 @@ EXTRA_MIDDLEWARE_CLASSES = (
 EXTRA_INSTALLED_APPS = ( 
     'debug_toolbar',
 )
+
+TEST_RUNNER = 'test_runner.SeleniumDiscoveryRunner'

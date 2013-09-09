@@ -4,6 +4,7 @@ from django.test.simple import DjangoTestSuiteRunner, \
 from django.test.testcases import TestCase
 from django.db.models import get_apps
 from django.utils.importlib import import_module
+from django_selenium.selenium_runner import SeleniumTestRunner
 
 try:
     from django.utils import unittest
