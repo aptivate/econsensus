@@ -298,6 +298,7 @@ class NotificationSettings(Settings):
     user = models.ForeignKey(User)
     organization = models.ForeignKey(Organization)
     notification_level = models.IntegerField(choices=NOTIFICATION_LEVELS,
+        default=MAIN_ITEMS_NOTIFICATIONS_ONLY,
         help_text=_("Levels are cumulative, so if, for example, you choose to "
             "get notifications of replies to feedback, you will get "
             "notifications of all changes to main items as well."))

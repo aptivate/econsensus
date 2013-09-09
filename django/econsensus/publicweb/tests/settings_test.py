@@ -1,6 +1,6 @@
 from django.test.testcases import SimpleTestCase
 from publicweb.models import NotificationSettings, OrganizationSettings,\
-    NO_NOTIFICATIONS
+    NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY
 from django.contrib.auth.models import User, AnonymousUser
 from organizations.models import Organization
 from django.db.models.fields.related import OneToOneField
@@ -46,6 +46,11 @@ class SettingsTest(SimpleTestCase):
     def test_notification_settings_are_unique_for_an_organization_and_user(self):
         self.assertEqual((('user', 'organization'),),
           NotificationSettings()._meta.unique_together)
+    
+    def test_notifitication_settings_default_value_is_main_items_only(self):
+        the_settings = NotificationSettings() 
+        self.assertEqual(MAIN_ITEMS_NOTIFICATIONS_ONLY, 
+         the_settings.notification_level)
     
     def test_user_notification_settings_view_uses_a_form(self):
         notification_settings_view = UserNotificationSettings()
