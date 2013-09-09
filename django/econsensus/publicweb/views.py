@@ -10,8 +10,9 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, FormView,\
+from django.views.generic.detail import DetailView,\
+    SingleObjectTemplateResponseMixin
+from django.views.generic.edit import CreateView, UpdateView,\
     ProcessFormView, ModelFormMixin
 from django.views.generic.list import ListView
 
@@ -19,9 +20,11 @@ from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
 
-from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
+    NotificationSettingsForm
 from publicweb.models import Decision, Feedback, NotificationSettings
 from dbsettings.models import Root
+from notification.models import ObservedItem
 
 
 class YourDetails(UpdateView):
@@ -377,7 +380,7 @@ class DecisionCreate(CreateView):
         return reverse('publicweb_item_list', args=[self.organization.slug, status])
 
     def post(self, *args, **kwargs):
-        if self.request.POST.get('submit', None) == "Cancel":
+        if self.request.POST.get('submit', None) == _("Cancel"):
             return HttpResponseRedirect(self.get_success_url())
         return super(DecisionCreate, self).post(*args, **kwargs)
 
@@ -414,7 +417,7 @@ class DecisionUpdate(UpdateView):
         return reverse('publicweb_item_list', args=[slug, status])
 
     def post(self, *args, **kwargs):
-        if self.request.POST.get('submit', None) == "Cancel":
+        if self.request.POST.get('submit', None) == _("Cancel"):
             return HttpResponseRedirect(self.get_success_url())
         else:
             self.last_status = self.get_object().status
@@ -449,7 +452,7 @@ class FeedbackCreate(CreateView):
         return reverse('publicweb_item_detail', args=[self.kwargs['parent_pk']])
 
     def post(self, *args, **kwargs):
-        if self.request.POST.get('submit', None) == "Cancel":
+        if self.request.POST.get('submit', None) == _("Cancel"):
             return HttpResponseRedirect(self.get_success_url())
         return super(FeedbackCreate, self).post(*args, **kwargs)
 
@@ -469,7 +472,7 @@ class FeedbackUpdate(UpdateView):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
     
     def post(self, *args, **kwargs):
-        if self.request.POST.get('submit', None) == "Cancel":
+        if self.request.POST.get('submit', None) == _("Cancel"):
             self.object = self.get_object()
             return HttpResponseRedirect(self.get_success_url())
         return super(FeedbackUpdate, self).post(*args, **kwargs)
@@ -509,15 +512,45 @@ class OrganizationRedirectView(RedirectView):
         except:
             return reverse('organization_list')
 
-class UserNotificationSettings(ModelFormMixin, ProcessFormView):
+class UserNotificationSettings(ModelFormMixin, ProcessFormView, SingleObjectTemplateResponseMixin):
     model = NotificationSettings
+    form_class = NotificationSettingsForm
+    template_name = "notificationsettings_update.html"
     
+    def get_success_url(self):
+        return reverse('organization_list')
+    
+    def get_object(self):
+        organization = Organization.objects.get(pk=self.kwargs['organization'])
+        
+        try:
+            the_object = self.model.objects.get(
+               organization=organization.pk, user=self.request.user.pk)
+        except self.model.DoesNotExist:
+            the_object = self.model(
+                organization=organization, user=self.request.user)
+        
+        return the_object 
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserNotificationSettings, self).dispatch(
+              request, *args, **kwargs)    
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(UserNotificationSettings, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
-        self.object = self.model()
-        root = Root()
-        root.save()
-        self.object.root = root 
-        self.object.user = request.user
-        self.object.organization = Organization.objects.get(users=self.request.user)
-        self.object.notification_level = request.POST['notification_level']
-        self.object.save()
+        self.object = self.get_object()
+        if self.request.POST.get('submit', None) == _("Cancel"):
+            return HttpResponseRedirect(self.get_success_url())
+        return super(UserNotificationSettings, self).post(request, *args, **kwargs)
+        
+    def form_valid(self, form):
+        notification_settings = form.instance
+        
+        if not notification_settings.root_id:
+            notification_settings.root = Root.objects.create()
+        
+        return super(UserNotificationSettings, self).form_valid(form)

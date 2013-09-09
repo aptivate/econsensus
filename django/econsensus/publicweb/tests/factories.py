@@ -57,7 +57,7 @@ class CommentFactory(factory.DjangoModelFactory):
 class NotificationSettingsFactory(factory.DjangoModelFactory):
     FACTORY_FOR = NotificationSettings
     user = factory.SubFactory(UserFactory)
-    organization = factory.SubFactory(Organization)
+    organization = factory.SubFactory(OrganizationFactory)
     notification_level = MAIN_ITEMS_NOTIFICATIONS_ONLY
 
 class NoticeTypeFactory(factory.DjangoModelFactory):

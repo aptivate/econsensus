@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main_content %}
+<h2>Notification Settings</h2>
+<form action="." method="post">
+{% csrf_token %}
+    <div class="form_item {% if form.notification_level.errors %}error{% endif %}">
+        {% if form.notification_level.errors %}{{ form.notification_level.errors }}{% endif %}
+        {{ form.notification_level.label_tag }} {{ form.notification_level }}
+        <span class="helptext">{{ form.notification_level.help_text }}</span>
+    </div>
+    <div class="meta controls">
+        <input class="button go once" type="submit" value="{% trans "Save" %}" />
+        <input class="button go once" type="submit" value="{% trans "Cancel" %}" />
+    </div> 
+</form>
+{% endblock main_content %}

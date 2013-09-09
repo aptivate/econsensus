@@ -2,11 +2,10 @@ from django.conf.urls.defaults import patterns, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 
-from views import DecisionCreate, DecisionUpdate, \
-                    DecisionDetail, DecisionList, \
-                    ExportCSV, FeedbackCreate, \
-                    FeedbackSnippetCreate, FeedbackUpdate, \
-                    OrganizationRedirectView, YourDetails
+from views import (DecisionCreate, DecisionUpdate, DecisionDetail, DecisionList, 
+                    ExportCSV, FeedbackCreate, FeedbackSnippetCreate, 
+                    FeedbackUpdate, OrganizationRedirectView, YourDetails,
+                    UserNotificationSettings)
 
 from models import Feedback
 
@@ -14,7 +13,8 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^your_details/$',
         YourDetails.as_view(),
         name='your_details'),
-                       
+    url(r'^settings/notification_settings/(?P<organization>[\d]+)/$',
+        UserNotificationSettings.as_view(), name='notification_settings'),
     #Feedback urls...
     url(r'^feedback/create/(?P<parent_pk>[\d]+)/$', 
         FeedbackCreate.as_view(template_name = 'feedback_update_page.html'),
