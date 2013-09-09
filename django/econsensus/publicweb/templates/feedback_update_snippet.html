@@ -13,15 +13,19 @@
 					{{ form.description.errors }}
 					{{ form.description }}
 		    	</div>
-		    	<div class="controls">
-			    {% if form.instance.id %}
-                                <div class="minor_edit" title="{% trans "Minor edits will not cause notification emails to be sent" %}">
-                                    <label for="id_minor_edit">{% trans "Minor Edit" %}?</label>
-                                    {{ form.minor_edit }}
-                                </div>
-			    {% endif %}
-			    <div><input class="button go" type="submit" name="submit" value="Cancel" /></div>
-			    <div><input class="button go once" type="submit" name="submit" value="Save" /></div>
+		    	<div class="update-controls">
+		    	    <div class="update-options">
+		                {% if form.instance.id %}
+		                <div class="minor_edit" title="{% trans "Minor edits will not cause notification emails to be sent" %}">
+		                    {{ form.minor_edit }}
+		                    <label for="id_minor_edit">{% trans "This is a minor edit" %}</label>
+		                </div>
+                        {% endif %}
+                    </div>
+                <div class="update-buttons">
+				    <div><input class="button go" type="submit" name="submit" value="Cancel" /></div>
+				    <div><input class="button go once" type="submit" name="submit" value="Save" /></div>
+				</div>
 			</div>	    	
 		    </div>
 		</div>
