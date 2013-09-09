@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import ChoiceField
+from django.forms.widgets import RadioSelect
 
 from widgets import JQueryUIDateWidget
 from publicweb.models import NotificationSettings
@@ -68,3 +69,6 @@ class NotificationSettingsForm(forms.ModelForm):
     class Meta:
         model = NotificationSettings
         exclude = ('user', 'organization')
+        widgets = {
+            'notification_level': RadioSelect
+         }

@@ -1238,10 +1238,11 @@ ul.errorlist {
     display: none;
 }
 
-#short-form span.helptext {
+#short-form span.helptext, .notification_form > .form_item > .helptext {
 	clear:both;
 	float: left;
 	font-size: 0.8em;
+	color: #706E6E;
 }
 
 #short-form .errorlist {
@@ -1299,6 +1300,19 @@ ul.errorlist {
     padding: 5px;
     position: relative;
     width: 232px;
+}
+
+/* Notification settings */
+.notification_form {
+	overflow: auto;
+	border: 3px solid #797676;
+	border-radius: 20px;
+}
+
+.notification_form > .meta.controls {
+	display: block;
+	float: left;
+	padding: 10px 3%;
 }
 
 /* 404 Page Styling */
