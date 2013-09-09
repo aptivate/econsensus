@@ -1,11 +1,9 @@
 /*
 Show/hide the feedback_comment class amongst multiple,
 with activation via a show button
-Objects are automatically hidden if the 
-user clicks outside the area
 */
   $(document).ready(function() {
-    $(".controls input[value=\"Cancel\"]").on("click", function(e) {
+    $(".controls .form_cancel").on("click", function(e) {
       $(".form_comment").hide();
       e.stopPropagation();
       e.preventDefault();

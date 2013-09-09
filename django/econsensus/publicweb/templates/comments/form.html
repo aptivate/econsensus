@@ -22,7 +22,7 @@
     {% endfor %}
    	<div class="controls">  
 		<input class="button go" type="submit" name="submit" value="{% trans "Post" %}" />
-		<input class="button go"  type="submit" name="submit" value="{% trans "Cancel" %}" />
+		<input class="button go form_cancel"  type="submit" name="submit" value="{% trans "Cancel" %}" />
 		{% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
 	</div>	           
   </form>
