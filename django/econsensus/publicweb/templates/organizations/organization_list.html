@@ -33,6 +33,9 @@
             </li>
             {% endif %}
             <li>
+                <a href="{% url 'notification_settings' organization.pk %}">{% trans "notification settings" %}</a>
+            </li>
+            <li>
                 <a href="{% url 'organization_user_leave' organization.pk user.pk %}">{% trans "leave" %}</a>
             </li>
         </ul>
