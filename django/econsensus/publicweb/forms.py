@@ -10,7 +10,12 @@ from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
 
 from widgets import JQueryUIDateWidget
+
 from publicweb.models import NotificationSettings
+
+from parsley.decorators import parsleyfy
+from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
+
 
 class YourDetailsForm(forms.ModelForm):
 
@@ -33,6 +38,7 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback
         exclude = ("decision",)
 
+@parsleyfy
 class DecisionForm(forms.ModelForm):
     
     watch = forms.BooleanField(required=False, initial=True)
@@ -51,8 +57,15 @@ class DecisionForm(forms.ModelForm):
 
 EXTRA_CHOICE = (3, _('All')) #pylint: disable=E1102
 
+@parsleyfy
+class EconsensusActionItemCreateForm(ActionItemCreateForm):
+    pass
 #TODO: Sort and filter forms have nothing to do with the app itself.
 #Move to site when site and app are split.
+
+@parsleyfy
+class EconsensusActionItemUpdateForm(ActionItemUpdateForm):
+    pass
 
 class FilterForm(forms.Form):
     #this seems clunky...

@@ -1,5 +1,6 @@
 import unicodecsv
 
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
@@ -15,17 +16,28 @@ from django.views.generic.detail import DetailView,\
 from django.views.generic.edit import CreateView, UpdateView,\
     ProcessFormView, ModelFormMixin
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import MultipleObjectsReturned
+
+import unicodecsv
 
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
 
-from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
-    NotificationSettingsForm
+from publicweb.forms import (DecisionForm, FeedbackForm, YourDetailsForm,
+        NotificationSettingsForm, EconsensusActionItemCreateForm, 
+        EconsensusActionItemUpdateForm)
 from publicweb.models import Decision, Feedback, NotificationSettings
 from dbsettings.models import Root
 from notification.models import ObservedItem
 
+from publicweb.forms import DecisionForm, FeedbackForm
+
+from actionitems.models import ActionItem
+from actionitems.views import ActionItemCreateView, ActionItemUpdateView, ActionItemListView
+from actionitems.forms import ActionItemCreateForm
 
 class YourDetails(UpdateView):
     template_name = 'your_details.html'
@@ -151,6 +163,7 @@ class DecisionDetail(DetailView):
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
         context['rating_names'] = [unicode(x) for x in Feedback.rating_names]
+        context['actionitems'] = ActionItem.objects.filter(origin=self.kwargs['pk'])
         return context
 
 
@@ -492,6 +505,219 @@ class FeedbackUpdate(UpdateView):
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
 
+class EconsensusActionitemCreateView(ActionItemCreateView):
+    template_name = 'actionitem_create_snippet.html'
+    form_class = EconsensusActionItemCreateForm
+    @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
+    def dispatch(self, *args, **kwargs):
+        return super(EconsensusActionitemCreateView, self).dispatch(*args, **kwargs)
+
+    def get_origin(self, request, *args, **kwargs):
+        origin = self.kwargs.get('pk')
+        return origin
+
+    def get_success_url(self, *args, **kwargs):
+        kwargs = {'decisionpk': self.kwargs.get('pk'),
+                  'pk': self.object.pk}
+        return reverse('actionitem_detail', kwargs=kwargs)
+
+class EconsensusActionitemDetailView(DetailView):
+    model = ActionItem
+    template_name = 'actionitem_detail_snippet.html'
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(EconsensusActionitemDetailView, self).dispatch(*args, **kwargs)
+
+class EconsensusActionitemUpdateView(ActionItemUpdateView):
+    template_name = 'actionitem_update_snippet.html'
+    form_class = EconsensusActionItemUpdateForm
+
+    @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
+    def dispatch(self, *args, **kwargs):        
+        return super(EconsensusActionitemUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        kwargs = {'decisionpk': self.kwargs.get('decisionpk'),
+                  'pk': self.object.pk}
+        return reverse('actionitem_detail', kwargs=kwargs)
+
+class EconsensusActionitemListView(ActionItemListView):
+    template_name = 'decision_list.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.organization = get_object_or_404(Organization, slug=kwargs.get('org_slug', None))
+        return super(EconsensusActionitemListView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.status = 'actionitems'
+        self.set_sorting(request)
+        self.get_table_headers(request)
+        self.set_paginate_by(request)
+        return super(EconsensusActionitemListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = ActionItem.objects \
+                .filter(origin__organization=self.organization)
+        if self.sort_field in self.sort_by_alpha_fields:
+            qs = qs.extra(select={'lower': "lower(" + self.sort_field + ")"}).order_by(self.sort_order + 'lower')
+        else:
+            qs = qs.order_by(self.sort_order + self.sort_field)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EconsensusActionitemListView, self).get_context_data(**kwargs)
+        context['organization'] = self.organization
+        context['tab'] = 'actionitems'
+        context['sort'] = self.sort_order + self.sort_field
+        context['header_list'] = self.header_list
+        context['num'] = self.paginate_by
+        context['prevstring'] = self.build_prev_query_string(context)
+        context['nextstring'] = self.build_next_query_string(context)
+        return context
+
+    #######################################
+    # TODO The following is NOT DRY
+    #######################################
+    
+    # SORTING ##########################################################
+
+    # sort_options
+    # * {'sort_field': 'default sort_order'}
+    # * if the column is not in this dict, the sort will default to -id
+    sort_options = {'id': '-',
+                    'description': '',
+                    'responsible': '',
+                    'deadline': '-',
+                    'is_done': '-',
+                    'origin': ''
+                    }
+    sort_by_alpha_fields = ['title', 'responsible']
+    sort_table_headers = {'actionitems': ['id', 'description', 'responsible', 'deadline', 'is_done', 'origin']}
+
+    def set_sorting(self, request):
+        sort_request = request.GET.get('sort', '-id')
+        if sort_request.startswith('-'):
+            self.sort_order = '-'
+            self.sort_field = sort_request.split('-')[1]
+        else:
+            self.sort_order = ''
+            self.sort_field = sort_request
+        #Invalid sort requests fail silently
+        if not self.sort_field in self.sort_options:
+            self.sort_order = '-'
+            self.sort_field = 'id'
+
+    def get_table_headers(self, request):
+        #TODO How to handle this with internationalization
+        header_titles = {'id': 'ID',
+                         'description': 'Excerpt',
+                         'responsible': 'Responsible',
+                         'deadline': 'Deadline',
+                         'is_done': 'Done?',
+                         'origin': 'Decision',
+                         }
+
+        self.header_list = []
+        for header in self.sort_table_headers[self.status]:
+                header = {'attrs': header, 'path': self.get_sort_query(request, header), 'sortclass': self.get_sort_class(header), 'title': header_titles[header]}
+                self.header_list.append(header)
+
+    def get_sort_class(self, field):
+        sort_class = ''
+        if self.sort_field == field:
+            sort_class = 'sort-asc'
+            if self.sort_order == '-':
+                sort_class = 'sort-desc'
+        return sort_class
+
+    def toggle_sort_order(self, sort_order):
+        if sort_order == '-':
+            toggled_sort_order = ''
+        if sort_order == '':
+            toggled_sort_order = '-'
+        return toggled_sort_order
+
+    def get_sort_query(self, request, field):
+        current_sort = self.sort_order + self.sort_field
+        default_sort = self.sort_options[field] + field
+
+        # Unless field is sort_field, when next_sort is inverse
+        if current_sort == default_sort:
+            next_sort = self.toggle_sort_order(self.sort_order) + self.sort_field
+        else:
+            next_sort = default_sort
+
+        # Exception of next_sort='-id'
+        if next_sort == '-id':
+            sort_query = ''
+        else:
+            sort_query = '?sort=' + next_sort
+
+        return request.path + sort_query
+
+    # END SORTING ##########################################################
+
+    # PAGINATION ##########################################################
+
+    def set_paginate_by(self, request):
+        # NB Don't know how to handle invalid Page # - https://docs.djangoproject.com/en/1.4/ref/class-based-views/
+        # "Note that page must be either a valid page number or the value last;
+        # any other value for page will result in a 404 error."
+
+        # The default number of items to paginate by
+        self.default_num_items = '10'
+
+        page_num = request.GET.get('page')
+        num_num = request.GET.get('num')
+
+        # Clean-up if invalid num request was given (i.e. handles error silently)
+        if num_num:
+            try:
+                num_num_int = int(num_num)
+                if num_num_int <= 0:
+                    raise ValueError
+            except ValueError:
+                request.session['num'] = self.paginate_by = self.default_num_items
+                return
+
+        # Set to default in case where a link has been sent that includes page number, but doesn't include a num
+        if page_num and not num_num:
+            self.paginate_by = self.default_num_items
+
+        # Standard case
+        else:
+            self.paginate_by = request.GET.get('num', request.session.get('num', self.default_num_items))
+
+        # Finally set as user's session value
+        request.session['num'] = self.paginate_by
+
+    def build_prev_query_string(self, context):
+        if not context['page_obj']:
+            return None
+        else:
+            return self.build_query_string(context, context['page_obj'].previous_page_number())
+
+    def build_next_query_string(self, context):
+        if not context['page_obj']:
+            return None
+        else:
+            return self.build_query_string(context, context['page_obj'].next_page_number())
+
+    def build_query_string(self, context, page_num):
+        page_query = 'page=' + str(page_num)
+        #prepend non-default number of items per page
+        if not context['num'] == self.default_num_items:
+            page_query = 'num=' + str(context['num']) + '&' + page_query
+        #prepend non-default sort
+        if not context['sort'] == '-id':
+            page_query = 'sort=' + context['sort'] + '&' + page_query
+        return '?' + page_query
+
+    # END PAGINATION ##########################################################
 
 class OrganizationRedirectView(RedirectView):
     '''

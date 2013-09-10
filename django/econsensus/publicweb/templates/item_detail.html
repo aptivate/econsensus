@@ -14,24 +14,13 @@
 {% block head_content %}
 {{ object.media }}
 	<link href="{{ STATIC_URL }}jquery/jquery-ui.css" type="text/css" media="all" rel="stylesheet" />
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/showhide.js"></script>
-
+    <script type="text/javascript" src="{{ STATIC_URL }}js/parsley.min.js"></script>
 	<script type="text/javascript">
 	<!--
-	jQuery(function ($) {
-        {% comment %}
-        Deprecation_Note_re_live_method: Note regarding use of .live():
-        ===============================================================
-        - .live() method deprecated from jQuery v1.7, removed jQuery v1.9.
-        - When upgrading, note that suggested replacement method .on() is not a complete 
-        solution because .live() attaches events to all elements that match now *and 
-        in the future* and I believe that on() only applies to current matches. This is 
-        significant because many jQuery context objects of .live() in this template do not 
-        exist on initial page load.
-        {% endcomment %}
-
+	$(function () {
 		/*
 		 * Common functions
 		 */
@@ -113,27 +102,108 @@
 		 * Proposal in-line editing
 		 */
 		// Override redirect to form and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".controls a.edit").live("click", function (e) {
+		$("#content").on("click", "#decision_snippet_envelope a.edit", function (e) {
 			replaceWithRemote("{% url 'publicweb_decision_snippet_update' object.id %}", "#decision_snippet_envelope");
-			e.preventDefault();
-		});
-	
-		// Override redirect to view and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('#decision_update_form input[value="Save"]').live("click", function (e) {
-			updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
-							"{% url 'publicweb_decision_snippet_detail' object.id %}",
-							"form#decision_update_form");
+			$('#decision_update_form').parsley();
 			e.preventDefault();
 		});
 
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('#decision_update_form input[value="Cancel"]').live("click", function (e) {
+		var decision_update_form_parent = "#content";
+		// Override redirect to view and put it inline
+		$(decision_update_form_parent).on("click", '#decision_update_form .decision_save', function (e) {
+			if($('#decision_update_form').parsley('validate')) {
+			 updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
+					"{% url 'publicweb_decision_snippet_detail' object.id %}",
+					"#decision_update_form");
+			}
+			e.preventDefault();
+		});
+
+        $(decision_update_form_parent).on("click", '#decision_update_form .decision_cancel', function (e) {
             e.stopPropagation();
             replaceWithRemote("{% url 'publicweb_decision_snippet_detail' object.id %}", 
-                                "form#decision_update_form");
+                                "#decision_update_form");
             e.preventDefault();
+        });
+
+        //Action items inline editing
+        var actionitem_add_url = "{% url 'actionitem_create' object.id %}",
+            actionitem_edit_url = "{% url 'actionitem_update' decisionpk=object.id pk=0 %}",
+            actionitem_detail_url = "{% url 'actionitem_detail' decisionpk=object.id pk=0 %}",
+            actionitem_form_parent = "#actionitem_add_anchor",
+            actionitem_button = $(".button.add_actionitem").clone().wrap('<div>').parent().html();
+        // Add
+		$(actionitem_form_parent).on("click", ".button.add_actionitem", function (e) {
+            replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
+            $('.actionitem-form').parsley();
+			e.preventDefault();
+		});
+        //Edit
+		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
+			var actionitempk = $(this).parents("li").attr("id").slice(7);
+			var snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
+
+            replaceWithRemote(snippet_update_url, "#act_id_"+actionitempk+" .actionitem_feedback_wrapper");
+            $('.actionitem-form').parsley();
+			e.preventDefault();
+		});
+		
+		$(actionitem_form_parent).on("submit", "form", function (e) {
+            var form = $(actionitem_form_parent + " form"),
+                parameters = form.serialize();
+            if(form.parsley('validate')) {
+	            $.post(actionitem_add_url,
+	                parameters,
+	                function (data) {
+	                    var $action_item = $(".list.decision_actionitem .actionitem_list");
+	    
+	                    $('.no_actionitem').remove();
+	                    if (data) {
+	                        $action_item.html($action_item.html()+data);
+	                    }
+	                    form.replaceWith(actionitem_button);
+	                }
+	            );
+            }
+            e.preventDefault();
+        }); 
+
+		$(".list.decision_actionitem").on("submit", "form", function (e) {
+            var form = $("ol.actionitem_list form"),
+                parameters = form.serialize();
+            // This is necessary because otherwise javascript doesn't recognise
+            // .split as a function. Don't know why this is.
+            var actionitempk = $(this).parents("li").attr("id").slice(7);
+            snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk),
+            snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
+            if(form.parsley('validate')) {
+                $.post(snippet_update_url,
+                    parameters,
+                    function (data) {
+                        // Post successful, now fetch stored value and add it as a snippet
+                        replaceWithRemote(snippet_detail_url, form.parent());
+                    }
+                );
+            }
+            e.preventDefault();
+        });   
+
+		// Handle cancel manually, because it doesn't get submitted with
+        // javascript submission
+        $(actionitem_form_parent).on("click", ".actionitem_cancel", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $("#actionitem_add_anchor form").replaceWith(actionitem_button);
+        });
+
+        $(".list.decision_actionitem").on("click", ".actionitem_cancel", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var actionitem_form = $(".list.decision_actionitem form");
+            var actionitempk = $(this).parents("li").attr("id").slice(7);
+            var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
+
+            replaceWithRemote(snippet_detail_url, actionitem_form.parent());
         });
         	
 		/*
@@ -145,25 +215,24 @@
 			feedback_update_url_template = "{% url 'publicweb_feedback_update' 0 %}",
 			feedback_add_url = "{% url 'publicweb_feedback_snippet_create' object.id %}",
 			// .prop("outerHTML") will work in future (.outerHTML added to FF11)
-			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html();
+			feedback_button = $(".button.add_feedback").clone().wrap('<div>').parent().html(),
+			feedback_form_parent = $("#feedback_add_anchor");
 	
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('#feedback_add_anchor input[value="Cancel"]').live("click", function (e) {
+		$(feedback_form_parent).on("click", ".feedback_cancel", function (e) {
 			e.stopPropagation();e.preventDefault();
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".button.add_feedback").live("click", function (e) {
+		$(feedback_form_parent).on("click", ".button.add_feedback", function (e) {
             replaceWithRemote(feedback_add_url, ".button.add_feedback");
             scrollToFeedbackAnchor();
+            
 			e.preventDefault();
 		});
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $("#decision_detail .stats a dt").live("click", function (e) {
+        $("#decision_detail .stats a dt").click(function (e) {
             var feedback_create_section = $('#feedback_add_anchor');
 
             if (feedback_create_section.find('.button.add_feedback').length) {
@@ -184,8 +253,7 @@
 			e.preventDefault();
 		});
 
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('#id_rating').live("change", function (e) {
+        $(feedback_form_parent).on("change", "#id_rating", function (e) {
             var new_rating_value = $(this).val();
             var new_rating_name = e.currentTarget.form.rating.options[new_rating_value].text
             updateFeedbackFormRatingClassName(
@@ -193,10 +261,16 @@
                 new_rating_name);
         });
 	
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$("#feedback_add_anchor form").live("submit", function (e) {
-			var $form = $(this),
-				parameters = $form.serialize();
+		// Handle cancel manually, because it doesn't get submitted with
+		// javascript submission
+		$(feedback_form_parent).on("click", '.feedback_cancel', function (e) {
+			e.stopPropagation();e.preventDefault();
+			$("#feedback_add_anchor form").replaceWith(feedback_button);
+		});
+	
+		$(feedback_form_parent).on("submit", "form", function (e) {
+			var form = $(this),
+				parameters = form.serialize();
 	
 			$.post("{% url 'publicweb_feedback_snippet_create' object.id %}",
 				parameters,
@@ -207,7 +281,7 @@
 					if (data) {
 						$feedback.html($feedback.html()+data);
 					}
-					$form.replaceWith(feedback_button);
+					form.replaceWith(feedback_button);
 					updateCounters();
 				}
 			);
@@ -215,20 +289,18 @@
 		});
 	
 		// Override redirect to form and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$(".feedback_list .description .edit").live("click", function (e) {
+		$(".list.decision_feedback").on("click", ".feedback_list .description .edit", function (e) {
 			var wrapper = $(this).parents(".feedback_wrapper"),
 				object_id = wrapper.parent().attr("id").slice(2),
 				snippet_update_url = snippet_update_url_template.replace('0', object_id);
 	
-			// $('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+			// $('.feedback_list .feedback_cancel').click(); // Close open feedback first
 			replaceWithRemote(snippet_update_url, wrapper);
 			e.preventDefault();
 		});
 	
 		// Override redirect to view and put it inline
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-        $('.feedback_list .feedback_form input[value="Cancel"]').live("click", function (e) {
+        $(".feedback_list").on("click", '.feedback_form .feedback_cancel', function (e) {
             e.stopPropagation();
             e.preventDefault();
 			var feedback_form = $(this).parents('.feedback_form');
@@ -238,8 +310,7 @@
             replaceWithRemote(snippet_detail_url, feedback_form);
             e.preventDefault();
         });
-        {% comment %} .live() - see Deprecation_Note_re_live_method {% endcomment %}
-		$('.feedback_list .feedback_form').live("submit", function (e) {
+		$(".feedback_list").on("submit", '.feedback_form', function (e) {
 			var $this = $(this),
 				object_id = $this.parent().attr("id").slice(2),
 				feedback_update_url = feedback_update_url_template.replace('0', object_id),
@@ -248,6 +319,11 @@
 			updateAndReplace(feedback_update_url, snippet_detail_url, $this, updateCounters);
 			e.preventDefault();
 		});
+
+        $(".hide").click(function() {
+            $(this).parent().toggleClass("minimized");
+            $(this).toggleClass("maximize");
+        });
 	});
 	//-->
 	</script>
@@ -262,19 +338,37 @@
 {% else %}
 {% include "decision_detail_snippet.html" %}
 
-<h2 class="page_title feedback">{% trans "Feedback" %}</h2>
-{% if "edit_decisions_feedback" in organization_permissions %}
-<div id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
-{% endif %}
-<div class="decision_feedback">
+<div class="envelope">
+    <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
+        {% if "edit_decisions_feedback" in organization_permissions %}
+            <div class="add_anchor" id="actionitem_add_anchor"><a class="button add_actionitem" href='{% url 'actionitem_create' object.id %}'><span>Add action item</span></a></div>
+        {% endif %}
+    <div class="list decision_actionitem">
 
-  <ol class="feedback_list">
-{% for feedback in object.feedback_set.all %}
-{% include "feedback_detail_snippet.html" with object=feedback %}
-{% empty %}
-	<li class="no_feedback">{% trans "No feedback yet." %}</li>
-{% endfor %}
-  </ol>
+        <ol class="actionitem_list">
+            {% for actionitem in actionitems %}
+            {% include "actionitem_detail_snippet.html" with object=actionitem %}
+            {% empty %}
+                <li class="no_actionitem">{% trans "No action items." %}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+<div class="envelope">
+    <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
+    {% if "edit_decisions_feedback" in organization_permissions %}
+    <div class="add_anchor" id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
+    {% endif %}
+    <div class="list decision_feedback">
+        <ol class="feedback_list">
+            {% for feedback in object.feedback_set.all %}
+            {% include "feedback_detail_snippet.html" with object=feedback %}
+            {% empty %}
+            <li class="no_feedback">{% trans "No feedback yet." %}</li>
+            {% endfor %}
+        </ol>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
