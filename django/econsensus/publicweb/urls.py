@@ -10,7 +10,7 @@ from views import (DecisionCreate, DecisionUpdate, DecisionDetail, DecisionList,
 from models import Feedback
 
 urlpatterns = patterns('econsensus.publicweb.views',
-    url(r'^your_details/$',
+    url(r'^settings/your_details/$',
         YourDetails.as_view(),
         name='your_details'),
     url(r'^settings/notification_settings/(?P<organization>[\d]+)/$',
