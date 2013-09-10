@@ -14,7 +14,7 @@ from dbsettings.models import Root
 from django.http import HttpResponseRedirect
 
 def get_organization(**kwargs):
-    return OrganizationFactory.build(id=2)
+    return OrganizationFactory.build(**kwargs)
         
 class SettingsTest(SimpleTestCase):
     def test_notification_settings_have_user_field(self):
@@ -77,15 +77,6 @@ class SettingsTest(SimpleTestCase):
         notification_settings_view = UserNotificationSettings()
         self.assertEqual(reverse('organization_list'), 
              notification_settings_view.get_success_url())
-    
-    def test_user_notification_settings_view_context_contains_organisation(self):
-        notification_settings_view = UserNotificationSettings()
-        
-        notification_settings_view.object = MagicMock(spec=NotificationSettings)
-        notification_settings_view.organization = get_organization()
-        context = notification_settings_view.get_context_data()
-        self.assertIn('organization', context)
-        self.assertTrue(context['organization'])
         
     def test_user_notification_settings_view_uses_user_notification_settings_form(self):
         notification_settings_view = UserNotificationSettings()
@@ -127,7 +118,7 @@ class SettingsTest(SimpleTestCase):
         notification_settings_view = UserNotificationSettings()
         
         user = UserFactory.build(id=1)
-        organization = get_organization()
+        organization = get_organization(id=2)
         
         organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization
@@ -175,7 +166,7 @@ class SettingsTest(SimpleTestCase):
         notification_settings_view = UserNotificationSettings()
         
         user = UserFactory.build(id=1)
-        organization = get_organization()
+        organization = get_organization(id=2)
         
         organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization
@@ -223,7 +214,7 @@ class SettingsTest(SimpleTestCase):
         notification_settings_view = UserNotificationSettings()
         
         user = UserFactory.build(id=1)
-        organization = get_organization()
+        organization = get_organization(id=2)
         
         notification_settings_instance = MagicMock(spec=NotificationSettings)
         
@@ -257,7 +248,7 @@ class SettingsTest(SimpleTestCase):
         notification_settings_view = UserNotificationSettings()
         
         user = UserFactory.build(id=1)
-        organization = get_organization()
+        organization = get_organization(id=2)
         
         organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization

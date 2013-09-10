@@ -757,12 +757,7 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView, SingleObjectTemp
             the_object = self.model(
                 organization=organization, user=self.request.user)
         
-        return the_object 
-    
-    def get_context_data(self, **kwargs):
-        context = super(UserNotificationSettings, self).get_context_data(**kwargs)
-        context['organization'] = self.object.organization
-        return context
+        return the_object
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
