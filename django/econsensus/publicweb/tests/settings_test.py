@@ -1,14 +1,12 @@
 from django.test.testcases import SimpleTestCase
-from publicweb.models import NotificationSettings, OrganizationSettings,\
-    NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY
+from publicweb.models import (NotificationSettings, OrganizationSettings,\
+    NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY)
 from django.contrib.auth.models import User, AnonymousUser
 from organizations.models import Organization
 from django.db.models.fields.related import OneToOneField
-from publicweb.tests.factories import NotificationSettingsFactory, UserFactory,\
-    OrganizationFactory
-from mock import Mock, patch, MagicMock
+from publicweb.tests.factories import UserFactory, OrganizationFactory
+from mock import patch, MagicMock
 from django.test.client import RequestFactory
-from notification.models import ObservedItem
 from publicweb.views import UserNotificationSettings
 from publicweb.forms import NotificationSettingsForm
 from django.core.urlresolvers import reverse
@@ -54,14 +52,14 @@ class SettingsTest(SimpleTestCase):
     
     def test_user_notification_settings_view_uses_a_form(self):
         notification_settings_view = UserNotificationSettings()
-        notification_settings_view.object = Mock(spec=NotificationSettings)
+        notification_settings_view.object = MagicMock(spec=NotificationSettings)
         notification_settings_view.object._meta.fields = []
         notification_settings_view.object._meta.many_to_many = []
         
         user = UserFactory.build(id=1)
-        organization = OrganizationFactory.build(id=2)
+        organization = get_organization()
         
-        organization_objects = Mock(Organization.objects)
+        organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization
         organization_objects.filter = get_organization
         
@@ -91,12 +89,12 @@ class SettingsTest(SimpleTestCase):
         
     def test_user_notification_settings_view_uses_user_notification_settings_form(self):
         notification_settings_view = UserNotificationSettings()
-        notification_settings_view.object = Mock(spec=NotificationSettings)
+        notification_settings_view.object = MagicMock(spec=NotificationSettings)
         
         user = UserFactory.build(id=1)
-        organization = OrganizationFactory.build(id=2)
+        organization = get_organization()
         
-        organization_objects = Mock(Organization.objects)
+        organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization
         organization_objects.filter = get_organization
         
@@ -116,7 +114,7 @@ class SettingsTest(SimpleTestCase):
         
         user = AnonymousUser()
         
-        organization = OrganizationFactory.build(id=2)
+        organization = get_organization()
         
         request.user = user
         
@@ -179,7 +177,7 @@ class SettingsTest(SimpleTestCase):
         user = UserFactory.build(id=1)
         organization = get_organization()
         
-        organization_objects = Mock(Organization.objects)
+        organization_objects = MagicMock(Organization.objects)
         organization_objects.get = get_organization
         organization_objects.filter = get_organization
         
@@ -193,7 +191,7 @@ class SettingsTest(SimpleTestCase):
         def get_settings(**kwargs):
             return notification_settings
         
-        notification_settings_objects = Mock(NotificationSettings.objects)
+        notification_settings_objects = MagicMock(NotificationSettings.objects)
         notification_settings_objects.get = get_settings
         
         request = RequestFactory().post(
