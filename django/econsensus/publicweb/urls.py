@@ -3,15 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 
 from views import (DecisionCreate, DecisionUpdate, DecisionDetail, DecisionList,
-                    ExportCSV, FeedbackCreate, FeedbackSnippetCreate, FeedbackUpdate,
-                    EconsensusActionitemCreateView, EconsensusActionitemUpdateView,
+                    ExportCSV, FeedbackCreate, FeedbackSnippetCreate, 
+                    FeedbackUpdate, EconsensusActionitemCreateView, 
+                    EconsensusActionitemUpdateView,
                     EconsensusActionitemListView, OrganizationRedirectView,
-                    YourDetails, UserNotificationSettings)
-
-from actionitems.views import ActionItemUpdateView
+                    YourDetails, UserNotificationSettings, 
+                    EconsensusActionitemDetailView)
 
 from models import Feedback
-from publicweb.views import EconsensusActionitemDetailView
+ 
 
 urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^user_settings/your_details/$',
@@ -38,7 +38,8 @@ urlpatterns = patterns('econsensus.publicweb.views',
         name='publicweb_feedback_detail'),
     #snippets
     url(r'^feedback/create/snippet/(?P<parent_pk>[\d]+)/$', 
-        FeedbackSnippetCreate.as_view(template_name = 'feedback_update_snippet.html'),
+        FeedbackSnippetCreate.as_view(
+        template_name='feedback_update_snippet.html'),
         name='publicweb_feedback_snippet_create'),
     url(r'^feedback/update/snippet/(?P<pk>[\d]+)/$', 
         FeedbackUpdate.as_view(template_name = 'feedback_update_snippet.html'),
@@ -85,7 +86,7 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)/$',
         EconsensusActionitemDetailView.as_view(), 
         name='actionitem_detail'),                   
-    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)/update/$', 
+    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)/update/$',
         EconsensusActionitemUpdateView.as_view(), 
         name='actionitem_update'),
     url(r'^(?P<org_slug>[-\w]+)/actionitem/list/$',
