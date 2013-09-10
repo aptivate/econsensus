@@ -17,7 +17,12 @@ django-keyedcache==1.4-6
 django-registration==1.0
 -e ../django/django-organizations
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
+git+git://github.com/birdsarah/django-actionitems.git
 django-guardian==1.1.1
 factory-boy==2.1.1
 MiniMock==1.2.8
 django-remember_me
+selenium==2.34.0
+django-dynamic-fixture==1.6.5
+django-selenium==0.9.6
+django-parsley==0.0.2a0
