@@ -6,14 +6,24 @@ from views import DecisionCreate, DecisionUpdate, \
                     DecisionDetail, DecisionList, \
                     ExportCSV, FeedbackCreate, \
                     FeedbackSnippetCreate, FeedbackUpdate, \
-                    OrganizationRedirectView, YourDetails
+                    EconsensusActionitemCreateView, EconsensusActionitemUpdateView, \
+                    EconsensusActionitemListView, OrganizationRedirectView, \
+                    YourDetails
+
+from actionitems.views import ActionItemUpdateView
 
 from models import Feedback
+from publicweb.views import EconsensusActionitemDetailView
 
 urlpatterns = patterns('econsensus.publicweb.views',
+                       
     url(r'^your_details/$',
         YourDetails.as_view(),
         name='your_details'),
+
+    url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
+        ExportCSV.as_view(),
+        name='publicweb_export_csv'),
                        
     #Feedback urls...
     url(r'^feedback/create/(?P<parent_pk>[\d]+)/$', 
@@ -50,9 +60,6 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^decision/detail/(?P<pk>[\d]+)/$',
         DecisionDetail.as_view(template_name = 'decision_detail_page.html'),
         name='publicweb_decision_detail'),
-    url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
-        ExportCSV.as_view(),
-        name='publicweb_export_csv'),
     #snippets    
     url(r'^(?P<org_slug>[-\w]+)/decision/create/snippet/(?P<status>[a-z]+)/$',
         DecisionCreate.as_view(template_name = 'decision_update_snippet.html'),
@@ -71,6 +78,20 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^(?P<org_slug>[-\w]+)/item/list/(?P<status>[a-z]+)/$',
         DecisionList.as_view(template_name='decision_list.html'),
         name='publicweb_item_list'),
+
+    #actionitem urls
+    url(r'^item/detail/(?P<pk>[\d]+)/actionitem/add/$', 
+        EconsensusActionitemCreateView.as_view(), 
+        name='actionitem_create'),
+    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)/$',
+        EconsensusActionitemDetailView.as_view(), 
+        name='actionitem_detail'),                   
+    url(r'^item/detail/(?P<decisionpk>[\d]+)/actionitem/(?P<pk>[\d]+)/update/$', 
+        EconsensusActionitemUpdateView.as_view(), 
+        name='actionitem_update'),
+    url(r'^(?P<org_slug>[-\w]+)/actionitem/list/$',
+        EconsensusActionitemListView.as_view(), 
+        name='actionitem_list'),
     url(r'^$', 
         OrganizationRedirectView.as_view(),
         name='publicweb_root'),

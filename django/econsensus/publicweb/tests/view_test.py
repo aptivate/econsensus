@@ -63,6 +63,7 @@ class TestDecisionDetailView(TestCase):
         manual_status = 'i set the status'
         decision = Decision(status=manual_status, organization=Organization())
         dd.object = decision
+        dd.kwargs = {'pk': decision.id}
         context = dd.get_context_data()
         self.assertIn('tab', context.keys())
         self.assertEqual(context['tab'], manual_status)
