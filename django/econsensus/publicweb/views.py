@@ -521,7 +521,8 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView, SingleObjectTemp
         return reverse('organization_list')
     
     def get_object(self):
-        organization = Organization.objects.get(pk=self.kwargs['organization'])
+        org_id = self.kwargs['organization']
+        organization = Organization.objects.get(pk=org_id)
         
         try:
             the_object = self.model.objects.get(
@@ -531,6 +532,11 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView, SingleObjectTemp
                 organization=organization, user=self.request.user)
         
         return the_object 
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserNotificationSettings, self).get_context_data(**kwargs)
+        context['organization'] = self.object.organization
+        return context
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

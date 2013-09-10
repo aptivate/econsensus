@@ -80,6 +80,15 @@ class SettingsTest(SimpleTestCase):
         self.assertEqual(reverse('organization_list'), 
              notification_settings_view.get_success_url())
     
+    def test_user_notification_settings_view_context_contains_organisation(self):
+        notification_settings_view = UserNotificationSettings()
+        
+        notification_settings_view.object = MagicMock(spec=NotificationSettings)
+        notification_settings_view.organization = get_organization()
+        context = notification_settings_view.get_context_data()
+        self.assertIn('organization', context)
+        self.assertTrue(context['organization'])
+        
     def test_user_notification_settings_view_uses_user_notification_settings_form(self):
         notification_settings_view = UserNotificationSettings()
         notification_settings_view.object = Mock(spec=NotificationSettings)
