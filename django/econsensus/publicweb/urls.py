@@ -14,10 +14,10 @@ from models import Feedback
 from publicweb.views import EconsensusActionitemDetailView
 
 urlpatterns = patterns('econsensus.publicweb.views',
-    url(r'^settings/your_details/$',
+    url(r'^user_settings/your_details/$',
         YourDetails.as_view(),
         name='your_details'),
-    url(r'^settings/notification_settings/(?P<organization>[\d]+)/$',
+    url(r'^user_settings/notification_settings/(?P<organization>[\d]+)/$',
         UserNotificationSettings.as_view(), name='notification_settings'),
 
     url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
