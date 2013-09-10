@@ -107,7 +107,7 @@
 
 		var decision_update_form_parent = "#content";
 		// Override redirect to view and put it inline
-		$(decision_update_form_parent).on("click", '#decision_update_form input[value="Save"]', function (e) {
+		$(decision_update_form_parent).on("click", '#decision_update_form .decision_save', function (e) {
 			if($('#decision_update_form').parsley('validate')) {
 			 updateAndReplace("{% url 'publicweb_decision_update' object.id %}",
 					"{% url 'publicweb_decision_snippet_detail' object.id %}",
@@ -116,7 +116,7 @@
 			e.preventDefault();
 		});
 
-        $(decision_update_form_parent).on("click", '#decision_update_form input[value="Cancel"]', function (e) {
+        $(decision_update_form_parent).on("click", '#decision_update_form .decision_cancel', function (e) {
             e.stopPropagation();
             replaceWithRemote("{% url 'publicweb_decision_snippet_detail' object.id %}", 
                                 "#decision_update_form");
@@ -217,7 +217,7 @@
 	
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
-		$(feedback_form_parent).on("click", "input[value=\"Cancel\"]", function (e) {
+		$(feedback_form_parent).on("click", ".feedback_cancel", function (e) {
 			e.stopPropagation();e.preventDefault();
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
@@ -260,7 +260,7 @@
 	
 		// Handle cancel manually, because it doesn't get submitted with
 		// javascript submission
-		$(feedback_form_parent).on("click", 'input[value="Cancel"]', function (e) {
+		$(feedback_form_parent).on("click", '.feedback_cancel', function (e) {
 			e.stopPropagation();e.preventDefault();
 			$("#feedback_add_anchor form").replaceWith(feedback_button);
 		});
@@ -291,13 +291,13 @@
 				object_id = wrapper.parent().attr("id").slice(2),
 				snippet_update_url = snippet_update_url_template.replace('0', object_id);
 	
-			$('.feedback_list input[value="Cancel"]').click(); // Close open feedback first
+			$('.feedback_list .feedback_cancel').click(); // Close open feedback first
 			replaceWithRemote(snippet_update_url, wrapper);
 			e.preventDefault();
 		});
 	
 		// Override redirect to view and put it inline
-        $(".feedback_list").on("click", '.feedback_form input[value="Cancel"]', function (e) {
+        $(".feedback_list").on("click", '.feedback_form .feedback_cancel', function (e) {
             e.stopPropagation();
             e.preventDefault();
 			var feedback_form = $(this).parents('.feedback_form');
