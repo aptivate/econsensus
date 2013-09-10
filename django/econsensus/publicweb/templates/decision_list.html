@@ -95,7 +95,9 @@
 		    	{% elif tab  == "archived" %}
 			    <p class="no_items">{% trans "There are no archived items" %}.<p>		    	
 		    	{% elif tab  == "discussion" %}
-			    <p class="no_items">{% trans "There are no discussion items" %}.<p>    	
+			    <p class="no_items">{% trans "There are no discussion items" %}.<p>	
+			    {% elif tab  == "actionitem" %}
+                <p class="no_items">{% trans "There are no action items" %}.<p> 
 		    	{% else %}
 			    <p class="no_items">{% trans "There are no decisions made" %}.<p>
 			    {% endif %}
