@@ -171,6 +171,7 @@ class ActionitemsViewTest(DecisionTestCase):
         ) # The decisionpk is what django-guardian checks for
         assert response.status_code == 403
         decision.delete()
+        actionitem.delete()
 
     def test_list_login(self):
         get_request = RequestFactory().get('/')
