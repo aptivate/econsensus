@@ -1,6 +1,6 @@
 fabric==1.4
 virtualenv
--e git+git://github.com/aptivate/dye.git@0681a70d2ee4e8134a43c9a11a31901be0db58ce#egg=dye
+-e git+git://github.com/aptivate/dye.git@4140dd35aefc286a01c1b90259c8c4d79bbaf4ac#egg=dye
 Django==1.4.5
 mysql-python==1.2.3
 django-tinymce==1.5.1a2
