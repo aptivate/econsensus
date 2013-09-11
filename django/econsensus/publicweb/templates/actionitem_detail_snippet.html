@@ -1,5 +1,7 @@
 {% load url from future %}
 {% load i18n %}
+{% load guardian_tags %}
+{% get_obj_perms request.user for object.origin.organization as "organization_permissions" %}
 <li id="act_id_{{ actionitem.id }}">
     <div class="actionitem_feedback_wrapper">
 	    {% if actionitem.done %}<del>{% endif %}
@@ -9,6 +11,8 @@
 	        {% else %}{% trans "No deadline" %}
 	        {% endif %}
 	    {% if actionitem.done %}</del>{% endif %} <br />
+	    {% if "edit_decisions_feedback" in organization_permissions %}
 	    <a class="edit actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
+	    {% endif %}
     </div>
 </li>
