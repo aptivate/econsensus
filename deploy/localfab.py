@@ -12,7 +12,7 @@ def deploy(revision=None, keep=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('vcs_root_dir', provided_by=env.valid_envs)
     fablib.check_for_local_changes()
-    fablib.link_webserver_conf(unlink=True)
+    fablib.link_webserver_conf(maintenance=True)
     with settings(warn_only=True):
         fablib.webserver_cmd('reload')
     if not files.exists(env.vcs_root_dir):
