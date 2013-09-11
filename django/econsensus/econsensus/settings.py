@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
+    'south',
     'registration',
     'notification',
     'custom_comments',
@@ -142,9 +143,12 @@ INSTALLED_APPS = (
     'publicweb',
     'signals',
     'tinymce',
-    'south',
     'tagging',
+    'remember_me',
+    'actionitems',
 )
+
+ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -211,6 +215,9 @@ LOGGING = {
     }
 }
 
+# Set this to true to log emails marked as auto-replies. Default is False
+LOG_AUTO_REPLIES = True
+ 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -239,10 +246,10 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
+TEST_RUNNER = 'test_runner.DiscoveryRunner' 
+ 
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
-
-TEST_RUNNER = 'test_runner.DiscoveryRunner'
 
 #--------------------------------
 # local settings import
