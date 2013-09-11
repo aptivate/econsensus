@@ -275,17 +275,15 @@ class Feedback(models.Model):
 # The indexes are numeric because the notification levels are cumulative
 # This enables us to do if notification_level >= number
 NO_NOTIFICATIONS = 0
-NO_NOTIFICATIONS_TEXT = _("No email notifications")
+NO_NOTIFICATIONS_TEXT = _("1. Silent")
 MAIN_ITEMS_NOTIFICATIONS_ONLY = 1
-MAIN_ITEMS_NOTIFICATIONS_ONLY_TEXT = _("Creation and status changes of main "
-   "items")
+MAIN_ITEMS_NOTIFICATIONS_ONLY_TEXT = _("2. Major events")
 FEEDBACK_ADDED_NOTIFICATIONS = 2
-FEEDBACK_ADDED_NOTIFICATIONS_TEXT = _("Changes of main items and creation of "
-                                      "feedback")
+FEEDBACK_ADDED_NOTIFICATIONS_TEXT = _("3. Feedback and changes")
 FEEDBACK_MAJOR_CHANGES = 3
-FEEDBACK_MAJOR_CHANGES_TEXT = _("Major changes and replies to feedback")
+FEEDBACK_MAJOR_CHANGES_TEXT = _("4. Full discussion")
 MINOR_CHANGES_NOTIFICATIONS = 4
-MINOR_CHANGES_NOTIFICATIONS_TEXT = _("Minor changes")
+MINOR_CHANGES_NOTIFICATIONS_TEXT = _("5. Everything, even minor changes")
 NOTIFICATION_LEVELS = (
           (NO_NOTIFICATIONS, NO_NOTIFICATIONS_TEXT),
           (MAIN_ITEMS_NOTIFICATIONS_ONLY, MAIN_ITEMS_NOTIFICATIONS_ONLY_TEXT),

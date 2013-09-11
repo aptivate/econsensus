@@ -1347,12 +1347,36 @@ ul.errorlist, .parsley-error-list {
 	overflow: auto;
 	border: 3px solid #797676;
 	border-radius: 20px;
+	padding: 10px;
 }
 
 .notification_form > .meta.controls {
 	display: block;
 	float: left;
 	padding: 10px 3%;
+}
+
+.notification_form > div > h4 {
+	font-weight: bold;
+	margin-top: 20px;
+}
+
+.glossary {
+	display: block;
+	clear: both;
+}
+
+.glossary > p {
+	margin: 10px 0;
+}
+
+.options_list dt {
+	margin: 10px 0;
+	font-weight: bold;
+}
+
+.form {
+	display: block;
 }
 
 /* 404 Page Styling */
