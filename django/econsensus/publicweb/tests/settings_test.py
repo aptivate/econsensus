@@ -191,22 +191,21 @@ class SettingsTest(SimpleTestCase):
         self.assertTrue(response.context_data['form'].errors)
     
     @patch('publicweb.views.Root.objects', spec=Root.objects)
-    def test_form_valid_method_creates_a_root_object(self, root):
+    def test_form_creates_a_root_object_when_saving_new_item(self, root):
         """
         For some reason, settings classes need a "root_id". 
-        This should be added in the form valid method, if it doesn't already
-        exist 
+        This should be added when the model is saved, if it doesn't already 
+        exist
         """
-        
         user = UserFactory.build(id=1)
         organization = create_fake_organization(id=2)
-        
+               
         notification_settings_instance = MagicMock(
                 spec=NotificationSettings,
                 organisation=organization,
                 user=user,
                 root_id=None,
-                meta = MagicMock(fields=[], many_to_many=[])
+                meta=MagicMock(fields=[], many_to_many=[])
         )
         
         notification_settings_form = NotificationSettingsForm(
@@ -214,15 +213,7 @@ class SettingsTest(SimpleTestCase):
                 instance=notification_settings_instance
         )
         
-        request = RequestFactory().post(
-            reverse('notification_settings', args=[organization.id])
-        )
-        
-        request.user = user
-        
-        notification_settings_view = UserNotificationSettings()
-        notification_settings_view.request = request    
-        notification_settings_view.form_valid(notification_settings_form)
+        notification_settings_form.save(False)
         
         self.assertTrue(root.create.called)
     

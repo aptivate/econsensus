@@ -15,6 +15,7 @@ from publicweb.models import NotificationSettings
 
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
+from dbsettings.models import Root
 
 
 class YourDetailsForm(forms.ModelForm):
@@ -79,6 +80,13 @@ class FilterForm(forms.Form):
                          widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
 
 class NotificationSettingsForm(forms.ModelForm):
+    
+    def save(self, commit=True):
+        the_settings = self.instance
+        if not the_settings.root_id:
+            the_settings.root = Root.objects.create()
+        return super(NotificationSettingsForm, self).save(commit)
+        
     class Meta:
         model = NotificationSettings
         exclude = ('user', 'organization')

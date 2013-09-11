@@ -773,11 +773,3 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView, SingleObjectTemp
         if self.request.POST.get('submit', None) == _("Cancel"):
             return HttpResponseRedirect(self.get_success_url())
         return super(UserNotificationSettings, self).post(request, *args, **kwargs)
-        
-    def form_valid(self, form):
-        notification_settings = form.instance
-        
-        if not notification_settings.root_id:
-            notification_settings.root = Root.objects.create()
-        
-        return super(UserNotificationSettings, self).form_valid(form)
