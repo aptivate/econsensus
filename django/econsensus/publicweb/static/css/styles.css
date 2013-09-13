@@ -973,7 +973,7 @@ p.title {
 
 .update-controls {
 	float: right;
-	clear: right;
+	clear: both;
 	padding-bottom:6px;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
