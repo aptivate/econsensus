@@ -15,6 +15,11 @@ from django.utils import timezone
 from livesettings import config_value
 from publicweb.models import Decision, Feedback
 from organizations.models import Organization
+from django.conf import settings
+
+def is_autoreply(mail):
+    return 'Precedence' in mail and (mail['Precedence'] == "bulk" or 
+         mail['Precedence'] == "auto_reply")
 
 class Command(BaseCommand):
     args = ''
@@ -49,8 +54,16 @@ class Command(BaseCommand):
         if all_msgs:
             self._print_if_verbose(verbosity, "Processing contents of mailbox.")  
             for i in all_msgs:
-                msg = mailbox.retr(i)[1]
-                mail = message_from_string("\n".join(msg))
+                msg = "\n".join(mailbox.retr(i)[1])
+                mail = message_from_string(msg) 
+
+                if is_autoreply(mail):
+                    log_auto_replies = getattr(settings, 'LOG_AUTO_REPLIES', 
+                      False)
+                    if log_auto_replies:
+                        logger.info(msg)
+                    continue
+                
                 try:
                     self._process_email(mail, verbosity)
                 except Exception as e:

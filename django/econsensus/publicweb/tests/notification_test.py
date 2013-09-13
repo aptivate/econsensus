@@ -1,16 +1,21 @@
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
-from guardian.shortcuts import assign
+from notification import models as notification
+from guardian.shortcuts import assign_perm
 from organizations.models import Organization
 
 from publicweb.models import Decision
 from decision_test_case import DecisionTestCase
 from django.utils import timezone
+
+from publicweb.tests.factories import DecisionFactory, UserFactory, \
+        FeedbackFactory
 
 class NotificationTest(DecisionTestCase):
     """
@@ -30,24 +35,24 @@ class NotificationTest(DecisionTestCase):
     def get_addresses_from_queryset(self, queryset):
         return_list = list()
         for this in queryset:
-            return_list.append(this.email)        
+            return_list.append(this.email)
         return return_list
-        
+
     def test_send_locmem_email(self):
         """
         Tests that django can send an email through the locmem backend
         """
-        
+
         settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
         msg = EmailMessage('X', 'Y', 'a@b.c', ['x@y.z'])
         msg.send()
-        
+
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
-        
+
         self.assertEqual(msg, outbox[0])
-                
+
     def test_create_triggers_notification(self):
         #add a decision
         decision = self.make_decision()
@@ -78,7 +83,7 @@ class NotificationTest(DecisionTestCase):
     def test_changing_new_decisions_org_correct_email_content(self):
         """
         Check that the notification emails states that the Decision
-        has changed, not its status (altering Decision via admin 
+        has changed, not its status (altering Decision via admin
         screens now sets last_status=status as for user screens).
         """
         orig_org = self.bettysorg
@@ -100,13 +105,13 @@ class NotificationTest(DecisionTestCase):
 
     def test_changing_decisions_org_alters_watchers(self):
         """
-        If a Decision's Organization is changed, ensure that members of the 
-        orig Organization no longer get email notifications about it. 
-        Check that all current members of the new Organization do get notified 
-        appropriately upon changes to the Decision, its Feedbacks, and all of 
+        If a Decision's Organization is changed, ensure that members of the
+        orig Organization no longer get email notifications about it.
+        Check that all current members of the new Organization do get notified
+        appropriately upon changes to the Decision, its Feedbacks, and all of
         their Comments.
-        To avoid hiding bugs in who gets what notification, use a different 
-        user per action (some actions only prompt notification to the 
+        To avoid hiding bugs in who gets what notification, use a different
+        user per action (some actions only prompt notification to the
         author)
         """
         orig_org = self.bettysorg
@@ -123,19 +128,19 @@ class NotificationTest(DecisionTestCase):
         for user in orig_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertFalse(new_org.is_member(user))
-            assign('edit_decisions_feedback', user, orig_org)
+            assign_perm('edit_decisions_feedback', user, orig_org)
         for user in new_org_members.values():
             self.assertTrue(orig_org.is_member(user))
             self.assertTrue(new_org.is_member(user))
-            assign('edit_decisions_feedback', user, new_org)
+            assign_perm('edit_decisions_feedback', user, new_org)
 
         # Make a decision under original org and edit it in various
-        # ways using various users 
+        # ways using various users
         self.login(orig_org_members['nobbie'])
         decision = self.make_decision(organization=orig_org)
         self.login(orig_org_members['ollie'])
         self.update_decision_through_browser(
-            decision.id, 
+            decision.id,
             description=decision.description + ' updated')
         self.login(orig_org_members['pollie'])
         feedback = self.make_feedback(decision=decision)
@@ -146,12 +151,12 @@ class NotificationTest(DecisionTestCase):
         self.login(orig_org_members['robbie'])
         comment = self.make_comment(
             object_pk=feedback.id,
-            content_type=ContentType.objects.get(name='feedback')) 
+            content_type=ContentType.objects.get(name='feedback'))
         mail.outbox = []
 
         # Move the decision to the new org
         # TODO: we should send a special notification to the original
-        # org users telling them of the move (see 
+        # org users telling them of the move (see
         # https://aptivate.kanbantool.com/boards/5986-econsensus#tasks-1533249)
         self.change_organization_via_admin_screens(decision, new_org)
         outbox = getattr(mail, 'outbox')
@@ -159,11 +164,11 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
         mail.outbox = []
 
-        # Edit the decision in various ways using various users of the 
-        # new organization 
+        # Edit the decision in various ways using various users of the
+        # new organization
         self.login(new_org_members['andy'])
         self.update_decision_through_browser(
-            decision.id, 
+            decision.id,
             description=decision.description + ' updated again')
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), new_org_members_count)
@@ -172,14 +177,14 @@ class NotificationTest(DecisionTestCase):
 
         self.login(new_org_members['betty'])
         self.update_feedback_through_browser(
-            feedback.id, 
+            feedback.id,
             description=feedback.description+' updated again')
         outbox = getattr(mail, 'outbox')
         self.assertEqual(len(outbox), new_org_members_count)
         self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
         mail.outbox = []
 
-        # Can't edit Comments via screens yet, but lets check that 
+        # Can't edit Comments via screens yet, but lets check that
         # we've future proofed for this
         self.login(new_org_members['charlie'])
         comment.comment += ' updated'
@@ -192,7 +197,7 @@ class NotificationTest(DecisionTestCase):
         self.login(new_org_members['debbie'])
         feedback_2 = self.make_feedback(decision=decision)
         outbox = getattr(mail, 'outbox')
-        # New feedback prompts notifications to all watchers of decision minus 
+        # New feedback prompts notifications to all watchers of decision minus
         # the feedback author
         self.assertEqual(len(outbox), new_org_members_count - 1)
         self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
@@ -201,41 +206,41 @@ class NotificationTest(DecisionTestCase):
         self.login(new_org_members['ernie'])
         comment_2 = self.make_comment(
             object_pk=feedback.id,
-            content_type=ContentType.objects.get(name='feedback')) 
+            content_type=ContentType.objects.get(name='feedback'))
         outbox = getattr(mail, 'outbox')
-        # New comment prompts notification to all watchers of decision minus 
+        # New comment prompts notification to all watchers of decision minus
         # the comment author
         self.assertEqual(len(outbox), new_org_members_count - 1)
         self.assertTrue(self.no_emails_to_orig_org_users(outbox, orig_org_user_email_set))
-        
+
     def test_notifications_dont_contain_amp(self):
         """
         We want to verify that the notifications sent out do not contain
         confusing text like '&amp' instead of '&' or ''&lt'
         instead of '<'
-        
+
         All plaintext emails should be marked 'safe' in the Django template.
         """
         self.make_decision(description='&', author=self.user, editor=self.user)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
-                
+
         self.assertNotIn('&amp', outbox[0].subject)
         self.assertNotIn('&amp', outbox[0].body)
-        
+
     def test_notifications_not_sent_to_author(self):
         """
-        We want to make sure that when a user creates or changes an 
+        We want to make sure that when a user creates or changes an
         item they are not sent a notification. The message goes to those
         that do not already know the item has changed!
-        """        
+        """
         self.create_decision_through_browser()
 
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
         self.assertNotIn(self.user, self.get_addresses_from_outbox(outbox))
-        
+
     def test_emails_not_sent_to_inactive_users(self):
         self.charlie.is_active = False
         self.charlie.save()
@@ -252,7 +257,7 @@ class NotificationTest(DecisionTestCase):
         """
         org = self.bettysorg
         decision = self.make_decision(organization=org)
-        mail.outbox = []        
+        mail.outbox = []
         all_members = decision.organization.users.all().exclude(username=self.user.username)
         self.login(all_members[0].username)
         self.create_feedback_through_browser(decision.id)
@@ -273,18 +278,18 @@ class NotificationTest(DecisionTestCase):
         mail.outbox = []
         feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
         comment = self.make_comment(user=self.user,
-                                    content_object=feedback, 
+                                    content_object=feedback,
                                     object_pk=feedback.id,
                                     content_type=feedback_type,
                                     submit_date = timezone.now(),
                                     site = Site.objects.get_current())
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        all_members = comment.content_object.decision.organization.users.exclude(username=self.user).exclude(is_active=False) 
+        all_members = comment.content_object.decision.organization.users.exclude(username=self.user).exclude(is_active=False)
         user_list = [user_object.email for user_object in all_members]
         self.assertNotIn(self.user.email, outbox_to)
         self.assertItemsEqual(user_list, outbox_to)
-        
+
     def test_changed_feedback_notification(self):
         """
         When feedback is changed only the original author of the feedback
@@ -294,19 +299,19 @@ class NotificationTest(DecisionTestCase):
         decision = self.create_decision_through_browser()
         # Charlie adds feedback to it
         self.login('charlie')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
         feedback = self.create_feedback_through_browser(decision.id)
         mail.outbox = []
         # Betty changes the feedback...
         self.login('betty')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
         self.update_feedback_through_browser(feedback.id)
         # Check email
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
         user_list = [self.charlie.email]
         self.assertItemsEqual(user_list, outbox_to)
-        
+
     def test_emails_come_from_organization(self):
         users_orgs = Organization.active.get_for_user(self.user)
         self.assertGreaterEqual(len(users_orgs), 2)
@@ -339,7 +344,7 @@ class NotificationTest(DecisionTestCase):
         comment = self.make_comment(user=self.charlie,
             content_object = feedback,
             object_pk = feedback.id,
-            content_type = feedback_type) 
+            content_type = feedback_type)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
@@ -356,7 +361,7 @@ class NotificationTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, decision.get_email())
-        
+
     def test_emails_contain_extra_header_info(self):
         users_orgs = Organization.active.get_for_user(self.user)
         self.assertGreaterEqual(len(users_orgs), 2)
@@ -381,12 +386,67 @@ class NotificationTest(DecisionTestCase):
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
         mail.outbox = []
-        
+
         self.login('charlie')
-        assign('edit_decisions_feedback', self.user, self.bettysorg)        
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
         feedback = self.update_feedback_through_browser(feedback.id)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
+
+class DecisionNotificationTest(TestCase):
+    def setUp(self):
+        user = UserFactory()
+        self.decision = DecisionFactory(author=user, description="Eat Cheese")
+        watcher = UserFactory(email="bob@bobbins.org")
+        notification.observe(self.decision, watcher, 'decision_change')
+
+    def test_edit_triggers_email(self):
+        mail.outbox = []
+        self.decision.description = "Make Cheese"
+        self.decision.save()
+        self.assertGreater(len(mail.outbox), 0)
+
+    def test_minor_edit_triggers_no_email(self):
+        mail.outbox = []
+        self.decision.description = "Eat Cheese!"
+        self.decision.minor_edit = True
+        self.decision.save()
+        self.assertEqual(len(mail.outbox), 0)
+
+class FeedbackNotificationTest(TestCase):
+    def setUp(self):
+        mail.outbox = []
+        self.user = UserFactory(email="bob@bobbins.org")
+        decision = DecisionFactory(author=self.user)
+        feedbackAuthor = UserFactory(email="rob@bobbins.org")
+        self.feedback = FeedbackFactory(decision=decision,
+                                        description="Not so fast",
+                                        author=feedbackAuthor,
+                                        editor=feedbackAuthor)
+
+    def test_edit_triggers_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not so slow"
+        self.feedback.save()
+        self.assertGreater(len(mail.outbox), 0)
+
+    def test_minor_edit_triggers_no_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not too fast"
+        self.feedback.minor_edit = True
+        self.feedback.save()
+        self.assertEqual(len(mail.outbox), 0)
+
+    # It is an arguable point whether this logic should be in the UI
+    # or the back end. However, whilst it's in the latter, we'll have a
+    # test for it here.
+    def test_minor_edit_by_non_author_triggers_email(self):
+        mail.outbox = []
+        self.feedback.description = "Not so quick"
+        self.feedback.minor_edit = True
+        self.feedback.editor = UserFactory(email="hob@bobbins.org")
+        self.feedback.save()
+        self.assertGreater(len(mail.outbox), 0)

@@ -1,6 +1,6 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from guardian.shortcuts import remove_perm
 
@@ -12,13 +12,16 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserUpdate,\
                                 OrganizationUserDelete,\
                                 OrganizationUserRemind,\
-                                OrganizationUserList
+                                OrganizationUserList, BaseOrganizationUserDelete
 from organizations.mixins import AdminRequiredMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationAddForm,\
                                     CustomOrganizationUserForm,\
                                     CustomOrganizationUserAddForm
+from django.http import Http404
+from organizations.models import Organization
+from publicweb.models import Feedback
 
 
 class CustomOrganizationCreate(OrganizationCreate):
@@ -64,11 +67,46 @@ class CustomOrganizationUserCreate(OrganizationUserCreate):
     form_class = CustomOrganizationUserAddForm
 
 # Delete unused permissions!
-class CustomOrganizationUserDelete(OrganizationUserDelete):
+# And remove them as watchers on decisions for that organisation.
+class CustomOrganizationUserDelete(BaseOrganizationUserDelete):
+    def _is_admin(self, request, organization_pk):
+        organization = get_object_or_404(Organization, pk=organization_pk)
+        return organization.is_admin(request.user) or request.user.is_superuser
+                    
+    def _is_current_user(self, request, user_pk):
+        """
+        Checks the user being accessed is the one currently logged in
+        """
+        return request.user.id == int(user_pk)
+            
+    def dispatch(self, request, *args, **kwargs):
+        organization_pk = kwargs.get('organization_pk', None)
+        user_pk = kwargs.get('user_pk', None)
+        if not self._is_admin(request, organization_pk) and not \
+            self._is_current_user(request, user_pk):
+            raise Http404
+        return super(CustomOrganizationUserDelete, self).dispatch(
+             request, *args, **kwargs) 
+    
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
+        decisions = org_user.organization.decision_set.all()
+        for decision in decisions:
+            decision.watchers.filter(user=org_user.user).delete()
+        for feedback in Feedback.objects.filter(decision__in=decisions):
+            feedback.watchers.filter(user=org_user.user).delete()
         return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
     
 class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
     pass
+
+class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
+    """
+       This view is necessary because CustomOrganizationUserDelete redirects to
+       the CustomOrganizationUserList view, which regular users shouldn't be 
+       able to access. When they leave an organisation, we send them back to 
+       their organisations list.       
+    """
+    def get_success_url(self):
+        return reverse('organization_list')

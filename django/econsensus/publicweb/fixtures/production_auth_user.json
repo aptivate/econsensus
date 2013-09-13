@@ -9,12 +9,12 @@
             "is_active": true, 
             "is_superuser": true, 
             "is_staff": true, 
-            "last_login": "2011-06-23 09:36:59", 
+            "last_login": "2011-06-23T09:36:59Z", 
             "groups": [], 
             "user_permissions": [], 
             "password": "sha1$99af0$879c4ba07b9cdcecbe2c408df2242b8d1b29504b", 
             "email": "", 
-            "date_joined": "2011-06-23 09:36:59"
+            "date_joined": "2011-06-23T09:36:59Z"
         }
     }
 ]
