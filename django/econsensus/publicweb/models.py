@@ -1,6 +1,6 @@
 #pylint: disable=E1102
 #config import is unused but required here for livesettings
-import config #pylint: disable=W0611
+import config  # pylint: disable=W0611
 import re
 
 from notification import models as notification
@@ -34,6 +34,9 @@ from custom_notification.utils import send_observation_notices_for
 from south.modelsinspector import add_introspection_rules
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
+
+STANDARD_SENDING_HEADERS = {'Precedence': 'bulk', 'Auto-Submitted': 'auto-generated'}
+
 
 class Decision(models.Model):
 
@@ -69,11 +72,11 @@ class Decision(models.Model):
     budget = models.CharField(blank=True, max_length=255,
         verbose_name=_('Budget/Resources'))
     people = models.CharField(max_length=255, null=True, blank=True)
-    meeting_people = models.CharField(max_length=255, null=True, blank=True)    
+    meeting_people = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(choices=STATUS_CHOICES,
                                  default=PROPOSAL_STATUS,
                                  max_length=10)
-    tags = TagField(null=True, blank=True, editable=True, 
+    tags = TagField(null=True, blank=True, editable=True,
                     help_text=TAGS_HELP_FIELD_TEXT)
     organization = models.ForeignKey(Organization)
     #admin stuff
@@ -114,13 +117,13 @@ class Decision(models.Model):
 
                 answer = _("Yes")
                 break
-            
+
         return answer
 
     unresolvedfeedback.short_description = _("Unresolved Feedback")
 
     def feedbackcount(self):
-        return self.feedback_set.all().count()    
+        return self.feedback_set.all().count()
 
     feedbackcount.short_description = _("Feedback")
 
@@ -133,18 +136,18 @@ class Decision(models.Model):
             if start < position:
                 position = start
         return description[:position]
-    
+
     def __unicode__(self):
         return self.excerpt
 
     @classmethod
     def get_fields(cls):
         return cls._meta.fields
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('publicweb_item_detail', [self.id])
-    
+
     def get_email(self):
         """
         Generates an email address based on the Decision's organization
@@ -152,7 +155,7 @@ class Decision(models.Model):
         """
         default_from_email = settings.DEFAULT_FROM_EMAIL
         return re.sub('\w+@', "%s@" % self.organization.slug, default_from_email)
-    
+
     def get_feedback_statistics(self):
         statistics = dict([(unicode(x),0) for x in Feedback.rating_names])
         raw_data = self.feedback_set.values('rating').annotate(Count('rating'))
@@ -186,6 +189,7 @@ class Decision(models.Model):
 
     def _send_change_notifications(self):
         headers = {'Message-ID' : self.get_message_id()}
+        headers.update(STANDARD_SENDING_HEADERS)
         send_observation_notices_for(self, headers=headers, from_email=self.get_email())
 
     def _is_same(self, other):
@@ -228,13 +232,13 @@ class Feedback(models.Model):
                     ugettext_noop('comment'))
 
     RATING_CHOICES = [(rating_names.index(x), x) for x in rating_names]
-    
+
     QUESTION_STATUS = rating_names.index('question')
     DANGER_STATUS = rating_names.index('danger')
     CONCERNS_STATUS = rating_names.index('concerns')
     CONSENT_STATUS = rating_names.index('consent')
     COMMENT_STATUS = rating_names.index('comment')
-    
+
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_related")
     editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
@@ -258,7 +262,7 @@ class Feedback(models.Model):
     @models.permalink
     def get_parent_url(self):
         return ('publicweb_item_detail', [self.decision.id])
-    
+
     def get_author_name(self):
         if hasattr(self.author, 'username') and self.author.username:
             return self.author.username
@@ -274,12 +278,13 @@ class Feedback(models.Model):
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):
     """
-    All users except the author will get a notification informing them of 
+    All users except the author will get a notification informing them of
     new content.
     All users are made observers of the decision.
     """
     instance = kwargs.get('instance')
     headers = {'Message-ID' : instance.get_message_id()}
+    headers.update(STANDARD_SENDING_HEADERS)
     if kwargs.get('created', True):
         active_users = instance.organization.users.filter(is_active=True)
         all_but_author = active_users.exclude(username=instance.author)
@@ -288,7 +293,7 @@ def decision_signal_handler(sender, **kwargs):
         extra_context = {}
         extra_context.update({"observed": instance})
         notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
-        
+
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
 def feedback_signal_handler(sender, **kwargs):
     """
@@ -298,7 +303,8 @@ def feedback_signal_handler(sender, **kwargs):
     """
     instance = kwargs.get('instance')
     headers = {'Message-ID' : instance.get_message_id()}
-    headers.update({'In-Reply-To' : instance.decision.get_message_id()})        
+    headers.update(STANDARD_SENDING_HEADERS)
+    headers.update({'In-Reply-To' : instance.decision.get_message_id()})
 
     instance.decision.note_external_modification()
 
@@ -325,8 +331,9 @@ def comment_signal_handler(sender, **kwargs):
     """
     instance = kwargs.get('instance')
     headers = {'Message-ID' : "comment-%s@%s" % (instance.id, Site.objects.get_current().domain)}
-    headers.update({'In-Reply-To' : instance.content_object.get_message_id()})        
-    
+    headers.update(STANDARD_SENDING_HEADERS)
+    headers.update({'In-Reply-To' : instance.content_object.get_message_id()})
+
     instance.content_object.decision.note_external_modification()
 
     if kwargs.get('created', True):
@@ -340,4 +347,4 @@ def comment_signal_handler(sender, **kwargs):
         notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
-        
+
