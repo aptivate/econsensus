@@ -91,6 +91,18 @@ class ActionitemsViewTestFast(TestCase):
         response = EconsensusActionitemListView.as_view()(get_request)
         assert response.status_code == 302  # Redirects to login
         user.delete()
+    
+    def test_list_sort_options_contain_done(self):
+        assert 'done' in EconsensusActionitemListView.sort_options
+    
+    def test_list_sort_options_doesnt_contain_is_done(self):
+        assert not 'is_done' in EconsensusActionitemListView.sort_options
+    
+    def test_sort_table_headers_contains_done(self):
+        assert 'done' in EconsensusActionitemListView.sort_table_headers['actionitems']
+    
+    def test_sort_table_headers_doesnt_contain_is_done(self):
+        assert not 'is_done' in EconsensusActionitemListView.sort_table_headers['actionitems']
 
 # Untested:
 # templates
@@ -141,19 +153,25 @@ class ActionitemsViewTest(DecisionTestCase):
         actionitem = ActionItem.objects.create()
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
-        response = EconsensusActionitemUpdateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        response = EconsensusActionitemUpdateView.as_view()(
+                   get_request, decisionpk=decision.pk, pk=actionitem.pk
+        ) # The decisionpk is what django-guardian checks for
         assert response.status_code == 200
         decision.delete()
         actionitem.delete()
 
     def test_update_login_and_editor_noeditor_perms(self):
         decision = self.create_and_return_decision()
+        actionitem = ActionItem.objects.create()
         get_request = RequestFactory().get('/')
         assert self.charlie.is_authenticated()  # Confirm user is logged in
         get_request.user = self.charlie
-        response = EconsensusActionitemUpdateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        response = EconsensusActionitemUpdateView.as_view()(
+                   get_request, decisionpk=decision.pk, pk=actionitem.pk
+        ) # The decisionpk is what django-guardian checks for
         assert response.status_code == 403
         decision.delete()
+        actionitem.delete()
 
     def test_list_login(self):
         get_request = RequestFactory().get('/')
