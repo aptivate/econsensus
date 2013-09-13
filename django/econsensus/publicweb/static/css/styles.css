@@ -973,7 +973,7 @@ p.title {
 
 .update-controls {
 	float: right;
-	clear: right;
+	clear: both;
 	padding-bottom:6px;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
@@ -1411,6 +1411,21 @@ p.error404 {
     }
 }
 
+@media screen and (max-width: 54em) {
+    #user-actions {
+        width:100%;
+        background-color:#fff;
+    }	
+
+    #navigation ul {
+        width:100%;
+    }
+
+    #navigation li {
+        width:24.8%;
+        text-align:center;
+    }    
+}
 
 @media screen and (max-width: 660px) {
 	body {
