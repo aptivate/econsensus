@@ -530,7 +530,7 @@ class EconsensusActionitemUpdateView(ActionItemUpdateView):
     form_class = EconsensusActionItemUpdateForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'decisionpk')))
     def dispatch(self, *args, **kwargs):        
         return super(EconsensusActionitemUpdateView, self).dispatch(*args, **kwargs)
 
@@ -587,11 +587,11 @@ class EconsensusActionitemListView(ActionItemListView):
                     'description': '',
                     'responsible': '',
                     'deadline': '-',
-                    'is_done': '-',
+                    'done': '-',
                     'origin': ''
                     }
     sort_by_alpha_fields = ['title', 'responsible']
-    sort_table_headers = {'actionitems': ['id', 'description', 'responsible', 'deadline', 'is_done', 'origin']}
+    sort_table_headers = {'actionitems': ['id', 'description', 'responsible', 'deadline', 'done', 'origin']}
 
     def set_sorting(self, request):
         sort_request = request.GET.get('sort', '-id')
@@ -612,7 +612,7 @@ class EconsensusActionitemListView(ActionItemListView):
                          'description': 'Excerpt',
                          'responsible': 'Responsible',
                          'deadline': 'Deadline',
-                         'is_done': 'Done?',
+                         'done': 'Done?',
                          'origin': 'Decision',
                          }
 
