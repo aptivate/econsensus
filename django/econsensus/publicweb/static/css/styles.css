@@ -49,6 +49,12 @@ table {
 	border-spacing: 0;
 }
 
+table.user_list {
+    border-collapse: separate;
+    border-spacing: 10px 0;
+}
+
+
 /* General Styles */
 
 body { 
