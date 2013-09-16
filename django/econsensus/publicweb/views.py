@@ -23,7 +23,7 @@ import unicodecsv
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
-from haystack.views import SearchView, search_view_factory
+from haystack.views import SearchView
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
     EconsensusActionItemCreateForm, EconsensusActionItemUpdateForm
@@ -736,15 +736,27 @@ class OrganizationRedirectView(RedirectView):
 
 class DecisionSearchView(SearchView):
     def __init__(self, *args, **kwargs):
-        super(DecisionSearchView, self).__init__(*args, **kwargs)
+        super(DecisionSearchView, self).__init__(*args, results_per_page=10, **kwargs)
+
+    def __call__(self, request, org_slug):
+        self.organization = get_object_or_404(Organization, slug=org_slug)
+        return super(DecisionSearchView, self).__call__(request)
 
     def get_results(self):
         results = super(DecisionSearchView, self).get_results()
-        orgs = Organization.objects.filter(users=self.request.user)
-        return results.filter(organization__in=orgs)
+        return results.filter(organization=self.organization)
+
+    def extra_context(self):
+	context = {}
+        context['organization'] = self.organization
+        context['tab'] = 'search'
+	context.update(super(DecisionSearchView, self).extra_context())
+	return context
 
     # Might have been logical to call this method "as_view", but
     # that might imply that we inherit from View...
     @classmethod
     def make(cls):
-        return login_required(search_view_factory(view_class=cls))
+	def search_view(request, *args, **kwargs):
+            return cls()(request, *args, **kwargs)
+        return login_required(search_view)

@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
+{% load url from future %}
 {% load i18n %}
 {% load search_enabled %}
 
-{% block topbar %}
-<div id="navigation-wrapper">
-    <div id="navigation">
-        <ul>
-            <li></li>
-        </ul>
-    </div>
-    <div class="search">
-        {% include "search/form.html" %}
-    </div>
-</div>
-
-{% endblock %}
-
 {% block main_content %}
+
+{% ifcansearch %}
+<form id="search_form" action="{% url 'publicweb_decision_search' organization.slug %}" method="get">
+    <p>
+        <input id="search" type="text" maxlength="128" value="{{query}}" name="q"/>
+        <input id="search_button" type="submit" value="{% trans 'Search' %}"/>
+    </p>
+</form>
+{% else %}
+<p>{% trans "Search has not been configured for this site." %}</p>
+{% endifcansearch %}
+
 {% if page.object_list %}
+    {% include "search/pagination.html" %}
     <table class="search-results summary-list">
         <thead>
             <tr class="summary-header">
@@ -33,22 +33,19 @@
                 <td class="id {{ status }}">
                     <a href="{{ object.get_absolute_url }}"><span class="iconified">{{ object.id }}</span></a>
                 </td>
-                <td class="excerpt {{ status }}">{{ object.excerpt }}</td>
-                <td class="status {{ status }}">{{ status|capfirst }}</td>
+                <td class="excerpt {{ status }}">
+                    <a href="{{ object.get_absolute_url }}">{{ object.excerpt }}</a>
+                </td>
+                <td class="status {{ status }}">
+                    <a href="{{ object.get_absolute_url }}">{{ status|capfirst }}</a>
+                </td>
             </tr>
             {% endwith %}
         {% endfor %}
         </tbody>
     </table>
-
-    {% if page.has_previous or page.has_next %}
-        <div>
-            {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-            |
-            {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-        </div>
-    {% endif %}
-{% else %}
+    {% include "search/pagination.html" %}
+{% elif query %}
     {% trans "No results" %}
 {% endif %}
 

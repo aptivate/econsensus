@@ -1,0 +1,26 @@
+{% load i18n %}
+
+{% comment %}
+This is modelled on pagination.html (as used in e.g. decision_list.html).
+Currently, the significant differences are:
+- The number of results per pages is fixed
+- There's no concept of sorting on different fields
+- The previous and next urls are constructed here rather than in the view
+- The page object is called page, not page_obj. (I think that one is
+  Haystack's fault.)
+{% endcomment %}
+<div class="pagination">
+    {% if page.has_previous %}
+        <a class="iconified-left" href="?q={{query}}&page={{ page.previous_page_number }}"></a>
+    {% else %}
+        <span class="iconified-left-disabled"></span>
+    {% endif %}
+
+    <p>{{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}</p>
+
+    {% if page.has_next %}
+        <a class="iconified" href="?q={{query}}&page={{ page.next_page_number }}"></a>
+    {% else %}
+        <span class="iconified-disabled"></span>
+    {% endif %}
+</div>
