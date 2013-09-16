@@ -321,6 +321,7 @@ input {
 #content ul.org_list ul li:first-child {
 	border-width:0;
 	padding-left:0;
+    font-size: 1.4em;
 }
 
 .page_title.actionitem, 
