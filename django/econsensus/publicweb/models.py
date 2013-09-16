@@ -32,7 +32,6 @@ from custom_notification.utils import send_observation_notices_for
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
-from dbsettings.models import Settings
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -292,7 +291,7 @@ NOTIFICATION_LEVELS = (
           (MINOR_CHANGES_NOTIFICATIONS, MINOR_CHANGES_NOTIFICATIONS_TEXT)        
                       )
 
-class NotificationSettings(Settings):
+class NotificationSettings(models.Model):
     user = models.ForeignKey(User)
     organization = models.ForeignKey(Organization)
     notification_level = models.IntegerField(choices=NOTIFICATION_LEVELS,
@@ -304,7 +303,7 @@ class NotificationSettings(Settings):
     class Meta:
         unique_together = ('user', 'organization')
 
-class OrganizationSettings(Settings):
+class OrganizationSettings(models.Model):
     organization = models.OneToOneField(Organization)
     default_notification_level = models.IntegerField(choices=NOTIFICATION_LEVELS,
         help_text=_("Levels are cumulative, so if, for example, you choose to "

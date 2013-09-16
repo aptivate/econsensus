@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'OrganizationSettings'
         db.create_table('publicweb_organizationsettings', (
-            ('root', self.gf('django.db.models.fields.related.OneToOneField')(related_name='publicweb_organizationsettings', unique=True, primary_key=True, to=orm['dbsettings.Root'])),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('organization', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['organizations.Organization'], unique=True)),
             ('default_notification_level', self.gf('django.db.models.fields.IntegerField')()),
         ))
@@ -74,10 +74,6 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'dbsettings.root': {
-            'Meta': {'object_name': 'Root'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         'notification.noticetype': {
             'Meta': {'object_name': 'NoticeType'},
@@ -151,16 +147,16 @@ class Migration(SchemaMigration):
         },
         'publicweb.notificationsettings': {
             'Meta': {'unique_together': "(('user', 'organization'),)", 'object_name': 'NotificationSettings'},
-            'notification_level': ('django.db.models.fields.IntegerField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'notification_level': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'organization': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['organizations.Organization']"}),
-            'root': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'publicweb_notificationsettings'", 'unique': 'True', 'primary_key': 'True', 'to': "orm['dbsettings.Root']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'settings'", 'to': "orm['auth.User']"})
         },
         'publicweb.organizationsettings': {
             'Meta': {'object_name': 'OrganizationSettings'},
             'default_notification_level': ('django.db.models.fields.IntegerField', [], {}),
-            'organization': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['organizations.Organization']", 'unique': 'True'}),
-            'root': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'publicweb_organizationsettings'", 'unique': 'True', 'primary_key': 'True', 'to': "orm['dbsettings.Root']"})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'organization': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['organizations.Organization']", 'unique': 'True'})
         },
         'sites.site': {
             'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
