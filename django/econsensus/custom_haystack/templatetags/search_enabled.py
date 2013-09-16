@@ -46,5 +46,5 @@ def ifcansearch(parser, token):
         nosearch_nodelist = parser.parse(('endifcansearch',))
         parser.delete_first_token()
     else:
-        nosearch_nodelist = NodeList()
+        nosearch_nodelist = template.NodeList()
     return IfCanSearchNode(search_nodelist, nosearch_nodelist)
