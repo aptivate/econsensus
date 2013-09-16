@@ -63,7 +63,7 @@ class ObservationManagerTest(SimpleTestCase):
         settings_handler = ObservationManager()
         settings_handler.settings = settings
         settings_handler.update_watchers(
-             FeedbackFactory.build(), FEEDBACK_CHANGE, 'post_save' 
+             FeedbackFactory.build(), FEEDBACK_NEW, 'post_save' 
         )
         
         self.assertFalse(observed_item.called)
@@ -80,4 +80,4 @@ class ObservationManagerTest(SimpleTestCase):
              FeedbackFactory.build(), FEEDBACK_NEW, 'post_save' 
         )
         
-        self.assertFalse(observed_item.called)
+        self.assertTrue(observed_item.called)
