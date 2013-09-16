@@ -14,39 +14,52 @@ def create_org_editor_perm(app, created_models, verbosity, **kwargs):
 
 signals.post_syncdb.connect(create_org_editor_perm, sender=auth)
 
+DECISION_NEW = "decision_new"
+FEEDBACK_NEW = "feedback_new"
+COMMENT_NEW = "comment_new"
+DECISION_CHANGE = "decision_change"
+FEEDBACK_CHANGE = "feedback_change"
+COMMENT_CHANGE = "comment_change"
+DECISION_STATUS_CHANGE = "decision_staust_change"
+
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
         notification.create_notice_type(
-            "decision_new", 
+            DECISION_NEW, 
             _("New Decision"),
             _("A new decision has been created."))
         
         notification.create_notice_type(
-            "feedback_new", 
+            FEEDBACK_NEW, 
             _("New Feedback"), 
             _("New feedback has been created."))
         
         notification.create_notice_type(
-            "comment_new", 
+            COMMENT_NEW, 
             _("New Comment"), 
             _("New comment has been created."))
         
         notification.create_notice_type(
-            "decision_change", 
+            DECISION_CHANGE, 
             _("Decision Change"),
             _("There has been a change to a decision."))
         
         notification.create_notice_type(
-            "feedback_change", 
+            FEEDBACK_CHANGE, 
             _("Feedback Change"), 
             _("There has been a change to feedback."))    
         
         notification.create_notice_type(
-            "comment_change", 
+            COMMENT_CHANGE, 
             _("Comment Change"), 
-            _("There has been a change to comment."))    
+            _("There has been a change to comment."))  
+        
+        notification.create_notice_type(
+            DECISION_STATUS_CHANGE, 
+            _("Decision Change"), 
+            _("There has been a change to decision's type."))    
 
     signals.post_syncdb.connect(create_notice_types, sender=notification)
 else:

@@ -32,6 +32,8 @@ from custom_notification.utils import send_observation_notices_for
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from signals.management import FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_CHANGE,\
+    COMMENT_NEW, DECISION_CHANGE, DECISION_NEW
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -323,10 +325,10 @@ def decision_signal_handler(sender, **kwargs):
         active_users = instance.organization.users.filter(is_active=True)
         all_but_author = active_users.exclude(username=instance.author)
         for user in active_users:
-            notification.observe(instance, user, 'decision_change')
+            notification.observe(instance, user, DECISION_CHANGE)
         extra_context = {}
         extra_context.update({"observed": instance})
-        notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
+        notification.send(all_but_author, DECISION_NEW, extra_context, headers, from_email=instance.get_email())
         
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
 def feedback_signal_handler(sender, **kwargs):
@@ -343,13 +345,13 @@ def feedback_signal_handler(sender, **kwargs):
 
     if kwargs.get('created', True):
         #author gets notified if the feedback is edited.
-        notification.observe(instance, instance.author, 'feedback_change')
+        notification.observe(instance, instance.author, FEEDBACK_CHANGE)
 
         #All watchers of parent get notified of new feedback.
         all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
         observer_list = [x.user for x in all_observed_items_but_authors]
         extra_context = dict({"observed": instance})
-        notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
+        notification.send(observer_list, FEEDBACK_NEW, extra_context, headers, from_email=instance.decision.get_email())
     else:
         # An edit by someone other than the author never counts as minor
         if instance.author != instance.editor or not instance.minor_edit:
@@ -370,13 +372,13 @@ def comment_signal_handler(sender, **kwargs):
 
     if kwargs.get('created', True):
         # Creator gets notified if the comment is edited.
-        notification.observe(instance, instance.user, 'comment_change')
+        notification.observe(instance, instance.user, COMMENT_CHANGE)
 
         #All watchers of parent get notified of new comment.
         all_observed_items_but_author = list(instance.content_object.decision.watchers.exclude(user=instance.user))
         observer_list = [x.user for x in all_observed_items_but_author]
         extra_context = dict({"observed": instance})
-        notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
+        notification.send(observer_list, COMMENT_NEW, extra_context, headers, from_email=instance.content_object.decision.get_email())
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
         
