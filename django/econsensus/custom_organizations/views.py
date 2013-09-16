@@ -1,7 +1,6 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView
 
 from guardian.shortcuts import remove_perm
 
