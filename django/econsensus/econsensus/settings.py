@@ -131,7 +131,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
-    'south',
+    'django.contrib.flatpages',
+    'django.contrib.markup',
     'registration',
     'notification',
     'custom_comments',
@@ -144,11 +145,8 @@ INSTALLED_APPS = (
     'signals',
     'tinymce',
     'tagging',
-    'remember_me',
-    'actionitems',
+    'custom_flatpages',
 )
-
-ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
