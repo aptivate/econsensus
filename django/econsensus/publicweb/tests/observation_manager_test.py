@@ -3,7 +3,8 @@ from publicweb.tests.factories import (NotificationSettingsFactory,
     DecisionFactory, FeedbackFactory, CommentFactory, UserFactory,
     OrganizationFactory)
 from publicweb.models import (NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY,
-    FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES, NotificationSettings)
+    FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES, NotificationSettings,
+    MINOR_CHANGES_NOTIFICATIONS)
 from mock import patch, MagicMock
 from publicweb.observation_manager import ObservationManager
 from signals.management import (DECISION_STATUS_CHANGE, FEEDBACK_CHANGE, 
@@ -22,7 +23,7 @@ class ObservationManagerTest(SimpleTestCase):
         settings_handler = ObservationManager()
 
         settings_handler.update_observers(
-             settings, DecisionFactory.build(), DECISION_NEW, 'post_save' 
+             settings, DECISION_NEW 
         )
         
         self.assertFalse(observed_item.called)
@@ -35,7 +36,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, DecisionFactory.build(), DECISION_NEW, 'post_save' 
+             settings, DECISION_NEW 
         )
         
         self.assertTrue(observed_item.called)
@@ -48,8 +49,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, DecisionFactory.build(), DECISION_STATUS_CHANGE, 
-             'post_save' 
+             settings, DECISION_STATUS_CHANGE, 
         )
         
         self.assertTrue(observed_item.called)
@@ -62,7 +62,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers( 
-            settings, DecisionFactory.build(), DECISION_CHANGE, 'post_save' 
+            settings, DECISION_CHANGE 
         )
         
         self.assertFalse(observed_item.called)
@@ -75,7 +75,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers( 
-             settings, FeedbackFactory.build(), FEEDBACK_NEW, 'post_save' 
+             settings, FEEDBACK_NEW 
         )
         
         self.assertFalse(observed_item.called)
@@ -88,7 +88,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers( 
-            settings, DecisionFactory.build(), DECISION_CHANGE, 'post_save' 
+            settings, DECISION_CHANGE
         )
         
         self.assertTrue(observed_item.called)
@@ -101,7 +101,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), FEEDBACK_NEW, 'post_save' 
+             settings, FEEDBACK_NEW 
         )
         
         self.assertTrue(observed_item.called)
@@ -114,7 +114,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), FEEDBACK_CHANGE, 'post_save' 
+             settings, FEEDBACK_CHANGE 
         )
         
         self.assertFalse(observed_item.called)
@@ -127,7 +127,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), FEEDBACK_CHANGE, 'post_save' 
+             settings, FEEDBACK_CHANGE 
         )
         
         self.assertTrue(observed_item.called)
@@ -140,7 +140,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), MINOR_CHANGE, 'post_save' 
+             settings, MINOR_CHANGE
         )
         
         self.assertFalse(observed_item.called)
@@ -153,7 +153,7 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), COMMENT_NEW, 'post_save' 
+             settings, COMMENT_NEW
         )
         
         self.assertTrue(observed_item.called)
@@ -166,80 +166,24 @@ class ObservationManagerTest(SimpleTestCase):
         
         settings_handler = ObservationManager()
         settings_handler.update_observers(
-             settings, FeedbackFactory.build(), COMMENT_CHANGE, 'post_save' 
+             settings, COMMENT_CHANGE 
         )
         
         self.assertTrue(observed_item.called)
     
     @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_observe_feedback_changes_with_decision_creates_decision_change_observation(self, observed_item):
-        settings = create_fake_settings()
-        decision = DecisionFactory.build()
-        settings_handler = ObservationManager()
-        settings_handler._observe_major_decision_changes(settings.user, decision, 
-            "post_save")
+    def test_minor_change_observer_added_for_minor_changes_notification_level(self, observed_item):
+        settings = NotificationSettingsFactory.build(
+             notification_level=MINOR_CHANGES_NOTIFICATIONS
+        )
         
-        self.assertEqual(len(observed_item.call_args_list), 1)
-        # observed_item.call_args_list is a tuple of tuples. We want to examine
-        # the first element of the first call in the tuple, which is the list
-        # of arguments the mock method was called with
-        self.assertIn(DECISION_CHANGE, observed_item.call_args_list[0][0])
-    
-    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_observe_feedback_changes_with_feedback_creates_feedback_new_observation(self, observed_item):
-        settings = create_fake_settings()
-        feedback = FeedbackFactory.build()
         settings_handler = ObservationManager()
-        settings_handler._observe_major_decision_changes(settings.user, feedback, 
-           "post_save")
+        settings_handler.update_observers(
+             settings, MINOR_CHANGE
+        )
         
-        self.assertEqual(len(observed_item.call_args_list), 1)
-        # observed_item.call_args_list is a tuple of tuples. We want to examine
-        # the first element of the first call in the tuple, which is the list
-        # of arguments the mock method was called with
-        self.assertIn(FEEDBACK_NEW, observed_item.call_args_list[0][0])
-    
-    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_observe_major_feedback_changes_with_feedback_creates_feedback_change_observation(self, observed_item):
-        settings = create_fake_settings()
-        feedback = FeedbackFactory.build()
-        settings_handler = ObservationManager()
-        settings_handler._observe_major_feedback_changes(settings.user, 
-           feedback, "post_save")
+        self.assertTrue(observed_item.called)    
         
-        self.assertEqual(len(observed_item.call_args_list), 1)
-        # observed_item.call_args_list is a tuple of tuples. We want to examine
-        # the first element of the first call in the tuple, which is the list
-        # of arguments the mock method was called with
-        self.assertIn(FEEDBACK_CHANGE, observed_item.call_args_list[0][0])
-    
-    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_observe_major_feedback_changes_with_comment_creates_comment_new_observation(self, observed_item):
-        settings = create_fake_settings()
-        comment = CommentFactory.build()
-        settings_handler = ObservationManager()
-        settings_handler._observe_major_feedback_changes(settings.user, comment, 
-           "post_save")
-        
-        self.assertEqual(len(observed_item.call_args_list), 2)
-        # observed_item.call_args_list is a tuple of tuples. We want to examine
-        # the first element of the first call in the tuple, which is the list
-        # of arguments the mock method was called with
-        self.assertIn(COMMENT_NEW, observed_item.call_args_list[0][0])
-    
-    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_observe_major_feedback_changes_with_comment_creates_comment_change_observation(self, observed_item):
-        settings = create_fake_settings()
-        comment = CommentFactory.build()
-        settings_handler = ObservationManager()
-        settings_handler._observe_major_feedback_changes(settings.user, comment, 
-           "post_save")
-        
-        self.assertEqual(len(observed_item.call_args_list), 2)
-        # observed_item.call_args_list is a tuple of tuples. We want to examine
-        # the first element of the second call in the tuple, which is the list
-        # of arguments the mock method was called with
-        self.assertIn(COMMENT_CHANGE, observed_item.call_args_list[1][0])
     
     @patch('publicweb.observation_manager.NotificationSettings.objects', 
            new=MagicMock(spec=NotificationSettings.objects, 
