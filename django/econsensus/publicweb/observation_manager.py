@@ -1,19 +1,20 @@
 from notification.models import observe
-from publicweb.models import NO_NOTIFICATIONS, NotificationSettings,\
-    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_MAJOR_CHANGES,\
-    FEEDBACK_ADDED_NOTIFICATIONS, Decision, Feedback
-from signals.management import DECISION_NEW, DECISION_STATUS_CHANGE,\
-    FEEDBACK_CHANGE, DECISION_CHANGE, FEEDBACK_NEW, COMMENT_NEW, COMMENT_CHANGE
+from publicweb.models import (NO_NOTIFICATIONS, NotificationSettings,
+    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_ADDED_NOTIFICATIONS, Decision, 
+    Feedback)
+from signals.management import (DECISION_NEW, DECISION_STATUS_CHANGE,
+    FEEDBACK_CHANGE, DECISION_CHANGE, FEEDBACK_NEW, COMMENT_NEW, COMMENT_CHANGE)
 
 class ObservationManager(object):
         
-    def _add_observeration(self):
-        pass
+    def _add_observeration(self, observed, observer, notice_type, signal):
+        observe(observed, observer, notice_type, signal)
     
-    def load_settings(self, user, organization):
-        self.settings, _ = NotificationSettings.objects.get_or_create(
+    def get_settings(self, user, organization):
+        settings, _ = NotificationSettings.objects.get_or_create(
               user=user, organization=organization
         )
+        return settings
     
     def _notification_is_for_main_items(self, notification_type):
         return (notification_type == DECISION_NEW or 
