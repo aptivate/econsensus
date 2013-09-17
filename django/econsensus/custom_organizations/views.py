@@ -1,6 +1,7 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
+from django.views.generic.edit import CreateView
 
 from guardian.shortcuts import remove_perm
 
@@ -15,19 +16,41 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserList, \
                                 BaseOrganizationUserDelete, \
                                 BaseOrganizationDetail
-from organizations.mixins import AdminRequiredMixin
+from organizations.mixins import AdminRequiredMixin, \
+                                 OrganizationMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationAddForm,\
                                     CustomOrganizationUserForm,\
-                                    CustomOrganizationUserAddForm
+                                    CustomOrganizationUserAddForm, \
+                                    GroupAddForm
 from django.http import Http404
 from organizations.models import Organization
 from publicweb.models import Feedback
+from custom_organizations.models import Group
 
 class OrganizationAdminView(BaseOrganizationDetail):
     model = Organization
     template_name = 'organizations/organization_admin.html'
+
+class GroupCreate(OrganizationMixin, CreateView):
+    # model = Group
+    form_class = GroupAddForm
+    template_name = 'organizations/organizationgroup_form.html'
+
+    def get_success_url(self):
+        return reverse("organization_list")
+
+    def get_form_kwargs(self):
+        kwargs = super(GroupCreate, self).get_form_kwargs()
+        kwargs.update({'organization': self.get_organization(),
+            'request': self.request})
+        return kwargs
+
+    # def get(self, request, *args, **kwargs):
+    #     self.organization = self.get_organization()
+    #     context = self.get_context_data(organization=self.organization)
+    #     return self.render_to_response(context)
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm

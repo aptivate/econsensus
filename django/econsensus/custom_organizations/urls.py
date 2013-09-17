@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from views import (OrganizationAdminView,
+                  GroupCreate,
                   CustomOrganizationCreate,
                   CustomOrganizationDetail,
                   CustomOrganizationUpdate,
@@ -24,6 +25,9 @@ urlpatterns = patterns('',
     url(r'^(?P<organization_pk>[\d]+)/admin/$',
         view=login_required(OrganizationAdminView.as_view()),
         name="organization_admin"),
+    url(r'^(?P<organization_pk>[\d]+)/groups/add/$',
+        view=login_required(GroupCreate.as_view()),
+        name="create_group"),
     url(r'^(?P<organization_pk>[\d]+)/people/add/$',
         view=login_required(CustomOrganizationUserCreate.as_view()),
         name="organization_user_add"),
