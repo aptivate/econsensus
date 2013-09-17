@@ -12,7 +12,9 @@ def create_org_editor_perm(app, created_models, verbosity, **kwargs):
                               name='Can Add & Edit Decisions and Feedback',
                               content_type=ct_organization)
 
+
 signals.post_syncdb.connect(create_org_editor_perm, sender=auth)
+
 
 DECISION_NEW = "decision_new"
 FEEDBACK_NEW = "feedback_new"
@@ -20,7 +22,9 @@ COMMENT_NEW = "comment_new"
 DECISION_CHANGE = "decision_change"
 FEEDBACK_CHANGE = "feedback_change"
 COMMENT_CHANGE = "comment_change"
-DECISION_STATUS_CHANGE = "decision_staust_change"
+DECISION_STATUS_CHANGE = "decision_status_change"
+MINOR_CHANGE = "minor_change"
+
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -59,7 +63,12 @@ if "notification" in settings.INSTALLED_APPS:
         notification.create_notice_type(
             DECISION_STATUS_CHANGE, 
             _("Decision Change"), 
-            _("There has been a change to decision's type."))    
+            _("There has been a change to decision's type."))
+        
+        notification.create_notice_type(
+            MINOR_CHANGE, 
+            _("Minor Change"), 
+            _("There has been a change that was marked as minor."))      
 
     signals.post_syncdb.connect(create_notice_types, sender=notification)
 else:
