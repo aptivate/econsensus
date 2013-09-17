@@ -1188,6 +1188,19 @@ div#tags {
 	float: right;
 }
 
+#footer ul.flatpagelinks li {
+    float: left;
+}
+
+#footer ul.flatpagelinks li a {
+	font-size: 1.2em;
+	padding-right: 0.5em;
+}
+
+#footer ul.flatpagelinks li a:hover {
+	background-color: #ededed;
+}
+
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
@@ -1346,6 +1359,12 @@ ul.errorlist, .parsley-error-list {
 p.error404 {
 	clear : both;
 	margin-bottom : 40px;
+}
+
+/* Styling of admin-defined pages */
+#flatpage ul {
+    list-style: disc outside none;
+    padding-left: 1em;
 }
 
 /* Media Queries*/
