@@ -131,6 +131,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
+    'django.contrib.flatpages',
+    'django.contrib.markup',
     'south',
     'registration',
     'notification',
@@ -147,6 +149,7 @@ INSTALLED_APPS = (
     'dbsettings',
     'remember_me',
     'actionitems',
+    'custom_flatpages',
 )
 
 ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
