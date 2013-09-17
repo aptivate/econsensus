@@ -12,7 +12,9 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserUpdate,\
                                 OrganizationUserDelete,\
                                 OrganizationUserRemind,\
-                                OrganizationUserList, BaseOrganizationUserDelete
+                                OrganizationUserList, \
+                                BaseOrganizationUserDelete, \
+                                BaseOrganizationDetail
 from organizations.mixins import AdminRequiredMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
@@ -23,6 +25,9 @@ from django.http import Http404
 from organizations.models import Organization
 from publicweb.models import Feedback
 
+class OrganizationAdminView(BaseOrganizationDetail):
+    model = Organization
+    template_name = 'organizations/organization_admin.html'
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
