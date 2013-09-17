@@ -1,6 +1,6 @@
 from django.test.testcases import SimpleTestCase
 from publicweb.tests.factories import (NotificationSettingsFactory,
-    DecisionFactory, FeedbackFactory)
+    DecisionFactory, FeedbackFactory, CommentFactory)
 from publicweb.models import NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY,\
     FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES,\
     MINOR_CHANGES_NOTIFICATIONS
@@ -172,15 +172,71 @@ class ObservationManagerTest(SimpleTestCase):
         self.assertTrue(observed_item.called)
     
     @patch('publicweb.observation_manager.ObservationManager._add_observeration')
-    def test_minor_chage_observer_added_for_minor_changes_notification_level(self, observed_item):
-        settings = NotificationSettingsFactory.build(
-             notification_level=MINOR_CHANGES_NOTIFICATIONS
-        )
-        
+    def test_observe_feedback_changes_with_decision_creates_decision_change_observation(self, observed_item):
+        settings = NotificationSettingsFactory.build()
+        decision = DecisionFactory.build()
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, FeedbackFactory.build(), COMMENT_CHANGE, 'post_save' 
-        )
+        settings_handler._observe_feedback_changes(settings.user, decision, 
+            "post_save")
         
-        self.assertTrue(observed_item.called)    
+        self.assertEqual(len(observed_item.call_args_list), 1)
+        # observed_item.call_args_list is a tuple of tuples. We want to examine
+        # the first element of the first call in the tuple, which is the list
+        # of arguments the mock method was called with
+        self.assertIn(DECISION_CHANGE, observed_item.call_args_list[0][0])
+    
+    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
+    def test_observe_feedback_changes_with_feedback_creates_feedback_new_observation(self, observed_item):
+        settings = NotificationSettingsFactory.build()
+        feedback = FeedbackFactory.build()
+        settings_handler = ObservationManager()
+        settings_handler._observe_feedback_changes(settings.user, feedback, 
+           "post_save")
         
+        self.assertEqual(len(observed_item.call_args_list), 1)
+        # observed_item.call_args_list is a tuple of tuples. We want to examine
+        # the first element of the first call in the tuple, which is the list
+        # of arguments the mock method was called with
+        self.assertIn(FEEDBACK_NEW, observed_item.call_args_list[0][0])
+    
+    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
+    def test_observe_major_feedback_changes_with_feedback_creates_feedback_change_observation(self, observed_item):
+        settings = NotificationSettingsFactory.build()
+        feedback = FeedbackFactory.build()
+        settings_handler = ObservationManager()
+        settings_handler._observe_major_feedback_changes(settings.user, 
+           feedback, "post_save")
+        
+        self.assertEqual(len(observed_item.call_args_list), 1)
+        # observed_item.call_args_list is a tuple of tuples. We want to examine
+        # the first element of the first call in the tuple, which is the list
+        # of arguments the mock method was called with
+        self.assertIn(FEEDBACK_CHANGE, observed_item.call_args_list[0][0])
+    
+    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
+    def test_observe_major_feedback_changes_with_comment_creates_comment_new_observation(self, observed_item):
+        settings = NotificationSettingsFactory.build()
+        comment = CommentFactory.build()
+        settings_handler = ObservationManager()
+        settings_handler._observe_major_feedback_changes(settings.user, comment, 
+           "post_save")
+        
+        self.assertEqual(len(observed_item.call_args_list), 2)
+        # observed_item.call_args_list is a tuple of tuples. We want to examine
+        # the first element of the first call in the tuple, which is the list
+        # of arguments the mock method was called with
+        self.assertIn(COMMENT_NEW, observed_item.call_args_list[0][0])
+    
+    @patch('publicweb.observation_manager.ObservationManager._add_observeration')
+    def test_observe_major_feedback_changes_with_comment_creates_comment_change_observation(self, observed_item):
+        settings = NotificationSettingsFactory.build()
+        comment = CommentFactory.build()
+        settings_handler = ObservationManager()
+        settings_handler._observe_major_feedback_changes(settings.user, comment, 
+           "post_save")
+        
+        self.assertEqual(len(observed_item.call_args_list), 2)
+        # observed_item.call_args_list is a tuple of tuples. We want to examine
+        # the first element of the second call in the tuple, which is the list
+        # of arguments the mock method was called with
+        self.assertIn(COMMENT_CHANGE, observed_item.call_args_list[1][0])
