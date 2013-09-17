@@ -176,7 +176,7 @@ class ObservationManagerTest(SimpleTestCase):
         settings = create_fake_settings()
         decision = DecisionFactory.build()
         settings_handler = ObservationManager()
-        settings_handler._observe_feedback_changes(settings.user, decision, 
+        settings_handler._observe_major_decision_changes(settings.user, decision, 
             "post_save")
         
         self.assertEqual(len(observed_item.call_args_list), 1)
@@ -190,7 +190,7 @@ class ObservationManagerTest(SimpleTestCase):
         settings = create_fake_settings()
         feedback = FeedbackFactory.build()
         settings_handler = ObservationManager()
-        settings_handler._observe_feedback_changes(settings.user, feedback, 
+        settings_handler._observe_major_decision_changes(settings.user, feedback, 
            "post_save")
         
         self.assertEqual(len(observed_item.call_args_list), 1)

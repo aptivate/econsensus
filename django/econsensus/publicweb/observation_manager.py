@@ -33,7 +33,7 @@ class ObservationManager(object):
         self._add_observeration(item, user, DECISION_NEW, signal)
         self._add_observeration(item, user, DECISION_STATUS_CHANGE, signal)
     
-    def _observe_feedback_changes(self, user, item, signal):
+    def _observe_major_decision_changes(self, user, item, signal):
         if isinstance(item, Decision):
             self._add_observeration(item, user, DECISION_CHANGE, signal)
         else:
@@ -53,7 +53,7 @@ class ObservationManager(object):
             
         if (settings.notification_level > MAIN_ITEMS_NOTIFICATIONS_ONLY and
                 self._notification_is_for_feedback_creation(notification_type)):
-            self._observe_feedback_changes(item, settings.user, signal)
+            self._observe_major_decision_changes(item, settings.user, signal)
             
         if (settings.notification_level > FEEDBACK_ADDED_NOTIFICATIONS and
                 self._notification_is_for_feedback_change(notification_type)):
@@ -61,4 +61,3 @@ class ObservationManager(object):
         
         # The minor changes setting doesn't relate to any specific item so we 
         # don't add an observation for it.
-            
