@@ -735,11 +735,20 @@ class OrganizationRedirectView(RedirectView):
             return reverse('organization_list')
 
 class DecisionSearchView(SearchView):
+    DEFAULT_RESULTS_PER_PAGE = 10
+
     def __init__(self, *args, **kwargs):
-        super(DecisionSearchView, self).__init__(*args, results_per_page=10, **kwargs)
+        super(DecisionSearchView, self).__init__(*args, **kwargs)
 
     def __call__(self, request, org_slug):
         self.organization = get_object_or_404(Organization, slug=org_slug)
+
+        num = request.GET.get('num')
+        if not num: num = request.session.get('num')
+        if not num: num = str(self.DEFAULT_RESULTS_PER_PAGE)
+        request.session['num'] = num
+        self.results_per_page = int(num)
+
         return super(DecisionSearchView, self).__call__(request)
 
     def get_results(self):
@@ -747,16 +756,24 @@ class DecisionSearchView(SearchView):
         return results.filter(organization=self.organization)
 
     def extra_context(self):
-	context = {}
+        context = {}
         context['organization'] = self.organization
         context['tab'] = 'search'
-	context.update(super(DecisionSearchView, self).extra_context())
-	return context
+        context['num'] = str(self.results_per_page)
+        context['queryurl'] = self.build_query_link()
+        context.update(super(DecisionSearchView, self).extra_context())
+        return context
+
+    def build_query_link(self):
+        link = '?q=' + self.query
+        if self.results_per_page != self.DEFAULT_RESULTS_PER_PAGE:
+            link = link + '&num=' + str(self.results_per_page)
+        return link
 
     # Might have been logical to call this method "as_view", but
     # that might imply that we inherit from View...
     @classmethod
     def make(cls):
-	def search_view(request, *args, **kwargs):
+        def search_view(request, *args, **kwargs):
             return cls()(request, *args, **kwargs)
         return login_required(search_view)

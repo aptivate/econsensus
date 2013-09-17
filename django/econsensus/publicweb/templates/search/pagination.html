@@ -3,24 +3,40 @@
 {% comment %}
 This is modelled on pagination.html (as used in e.g. decision_list.html).
 Currently, the significant differences are:
-- The number of results per pages is fixed
 - There's no concept of sorting on different fields
+- The pagination form has to have the query as a hidden input
 - The previous and next urls are constructed here rather than in the view
 - The page object is called page, not page_obj. (I think that one is
   Haystack's fault.)
 {% endcomment %}
 <div class="pagination">
     {% if page.has_previous %}
-        <a class="iconified-left" href="?q={{query}}&page={{ page.previous_page_number }}"></a>
+        <a class="iconified-left" href="{{queryurl}}&page={{ page.previous_page_number }}"></a>
     {% else %}
         <span class="iconified-left-disabled"></span>
     {% endif %}
 
     <p>{{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}</p>
 
+    <form class="paginationform">
+        <noscript><input type="submit" value="{% trans 'show' %}"></noscript>
+        <input type="hidden" name="q" value="{{ query }}">
+        <select name="num" class="pagination-num-items">
+            <!-- TODO Do the numeric values need trans tag?-->
+            <option value="10" {% if num == '10' %}selected{% endif %}>10</option>
+            <option value="25" {% if num == '25' %}selected{% endif %}>25</option>
+            <option value="50" {% if num == '50' %}selected{% endif %}>50</option>
+            <option value="100000" {% if num == '100000' %}selected{% endif %}>{% trans "all" %}</option>
+        </select>
+    </form>
+
+    <p>{% trans "results per page" %}</p>
+
     {% if page.has_next %}
-        <a class="iconified" href="?q={{query}}&page={{ page.next_page_number }}"></a>
+        <a class="iconified" href="{{queryurl}}&page={{ page.next_page_number }}"></a>
     {% else %}
         <span class="iconified-disabled"></span>
     {% endif %}
 </div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/repaginate.js"></script>
