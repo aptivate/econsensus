@@ -21,7 +21,6 @@ git+git://github.com/birdsarah/django-actionitems.git
 django-guardian==1.1.1
 factory-boy==2.1.1
 mock==1.0.1
--e git+git://github.com/IlyaSemenov/django-modelsettings.git#egg=dbsettings
 django-remember_me
 selenium==2.34.0
 django-dynamic-fixture==1.6.5
