@@ -5,6 +5,7 @@ from signals.management import (DECISION_NEW, DECISION_STATUS_CHANGE,
     FEEDBACK_CHANGE, DECISION_CHANGE, FEEDBACK_NEW, COMMENT_NEW, COMMENT_CHANGE,
     MINOR_CHANGE)
 from django.contrib.comments.models import Comment
+from notification import models as notification
 
 class ObservationManager(object):
     recipient_list = None
@@ -49,4 +50,22 @@ class ObservationManager(object):
         item = self._get_decision(item)
         self.recipient_list.update(
             [watcher.user for watcher in item.watchers.all()]
-        )        
+        )
+    
+    def send_notifications(self, recipients, item, notification_type, 
+                           extra_context, headers, from_email):
+        self.include_watchers(item)
+        organization = self._get_organization(item)
+        
+        for recipient in recipients:
+            settings = self.get_settings(recipient, organization)
+            self.update_observers(settings, notification_type)
+        
+        notification.send(
+            list(self.recipient_list), 
+            notification_type, 
+            extra_context,
+            headers,
+            from_email
+        )
+        
