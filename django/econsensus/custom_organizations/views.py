@@ -17,7 +17,8 @@ from organizations.views import OrganizationCreate,\
                                 BaseOrganizationUserDelete, \
                                 BaseOrganizationDetail
 from organizations.mixins import AdminRequiredMixin, \
-                                 OrganizationMixin
+                                 OrganizationMixin, \
+                                 OrganizationUserMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationAddForm,\
@@ -34,7 +35,6 @@ class OrganizationAdminView(BaseOrganizationDetail):
     template_name = 'organizations/organization_admin.html'
 
 class GroupCreate(OrganizationMixin, CreateView):
-    # model = Group
     form_class = GroupAddForm
     template_name = 'organizations/organizationgroup_form.html'
 
@@ -46,11 +46,6 @@ class GroupCreate(OrganizationMixin, CreateView):
         kwargs.update({'organization': self.get_organization(),
             'request': self.request})
         return kwargs
-
-    # def get(self, request, *args, **kwargs):
-    #     self.organization = self.get_organization()
-    #     context = self.get_context_data(organization=self.organization)
-    #     return self.render_to_response(context)
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm

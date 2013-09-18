@@ -1,6 +1,6 @@
 from django import forms
 
-from organizations.models import Organization, get_user_model
+from organizations.models import Organization, get_user_model, OrganizationUser
 from organizations.utils import create_organization
 from organizations.backends.forms import UserRegistrationForm
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
@@ -113,8 +113,14 @@ class GroupAddForm(forms.ModelForm):
 
     class Meta:
         model = Group
-        exclude = ('organization')
+        exclude = ('organization', 'members')
 
     def save(self, **kwargs):
-        return Group.objects.create(name=self.cleaned_data['name'], 
-            organization = self.organization)
+        group = Group.objects.create(name=self.cleaned_data['name'],
+             organization = self.organization)
+        # return group
+        group_creator = OrganizationUser.objects.get(organization = self.organization,
+            user = self.request.user)
+        group.save()
+        group.members.add(group_creator)
+        return group
