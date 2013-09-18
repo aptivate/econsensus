@@ -19,6 +19,7 @@ def create_fake_settings(**kwargs):
         kwargs["notification_level"] = NO_NOTIFICATIONS
     return NotificationSettingsFactory.build(**kwargs) 
 
+
 def add_watchers(decision):
     users = UserFactory.build_batch(size=3)
     for index, user in enumerate(users):
@@ -35,15 +36,17 @@ def add_watchers(decision):
         )
     return decision
 
+class MockQueryset(set):
+    def all(self):
+        return list(self)
+
 class ObservationManagerTest(SimpleTestCase):    
     @patch('publicweb.observation_manager.ObservationManager._add_recipient')
     def test_observer_not_created_for_no_notifications_level(self, observed_item):
         settings = create_fake_settings()
         settings_handler = ObservationManager()
 
-        settings_handler.update_observers(
-             settings, DECISION_NEW 
-        )
+        settings_handler.update_observers(settings, DECISION_NEW)
         
         self.assertFalse(observed_item.called)
 
@@ -54,9 +57,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, DECISION_NEW 
-        )
+        settings_handler.update_observers(settings, DECISION_NEW)
         
         self.assertTrue(observed_item.called)
     
@@ -67,9 +68,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, DECISION_STATUS_CHANGE, 
-        )
+        settings_handler.update_observers(settings, DECISION_STATUS_CHANGE)
         
         self.assertTrue(observed_item.called)
     
@@ -80,9 +79,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers( 
-            settings, DECISION_CHANGE 
-        )
+        settings_handler.update_observers(settings, DECISION_CHANGE)
         
         self.assertFalse(observed_item.called)
     
@@ -93,10 +90,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers( 
-             settings, FEEDBACK_NEW 
-        )
-        
+        settings_handler.update_observers(settings, FEEDBACK_NEW)        
         self.assertFalse(observed_item.called)
     
     @patch('publicweb.observation_manager.ObservationManager._add_recipient')
@@ -106,9 +100,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers( 
-            settings, DECISION_CHANGE
-        )
+        settings_handler.update_observers(settings, DECISION_CHANGE)
         
         self.assertTrue(observed_item.called)
     
@@ -119,9 +111,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, FEEDBACK_NEW 
-        )
+        settings_handler.update_observers(settings, FEEDBACK_NEW)
         
         self.assertTrue(observed_item.called)
         
@@ -132,10 +122,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, FEEDBACK_CHANGE 
-        )
-        
+        settings_handler.update_observers(settings, FEEDBACK_CHANGE)        
         self.assertFalse(observed_item.called)
     
     @patch('publicweb.observation_manager.ObservationManager._add_recipient')
@@ -145,9 +132,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, FEEDBACK_CHANGE 
-        )
+        settings_handler.update_observers(settings, FEEDBACK_CHANGE)
         
         self.assertTrue(observed_item.called)
     
@@ -158,9 +143,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, MINOR_CHANGE
-        )
+        settings_handler.update_observers(settings, MINOR_CHANGE)
         
         self.assertFalse(observed_item.called)
         
@@ -171,9 +154,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, COMMENT_NEW
-        )
+        settings_handler.update_observers(settings, COMMENT_NEW)
         
         self.assertTrue(observed_item.called)
     
@@ -184,9 +165,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, COMMENT_CHANGE 
-        )
+        settings_handler.update_observers(settings, COMMENT_CHANGE)
         
         self.assertTrue(observed_item.called)
     
@@ -197,9 +176,7 @@ class ObservationManagerTest(SimpleTestCase):
         )
         
         settings_handler = ObservationManager()
-        settings_handler.update_observers(
-             settings, MINOR_CHANGE
-        )
+        settings_handler.update_observers(settings, MINOR_CHANGE)
         
         self.assertTrue(observed_item.called)    
         
@@ -253,15 +230,18 @@ class ObservationManagerTest(SimpleTestCase):
              MAIN_ITEMS_NOTIFICATIONS_ONLY, settings.notification_level
         )
     
+    @patch('publicweb.models.Decision.watchers', new=MockQueryset())
     def test_include_watchers_adds_watchers_for_decision(self):
         decision = DecisionFactory.build(id=1)
         decision = add_watchers(decision)
         settings_handler = ObservationManager()
-        settings_handler.include_watchers(decision)
+        settings_handler.include_watchers(decision) 
         self.assertSetEqual(
-                set(decision.watchers.all()), settings_handler.recipient_list
+            set([watcher.user for watcher in decision.watchers.all()]), 
+            settings_handler.recipient_list
         )
     
+    @patch('publicweb.models.Decision.watchers', new=MockQueryset())
     def test_include_watchers_adds_watchers_for_feedback(self):
         decision = DecisionFactory.build(id=1)
         decision = add_watchers(decision)
@@ -269,9 +249,11 @@ class ObservationManagerTest(SimpleTestCase):
         settings_handler = ObservationManager()
         settings_handler.include_watchers(feedback)
         self.assertSetEqual(
-                set(decision.watchers.all()), settings_handler.recipient_list
+                set([watcher.user for watcher in decision.watchers.all()]),
+                settings_handler.recipient_list
         )
     
+    @patch('publicweb.models.Decision.watchers', new=MockQueryset())
     def test_include_watchers_adds_watchers_for_comments(self):
         decision = DecisionFactory.build(id=1)
         decision = add_watchers(decision)
@@ -281,5 +263,41 @@ class ObservationManagerTest(SimpleTestCase):
         settings_handler = ObservationManager()
         settings_handler.include_watchers(comment)
         self.assertSetEqual(
-                set(decision.watchers.all()), settings_handler.recipient_list
+                set([watcher.user for watcher in decision.watchers.all()]),
+                settings_handler.recipient_list
         )
+    
+    def test_get_organization_returns_organization_for_decision(self):
+        expected_organization = OrganizationFactory.build(id=1)
+        decision = DecisionFactory.build(
+            id=2, 
+            organization=expected_organization
+        )
+        settings_handler = ObservationManager()
+        actual_organization = settings_handler._get_organization(decision)
+        self.assertEqual(expected_organization, actual_organization)
+    
+    def test_get_organization_returns_organization_for_feedback(self):
+        expected_organization = OrganizationFactory.build(id=1)
+        decision = DecisionFactory.build(
+            id=2, 
+            organization=expected_organization
+        )
+        feedback = FeedbackFactory.build(decision=decision)
+        settings_handler = ObservationManager()
+        actual_organization = settings_handler._get_organization(feedback)
+        self.assertEqual(expected_organization, actual_organization)
+    
+    def test_get_organization_returns_organization_for_comment(self):
+        expected_organization = OrganizationFactory.build(id=1)
+        decision = DecisionFactory.build(
+            id=2, 
+            organization=expected_organization
+        )
+        feedback = FeedbackFactory.build(id=2, decision=decision)
+        comment = CommentFactory.build()
+        comment.content_object = feedback
+        settings_handler = ObservationManager()
+        actual_organization = settings_handler._get_organization(comment)
+        self.assertEqual(expected_organization, actual_organization)
+        

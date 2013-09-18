@@ -11,9 +11,20 @@ class ObservationManager(object):
     
     def __init__(self):
         self.recipient_list = set()
+    
+    def _get_decision(self, item):
+        if isinstance(item, Comment):
+            item = item.content_object
+        if isinstance(item, Feedback):
+            item = item.decision
+        return item
        
     def _add_recipient(self, user):
-        self.recipient_list.add(user)
+        self.recipient_list.add(user)#
+        
+    def _get_organization(self, item):
+        item = self._get_decision(item)
+        return item.organization
     
     def get_settings(self, user, organization):
         settings, _ = NotificationSettings.objects.get_or_create(
@@ -35,8 +46,7 @@ class ObservationManager(object):
                 self._add_recipient(settings.user)
     
     def include_watchers(self, item):
-        if isinstance(item, Comment):
-            item = item.content_object
-        if isinstance(item, Feedback):
-            item = item.decision
-        self.recipient_list.update(item.watchers.all())
+        item = self._get_decision(item)
+        self.recipient_list.update(
+            [watcher.user for watcher in item.watchers.all()]
+        )        
