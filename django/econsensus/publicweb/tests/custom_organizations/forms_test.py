@@ -1,17 +1,29 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from publicweb.tests.factories import UserFactory, \
-    OrganizationOwnerFactory, OrganizationFactory
+    OrganizationOwnerFactory, OrganizationFactory, \
+    OrganizationUserFactory
 
 from custom_organizations.forms import CustomOrganizationAddForm,\
     CustomOrganizationUserForm, CustomOrganizationUserAddForm, \
-    CustomOrganizationForm
+    CustomOrganizationForm, GroupAddForm
 
 from django.template.defaultfilters import slugify
 
 from guardian.shortcuts import assign_perm
 from django.forms.fields import BooleanField
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
+
+class TestGroupAddForm(TestCase):
+
+    def test_creator_added_as_member(self):
+        org_user = OrganizationUserFactory()
+        request = RequestFactory()
+        request.user = org_user.user
+        form = GroupAddForm(request, org_user.organization)
+        form.cleaned_data = {'name' : 'Testgroup'}
+        group = form.save()
+        self.assertEqual(group.members.get(id = org_user.id), org_user)
 
 
 class TestCustomOrganizationForm(TestCase):

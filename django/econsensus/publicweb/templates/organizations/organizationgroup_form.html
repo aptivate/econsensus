@@ -1,0 +1,32 @@
+{% extends "base_org_admin.html" %}
+{% load url from future %}
+
+{% load i18n %}
+
+{% block title %}
+Create group for organization
+{% endblock %}
+
+{% block heading %}
+{% trans "Create group" %}
+{% endblock %}
+
+{% block main_content %}
+
+<p> {% blocktrans %} Create a new working group within {{ organization }}. You will <br /> automatically be  made the owner of the group.{% endblocktrans %} </p>
+
+<br />
+
+<form action="." method="post">{% csrf_token %}
+    {% for field in form %}
+        {{ field.errors }}
+        {{ field }}
+    {% endfor %}
+    <br />
+    <br />
+    <input class="loose button" type="submit" value="OK">
+</form>
+<form method="GET" action="{% url 'organization_admin' organization.pk %}">
+    <input class="loose button" type="submit" value="Cancel">
+</form>
+{% endblock %}
