@@ -47,15 +47,19 @@
 		}
 
 		function updateCounters() {
-			var counters = {},
-			    feedback_type;
+			var counters = {};
+			$(".stats dt").each(function () {
+				var type = this.className;
+				counters[type] = 0;
+			});
 			$(".feedback_type").each(function () {
 				var type = $.trim(this.className.replace("feedback_type", ""));
-				counters[type] = counters[type] ? counters[type]+1 : 1;
+				counters[type] = counters[type]+1;
 			});
-			for(feedback_type in counters) {
-				$(".stats ."+feedback_type).next()
-						.html(counters[feedback_type]);
+			for(var feedback_type in counters) {
+				var dt = $(".stats ."+feedback_type);
+				var dd = dt.next();
+				dd.html(counters[feedback_type]);
 			}
 		}
 
