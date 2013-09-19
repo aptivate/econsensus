@@ -17,19 +17,13 @@
 {% for organization in organizations %}
 {% if forloop.first %}<ul class="org_list">{% endif %}
     <li>
-        <h3><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a></h3>
         <ul>
+        <li>
+            <a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a>
+        </li>
             {% if organization|is_admin:user %}
             <li>
-                <a href="{% url 'organization_edit' organization.pk %}">{% trans "rename" %}</a>
-            </li>
-            <li class="org-admin">
-                <a href="{% url 'organization_user_list' organization.pk %}">{% trans "members" %}</a>
-            </li>
-            {% endif %}
-            {% if organization|is_owner:user %}
-            <li>
-                <a href="{% url 'organization_delete' organization.pk %}">{% trans "delete" %}</a>
+                <a href="{% url 'organization_admin' organization.pk %}">{% trans "admin" %}</a>
             </li>
             {% endif %}
             <li>

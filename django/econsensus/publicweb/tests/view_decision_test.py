@@ -44,5 +44,5 @@ class ViewDecisionTest(DecisionTestCase):
         self.assertTrue(response_content.startswith('<!DOCTYPE html'))
         self.assertContains(response, u"Update Decision #%s" % decision.id)
 
-        form_data = self.get_form_values_from_response(response, 2)
+        form_data = self.get_form_values_from_response(response, 1)
         self.assertTrue(form_fields.issubset(set(form_data.keys())))

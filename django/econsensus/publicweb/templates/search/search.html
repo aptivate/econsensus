@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load url from future %}
+{% load i18n %}
+{% load search_enabled %}
+
+{% block main_content %}
+
+{% ifcansearch %}
+<form id="search_form" action="{% url 'publicweb_decision_search' organization.slug %}" method="get">
+    <p>
+        <input id="search" type="text" maxlength="128" value="{{query}}" name="q"/>
+        <input id="search_button" type="submit" value="{% trans 'Search' %}"/>
+    </p>
+</form>
+{% else %}
+<p>{% trans "Search has not been configured for this site." %}</p>
+{% endifcansearch %}
+
+{% if page.object_list %}
+    {% include "search/pagination.html" %}
+    <table class="search-results summary-list">
+        <thead>
+            <tr class="summary-header">
+                <th class="id">{% trans "ID" %}</th>
+                <th class="excerpt">{% trans "Excerpt" %}</th>
+                <th class="status">{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in page.object_list %}
+            {% with object=result.object status=result.object.status %}
+            <tr>
+                <td class="id {{ status }}">
+                    <a href="{{ object.get_absolute_url }}"><span class="iconified">{{ object.id }}</span></a>
+                </td>
+                <td class="excerpt {{ status }}">
+                    <a href="{{ object.get_absolute_url }}">{{ object.excerpt }}</a>
+                </td>
+                <td class="status {{ status }}">
+                    <a href="{{ object.get_absolute_url }}">{{ status|capfirst }}</a>
+                </td>
+            </tr>
+            {% endwith %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include "search/pagination.html" %}
+{% elif query %}
+    {% trans "No results" %}
+{% endif %}
+
+{% endblock main_content %}

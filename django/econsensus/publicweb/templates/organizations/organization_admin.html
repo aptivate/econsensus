@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load org_tags %}
+{% load org_filters %}
+
+{% block title %}
+{{ organization }} admin page
+{% endblock %}
+
+{% block heading %}
+{{ organization }} admin page
+{% endblock %}
+
+{% block main_content %}
+<div id="organization-admin">
+<ul>
+    {% if organization|is_admin:user %}
+    <li>
+        <a href="{% url 'organization_edit' organization.pk %}">{% trans "Rename Organization" %}</a>
+    </li>
+    <li>
+        <a href="{% url 'organization_user_list' organization.pk %}">{% trans "Manage Members" %}</a>
+    </li>
+    {% endif %}
+    {% if organization|is_owner:user %}
+    <li>
+        <a href="{% url 'organization_delete' organization.pk %}">{% trans "Delete Organization" %}</a>
+    </li>
+    {% endif %}
+</ul>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% load comments %}
+
+{{ object.author }}
+{{ object.description }}
+
+{% for feedback in object.feedback_set.all %}
+    {{ feedback.description }}
+    {% get_comment_list for feedback as comment_list %}
+    {% for comment in comment_list %}
+        {{ comment.comment }}
+    {% endfor %}
+{% endfor %}

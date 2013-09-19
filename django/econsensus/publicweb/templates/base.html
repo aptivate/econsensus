@@ -3,6 +3,8 @@
 {% load i18n %}
 {% load org_filters %}
 {% load guardian_tags %}
+{% load custom_flatpages %}
+{% load search_enabled %}
 
 {% if organization %}
 {% get_obj_perms request.user for organization as "organization_permissions" %}
@@ -53,6 +55,9 @@
 						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'decision'%}">{% trans "Decisions" %}</a></li>
 						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'archived'%}">{% trans "Archived" %}</a></li>
                         <li {% if tab == "actionitems" %}class="selected"{% endif %}><a href="{% url 'actionitem_list' organization.slug %}">{% trans "Action Items" %}</a></li>
+						{% ifcansearch %}
+						<li {% if tab == "search" %}class="selected"{% endif %}><a href="{% url 'publicweb_decision_search' organization.slug %}">{% trans "Search" %}</a></li>
+						{% endifcansearch %}
 					{% else %}
 						<li></li>
 					{% endif %}
@@ -67,15 +72,6 @@
 					</div>
 					{% endif %}
 				</div>
-				<div class="search">
-					<form id="search_form" action="search" method="get">
-						<p>
-							<input id="search" type="text" maxlength="128" value="" name="search"/>
-							<input id="search_button" type="submit" value="Search"/>
-						</p>
-					</form>
-				</div>
-				
 			</div>
 		{% endblock %}
 	</div><!-- Header end -->
@@ -90,6 +86,14 @@
 	<div id="footer-wrapper">
 		<div id="footer">
 			{% block footer_content%}{% endblock %}
+			{% get_topflatpages for user as flatpages %}
+			{% for page in flatpages %}
+			    {% if forloop.first %}<ul class="flatpagelinks">{% endif %}
+                            <li>
+				<a href="{% url 'django.contrib.flatpages.views.flatpage' url=page.url %}">{{ page.title }}</a>
+                            </li>
+			    {% if forloop.last %}</ul>{% endif %}
+			{% endfor %}
 			<p class="aptivate">{% trans "Econsensus" %} {{ version }} {% trans "is an open source project developed by" %} <a href="http://www.aptivate.org/"><span class="user-org not_translated">Aptivate</span></a></p>
 		</div>
 	</div><!-- footer end -->

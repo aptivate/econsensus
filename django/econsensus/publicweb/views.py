@@ -23,6 +23,7 @@ import unicodecsv
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
+from haystack.views import SearchView
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
     EconsensusActionItemCreateForm, EconsensusActionItemUpdateForm
@@ -117,32 +118,49 @@ class ExportCSV(View):
         decision_field_names = sorted(list(set([field.name for field in Decision._meta.fields])), key=field_sorter)
         feedback_field_names = sorted(list(set([field.name for field in Feedback._meta.fields])), key=field_sorter)
         comment_field_names = sorted(list(set([field.name for field in Comment._meta.fields])), key=field_sorter)
+        actionitem_field_names = sorted(list(set([field.name for field in ActionItem._meta.fields])), key=field_sorter)
 
         # Remove fields implied by filename (organization) or csv layout:
         remove_field(decision_field_names, 'organization')
         remove_field(feedback_field_names, 'decision')
         remove_field(comment_field_names, 'content_type')
         remove_field(comment_field_names, 'object_pk')
+        remove_field(actionitem_field_names, 'origin')
 
         decision_column_titles = ["Issue.%s" % field_name for field_name in decision_field_names]
         feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
         comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
+        actionitem_column_titles = ["ActionItem.%s" % field_name for field_name in actionitem_field_names]
 
         writer = unicodecsv.writer(response)
-        writer.writerow(decision_column_titles + feedback_column_titles + comment_column_titles)
+        writer.writerow(decision_column_titles + feedback_column_titles +
+                        comment_column_titles + actionitem_column_titles)
+
+        no_decision_data   = [u""]*len(decision_field_names)
+        no_feedback_data   = [u""]*len(feedback_field_names)
+        no_comment_data    = [u""]*len(comment_field_names)
+        no_actionitem_data = [u""]*len(actionitem_field_names)
+
         for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
             decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
-            writer.writerow(decision_data + [u""]*len(feedback_field_names) + [u""]*len(comment_field_names))    
+            writer.writerow(decision_data + no_feedback_data + no_comment_data + no_actionitem_data)
+
             for feedback in decision.feedback_set.all().order_by('id'):
                 feedback_data = [field_value(feedback, field_name) for field_name in feedback_field_names]
-                writer.writerow([u""]*len(decision_field_names) + feedback_data + [u""]*len(comment_field_names))
+                writer.writerow(no_decision_data + feedback_data + no_comment_data + no_actionitem_data)
+
                 comments = Comment.objects.filter(
                     content_type=ContentType.objects.get_for_model(Feedback),
                     object_pk=feedback.id
                 ).order_by('id')
                 for comment in comments:
                     comment_data = [field_value(comment, field_name) for field_name in comment_field_names]
-                    writer.writerow([u""]*len(decision_field_names) + [u""]*len(feedback_field_names) + comment_data)    
+                    writer.writerow(no_decision_data + no_feedback_data + comment_data + no_actionitem_data)
+
+            for actionitem in ActionItem.objects.filter(origin=decision.id).order_by('id'):
+                actionitem_data = [field_value(actionitem, field_name) for field_name in actionitem_field_names]
+                writer.writerow(no_decision_data + no_feedback_data + no_comment_data + actionitem_data)
+
         return response
 
 
@@ -163,6 +181,8 @@ class DecisionDetail(DetailView):
 
 
 class DecisionList(ListView):
+    DEFAULT = Decision.DISCUSSION_STATUS
+
     model = Decision
 
     @method_decorator(login_required)
@@ -172,7 +192,7 @@ class DecisionList(ListView):
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
     def set_status(self, **kwargs):
-        self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        self.status = kwargs.get('status', DecisionList.DEFAULT)
         return self.status
 
     def get(self, request, *args, **kwargs):
@@ -613,7 +633,7 @@ class EconsensusActionitemListView(ActionItemListView):
                          'responsible': 'Responsible',
                          'deadline': 'Deadline',
                          'done': 'Done?',
-                         'origin': 'Decision',
+                         'origin': 'Parent Item',
                          }
 
         self.header_list = []
@@ -729,6 +749,50 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
+            return reverse('publicweb_item_list', args = [users_org.slug, DecisionList.DEFAULT])
         except:
             return reverse('organization_list')
+
+class DecisionSearchView(SearchView):
+    DEFAULT_RESULTS_PER_PAGE = 10
+
+    def __init__(self, *args, **kwargs):
+        super(DecisionSearchView, self).__init__(*args, **kwargs)
+
+    def __call__(self, request, org_slug):
+        self.organization = get_object_or_404(Organization, slug=org_slug)
+
+        num = request.GET.get('num')
+        if not num: num = request.session.get('num')
+        if not num: num = str(self.DEFAULT_RESULTS_PER_PAGE)
+        request.session['num'] = num
+        self.results_per_page = int(num)
+
+        return super(DecisionSearchView, self).__call__(request)
+
+    def get_results(self):
+        results = super(DecisionSearchView, self).get_results()
+        return results.filter(organization=self.organization)
+
+    def extra_context(self):
+        context = {}
+        context['organization'] = self.organization
+        context['tab'] = 'search'
+        context['num'] = str(self.results_per_page)
+        context['queryurl'] = self.build_query_link()
+        context.update(super(DecisionSearchView, self).extra_context())
+        return context
+
+    def build_query_link(self):
+        link = '?q=' + self.query
+        if self.results_per_page != self.DEFAULT_RESULTS_PER_PAGE:
+            link = link + '&num=' + str(self.results_per_page)
+        return link
+
+    # Might have been logical to call this method "as_view", but
+    # that might imply that we inherit from View...
+    @classmethod
+    def make(cls):
+        def search_view(request, *args, **kwargs):
+            return cls()(request, *args, **kwargs)
+        return login_required(search_view)
