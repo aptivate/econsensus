@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load org_tags %}
+
+{% block title %}
+Group Detail
+{% endblock %}
+
+{% block heading %}
+Group Detail for {{ object.name }}
+{% endblock %}
+
+{% block main_content %}
+<h3> Group Members </h3>
+<ul>
+{% for member in object.members.all %}
+    <li> {{ member.user.username }} </li>
+</ul>
+{% empty %}
+<p>> {% trans "This group currently has no members" %}
+{% endfor %}
+{% endblock %}
