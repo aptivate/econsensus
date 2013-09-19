@@ -2,6 +2,7 @@ from django import template
 
 from publicweb.models import Feedback
 import publicweb.utils
+from actionitems.models import ActionItem
 
 register = template.Library()
 
@@ -29,3 +30,7 @@ def get_user_name_for_notification(user):
 @register.filter
 def get_excerpt(value):
     return publicweb.utils.get_excerpt(value)
+
+@register.filter
+def get_actionitems(decision):
+    return ActionItem.objects.filter(origin=decision.id)

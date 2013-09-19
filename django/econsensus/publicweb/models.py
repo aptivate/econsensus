@@ -340,3 +340,24 @@ def comment_signal_handler(sender, **kwargs):
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
 
+def actionitem_signal_handler(sender, **kwargs):
+    """
+    Triggers external update to decision associated with this action item.
+    As well as updating the "last-modified" field, this has the nice
+    consequence of causing the decision to get re-indexed.
+    """
+    instance = kwargs.get('instance')
+    if isinstance(instance.origin, Decision):
+        instance.origin.note_external_modification()
+
+# We can't register our ActionItem post-save signal handler, as importing the
+# ActionItem model in this file would result in a circular dependency. So
+# instead we listen for the ActionItem model class being defined, and register
+# the post-save signal handler when it is ready.
+@receiver(models.signals.class_prepared, dispatch_uid="publicweb.models.class_prepared_signal_handler")
+def class_prepared_signal_handler(sender, **kwargs):
+    if sender.__name__ == "ActionItem":
+        register = receiver(models.signals.post_save,
+                            sender=sender,
+                            dispatch_uid="publicweb.models.actionitem_signal_handler")
+        register(actionitem_signal_handler)
