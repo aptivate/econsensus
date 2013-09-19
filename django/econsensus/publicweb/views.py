@@ -616,7 +616,7 @@ class EconsensusActionitemListView(ActionItemListView):
                          'responsible': 'Responsible',
                          'deadline': 'Deadline',
                          'done': 'Done?',
-                         'origin': 'Decision',
+                         'origin': 'Parent Item',
                          }
 
         self.header_list = []
