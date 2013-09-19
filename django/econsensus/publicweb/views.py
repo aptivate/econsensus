@@ -163,6 +163,8 @@ class DecisionDetail(DetailView):
 
 
 class DecisionList(ListView):
+    DEFAULT = Decision.DISCUSSION_STATUS
+
     model = Decision
 
     @method_decorator(login_required)
@@ -172,7 +174,7 @@ class DecisionList(ListView):
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
     def set_status(self, **kwargs):
-        self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        self.status = kwargs.get('status', DecisionList.DEFAULT)
         return self.status
 
     def get(self, request, *args, **kwargs):
@@ -729,6 +731,6 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
+            return reverse('publicweb_item_list', args = [users_org.slug, DecisionList.DEFAULT])
         except:
             return reverse('organization_list')
