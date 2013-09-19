@@ -7,7 +7,6 @@ from notification import models as notification
 
 from django.db import models
 from django.utils import timezone
-from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext_noop
 from django.contrib.auth.models import User
@@ -24,6 +23,8 @@ from organizations.models import Organization
 from managers import DecisionManager
 
 from custom_notification.utils import send_observation_notices_for
+
+from publicweb.utils import get_excerpt
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -52,8 +53,6 @@ class Decision(models.Model):
                   (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
                   )
-
-    DEFAULT_SIZE = 140
 
     #User entered fields
     description = models.TextField(verbose_name=_('Description'))
@@ -128,14 +127,7 @@ class Decision(models.Model):
     feedbackcount.short_description = _("Feedback")
 
     def _get_excerpt(self):
-        description = strip_tags(self.description)
-        match = re.search("\.|\\r|\\n", description)
-        position = self.DEFAULT_SIZE
-        if match:
-            start = match.start()
-            if start < position:
-                position = start
-        return description[:position]
+        return get_excerpt(self.description)
 
     def __unicode__(self):
         return self.excerpt

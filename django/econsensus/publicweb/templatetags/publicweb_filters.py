@@ -1,6 +1,7 @@
 from django import template
 
 from publicweb.models import Feedback
+import publicweb.utils
 
 register = template.Library()
 
@@ -24,3 +25,7 @@ def get_user_name_for_notification(user):
         return user.first_name + " " + user.last_name
     else:
         return user.username
+
+@register.filter
+def get_excerpt(value):
+    return publicweb.utils.get_excerpt(value)
