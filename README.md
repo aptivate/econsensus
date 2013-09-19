@@ -36,7 +36,7 @@ that's more up-to-date than master.
 
     $ git push origin my_branch
     
-- find your branch my_branch on your github account and use the github button to submit a pull request to the aptivate 
+- find your branch my\_branch on your github account and use the github button to submit a pull request to the aptivate 
 develop branch
 - we'll get notified of your pull request and will be in touch asap
 
@@ -98,12 +98,23 @@ an admin level user of that organization. You can also repeat
 these steps to sign up more members and create organizations for them, or you can also create new 
 organizations as an existing logged-in user. 
 
+Installing default help pages
+=============================
+
+You can install help pages for the benefit of your users by running
+
+    $ ./manage.py loaddata default_flatpages
+
+The text of these pages can be modified (and pages added or removed)
+via the django admin screen. Pages are 'flatpage' instances, and their
+content is in [Markdown](http://en.wikipedia.org/wiki/Markdown) format.
+
 Important note on email notifications
 -------------------------------------
 Please note that the processes described above involve email interaction. An econsensus instance installed as above is not set up to send out 
 actual emails, but will instead write emails out as text files into the directory specified by the 
-EMAIL_FILE_PATH setting in local_settings.py. This email behaviour is controlled by the EMAIL_BACKEND 
-setting also in local_settings.py.
+EMAIL\_FILE\_PATH setting in local\_settings.py. This email behaviour is controlled by the EMAIL\_BACKEND 
+setting also in local\_settings.py.
 
 
 
