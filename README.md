@@ -116,6 +116,28 @@ actual emails, but will instead write emails out as text files into the director
 EMAIL\_FILE\_PATH setting in local\_settings.py. This email behaviour is controlled by the EMAIL\_BACKEND 
 setting also in local\_settings.py.
 
+Enabling search
+---------------
 
+If you wish to search within econsensus, you will also need to install
+Elasticsearch. This can be downloaded from http://www.elasticsearch.org/.
 
-                                                                                                                                                                                                                                                                                            
+Elastisticsearch requires Java be install, e.g.:
+
+    $ sudo apt-get install openjdk-6-jre-headless
+
+Econsensus also needs to be configured to use Elasticsearch, which can be done by adding the following
+to local_settings.py:
+
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+             'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+             'URL': 'http://127.0.0.1:9200/',
+             'INDEX_NAME': 'haystack',
+        },
+    }
+
+If you configure search when your Econsensus installation already has content, then you will need to get
+this content into the search index by running:
+
+    ./manage.py update_index
