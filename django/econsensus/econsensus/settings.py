@@ -150,9 +150,22 @@ INSTALLED_APPS = (
     'remember_me',
     'actionitems',
     'custom_flatpages',
+    'haystack',
+    'custom_haystack'
 )
 
 ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
+
+# Search disabled by default.
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'custom_haystack.backends.disabled_backend.DisabledEngine',
+    },
+}
+
+# When search is enabled, updates to search index happens
+# in real time.
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

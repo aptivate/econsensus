@@ -17,8 +17,8 @@
 	  <span class="author">{{ object.get_author_name }} says:</span>
 	  <p>{{ object.description|urlize|linebreaksbr }}</p>
 {% if "edit_decisions_feedback" in organization_permissions %}
-	  <a class="edit" href='{% url 'publicweb_feedback_update' object.id %}'>{% trans "Edit" %}</a>
-	  <a class="show" href='#'>{% trans "Reply" %}</a>
+	  <a class="button edit" href='{% url 'publicweb_feedback_update' object.id %}'>{% trans "Edit" %}</a>
+	  <a class="button show" href='#'>{% trans "Reply" %}</a>
 {% endif %}
 	</div>
 		
