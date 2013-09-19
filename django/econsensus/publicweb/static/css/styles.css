@@ -760,10 +760,10 @@ span.excerpt {
 	bottom:10px;
 }
 
-a.edit, a.show {
-	text-decoration:underline;
+a.button.edit, a.button.show {
 	font-weight:bold;
 	font-size:0.8em;
+	margin: 0 0
 }
 
 #decision_detail .dates {
