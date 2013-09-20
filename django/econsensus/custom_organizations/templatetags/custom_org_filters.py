@@ -10,12 +10,7 @@ def get_organization_groups_for_current_user(org, user):
 @register.filter
 def is_member_of_group(group, user): 
     result = Group.objects.filter(id=group.id, members__user=user)
-    if result:
-        print "yay!"
-        return True
-    else:
-        print "booh"
-        return False
+    return result
 
 @register.filter
 def get_organization_groups(org):

@@ -312,16 +312,28 @@ input {
 	margin-left:1em;
 }
 
-#content ul.org_list ul li {
-	display:inline;
-    border-left:1px solid #666;
-    padding:0 0.5em;
+#your-organizations ul.group_list {
+    text-indent:70px;
+}
+
+#your-organizations li.group_list_member  {
+    font-weight: bold;
+}
+
+#your-organizations h3.groups_title {
+    text-indent:60px;
 }
 
 #content ul.org_list ul li:first-child {
 	border-width:0;
 	padding-left:0;
     font-size: 1.4em;
+}
+
+#content ul.org_list ul li {
+    display:inline;
+    border-left:1px solid #666;
+    padding:0 0.5em;
 }
 
 .page_title.actionitem, 

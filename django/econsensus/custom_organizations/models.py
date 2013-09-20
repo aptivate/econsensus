@@ -10,6 +10,8 @@ class Group(models.Model):
     organization = models.ForeignKey(Organization,
             related_name="organization_groups")
     members = models.ManyToManyField(OrganizationUser)
+    owner = models.ForeignKey(OrganizationUser,
+        related_name="organizationuser_groupowner")
 
     class Meta:
         ordering = ['name']

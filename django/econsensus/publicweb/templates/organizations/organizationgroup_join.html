@@ -1,0 +1,23 @@
+{% extends "base_org_admin.html" %}
+{% load url from future %}
+{% load i18n %}
+
+{% block title %}
+Join group
+{% endblock %}
+
+{% block heading %}
+Request to join group?
+{% endblock %}
+
+{% block main_content %}
+<p> Would you like to request to join this group? </p>
+<form action="." method="post">{% csrf_token %}
+    <input class="loose button" type="submit" value="Send Request">
+</form>
+<form method="GET" action="{% url 'organization_list' %}">
+    <input class="loose button" type="submit" value="Cancel">
+</form>
+
+
+{% endblock %}

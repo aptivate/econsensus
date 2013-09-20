@@ -10,5 +10,5 @@ class GroupMixin(object):
         if hasattr(self, 'group'):
             return self.group
         group_pk = self.kwargs.get('group_pk', None)
-        self.group = get_object_or_404(self.group_model, pk = group_pk)
-        return self.group
+        return get_object_or_404(self.group_model, pk = group_pk)
+    get_group = get_object

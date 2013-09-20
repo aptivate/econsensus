@@ -113,14 +113,23 @@ class GroupAddForm(forms.ModelForm):
 
     class Meta:
         model = Group
-        exclude = ('organization', 'members')
+        exclude = ('organization', 'members', 'owner')
 
     def save(self, **kwargs):
-        group = Group.objects.create(name=self.cleaned_data['name'],
-             organization = self.organization)
-        # return group
         group_creator = OrganizationUser.objects.get(organization = self.organization,
             user = self.request.user)
+        group = Group.objects.create(name=self.cleaned_data['name'],
+             organization = self.organization, owner=group_creator)
         group.save()
         group.members.add(group_creator)
         return group
+
+class GroupJoinForm(forms.ModelForm):
+    def __init__(self, org_user, group, *args, **kwargs):
+       self.org_user = org_user
+       self.group = group
+       super(GroupJoinForm, self).__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        self.group.members.add(self.org_user)
+        return self.group

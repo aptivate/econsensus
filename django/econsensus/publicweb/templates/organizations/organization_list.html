@@ -33,14 +33,18 @@
         </ul>
     </li>
 </ul>
-<ul>
+<h3 class = "groups_title">Subgroups:</h3>
+<ul class="group_list">
     {% for group in organization|get_organization_groups %}
-    <li>
-        {% if group|is_member_of_group:user %}
-            <h3> {{ group }} </h3>
+    {% if group|is_member_of_group:user %}
+        <li class="group_list_member">
+            <a href="{% url 'group_detail' organization.pk group.pk %}"> {{ group }}</a>
         {% else %}
-         {{ group }}
+        <li>
+            {{ group }} <a href="{% url 'join_group' organization.pk group.pk %}">Join</a>
         {% endif %}
+    {% empty %}
+    <li> <p> There are no subgroups for this organization. </p> </li>
     </li>
     {% endfor %}
 </ul>
