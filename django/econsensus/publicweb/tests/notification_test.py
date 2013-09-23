@@ -150,7 +150,7 @@ class NotificationTest(DecisionTestCase):
         self.assertNotIn('&amp', outbox[0].subject)
         self.assertNotIn('&amp', outbox[0].body)
 
-    def test_notifications_not_sent_to_author(self):
+    def test_notifications_sent_to_author(self):
         """
         We want to make sure that when a user creates or changes an
         item they are not sent a notification. The message goes to those
@@ -162,7 +162,7 @@ class NotificationTest(DecisionTestCase):
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
 
-        self.assertNotIn(self.user, self.get_addresses_from_outbox(outbox))
+        self.assertIn(self.user.email, self.get_addresses_from_outbox(outbox))
 
     def test_emails_not_sent_to_inactive_users(self):
         self.charlie.is_active = False

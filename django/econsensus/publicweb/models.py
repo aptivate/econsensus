@@ -297,10 +297,9 @@ def decision_signal_handler(sender, **kwargs):
     headers.update(STANDARD_SENDING_HEADERS)
     if kwargs.get('created', True):
         active_users = instance.organization.users.filter(is_active=True)
-        all_but_author = active_users.exclude(username=instance.author)
         extra_context = {"observed": instance}
         observation_manager = ObservationManager()
-        observation_manager.send_notifications(all_but_author, instance, DECISION_NEW, extra_context, headers, from_email=instance.get_email())
+        observation_manager.send_notifications(active_users, instance, DECISION_NEW, extra_context, headers, from_email=instance.get_email())
 
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
 def feedback_signal_handler(sender, **kwargs):
