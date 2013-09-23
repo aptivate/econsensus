@@ -2,6 +2,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load org_filters %}
+{% load publicweb_filters %}
 
 {% block title %}
     {{ block.super }}
@@ -78,7 +79,7 @@
                             {% endif %}
                             {% if tab == 'actionitems' %}
                                 <td class="id">{{ object.id }}</td>
-                                <td class="excerpt">{{ object.title }}</td>
+                                <td class="excerpt">{{ object.description|get_excerpt }}</td>
                                 <td>{{ object.responsible }}</td>
                                 <td>{{ object.deadline }}</td>
                                 <td><input id="id_done" type="checkbox" name="done" {% if object.done %}checked{% endif %} disabled/></td>

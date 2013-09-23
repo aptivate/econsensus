@@ -6,7 +6,7 @@
     <div class="actionitem_feedback_wrapper">
 	    {% if actionitem.done %}<del>{% endif %}
 	        <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
-	        {{ actionitem.title }} <br />
+	        {{ actionitem.description|urlize|linebreaksbr }} <br />
 	        {% if actionitem.deadline %}{% trans "by " %}<span class="actionitem_responsible">{{ actionitem.deadline }}</span>
 	        {% else %}{% trans "No deadline" %}
 	        {% endif %}

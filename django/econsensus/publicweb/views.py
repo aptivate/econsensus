@@ -136,64 +136,49 @@ class ExportCSV(View):
           ), 
           key=field_sorter)
         comment_field_names = sorted(list(set([field.name for field in Comment._meta.fields])), key=field_sorter)
+        actionitem_field_names = sorted(list(set([field.name for field in ActionItem._meta.fields])), key=field_sorter)
 
         # Remove fields implied by filename (organization) or csv layout:
         remove_field(decision_field_names, 'organization')
         remove_field(feedback_field_names, 'decision')
         remove_field(comment_field_names, 'content_type')
         remove_field(comment_field_names, 'object_pk')
+        remove_field(actionitem_field_names, 'origin')
 
-        decision_column_titles = [
-              "Issue.%s" % field_name for field_name in decision_field_names
-        ]
-        feedback_column_titles = [
-              "Feedback.%s" % field_name for field_name in feedback_field_names
-        ]
-        comment_column_titles = [
-              "Comment.%s" % field_name for field_name in comment_field_names
-        ]
+        decision_column_titles = ["Issue.%s" % field_name for field_name in decision_field_names]
+        feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
+        comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
+        actionitem_column_titles = ["ActionItem.%s" % field_name for field_name in actionitem_field_names]
 
         writer = unicodecsv.writer(response)
-        writer.writerow(
-            decision_column_titles + 
-            feedback_column_titles + 
-            comment_column_titles
-        )
-        org_decisions = Decision.objects.filter(organization=self.organization)
-        for decision in org_decisions.order_by('id'):
-            decision_data = [
-                 field_value(decision, field_name) 
-                 for field_name in decision_field_names
-            ]
-            writer.writerow(
-                decision_data + 
-                [u""]*len(feedback_field_names) + 
-                [u""]*len(comment_field_names)
-            )    
+        writer.writerow(decision_column_titles + feedback_column_titles +
+                        comment_column_titles + actionitem_column_titles)
+
+        no_decision_data   = [u""]*len(decision_field_names)
+        no_feedback_data   = [u""]*len(feedback_field_names)
+        no_comment_data    = [u""]*len(comment_field_names)
+        no_actionitem_data = [u""]*len(actionitem_field_names)
+
+        for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
+            decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
+            writer.writerow(decision_data + no_feedback_data + no_comment_data + no_actionitem_data)
+
             for feedback in decision.feedback_set.all().order_by('id'):
-                feedback_data = [
-                    field_value(feedback, field_name) 
-                    for field_name in feedback_field_names
-                ]
-                writer.writerow(
-                    [u""]*len(decision_field_names) + 
-                    feedback_data + 
-                    [u""]*len(comment_field_names)
-                )
+                feedback_data = [field_value(feedback, field_name) for field_name in feedback_field_names]
+                writer.writerow(no_decision_data + feedback_data + no_comment_data + no_actionitem_data)
+
                 comments = Comment.objects.filter(
                     content_type=ContentType.objects.get_for_model(Feedback),
                     object_pk=feedback.id
                 ).order_by('id')
                 for comment in comments:
-                    comment_data = [
-                        field_value(comment, field_name) 
-                        for field_name in comment_field_names
-                    ]
-                    writer.writerow(
-                        [u""]*len(decision_field_names) + 
-                        [u""]*len(feedback_field_names) + 
-                        comment_data
-                    )    
+                    comment_data = [field_value(comment, field_name) for field_name in comment_field_names]
+                    writer.writerow(no_decision_data + no_feedback_data + comment_data + no_actionitem_data)
+
+            for actionitem in ActionItem.objects.filter(origin=decision.id).order_by('id'):
+                actionitem_data = [field_value(actionitem, field_name) for field_name in actionitem_field_names]
+                writer.writerow(no_decision_data + no_feedback_data + no_comment_data + actionitem_data)
+
         return response
 
 
@@ -710,7 +695,7 @@ class EconsensusActionitemListView(ActionItemListView):
                          'responsible': 'Responsible',
                          'deadline': 'Deadline',
                          'done': 'Done?',
-                         'origin': 'Decision',
+                         'origin': 'Parent Item',
                          }
 
         self.header_list = []

@@ -20,6 +20,8 @@ from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
 
+from publicweb.utils import get_excerpt
+
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
 # http://code.google.com/p/django-tinymce/issues/detail?id=80
@@ -130,14 +132,7 @@ class Decision(models.Model):
     feedbackcount.short_description = _("Feedback")
 
     def _get_excerpt(self):
-        description = strip_tags(self.description)
-        match = re.search("\.|\\r|\\n", description)
-        position = self.DEFAULT_SIZE
-        if match:
-            start = match.start()
-            if start < position:
-                position = start
-        return description[:position]
+        return get_excerpt(self.description)
 
     def __unicode__(self):
         return self.excerpt
@@ -351,5 +346,3 @@ def comment_signal_handler(sender, **kwargs):
         observation_manager.send_notifications(org_users, instance, COMMENT_NEW, extra_context, headers, from_email=instance.content_object.decision.get_email())
     else:
         observation_manager.send_notifications(org_users, instance, COMMENT_CHANGE, extra_context, headers, from_email=instance.content_object.decision.get_email())
-
-    
