@@ -5,7 +5,7 @@ import os
 from os import path
 import sys
 import subprocess
-from ve_mgr import check_python_version, find_package_dir_in_ve
+from ve_mgr import check_python_version, find_package_dir_in_ve, UpdateVE
 
 # check python version is high enough
 check_python_version(2, 6, __file__)
@@ -20,6 +20,12 @@ if not path.exists(ve_dir):
     print "Expected virtualenv does not exist"
     print "(required for correct version of fabric and dye)"
     print "Please run './bootstrap.py' to create virtualenv"
+    sys.exit(1)
+
+updater = UpdateVE(ve_dir=ve_dir)
+if updater.virtualenv_needs_update():
+    print "VirtualEnv needs to be updated"
+    print 'Run deploy/bootstrap.py'
     sys.exit(1)
 
 fab_bin = path.join(ve_dir, 'bin', 'fab')
