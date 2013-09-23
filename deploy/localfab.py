@@ -12,8 +12,12 @@ import fablib
 def deploy(revision=None, keep=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('server_project_home', provided_by=env.valid_envs)
-    fablib.check_for_local_changes()
+    fablib._migrate_directory_structure()
+    fablib._set_vcs_root_dir_timestamp()
     fablib._create_dir_if_not_exists(env.server_project_home)
+
+    fablib.check_for_local_changes()
+
     fablib.create_copy_for_next()
     fablib.checkout_or_update(in_next=True, revision=revision)
     fablib.rm_pyc_files(path.join(env.next_dir, env.relative_django_dir))
@@ -27,7 +31,7 @@ def deploy(revision=None, keep=None):
     fablib.link_webserver_conf(maintenance=True)
     with settings(warn_only=True):
         fablib.webserver_cmd('reload')
-    fablib.next_to_current_to_rollback()
+    fablib.point_current_to_next()
 
     # Use tasks.py deploy:env to actually do the deployment, including
     # creating the virtualenv if it thinks it necessary, ignoring
@@ -39,8 +43,8 @@ def deploy(revision=None, keep=None):
     fablib.link_webserver_conf()
     fablib.webserver_cmd('reload')
     downtime_end = datetime.now()
-
     fablib.touch_wsgi()
+
     correct_log_perms()
 
     fablib.delete_old_rollback_versions(keep)
