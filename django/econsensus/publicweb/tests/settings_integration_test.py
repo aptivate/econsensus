@@ -5,8 +5,8 @@ from publicweb.tests.factories import ObservedItemFactory, NoticeTypeFactory,\
     UserFactory, OrganizationFactory, DecisionFactory,\
     NotificationSettingsFactory
 from django.core import mail
-from publicweb.models import (NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY,
-    MINOR_CHANGES_NOTIFICATIONS)
+from publicweb.extra_models import (NO_NOTIFICATIONS, 
+    MAIN_ITEMS_NOTIFICATIONS_ONLY, MINOR_CHANGES_NOTIFICATIONS)
 from signals.management import DECISION_NEW
 from publicweb.observation_manager import ObservationManager
 

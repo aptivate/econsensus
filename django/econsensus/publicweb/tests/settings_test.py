@@ -1,5 +1,5 @@
 from django.test.testcases import SimpleTestCase
-from publicweb.models import (NotificationSettings, OrganizationSettings,\
+from publicweb.extra_models import (NotificationSettings, OrganizationSettings,
     NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY)
 from django.contrib.auth.models import User, AnonymousUser
 from organizations.models import Organization
@@ -9,7 +9,6 @@ from mock import patch, MagicMock
 from django.test.client import RequestFactory
 from publicweb.views import UserNotificationSettings
 from publicweb.forms import NotificationSettingsForm
-import publicweb
 from django.core.urlresolvers import reverse
 from dbsettings.models import Root
 from django.http import HttpResponseRedirect
@@ -198,33 +197,6 @@ class SettingsTest(SimpleTestCase):
             
         self.assertIn('form', response.context_data)
         self.assertTrue(response.context_data['form'].errors)
-    
-    @patch('publicweb.views.Root.objects', spec=Root.objects)
-    def test_form_creates_a_root_object_when_saving_new_item(self, root):
-        """
-        For some reason, settings classes need a "root_id". 
-        This should be added when the model is saved, if it doesn't already 
-        exist
-        """
-        user = UserFactory.build(id=1)
-        organization = create_fake_organization(id=2)
-               
-        notification_settings_instance = MagicMock(
-                spec=NotificationSettings,
-                organisation=organization,
-                user=user,
-                root_id=None,
-                meta=MagicMock(fields=[], many_to_many=[])
-        )
-        
-        notification_settings_form = NotificationSettingsForm(
-                {'notification_level': NO_NOTIFICATIONS},
-                instance=notification_settings_instance
-        )
-        
-        notification_settings_form.save(False)
-        
-        self.assertTrue(root.create.called)
     
     @patch('publicweb.views.Organization.objects', 
            new=MagicMock(

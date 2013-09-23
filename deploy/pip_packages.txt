@@ -31,3 +31,4 @@ django-haystack==2.1.0
 requests==1.2.3
 pyelasticsearch==0.6
 simplejson==3.3.0
+pytz==2013d

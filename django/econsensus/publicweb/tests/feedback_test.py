@@ -2,8 +2,8 @@ from decision_test_case import DecisionTestCase
 from django.core.urlresolvers import reverse
 from guardian.shortcuts import assign_perm
 from publicweb.forms import FeedbackForm
-from publicweb import models
 from django.core import mail
+from publicweb.extra_models import FEEDBACK_MAJOR_CHANGES, NotificationSettings
 
 class FeedbackTest(DecisionTestCase):
 
@@ -17,8 +17,15 @@ class FeedbackTest(DecisionTestCase):
     def test_email_sent_when_feedback_edited(self):
         decision = self.create_and_return_example_decision_with_feedback()
 
+        settings = NotificationSettings.objects.get(
+            user=self.betty, 
+            organization=decision.organization
+        )
+        settings.notification_level = FEEDBACK_MAJOR_CHANGES
+        settings.save()
         feedback = decision.feedback_set.all()[0]
         self.assertEqual(feedback.author, self.betty)
+        
         # edit feedback, not as author
         self.login(self.charlie)
         assign_perm('edit_decisions_feedback', self.user, self.bettysorg)

@@ -19,6 +19,7 @@ from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 from publicweb.tests import dummy_poplib
 from publicweb.models import Decision, Feedback
 from publicweb.management.commands.process_email import is_autoreply
+from publicweb.extra_models import NotificationSettings, FEEDBACK_MAJOR_CHANGES
 
 class CommandTest(EconsensusFixtureTestCase):
 
@@ -135,10 +136,17 @@ class CommandTest(EconsensusFixtureTestCase):
         self.assertEqual(feedback.description, "")
 
     def test_process_email_reply_to_feedback_with_comment(self):
-        #Tests that a reply to a new feedback notification results in a new comment.
+        #Tests that a reply to a new feedback notification results in a new 
+        #comment.
+        users_organizations = Organization.active.get_for_user(self.user) 
+        NotificationSettings.objects.create(
+            user=self.user, 
+            organization=users_organizations.latest('id'),
+            notification_level=FEEDBACK_MAJOR_CHANGES
+        )
         comment_body = 'Comment description'
         decision = self.make_decision()
-        feedback = self.make_feedback(decision=decision)
+        self.make_feedback(decision=decision)
         count = Comment.objects.count()
         email = getattr(mail, 'outbox')[-1]
         user  = User.objects.get(email=email.to[0])
@@ -151,7 +159,8 @@ class CommandTest(EconsensusFixtureTestCase):
             management.call_command('process_email')
         except:
             self.fail("Exception was raised when processing legitimate email.")
-        self.assertEqual(count + 1, Comment.objects.count(), "New comment failed to appear in database")
+        self.assertEqual(count + 1, Comment.objects.count(), 
+                         "New comment failed to appear in database")
         comment = Comment.objects.latest('id')
         
         self.assertEqual(comment.comment, comment_body)
@@ -192,6 +201,11 @@ class CommandTest(EconsensusFixtureTestCase):
 
     def test_process_email_reply_to_comment_with_comment(self):
         #Tests that a reply to a new comment notification results in a new comment if no rating supplied.
+        NotificationSettings.objects.create(
+                user=self.user, 
+                organization=Organization.active.get_for_user(self.user).latest('id'),
+                notification_level=FEEDBACK_MAJOR_CHANGES
+        )
         comment_body = 'Comment description'
         decision = self.make_decision()
         feedback = self.make_feedback(decision=decision)

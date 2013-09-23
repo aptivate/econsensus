@@ -2,15 +2,14 @@ from django.test.testcases import SimpleTestCase
 from publicweb.tests.factories import (NotificationSettingsFactory,
     DecisionFactory, FeedbackFactory, CommentFactory, UserFactory,
     OrganizationFactory, ObservedItemFactory, NoticeTypeFactory)
-from publicweb.models import (NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY,
-    FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES, NotificationSettings,
-    MINOR_CHANGES_NOTIFICATIONS)
+from publicweb.extra_models import (NO_NOTIFICATIONS, 
+    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_ADDED_NOTIFICATIONS, 
+    FEEDBACK_MAJOR_CHANGES, NotificationSettings, MINOR_CHANGES_NOTIFICATIONS)
 from mock import patch, MagicMock
 from publicweb.observation_manager import ObservationManager
 from signals.management import (DECISION_STATUS_CHANGE, FEEDBACK_CHANGE, 
     DECISION_NEW, FEEDBACK_NEW, DECISION_CHANGE, COMMENT_NEW, COMMENT_CHANGE,
     MINOR_CHANGE)
-from notification.models import ObservedItem
 from datetime import datetime
 from pytz import utc
 

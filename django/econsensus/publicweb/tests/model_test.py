@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.test import TestCase
@@ -112,10 +111,6 @@ class ModelTestSlow(DecisionTestCase):
         self.model_has_attribute(decision, "editor")
         self.model_has_attribute(decision, "last_modified")
         self.model_has_attribute(decision, "organization")
-        
-    def test_watchers_changes(self):
-        decision = self.make_decision()
-        self.assertEqual(decision.organization.users.count(), decision.watchers.count())
 
     def test_feedback_can_have_empty_description(self):
         decision = self.make_decision()

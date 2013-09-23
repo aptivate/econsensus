@@ -1,10 +1,9 @@
-from publicweb.models import (NO_NOTIFICATIONS, NotificationSettings,
-    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_ADDED_NOTIFICATIONS, 
-    FEEDBACK_MAJOR_CHANGES, Feedback)
+from publicweb.extra_models import (NotificationSettings,
+    NO_NOTIFICATIONS, MAIN_ITEMS_NOTIFICATIONS_ONLY,
+    FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES)
 from signals.management import (DECISION_NEW, DECISION_STATUS_CHANGE,
     FEEDBACK_CHANGE, DECISION_CHANGE, FEEDBACK_NEW, COMMENT_NEW, COMMENT_CHANGE,
     MINOR_CHANGE)
-from django.contrib.comments.models import Comment
 from notification import models as notification
 
 class ObservationManager(object):
@@ -14,9 +13,9 @@ class ObservationManager(object):
         self.recipient_list = set()
     
     def _get_decision(self, item):
-        if isinstance(item, Comment):
+        if hasattr(item, 'content_object'):
             item = item.content_object
-        if isinstance(item, Feedback):
+        if hasattr(item, 'decision'):
             item = item.decision
         return item
        
@@ -48,15 +47,14 @@ class ObservationManager(object):
     
     def include_watchers(self, item):
         item = self._get_decision(item)
-        self.recipient_list.update(
-            [watcher.user for watcher in item.watchers.all()]
-        )
+        watchers = [watcher.user for watcher in item.watchers.all()]
+        self.recipient_list.update(watchers)
     
     def send_notifications(self, recipients, item, notification_type, 
                            extra_context, headers, from_email):
         self.include_watchers(item)
         organization = self._get_organization(item)
-        
+
         for recipient in recipients:
             settings = self.get_settings(recipient, organization)
             self.update_observers(settings, notification_type)
@@ -66,6 +64,6 @@ class ObservationManager(object):
             notification_type, 
             extra_context,
             headers,
-            from_email
+            from_email=from_email
         )
         

@@ -108,11 +108,11 @@ class Command(BaseCommand):
                 user = User.objects.get(email=from_match.group(1))
             except ObjectDoesNotExist:
                 logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known User" \
-                             % (mail['From'], subject_match.group(1)))
+                             % (mail['From'], from_match.group(1)))
                 return
             except MultipleObjectsReturned:
                 logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned several Users for id '%s'" \
-                             % (mail['From'], subject_match.group(1)))
+                             % (mail['From'], from_match.group(1)))
                 return
             self._print_if_verbose(verbosity, "Matched email to user '%s'" % user)
         else:
@@ -127,11 +127,11 @@ class Command(BaseCommand):
                 organization = Organization.objects.get(slug=org_match.group(1))
             except ObjectDoesNotExist:
                 logger.error("[EMAIL REJECTED] From '%s' Reason: id '%s' does not correspond to any known Organization" \
-                             % (mail['From'], subject_match.group(1)))
+                             % (mail['From'], org_match.group(1)))
                 return
             except MultipleObjectsReturned:
                 logger.error("[EMAIL REJECTED] From '%s' Reason: Query returned several Organizations for id '%s'" \
-                             % (mail['From'], subject_match.group(1)))
+                             % (mail['From'], org_match.group(1)))
                 return
             self._print_if_verbose(verbosity, "Matched email to organization '%s'" % organization.name)
         else:
@@ -176,7 +176,7 @@ class Command(BaseCommand):
                     logger.error("[EMAIL REJECTED] From '%s' Reason: User cannot reply to decision #%s because they are not a member of that organization." \
                                  % (mail['From'], subject_match.group(1)))
                     return
-                    
+   
             #process comment or feedback against feedback
             if subject_match.group(2):
                 self._print_if_verbose(verbosity, "Found feedback id '%s' in Subject" % subject_match.group(2))
