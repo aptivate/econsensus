@@ -1,7 +1,7 @@
 # Django settings for Econsensus project.
 
 import os
-import private_settings #@UnresolvedImport
+import private_settings  # @UnresolvedImport
 
 DJANGO_HOME = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
 DEBUG = True
@@ -11,11 +11,18 @@ ADMINS = (
     ('Econsensus Project', 'carers-econsensus@aptivate.org'),
 )
 
+ALLOWED_HOSTS = [
+    '.econsensus.org',
+    'www.econsensus.org',
+    'econsensus.stage.aptivate.org',
+    'fen-vz-econsensus.fen.aptivate.org',
+]
+
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
