@@ -97,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 )
 
 ROOT_URLCONF = 'econsensus.urls'
@@ -135,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'south',
     'registration',
+    'waffle',
     'notification',
     'custom_comments',
     'keyedcache',
@@ -233,7 +235,7 @@ LOGGING = {
 
 # Set this to true to log emails marked as auto-replies. Default is False
 LOG_AUTO_REPLIES = True
- 
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -262,8 +264,8 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
-TEST_RUNNER = 'test_runner.DiscoveryRunner' 
- 
+TEST_RUNNER = 'test_runner.DiscoveryRunner'
+
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 

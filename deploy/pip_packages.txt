@@ -26,6 +26,7 @@ selenium==2.34.0
 django-dynamic-fixture==1.6.5
 django-selenium==0.9.6
 django-parsley==0.0.2a0
+django-waffle==0.9.1
 Markdown==2.3.1
 django-haystack==2.1.0
 requests==1.2.3
