@@ -1,7 +1,7 @@
 # Django settings for Econsensus project.
 
 import os
-import private_settings #@UnresolvedImport
+import private_settings  # @UnresolvedImport
 
 DJANGO_HOME = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
 DEBUG = True
@@ -11,11 +11,18 @@ ADMINS = (
     ('Econsensus Project', 'carers-econsensus@aptivate.org'),
 )
 
+ALLOWED_HOSTS = [
+    '.econsensus.org',
+    'www.econsensus.org',
+    'econsensus.stage.aptivate.org',
+    'fen-vz-econsensus.fen.aptivate.org',
+]
+
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
@@ -97,6 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 )
 
 ROOT_URLCONF = 'econsensus.urls'
@@ -135,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'south',
     'registration',
+    'waffle',
     'notification',
     'custom_comments',
     'keyedcache',
@@ -233,7 +242,7 @@ LOGGING = {
 
 # Set this to true to log emails marked as auto-replies. Default is False
 LOG_AUTO_REPLIES = True
- 
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -262,8 +271,8 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
-TEST_RUNNER = 'test_runner.DiscoveryRunner' 
- 
+TEST_RUNNER = 'test_runner.DiscoveryRunner'
+
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 

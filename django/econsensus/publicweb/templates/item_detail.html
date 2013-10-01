@@ -2,6 +2,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load org_filters %}
+{% load waffle_tags %}
 
 {% block title %}
 {% if organization|is_member:user %}
@@ -343,6 +344,7 @@
 {% else %}
 {% include "decision_detail_snippet.html" %}
 
+{% switch "actionitems" %}
 <div class="envelope">
     <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
         {% if "edit_decisions_feedback" in organization_permissions %}
@@ -359,6 +361,7 @@
         </ol>
     </div>
 </div>
+{% endswitch %}
 
 <div class="envelope">
     <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
