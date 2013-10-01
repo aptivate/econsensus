@@ -518,9 +518,9 @@ class FeedbackUpdate(UpdateView):
 class EconsensusActionitemCreateView(ActionItemCreateView):
     template_name = 'actionitem_create_snippet.html'
     form_class = EconsensusActionItemCreateForm
+
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
-
     def dispatch(self, *args, **kwargs):
         if not switch_is_active('actionitems'):
             raise Http404
