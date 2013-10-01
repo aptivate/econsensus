@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load org_filters %}
 {% load publicweb_filters %}
+{% load waffle_tags %}
 
 {% block title %}
     {{ block.super }}
@@ -57,7 +58,7 @@
                                 </a>
                             </th>
                             {% endfor %}
-            			</tr>                  
+            			</tr>
                     </thead>
                     <tbody>
                     {% for object in object_list %}
@@ -78,12 +79,14 @@
                                 {% endif %}
                             {% endif %}
                             {% if tab == 'actionitems' %}
+															{% switch "actionitems" %}
                                 <td class="id">{{ object.id }}</td>
                                 <td class="excerpt">{{ object.description|get_excerpt }}</td>
                                 <td>{{ object.responsible }}</td>
                                 <td>{{ object.deadline }}</td>
                                 <td><input id="id_done" type="checkbox" name="done" {% if object.done %}checked{% endif %} disabled/></td>
                                 <td class="id"><a href="{{ object.origin.get_absolute_url }}"><span class="iconified">{{ object.origin.id }}</span></a></td>
+															{% endswitch %}
                             {% endif %}
                         </tr>
                     {% endfor %}

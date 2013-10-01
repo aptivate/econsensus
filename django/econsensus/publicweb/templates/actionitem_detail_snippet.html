@@ -1,6 +1,9 @@
 {% load url from future %}
 {% load i18n %}
 {% load guardian_tags %}
+{% load waffle_tags %}
+
+{% switch "actionitems" %}
 {% get_obj_perms request.user for object.origin.organization as "organization_permissions" %}
 <li id="act_id_{{ actionitem.id }}">
     <div class="actionitem_feedback_wrapper">
@@ -16,3 +19,4 @@
 	    {% endif %}
     </div>
 </li>
+{% endswitch %}
