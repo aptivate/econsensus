@@ -9,6 +9,7 @@ from dye.tasklib.util import _call_wrapper
 def post_deploy(environment=None, svnuser=None, svnpass=None):
     load_auth_user(environment)
     load_django_site_data(environment)
+    load_required_flat_pages(environment)
 
 
 def load_sample_data(environment, force=False):
@@ -20,42 +21,43 @@ def load_sample_data(environment, force=False):
             print "Environment '", environment, "' already has sample data loaded."
             return
 
-        _manage_py(['loaddata', "sample_data.json"])
+    _manage_py(['loaddata', "sample_data.json"])
 
 
 def load_auth_user(environment, force=False):
     """load auth user fixture based on environment. """
-    if force is False:
-        auth_user_needs_initializing = int(_manage_py(['auth_user_needs_initializing'])[0].strip())
-        if not auth_user_needs_initializing:
-            print "Environment '", environment, "' already has auth.user initialized."
-            return
-
-    local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
-                                           'fixtures')
-    user_path = os.path.join(local_fixtures_directory,
-        environment + '_auth_user.json')
-    if os.path.exists(user_path):
-        _manage_py(['loaddata', user_path])
-    else:
-        _manage_py(['loaddata', "default_auth_user.json"])
+    _conditionally_load_data(environment, force, 'auth.user',
+                             'auth_user_needs_initializing', '_auth_user')
 
 
 def load_django_site_data(environment, force=False):
     """Load data for django sites framework. """
+    _conditionally_load_data(environment, force, 'site date',
+                             'site_needs_initializing', '_site')
+
+
+def load_required_flat_pages(environment, force=False):
+    """ The templates assume that the about and help flatpages exists and
+    are likely to explode without them.  So if they don't exist, load a
+    fixture to create them. """
+    _conditionally_load_data(environment, force, 'flat pages',
+                             'flatpages_needs_initializing', '_flatpages')
+
+
+def _conditionally_load_data(environment, force, name, manage_cmd, fixture_suffix):
     if force is False:
-        site_needs_initializing = int(_manage_py(['site_needs_initializing'])[0].strip())
-        if not site_needs_initializing:
-            print "Environment '", environment, "' already has site data initialized."
+        needs_initializing = int(_manage_py([manage_cmd])[0].strip())
+        if not needs_initializing:
+            print "Environment '", environment, "' already has ", name, " initialized."
             return
-    local_fixtures_directory = os.path.join(tasklib.env['django_dir'], 'publicweb',
-                                           'fixtures')
-    site_fixture_path = os.path.join(local_fixtures_directory,
-        environment + '_site.json')
-    if os.path.exists(site_fixture_path):
-        _manage_py(['loaddata', site_fixture_path])
+    local_fixtures_directory = os.path.join(
+        tasklib.env['django_dir'], 'publicweb', 'fixtures')
+    fixture_path = os.path.join(
+        local_fixtures_directory, environment + fixture_suffix + '.json')
+    if os.path.exists(fixture_path):
+        _manage_py(['loaddata', fixture_path])
     else:
-        _manage_py(['loaddata', "default_site.json"])
+        _manage_py(['loaddata', "default" + fixture_suffix + ".json"])
 
 
 def create_ve():
