@@ -135,9 +135,9 @@ Enabling search
 If you wish to search within econsensus, you will also need to install
 Elasticsearch. This can be downloaded from http://www.elasticsearch.org/.
 
-Elastisticsearch requires Java be install, e.g.:
+Elastisticsearch requires Java to be installed, e.g.:
 
-    $ sudo apt-get install openjdk-6-jre-headless
+    $ sudo apt-get install openjdk-7-jre-headless
 
 Econsensus also needs to be configured to use Elasticsearch, which can be done
 by adding the following to `local_settings.py`:
