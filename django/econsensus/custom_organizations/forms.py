@@ -1,14 +1,18 @@
 from django import forms
 
-from organizations.models import Organization, get_user_model
+from organizations.models import Organization, get_user_model, OrganizationUser
 from organizations.utils import create_organization
 from organizations.backends.forms import UserRegistrationForm
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
+from custom_organizations.models import Group
 from guardian.shortcuts import assign_perm, remove_perm
 from registration.forms import RegistrationFormUniqueEmail
 from registration.signals import user_registered
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+
+from organizations.mixins import AdminRequiredMixin, \
+                                 OrganizationMixin
 
 
 # Subclass the default Registration form so we can add extra fields 
@@ -100,3 +104,32 @@ class CustomOrganizationUserAddForm(OrganizationUserAddForm):
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         return self.instance
+
+class GroupAddForm(forms.ModelForm):
+    def __init__(self, request, organization, *args, **kwargs):
+       self.request = request
+       self.organization = organization
+       super(GroupAddForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Group
+        exclude = ('organization', 'members', 'owner')
+
+    def save(self, **kwargs):
+        group_creator = OrganizationUser.objects.get(organization = self.organization,
+            user = self.request.user)
+        group = Group.objects.create(name=self.cleaned_data['name'],
+             organization = self.organization, owner=group_creator)
+        group.save()
+        group.members.add(group_creator)
+        return group
+
+class GroupJoinForm(forms.ModelForm):
+    def __init__(self, org_user, group, *args, **kwargs):
+       self.org_user = org_user
+       self.group = group
+       super(GroupJoinForm, self).__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        self.group.members.add(self.org_user)
+        return self.group

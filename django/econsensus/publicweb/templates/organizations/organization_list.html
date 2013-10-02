@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load org_tags %}
 {% load org_filters %}
+{% load custom_org_filters %}
 
 {% block title %}
 {% trans "Your Organizations" %}
@@ -15,7 +16,7 @@
 {% block main_content %}
 <div id="your-organizations">
 {% for organization in organizations %}
-{% if forloop.first %}<ul class="org_list">{% endif %}
+<ul class="org_list">
     <li>
         <ul>
         <li>
@@ -31,7 +32,22 @@
             </li>
         </ul>
     </li>
-{% if forloop.last %}</ul>{% endif %}
+</ul>
+<h3 class = "groups_title">Subgroups:</h3>
+<ul class="group_list">
+    {% for group in organization|get_organization_groups %}
+    {% if group|is_member_of_group:user %}
+        <li class="group_list_member">
+            <a href="{% url 'group_detail' organization.pk group.pk %}"> {{ group }}</a>
+        {% else %}
+        <li>
+            {{ group }} <a href="{% url 'join_group' organization.pk group.pk %}">Join</a>
+        {% endif %}
+    {% empty %}
+    <li> <p> There are no subgroups for this organization. </p> </li>
+    </li>
+    {% endfor %}
+</ul>
 {% empty %}
 <p>{% trans "You do not currently belong to any organizations."%}</p>
 <p>{% trans "You can only view and create discussions, proposals and decisions when you belong to an organization so try one of the following ..."%}</p>

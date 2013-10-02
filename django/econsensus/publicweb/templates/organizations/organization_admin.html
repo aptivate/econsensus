@@ -22,6 +22,9 @@
     <li>
         <a href="{% url 'organization_user_list' organization.pk %}">{% trans "Manage Members" %}</a>
     </li>
+    <li>
+        <a href="{% url 'create_group' organization.pk %}">{% trans "Create Group" %}</a>
+    </li>
     {% endif %}
     {% if organization|is_owner:user %}
     <li>
@@ -29,5 +32,12 @@
     </li>
     {% endif %}
 </ul>
+
+<ul>
+<br />
+<br />
+    <li><a href="{% url 'organization_list' %}">Back to your organizations</a> </li>
+</ul>
+
 </div>
 {% endblock %}

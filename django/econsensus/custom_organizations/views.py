@@ -1,6 +1,7 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from guardian.shortcuts import remove_perm
 
@@ -15,19 +16,64 @@ from organizations.views import OrganizationCreate,\
                                 OrganizationUserList, \
                                 BaseOrganizationUserDelete, \
                                 BaseOrganizationDetail
-from organizations.mixins import AdminRequiredMixin
+from organizations.mixins import AdminRequiredMixin, \
+                                 OrganizationMixin, \
+                                 OrganizationUserMixin
+from custom_organizations.mixins import GroupMixin
 
 from custom_organizations.forms import CustomOrganizationForm,\
                                     CustomOrganizationAddForm,\
                                     CustomOrganizationUserForm,\
-                                    CustomOrganizationUserAddForm
+                                    CustomOrganizationUserAddForm, \
+                                    GroupAddForm, \
+                                    GroupJoinForm
 from django.http import Http404
-from organizations.models import Organization
+from organizations.models import Organization, OrganizationUser
 from publicweb.models import Feedback
+from custom_organizations.models import Group
 
 class OrganizationAdminView(BaseOrganizationDetail):
     model = Organization
     template_name = 'organizations/organization_admin.html'
+
+class GroupCreate(AdminRequiredMixin, OrganizationMixin, CreateView):
+    form_class = GroupAddForm
+    template_name = 'organizations/organizationgroup_form.html'
+
+    def get_success_url(self):
+        return reverse("organization_list")
+
+    def get_form_kwargs(self):
+        kwargs = super(GroupCreate, self).get_form_kwargs()
+        kwargs.update({'organization': self.get_organization(),
+            'request': self.request})
+        return kwargs
+
+class GroupDetailView(GroupMixin, DetailView):
+    model = Group
+    template_name = 'organizations/organizationgroup_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupDetailView, self).get_context_data(**kwargs)
+        return context
+
+class GroupJoinView(GroupMixin, UpdateView):
+    model = Group
+    form_class = GroupJoinForm
+    template_name = 'organizations/organizationgroup_join.html'
+
+    def get_success_url(self):
+        return reverse("organization_list")
+
+    def get_form_kwargs(self):
+        kwargs = super(GroupJoinView, self).get_form_kwargs()
+        self.group = self.get_group()
+        kwargs.update({'org_user': OrganizationUser.objects.get(
+            organization = self.group.organization,
+            user = self.request.user),
+            'group': self.group})
+        return kwargs
+
 
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
@@ -77,13 +123,13 @@ class CustomOrganizationUserDelete(BaseOrganizationUserDelete):
     def _is_admin(self, request, organization_pk):
         organization = get_object_or_404(Organization, pk=organization_pk)
         return organization.is_admin(request.user) or request.user.is_superuser
-                    
+
     def _is_current_user(self, request, user_pk):
         """
         Checks the user being accessed is the one currently logged in
         """
         return request.user.id == int(user_pk)
-            
+
     def dispatch(self, request, *args, **kwargs):
         organization_pk = kwargs.get('organization_pk', None)
         user_pk = kwargs.get('user_pk', None)
