@@ -1,4 +1,5 @@
 {% load comments %}
+{% load publicweb_filters %}
 
 {{ object.author }}
 {{ object.description }}
@@ -9,4 +10,9 @@
     {% for comment in comment_list %}
         {{ comment.comment }}
     {% endfor %}
+{% endfor %}
+
+{% for actionitem in object|get_actionitems %}
+    {{ actionitem.description }}
+    {{ actionitem.responsible }}
 {% endfor %}
