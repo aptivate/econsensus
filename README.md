@@ -132,25 +132,14 @@ controlled by the `EMAIL_BACKEND` setting also in `local_settings.py`.
 Enabling search
 ---------------
 
-If you wish to search within econsensus, you will also need to install
-Elasticsearch. This can be downloaded from http://www.elasticsearch.org/.
+If you are using the dev settings (as set up above) then whoosh is the search
+backend used.  See the `HAYSTACK_CONNECTIONS` section of
+`econsensus/local_settings.py.dev`
 
-Elastisticsearch requires Java to be installed, e.g.:
-
-    $ sudo apt-get install openjdk-7-jre-headless
-
-Econsensus also needs to be configured to use Elasticsearch, which can be done
-by adding the following to `local_settings.py`:
-
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-             'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-             'URL': 'http://127.0.0.1:9200/',
-             'INDEX_NAME': 'haystack',
-        },
-    }
-
-If you configure search when your Econsensus installation already has content,
-then you will need to get this content into the search index by running:
+All you need to do to have search actually be able to find the content is to
+run:
 
     ./manage.py update_index
+
+This will create a directory called `whoosh_index` in `django/econsensus/`
+that will contain the files required.
