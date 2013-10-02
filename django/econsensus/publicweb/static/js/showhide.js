@@ -18,7 +18,7 @@ with activation via a show button
     	}
       });
     
-    $(".show").on("click", function(e) {
+    $(".feedback_list").on("click", "li > .feedback_wrapper > .description > .show", function(e) {
       var this_comment_form  = $(this).parent().siblings().find(".form_comment");
       $(".form_comment").hide();
       this_comment_form.parsley()
