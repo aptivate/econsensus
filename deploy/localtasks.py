@@ -60,17 +60,6 @@ def _conditionally_load_data(environment, force, name, manage_cmd, fixture_suffi
         _manage_py(['loaddata', "default" + fixture_suffix + ".json"])
 
 
-def create_ve():
-    """Create the virtualenv"""
-    tasklib.create_ve()
-    tasklib.patch_south()
-
-
-def update_ve():
-    """ Update the virtualenv """
-    create_ve()
-
-
 def add_cron_email(environment):
     """sets up a cron job for the email checking"""
 
