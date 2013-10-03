@@ -32,3 +32,4 @@ django-haystack==2.1.0
 requests==1.2.3
 pyelasticsearch==0.6
 simplejson==3.3.0
+-e git+git://github.com/aptivate/aptivate-monkeypatch.git@ed4f821d8d57ba181c418b8d78dfd8bca70d6817#egg=aptivate_monkeypatch

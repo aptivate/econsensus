@@ -47,10 +47,11 @@ class CustomOrganizationUserList(AdminRequiredMixin, OrganizationUserList):
         self.organization = self.get_organization()
         self.object_list = self.organization.organization_users.all()
         self.inactive_list = self.organization.organization_users.filter(user__is_active=False)
-        context = self.get_context_data(object_list=self.object_list,
-                organization_users=self.object_list,
-                inactive_users=self.inactive_list,
-                organization=self.organization)
+        context = self.get_context_data(
+            object_list=self.object_list,
+            organization_users=self.object_list,
+            inactive_users=self.inactive_list,
+            organization=self.organization)
         return self.render_to_response(context)
 
 
