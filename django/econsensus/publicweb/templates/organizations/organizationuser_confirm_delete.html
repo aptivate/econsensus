@@ -4,21 +4,21 @@
 {% load org_tags %}
 
 {% block title %}
-Confirm delete
+Confirm remove
 {% endblock %}
 
 {% block heading %}
 {% if organization_user.user.is_active %}
-Confirm delete for {{ organization_user.user }}
+Confirm removal of {{ organization_user.user }} from {{ organization }}.
 {% else %}
-Confirm delete for {{ organization_user.user.email }}
+Confirm removal of {{ organization_user.user.email }} from {{ organization }}.
 {% endif %}
 {% endblock %}
 
 {% block main_content %}
 <br />
 <br />
-Deleting a user will only remove the user from your organization, {{ organization }}
+Removing a user will only remove the user from your organization, {{ organization }}.
 <br />
 <br />
 The user will not be removed from econsensus
@@ -26,7 +26,7 @@ The user will not be removed from econsensus
 <br />
 <form action="." method="post">{% csrf_token %}
     {{ form }}
-    <input class="loose button" type="submit" value="Delete">
+    <input class="loose button" type="submit" value="Remove">
 </form>
 
 <form method="GET" action="{% url 'organization_user_list' organization.pk%}">
