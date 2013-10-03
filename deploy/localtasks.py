@@ -10,6 +10,7 @@ def post_deploy(environment=None, svnuser=None, svnpass=None):
     load_auth_user(environment)
     load_django_site_data(environment)
     load_required_flat_pages(environment)
+    update_search_index()
 
 
 def load_sample_data(environment, force=False):
@@ -58,6 +59,10 @@ def _conditionally_load_data(environment, force, name, manage_cmd, fixture_suffi
         _manage_py(['loaddata', fixture_path])
     else:
         _manage_py(['loaddata', "default" + fixture_suffix + ".json"])
+
+
+def update_search_index():
+    _manage_py(['update_index'])
 
 
 def add_cron_email(environment):
