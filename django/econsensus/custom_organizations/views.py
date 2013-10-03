@@ -1,36 +1,39 @@
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpResponseForbidden
+from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
 
 from guardian.shortcuts import remove_perm
 
 from organizations.backends import invitation_backend
-from organizations.views import OrganizationCreate,\
-                                OrganizationUpdate,\
-                                OrganizationDetail,\
-                                OrganizationUserCreate,\
-                                OrganizationUserUpdate,\
-                                OrganizationUserDelete,\
-                                OrganizationUserRemind,\
-                                OrganizationUserList, \
-                                BaseOrganizationUserDelete, \
-                                BaseOrganizationDetail
+from organizations.views import (OrganizationCreate,
+                                 OrganizationUpdate,
+                                 OrganizationDetail,
+                                 OrganizationUserCreate,
+                                 OrganizationUserUpdate,
+                                 OrganizationUserRemind,
+                                 OrganizationUserList,
+                                 BaseOrganizationUserDelete,
+                                 BaseOrganizationDetail)
 from organizations.mixins import AdminRequiredMixin
 
-from custom_organizations.forms import CustomOrganizationForm,\
-                                    CustomOrganizationAddForm,\
-                                    CustomOrganizationUserForm,\
-                                    CustomOrganizationUserAddForm
-from django.http import Http404
+from custom_organizations.forms import (CustomOrganizationForm,
+                                        CustomOrganizationAddForm,
+                                        CustomOrganizationUserForm,
+                                        CustomOrganizationUserAddForm)
 from organizations.models import Organization
 from publicweb.models import Feedback
+
 
 class OrganizationAdminView(BaseOrganizationDetail):
     model = Organization
     template_name = 'organizations/organization_admin.html'
 
+
 class CustomOrganizationCreate(OrganizationCreate):
     form_class = CustomOrganizationAddForm
+
 
 class CustomOrganizationUpdate(OrganizationUpdate):
     form_class = CustomOrganizationForm
@@ -50,6 +53,7 @@ class CustomOrganizationUserList(AdminRequiredMixin, OrganizationUserList):
                 organization=self.organization)
         return self.render_to_response(context)
 
+
 class CustomOrganizationUserRemind(OrganizationUserRemind):
 
     def post(self, request, *args, **kwargs):
@@ -58,6 +62,7 @@ class CustomOrganizationUserRemind(OrganizationUserRemind):
                 **{'domain': get_current_site(self.request),
                     'organization': self.organization, 'sender': request.user})
         return redirect(reverse("organization_user_list", args=[str(self.organization.id)]))
+
 
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
@@ -68,50 +73,69 @@ class CustomOrganizationUserUpdate(OrganizationUserUpdate):
         self.initial = {"is_editor": is_editor}
         return self.initial
 
+
 class CustomOrganizationUserCreate(OrganizationUserCreate):
     form_class = CustomOrganizationUserAddForm
+
 
 # Delete unused permissions!
 # And remove them as watchers on decisions for that organisation.
 class CustomOrganizationUserDelete(BaseOrganizationUserDelete):
-    def _is_admin(self, request, organization_pk):
-        organization = get_object_or_404(Organization, pk=organization_pk)
-        return organization.is_admin(request.user) or request.user.is_superuser
-                    
-    def _is_current_user(self, request, user_pk):
+
+    def _check_access_perms(self, user):
+        """ Leave covers the "removing self" case, so restrict to only admins
         """
-        Checks the user being accessed is the one currently logged in
-        """
-        return request.user.id == int(user_pk)
-            
+        self.organization = self.get_organization()
+        if not self.organization.is_admin(user) and not user.is_superuser:
+            return HttpResponseForbidden(_("Sorry, admins only"))
+
     def dispatch(self, request, *args, **kwargs):
-        organization_pk = kwargs.get('organization_pk', None)
-        user_pk = kwargs.get('user_pk', None)
-        if not self._is_admin(request, organization_pk) and not \
-            self._is_current_user(request, user_pk):
-            raise Http404
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        response = self._check_access_perms(request.user)
+        if response is not None:
+            return response
         return super(CustomOrganizationUserDelete, self).dispatch(
-             request, *args, **kwargs) 
-    
+            request, *args, **kwargs)
+
     def delete(self, *args, **kwargs):
         org_user = self.get_object()
         remove_perm('edit_decisions_feedback', org_user.user, org_user.organization)
         decisions = org_user.organization.decision_set.all()
         for decision in decisions:
             decision.watchers.filter(user=org_user.user).delete()
+        # TODO: remove circular dependency back to Feedback - add method
+        # on decision model to delete all watchers, and have that cascade
+        # and then have that listen for the organization_user delete
         for feedback in Feedback.objects.filter(decision__in=decisions):
             feedback.watchers.filter(user=org_user.user).delete()
-        return super(CustomOrganizationUserDelete,self).delete(*args, **kwargs)
-    
+        return super(CustomOrganizationUserDelete, self).delete(*args, **kwargs)
+
+
 class CustomOrganizationDetail(AdminRequiredMixin, OrganizationDetail):
     pass
+
 
 class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
     """
        This view is necessary because CustomOrganizationUserDelete redirects to
-       the CustomOrganizationUserList view, which regular users shouldn't be 
-       able to access. When they leave an organisation, we send them back to 
-       their organisations list.       
+       the CustomOrganizationUserList view, which regular users shouldn't be
+       able to access. When they leave an organisation, we send them back to
+       their organisations list.
     """
+    template_name = 'organizations/organizationuser_confirm_leave.html'
+
+    def _check_access_perms(self, request, **kwargs):
+        """ we set the user_pk to self in dispatch, and the organization/user
+        combo is checked in get_object() (if that fails it does 404) - so don't
+        worry about this. """
+        pass
+
+    def dispatch(self, request, *args, **kwargs):
+        kwargs['user_pk'] = request.user.id
+        return super(CustomOrganizationUserLeave, self).dispatch(
+            request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse('organization_list')
