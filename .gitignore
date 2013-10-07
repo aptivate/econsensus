@@ -7,6 +7,7 @@ django/econsensus/.ve
 django/econsensus/distribute-*.tar.gz
 django/econsensus/static
 django/econsensus/econsensus-messages
+django/econsensus/whoosh_index
 django/econsensus/log/error.log
 django/econsensus/log/econsensus.log
 *.sqlite
@@ -15,6 +16,8 @@ reports/*
 .pydevproject
 .ropeproject
 .DS_Store
+deploy/*.sql
+*.sql.gz
 
 /.metadata
 /.settings

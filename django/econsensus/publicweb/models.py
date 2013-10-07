@@ -7,7 +7,6 @@ from notification import models as notification
 
 from django.db import models
 from django.utils import timezone
-from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext_noop
 from django.contrib.auth.models import User
@@ -24,6 +23,8 @@ from organizations.models import Organization
 from managers import DecisionManager
 
 from custom_notification.utils import send_observation_notices_for
+
+from publicweb.utils import get_excerpt
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -52,8 +53,6 @@ class Decision(models.Model):
                   (DECISION_STATUS, _('decision')),
                   (ARCHIVED_STATUS, _('archived')),
                   )
-
-    DEFAULT_SIZE = 140
 
     #User entered fields
     description = models.TextField(verbose_name=_('Description'))
@@ -128,14 +127,7 @@ class Decision(models.Model):
     feedbackcount.short_description = _("Feedback")
 
     def _get_excerpt(self):
-        description = strip_tags(self.description)
-        match = re.search("\.|\\r|\\n", description)
-        position = self.DEFAULT_SIZE
-        if match:
-            start = match.start()
-            if start < position:
-                position = start
-        return description[:position]
+        return get_excerpt(self.description)
 
     def __unicode__(self):
         return self.excerpt
@@ -348,3 +340,24 @@ def comment_signal_handler(sender, **kwargs):
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
 
+def actionitem_signal_handler(sender, **kwargs):
+    """
+    Triggers external update to decision associated with this action item.
+    As well as updating the "last-modified" field, this has the nice
+    consequence of causing the decision to get re-indexed.
+    """
+    instance = kwargs.get('instance')
+    if isinstance(instance.origin, Decision):
+        instance.origin.note_external_modification()
+
+# We can't register our ActionItem post-save signal handler, as importing the
+# ActionItem model in this file would result in a circular dependency. So
+# instead we listen for the ActionItem model class being defined, and register
+# the post-save signal handler when it is ready.
+@receiver(models.signals.class_prepared, dispatch_uid="publicweb.models.class_prepared_signal_handler")
+def class_prepared_signal_handler(sender, **kwargs):
+    if sender.__name__ == "ActionItem":
+        register = receiver(models.signals.post_save,
+                            sender=sender,
+                            dispatch_uid="publicweb.models.actionitem_signal_handler")
+        register(actionitem_signal_handler)

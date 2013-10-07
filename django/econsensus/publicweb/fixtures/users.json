@@ -12,7 +12,7 @@
       "last_login": "2012-08-30T09:24:21Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$mP5qXqT4Zcx4$BtUubkyGkQPHanUnDgbUwmBaSI9djbHoeanZ1mkMDIE=", 
+      "password": "md5$GWBhZ6cGJvD6$b6de7c8e745d9958fd47da3d81a4f2dc", 
       "email": "andy@theinternet.com", 
       "date_joined": "2012-07-05T16:51:02Z"
     }
@@ -30,7 +30,7 @@
       "last_login": "2012-08-30T09:02:26Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$evEiFYtsFkvI$AHNzMw14OmxxyGk7ROzel050zGjzZRuxtvAvVrACCA4=", 
+      "password": "md5$uYm5uaDfMW1I$3b14548d665ca4e6552e4c776cb82881", 
       "email": "betty@hotmail.com", 
       "date_joined": "2012-08-24T14:01:01Z"
     }
@@ -48,7 +48,7 @@
       "last_login": "2012-08-29T15:38:19Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$omthX333Or6N$kKAJJ1KKN1TpVjW0FhEpL5jmhFUwpaTFOi6bu7C44M4=", 
+      "password": "md5$CzUb27olaThQ$481c87c2cfc80b3bc613125923d50794", 
       "email": "cchicken@gmail.com", 
       "date_joined": "2012-08-24T14:01:48Z"
     }
@@ -66,7 +66,7 @@
       "last_login": "2012-08-30T09:03:00Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$rtk2aqHsxzi6$idP3xAsmsMRDOW+EZTIq2FVkGerXcKYceJCjQcBCxJg=", 
+      "password": "md5$tII4VNxkIocE$eb0ac7a9430f7dab8cf94b2ccb5c11f6", 
       "email": "dd65@yahoo.com", 
       "date_joined": "2012-08-24T14:02:59Z"
     }
@@ -84,7 +84,7 @@
       "last_login": "2012-08-30T09:03:19Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$vRXlzoVjnwrj$ROOLmlE6ThP/mUWuiAonYABl0WO5dzw4p2+5/0/mc3w=", 
+      "password": "md5$sJkXBrzZezdK$2384361b8f1f2e83ada7449be3ceb5c4", 
       "email": "leethaxor@secret.com", 
       "date_joined": "2012-08-24T14:03:40Z"
     }
@@ -102,7 +102,7 @@
       "last_login": "2012-08-24T14:04:13Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$dHZqFUfXNjC0$FK7V35ROb4+1WW/M9lOP6bWU14qFdG+JkVOE1ElHOcg=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "freddy@internet.com", 
       "date_joined": "2012-08-24T14:04:13Z"
     }
@@ -120,7 +120,7 @@
       "last_login": "2012-08-24T14:04:38Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$d3NVE0juF5aT$ApG63T9p2PS6dllW6CRY7ZU9W8W4LWOkUwQ//j9G6q0=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "grilla@lycos.com", 
       "date_joined": "2012-08-24T14:04:38Z"
     }
@@ -138,7 +138,7 @@
       "last_login": "2012-08-30T09:32:32Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$NhwHvYh5u39a$fGZjXoyHBGrpzI2eUmIPIbkuRiDeqj0T9s7eG6XaLwI=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "hhippo@animalworld.com", 
       "date_joined": "2012-08-30T09:32:32Z"
     }
@@ -156,7 +156,7 @@
       "last_login": "2012-08-30T09:33:53Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$A88naxcn8FiA$X5pqRVPg9Z0xEMJRb157IoqhfIvZv57D2OAYtf7OH1Y=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "igster@gmail.com", 
       "date_joined": "2012-08-30T09:33:53Z"
     }
@@ -174,7 +174,7 @@
       "last_login": "2012-08-30T09:34:49Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$f1jtexuzCSTF$wJhilovBledwHMEgMGJ0GTGyqVarFE3h+ldfKgtsOXw=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "jr09@flowerfield.co.uk", 
       "date_joined": "2012-08-30T09:34:49Z"
     }
@@ -192,7 +192,7 @@
       "last_login": "2012-08-30T09:37:07Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$sdsomSiUkxnG$Us1sy2wJ4nkLEdcUhcoPRU6QVmdoBx7wPRRuQwx09ZQ=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "kk@yahoo.fr", 
       "date_joined": "2012-08-30T09:37:07Z"
     }
@@ -210,7 +210,7 @@
       "last_login": "2012-08-30T09:38:38Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$NhUx2tHxiszU$KKlv5V6neJju9LzL+tn2ghRxY1LzMzvsQ6YjsKKJTI4=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "larry@madagasca.com", 
       "date_joined": "2012-08-30T09:38:38Z"
     }
@@ -228,7 +228,7 @@
       "last_login": "2012-08-30T09:39:57Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$CnNHlmoZrOyM$yJNCTXML8XxhcflY5g5jxUizkK8RucpmtTwXQ6D400c=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "lilmouse@garden.com", 
       "date_joined": "2012-08-30T09:39:57Z"
     }
@@ -246,7 +246,7 @@
       "last_login": "2012-08-30T09:41:50Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$z54xfmGsKFA5$7kcx8r/ltouT2pdA06XzTiY5/sFH0+vNpbZlKM4qhhY=", 
+      "password": "md5$H0ex6YEe2Afd$9250cc98a0adf4e607652e006480ffc2", 
       "email": "n1987@undersea.co.uk", 
       "date_joined": "2012-08-30T09:41:50Z"
     }
@@ -264,7 +264,7 @@
       "last_login": "2012-08-30T09:42:52Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$FmwLVxqEXM7o$VvGH+dwGPU7DGJH8z9j19R8GN2yK5dzwAVdX6ziWrZA=", 
+      "password": "md5$kWeBWkol6g1W$06d54e7b448dd06ef3ea8f1a7005e2cc", 
       "email": "octoboy@hotworld.com", 
       "date_joined": "2012-08-30T09:42:52Z"
     }
@@ -282,7 +282,7 @@
       "last_login": "2012-08-30T09:43:41Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$QaWi24fzCU2d$TP/Nxm64zg936jCkiRAN8D1P/h/ejOX+nXO/LbCKNco=", 
+      "password": "md5$6usP5q2n8tuu$73377e49908f037006942e7d535736c4", 
       "email": "keetster@virginmeddia.com", 
       "date_joined": "2012-08-30T09:43:41Z"
     }
@@ -300,7 +300,7 @@
       "last_login": "2012-08-30T09:45:44Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$CUpcFLJXwLCg$19Vvl2bbcvqwokVrOQNFnjCFPJws6NNZopdIhZCAOWk=", 
+      "password": "md5$jMI6hIQuPZAV$9c0b78e93168b140e6c33f7e171992d9", 
       "email": "smallanddefenseless@undergrowth.com", 
       "date_joined": "2012-08-30T09:45:44Z"
     }
@@ -318,7 +318,7 @@
       "last_login": "2012-08-30T09:47:27Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$bqqzLLjNicaY$dgdoLlhUjOCjV0W6TFpmucm46qB5305P6TS69+g0bys=", 
+      "password": "md5$8b9JMF9Q26hr$48bbd898232782b1c41ef243873baf03", 
       "email": "rob@goggle.com", 
       "date_joined": "2012-08-30T09:47:27Z"
     }
@@ -336,7 +336,7 @@
       "last_login": "2012-08-30T09:48:26Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$Fs8MkBoftspF$B6T7r3hwrQdBJE/rKhXt+gQZJuXWEB/wllycbDT9oJw=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "sqidums@beetee.co.uk", 
       "date_joined": "2012-08-30T09:48:26Z"
     }
@@ -354,7 +354,7 @@
       "last_login": "2012-08-30T09:49:21Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$P5gKheW3SWZn$Sujm1MNtj0hWORZi3bsayMBokEOmDp7xopZaKP7cwOs=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "splish@botmail.com", 
       "date_joined": "2012-08-30T09:49:21Z"
     }
@@ -372,7 +372,7 @@
       "last_login": "2012-08-30T09:51:01Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$yGQev9eEc4C6$y683hgWgWAM1FDKAsZy5s0VDVsYnV3neoIuxOlgzVtc=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "immagic@aol.com", 
       "date_joined": "2012-08-30T09:51:01Z"
     }
@@ -390,7 +390,7 @@
       "last_login": "2012-08-30T09:54:01Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$iXFOjHm26cRp$l54rwqTh7j75EYiTF44/QqIeOpWh0F1vpmqTJ6mpCfI=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "volasaurus@greenfield.co.uk", 
       "date_joined": "2012-08-30T09:54:01Z"
     }
@@ -408,7 +408,7 @@
       "last_login": "2012-08-30T09:55:43Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$9WZ4pGlsiiJE$0hD8h1BE/1y6m4LEdoClcqf0QhsokM9G5+oa0MnxpYc=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "bill1990@hotmail.co.il", 
       "date_joined": "2012-08-30T09:55:43Z"
     }
@@ -426,7 +426,7 @@
       "last_login": "2012-08-30T09:57:06Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$Jfij24Jpj8cX$2F7Re+5nao52jJ419A6rrD6iDmoSKxeCRvHbj4uuIcE=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "xxx@gmail.es", 
       "date_joined": "2012-08-30T09:57:06Z"
     }
@@ -444,7 +444,7 @@
       "last_login": "2012-08-30T09:59:11Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$ak81U9nPowSa$jzZwU2c77XRvRS32yhHMIn0UWWp3lSgxGEAmbITPltI=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "yakattak@tibet.com", 
       "date_joined": "2012-08-30T09:59:11Z"
     }
@@ -462,7 +462,7 @@
       "last_login": "2012-08-30T10:00:34Z", 
       "groups": [], 
       "user_permissions": [], 
-      "password": "pbkdf2_sha256$10000$ag8AVa6L1nNs$n6G2vcmt8DiP+qGg+785mR4VIUD7l+3ybz7Y7mNWlew=", 
+      "password": "md5$$025503690d7d761bbcd348cceaed9ccb", 
       "email": "zed3000@openworld.hk", 
       "date_joined": "2012-08-30T10:00:34Z"
     }

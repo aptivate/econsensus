@@ -3,6 +3,9 @@
 {% load i18n %}
 {% load org_filters %}
 {% load guardian_tags %}
+{% load custom_flatpages %}
+{% load search_enabled %}
+{% load waffle_tags %}
 
 {% if organization %}
 {% get_obj_perms request.user for organization as "organization_permissions" %}
@@ -21,7 +24,7 @@
 	{% block head_content%}{% endblock %}
 </head>
 <body class="{% block body_class%}base{% endblock %}">
-	<div id="header-wrapper">		
+	<div id="header-wrapper">
 		<div id="header">
 			<h1>
 			  <a href="/"><img alt="Econsensus" src="{{ STATIC_URL }}images/econsensus-logo-header.png"/></a>
@@ -33,6 +36,7 @@
 			{% block user_access %}
 				<div id="user_access">
 					{% if user.is_authenticated %}
+						<a href="{% url 'django.contrib.flatpages.views.flatpage' url='/help/' %}">{% trans "Help" %}</a> |
 						<a href="{% url 'organization_list' %}">{% trans "Your Organizations" %}</a> |
 						<a href="{% url 'your_details' %}">{% trans "Your Details" %}</a> |
 						<a href='{% url 'auth_logout' %}'> {%trans "Logout" %} <span class="not_translated">({{ user.username }})</span></a>
@@ -40,19 +44,24 @@
 						<a href='{% url 'auth_login' %}'> {%trans "Login" %}</a>
 					{% endif %}
 				</div>
-			{% endblock user_access%}
-			
+			{% endblock user_access %}
+
 		</div>
 		{% block topbar %}
 			<div id="navigation-wrapper">
 				<div id="navigation">
 					<ul>
-					{% if organization %}					
+					{% if organization %}
 						<li {% if tab == "discussion" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{% trans "Discussions" %}</a></li>
 						<li {% if tab == "proposal" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'proposal'%}">{% trans "Proposals" %}</a></li>
 						<li {% if tab == "decision" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'decision'%}">{% trans "Decisions" %}</a></li>
 						<li {% if tab == "archived" %}class="selected"{% endif %}><a href="{% url 'publicweb_item_list' organization.slug 'archived'%}">{% trans "Archived" %}</a></li>
-                        <li {% if tab == "actionitems" %}class="selected"{% endif %}><a href="{% url 'actionitem_list' organization.slug %}">{% trans "Action Items" %}</a></li>
+						{% switch "actionitems" %}
+						<li {% if tab == "actionitems" %}class="selected"{% endif %}><a href="{% url 'actionitem_list' organization.slug %}">{% trans "Action Items" %}</a></li>
+						{% endswitch %}
+						{% ifcansearch %}
+						<li {% if tab == "search" %}class="selected"{% endif %}><a href="{% url 'publicweb_decision_search' organization.slug %}">{% trans "Search" %}</a></li>
+						{% endifcansearch %}
 					{% else %}
 						<li></li>
 					{% endif %}
@@ -67,34 +76,26 @@
 					</div>
 					{% endif %}
 				</div>
-				<div class="search">
-					<form id="search_form" action="search" method="get">
-						<p>
-							<input id="search" type="text" maxlength="128" value="" name="search"/>
-							<input id="search_button" type="submit" value="Search"/>
-						</p>
-					</form>
-				</div>
-				
 			</div>
 		{% endblock %}
 	</div><!-- Header end -->
-		
+
 		<div id="content-wrapper">
 			<div id="content">
 				{% block heading_title %}<h2 class="page_title">{% block heading %}{% endblock heading %}</h2>{% endblock %}
 	        	{% block main_content %}{% endblock main_content %}
 			</div>
 		</div> <!-- content-wrapper end -->
-	
+
 	<div id="footer-wrapper">
 		<div id="footer">
 			{% block footer_content%}{% endblock %}
-			<p class="aptivate">{% trans "Econsensus" %} {{ version }} {% trans "is an open source project developed by" %} <a href="http://www.aptivate.org/"><span class="user-org not_translated">Aptivate</span></a></p>
+			<p class="aptivate">{% trans "Econsensus" %} {{ version }} {% trans "is an open source project developed by" %} <a href="http://www.aptivate.org/"><span class="user-org not_translated">Aptivate</span></a> |
+			<a href="{% url 'django.contrib.flatpages.views.flatpage' url='/about/' %}">{% trans "About Econsensus" %}</a>
+			</p>
 		</div>
 	</div><!-- footer end -->
 
 	</body>
 </html>
 {% endautoescape %}
-

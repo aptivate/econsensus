@@ -49,6 +49,12 @@ table {
 	border-spacing: 0;
 }
 
+table.user_list {
+    border-collapse: separate;
+    border-spacing: 10px 0;
+}
+
+
 /* General Styles */
 
 body { 
@@ -236,8 +242,6 @@ input {
     display: block;
     float: right;
     padding: 8px 10px;
-	display: none; /* pcb : disbled for the moment since it's nonfunctional */
-    
 }
 
 #navigation #search_form input#search {
@@ -450,7 +454,8 @@ p.no_items {
 
 /* list view colors */
 .archived-list .summary-list th,
-.archived-list .summary-list td {
+.archived-list .summary-list td,
+.summary-list td.archived {
 	border-color: #D1D7DF;
 }
 
@@ -459,7 +464,8 @@ p.no_items {
 }
 
 .proposal-list .summary-list th,
-.proposal-list .summary-list td {
+.proposal-list .summary-list td,
+.summary-list td.proposal {
 	border-color: #FFCC00;
 }
 
@@ -468,7 +474,8 @@ p.no_items {
 }
 
 .decision-list .summary-list th,
-.decision-list .summary-list td {
+.decision-list .summary-list td,
+.summary-list td.decision {
 	border-color: #AAD400;
 }
 
@@ -477,7 +484,8 @@ p.no_items {
 }
 
 .discussion-list .summary-list th,
-.discussion-list .summary-list td {
+.discussion-list .summary-list td,
+.summary-list td.discussion {
 	border-color: #3E6EA3;
 }
 
@@ -609,6 +617,12 @@ a.button.add_discussion {
 a.button.add_actionitem {
     background-color: #E02E78;
     color:#fff;
+}
+
+/* Search view */
+.summary-list.search-results th {
+    background-color:#D3CDC6;
+    border-color:#D3CDC6;
 }
 
 /* Decision View */
@@ -746,10 +760,10 @@ span.excerpt {
 	bottom:10px;
 }
 
-a.edit, a.show {
-	text-decoration:underline;
+a.button.edit, a.button.show {
 	font-weight:bold;
 	font-size:0.8em;
+	margin: 0 0
 }
 
 #decision_detail .dates {
@@ -1188,6 +1202,19 @@ div#tags {
 	float: right;
 }
 
+#footer ul.flatpagelinks li {
+    float: left;
+}
+
+#footer ul.flatpagelinks li a {
+	font-size: 1.2em;
+	padding-right: 0.5em;
+}
+
+#footer ul.flatpagelinks li a:hover {
+	background-color: #ededed;
+}
+
 /* login form */
 
 body.login #header-wrapper, body.login #content-wrapper, body.login #footer-wrapper {
@@ -1346,6 +1373,12 @@ ul.errorlist, .parsley-error-list {
 p.error404 {
 	clear : both;
 	margin-bottom : 40px;
+}
+
+/* Styling of admin-defined pages */
+#flatpage ul {
+    list-style: disc outside none;
+    padding-left: 1em;
 }
 
 /* Media Queries*/
@@ -1564,11 +1597,14 @@ p.error404 {
 	.summary-list {
 		padding: 10px 10px 0 10px;
 	}
+	.update-controls div.update-options {
+		width:100%;
+		margin-bottom:1em;
+	}
 
-    .update-controls div.update-options {
-        width:100%;
-        margin-bottom:1em;
-    }
+	.contrib_comment_container {
+		margin-right: 0;
+	}
 }
 
 @media screen and (max-width:400px) {
@@ -1685,6 +1721,17 @@ p.error404 {
     margin-left: 0;
     padding-top: 10px;
 	}
+	
+	.contrib_comment_container {
+    margin-left: 0;
+    border: thin solid #ececec;
+    padding:1em;
+    margin-top:1em;
+    }
+    
+    .contrib_comment_list {
+    margin-top: 0;
+    }
 }
 
 del,
@@ -1714,4 +1761,13 @@ del > .actionitem_responsible {
 .actionitems-list .summary-list th.description a {
     text-align: left;
     padding: 10px 10px 10px 0px;
+}
+
+.actionitem_metadata {
+	float: right;
+	border: 5px solid #ECECEC;
+	border-radius: 15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	padding: 20px;
 }

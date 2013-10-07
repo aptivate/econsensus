@@ -23,30 +23,30 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         self.charlie = User.objects.get(username="charlie")
         self.bettysorg = Organization.objects.get_for_user(self.betty)[0]
         assign_perm('edit_decisions_feedback', self.betty, self.bettysorg)
-        
+
         self.factory = RequestFactory()
         self.login('betty')
 
-    def login(self, user):
-        user = User.objects.get(username=user)
-        self.client.login(username=user, password=user)
-        self.user = User.objects.get(username=user) 
+    def login(self, username):
+        self.user = User.objects.get(username=username)
+        login_success = self.client.login(username=username, password=username)
+        self.assertTrue(login_success)
         return self.user
 
     def get_form_values_from_response(self, response, number):
         forms = ParseString(response.content, '')
-        
+
         form_data = {}
         for control in forms[number].controls:
             name = control.name
             form_data[name] = control.value
-        
+
         return form_data
 
     def make_decision(self, **kwargs):
         required = {'description': 'Default description text',
                     'organization': Organization.active.get_for_user(self.user).latest('id'),
-                    'status': Decision.PROPOSAL_STATUS}    
+                    'status': Decision.PROPOSAL_STATUS}
         for (key,value) in required.items():
             if key not in kwargs.keys():
                 kwargs[key] = value
@@ -56,12 +56,12 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         required = {'description': 'Default description text',
                     'resolved': False,
                     'author': self.user,
-                    'rating': Feedback.DANGER_STATUS}    
+                    'rating': Feedback.DANGER_STATUS}
         for (key,value) in required.items():
             if key not in kwargs.keys():
                 kwargs[key] = value
         return self.make_model_instance(Feedback, **kwargs)
-        
+
     def make_comment(self, **kwargs):
         required = {'comment': 'Default comment text',
                     'user': self.user,
@@ -71,7 +71,7 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
             if key not in kwargs.keys():
                 kwargs[key] = value
         return self.make_model_instance(Comment, **kwargs)
-        
+
     def make_model_instance(self, model, **kwargs):
         instance = model()
         for (key,value) in kwargs.items():
@@ -83,37 +83,37 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         instance.full_clean()
         instance.save()
         return instance
-                  
+
     def create_decision_through_browser(self):
         description = 'Quisque sapien justo'
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
-        post_dict = {'description': description, 
+        post_dict = {'description': description,
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
         self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
-    
-    def update_decision_through_browser(self, idd, 
+
+    def update_decision_through_browser(self, idd,
             description = 'Aenean eros nibh'):
         path = reverse('publicweb_decision_update', args=[idd])
-        post_dict = {'description': description, 
+        post_dict = {'description': description,
                      'status': Decision.PROPOSAL_STATUS,
                      'watch': True}
         response = self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
-    
+
     def create_feedback_through_browser(self, idd):
         description = 'a pulvinar tortor bibendum nec'
         path = reverse('publicweb_feedback_create', args=[idd])
-        post_dict = {'description': description, 
+        post_dict = {'description': description,
                      'rating': Feedback.COMMENT_STATUS }
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
-    
-    def update_feedback_through_browser(self, idd, 
+
+    def update_feedback_through_browser(self, idd,
             description = 'nibh ut dignissim. Sed a aliquet quam'):
         path = reverse('publicweb_feedback_update', args=[idd])
-        post_dict = {'description': description, 
+        post_dict = {'description': description,
                      'rating': Feedback.COMMENT_STATUS }
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
