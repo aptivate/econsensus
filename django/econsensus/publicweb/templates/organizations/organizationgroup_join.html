@@ -7,11 +7,11 @@ Join group
 {% endblock %}
 
 {% block heading %}
-Request to join group?
+Request to join {{ group }}?
 {% endblock %}
 
 {% block main_content %}
-<p> Would you like to request to join this group? </p>
+<p> Would you like to request to join the group {{ group }}? </p>
 <form action="." method="post">{% csrf_token %}
     <input class="loose button" type="submit" value="Send Request">
 </form>

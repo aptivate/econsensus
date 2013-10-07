@@ -124,12 +124,23 @@ class GroupAddForm(forms.ModelForm):
         group.members.add(group_creator)
         return group
 
-class GroupJoinForm(forms.ModelForm):
+class GroupMembershipForm(forms.ModelForm):
     def __init__(self, org_user, group, *args, **kwargs):
        self.org_user = org_user
        self.group = group
-       super(GroupJoinForm, self).__init__(*args, **kwargs)
+       super(GroupMembershipForm, self).__init__(*args, **kwargs)
 
     def save(self, **kwargs):
+        return self.group
+
+class GroupJoinForm(GroupMembershipForm):
+    def save(self, **kwargs):
         self.group.members.add(self.org_user)
+        return self.group
+
+class GroupLeaveForm(GroupMembershipForm):
+    def save(self, **kwargs):
+        # this check should be unnecessary due to verification in the template
+        if self.group.owner != self.org_user:
+            self.group.members.remove(self.org_user)
         return self.group

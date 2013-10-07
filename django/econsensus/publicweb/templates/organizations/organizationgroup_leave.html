@@ -1,0 +1,34 @@
+{% extends "base_org_admin.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load custom_org_filters %}
+
+{% block title %}
+Leave group
+{% endblock %}
+
+{% block heading %}
+Leave {{ group }}?
+{% endblock %}
+
+{% block main_content %}
+
+{% if group|is_group_owner:user %}
+
+<p> Sorry, in order to leave this group you must first transfer ownership to another user. </p>
+<form method="GET" action="{% url 'organization_list' %}">
+    <input class="loose button" type="submit" value="OK">
+</form>
+
+{% else %}
+
+<p> Are you sure you want to leave the group {{ group }} ? </p>
+<form action="." method="post">{% csrf_token %}
+    <input class="loose button" type="submit" value="OK">
+</form>
+<form method="GET" action="{% url 'organization_list' %}">
+    <input class="loose button" type="submit" value="Cancel">
+</form>
+
+{% endif %}
+{% endblock %}
