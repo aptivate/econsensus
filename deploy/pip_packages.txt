@@ -24,7 +24,7 @@ git+git://github.com/birdsarah/django-actionitems.git
 django-guardian==1.1.1
 factory-boy==2.1.1
 MiniMock==1.2.8
-django-remember_me
+django-remember_me==0.2d0
 selenium==2.34.0
 django-dynamic-fixture==1.6.5
 django-selenium==0.9.6
