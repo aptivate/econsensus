@@ -1,16 +1,19 @@
+# deploy stuff
 fabric==1.4
 virtualenv
--e git+git://github.com/aptivate/dye.git@802e33642f69b7c2feb6e46139a46fe10d38d060#egg=dye
+-e git+git://github.com/aptivate/dye.git@fd4d1466197dc78908fa0b4da7d5597a01b070aa#egg=dye
+
+# core django
 Django==1.4.8
 mysql-python==1.2.3
+South==0.7.5
+
 django-tinymce==1.5.1a2
 mechanize==0.2.5
 django-floppyforms==0.4.5
 lxml==2.2.4
 BeautifulSoup==3.2.0
-South==0.7.5
 git+git://github.com/jdunck/python-unicodecsv.git
-django-debug-toolbar==0.9.4
 django-tagging==0.3.1
 hg+https://bitbucket.org/bkroeze/django-livesettings
 django-keyedcache==1.4-6
@@ -28,8 +31,14 @@ django-selenium==0.9.6
 django-parsley==0.0.2a0
 django-waffle==0.9.1
 Markdown==2.3.1
+-e git+git://github.com/aptivate/aptivate-monkeypatch.git@ed4f821d8d57ba181c418b8d78dfd8bca70d6817#egg=aptivate_monkeypatch
+
+# for search
 django-haystack==2.1.0
 requests==1.2.3
-pyelasticsearch==0.6
 simplejson==3.3.0
--e git+git://github.com/aptivate/aptivate-monkeypatch.git@ed4f821d8d57ba181c418b8d78dfd8bca70d6817#egg=aptivate_monkeypatch
+pyelasticsearch==0.6
+Whoosh==2.5.4
+
+# only required for developer machines
+django-debug-toolbar==0.9.4
