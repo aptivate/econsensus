@@ -54,6 +54,9 @@ table.user_list {
     border-spacing: 10px 0;
 }
 
+.user_list th {
+    text-align: left;
+}
 
 /* General Styles */
 
