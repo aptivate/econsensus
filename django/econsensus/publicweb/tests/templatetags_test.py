@@ -14,3 +14,11 @@ class CustomTemplateFilterTest(TestCase):
         user = UserFactory()
         comment.user = user
         self.assertEqual(publicweb_filters.get_user_name_from_comment(comment), user.username)
+
+    def test_get_user_name_for_notification(self):
+        user = UserFactory()
+        user.username = "bobbins"
+        self.assertEquals("bobbins", publicweb_filters.get_user_name_for_notification(user))
+        user.first_name = "Robert"
+        user.last_name = "Bins"
+        self.assertEquals("Robert Bins", publicweb_filters.get_user_name_for_notification(user))

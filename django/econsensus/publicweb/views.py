@@ -1,38 +1,32 @@
-import unicodecsv
-
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import get_object_or_404 
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View, RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import MultipleObjectsReturned
 
 import unicodecsv
 
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
 from organizations.models import Organization
+from haystack.views import SearchView
+from waffle import switch_is_active
 
 from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
     EconsensusActionItemCreateForm, EconsensusActionItemUpdateForm
 from publicweb.models import Decision, Feedback
 
-from publicweb.forms import DecisionForm, FeedbackForm
-
 from actionitems.models import ActionItem
 from actionitems.views import ActionItemCreateView, ActionItemUpdateView, ActionItemListView
-from actionitems.forms import ActionItemCreateForm
+
 
 class YourDetails(UpdateView):
     template_name = 'your_details.html'
@@ -62,8 +56,8 @@ class ExportCSV(View):
         return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        ''' 
-        Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from 
+        '''
+        Create the HttpResponse object with the appropriate CSV header and corresponding CSV data from
         Decision, Feedback and Comment.
         Expected input: request (not quite sure what this is!)
         Expected output: http containing MIME info followed by the data itself as CSV.
@@ -104,7 +98,7 @@ class ExportCSV(View):
             else: return s
 
         def remove_field(l, field_name):
-            if field_name in l: 
+            if field_name in l:
                 l.remove(field_name)
 
         def field_value(obj, field_name):
@@ -117,32 +111,49 @@ class ExportCSV(View):
         decision_field_names = sorted(list(set([field.name for field in Decision._meta.fields])), key=field_sorter)
         feedback_field_names = sorted(list(set([field.name for field in Feedback._meta.fields])), key=field_sorter)
         comment_field_names = sorted(list(set([field.name for field in Comment._meta.fields])), key=field_sorter)
+        actionitem_field_names = sorted(list(set([field.name for field in ActionItem._meta.fields])), key=field_sorter)
 
         # Remove fields implied by filename (organization) or csv layout:
         remove_field(decision_field_names, 'organization')
         remove_field(feedback_field_names, 'decision')
         remove_field(comment_field_names, 'content_type')
         remove_field(comment_field_names, 'object_pk')
+        remove_field(actionitem_field_names, 'origin')
 
         decision_column_titles = ["Issue.%s" % field_name for field_name in decision_field_names]
         feedback_column_titles = ["Feedback.%s" % field_name for field_name in feedback_field_names]
         comment_column_titles = ["Comment.%s" % field_name for field_name in comment_field_names]
+        actionitem_column_titles = ["ActionItem.%s" % field_name for field_name in actionitem_field_names]
 
         writer = unicodecsv.writer(response)
-        writer.writerow(decision_column_titles + feedback_column_titles + comment_column_titles)
+        writer.writerow(decision_column_titles + feedback_column_titles +
+                        comment_column_titles + actionitem_column_titles)
+
+        no_decision_data   = [u""]*len(decision_field_names)
+        no_feedback_data   = [u""]*len(feedback_field_names)
+        no_comment_data    = [u""]*len(comment_field_names)
+        no_actionitem_data = [u""]*len(actionitem_field_names)
+
         for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
             decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
-            writer.writerow(decision_data + [u""]*len(feedback_field_names) + [u""]*len(comment_field_names))    
+            writer.writerow(decision_data + no_feedback_data + no_comment_data + no_actionitem_data)
+
             for feedback in decision.feedback_set.all().order_by('id'):
                 feedback_data = [field_value(feedback, field_name) for field_name in feedback_field_names]
-                writer.writerow([u""]*len(decision_field_names) + feedback_data + [u""]*len(comment_field_names))
+                writer.writerow(no_decision_data + feedback_data + no_comment_data + no_actionitem_data)
+
                 comments = Comment.objects.filter(
                     content_type=ContentType.objects.get_for_model(Feedback),
                     object_pk=feedback.id
                 ).order_by('id')
                 for comment in comments:
                     comment_data = [field_value(comment, field_name) for field_name in comment_field_names]
-                    writer.writerow([u""]*len(decision_field_names) + [u""]*len(feedback_field_names) + comment_data)    
+                    writer.writerow(no_decision_data + no_feedback_data + comment_data + no_actionitem_data)
+
+            for actionitem in ActionItem.objects.filter(origin=decision.id).order_by('id'):
+                actionitem_data = [field_value(actionitem, field_name) for field_name in actionitem_field_names]
+                writer.writerow(no_decision_data + no_feedback_data + no_comment_data + actionitem_data)
+
         return response
 
 
@@ -158,11 +169,14 @@ class DecisionDetail(DetailView):
         context['organization'] = self.object.organization
         context['tab'] = self.object.status
         context['rating_names'] = [unicode(x) for x in Feedback.rating_names]
-        context['actionitems'] = ActionItem.objects.filter(origin=self.kwargs['pk'])
+        if switch_is_active('actionitems'):
+            context['actionitems'] = ActionItem.objects.filter(origin=self.kwargs['pk'])
         return context
 
 
 class DecisionList(ListView):
+    DEFAULT = Decision.DISCUSSION_STATUS
+
     model = Decision
 
     @method_decorator(login_required)
@@ -172,7 +186,7 @@ class DecisionList(ListView):
         return super(DecisionList, self).dispatch(request, *args, **kwargs)
 
     def set_status(self, **kwargs):
-        self.status = kwargs.get('status', Decision.PROPOSAL_STATUS)
+        self.status = kwargs.get('status', DecisionList.DEFAULT)
         return self.status
 
     def get(self, request, *args, **kwargs):
@@ -219,7 +233,7 @@ class DecisionList(ListView):
                     }
     sort_by_count_fields = ['feedback']
     sort_by_alpha_fields = ['excerpt']
-    
+
     sort_table_headers = {'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
                           'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
                           'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
@@ -398,7 +412,7 @@ class DecisionUpdate(UpdateView):
     form_class = DecisionForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))    
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(DecisionUpdate, self).dispatch(*args, **kwargs)
 
@@ -437,7 +451,7 @@ class FeedbackCreate(CreateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))    
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'parent_pk')))
     def dispatch(self, request, *args, **kwargs):
         self.rating_initial = Feedback.COMMENT_STATUS
         rating = request.GET.get('rating')
@@ -475,10 +489,10 @@ class FeedbackUpdate(UpdateView):
     form_class = FeedbackForm
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))        
+    @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision__feedback', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
-    
+
     def post(self, *args, **kwargs):
         if self.request.POST.get('submit', None) == "Cancel":
             self.object = self.get_object()
@@ -500,12 +514,16 @@ class FeedbackUpdate(UpdateView):
     def get_success_url(self, *args, **kwargs):
         return reverse('publicweb_item_detail', args=[self.object.decision.pk])
 
+
 class EconsensusActionitemCreateView(ActionItemCreateView):
     template_name = 'actionitem_create_snippet.html'
     form_class = EconsensusActionItemCreateForm
+
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'pk')))
     def dispatch(self, *args, **kwargs):
+        if not switch_is_active('actionitems'):
+            raise Http404
         return super(EconsensusActionitemCreateView, self).dispatch(*args, **kwargs)
 
     def get_origin(self, request, *args, **kwargs):
@@ -517,13 +535,17 @@ class EconsensusActionitemCreateView(ActionItemCreateView):
                   'pk': self.object.pk}
         return reverse('actionitem_detail', kwargs=kwargs)
 
+
 class EconsensusActionitemDetailView(DetailView):
     model = ActionItem
     template_name = 'actionitem_detail_snippet.html'
-    
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        if not switch_is_active('actionitems'):
+            raise Http404
         return super(EconsensusActionitemDetailView, self).dispatch(*args, **kwargs)
+
 
 class EconsensusActionitemUpdateView(ActionItemUpdateView):
     template_name = 'actionitem_update_snippet.html'
@@ -531,7 +553,9 @@ class EconsensusActionitemUpdateView(ActionItemUpdateView):
 
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('edit_decisions_feedback', (Organization, 'decision', 'decisionpk')))
-    def dispatch(self, *args, **kwargs):        
+    def dispatch(self, *args, **kwargs):
+        if not switch_is_active('actionitems'):
+            raise Http404
         return super(EconsensusActionitemUpdateView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
@@ -539,11 +563,14 @@ class EconsensusActionitemUpdateView(ActionItemUpdateView):
                   'pk': self.object.pk}
         return reverse('actionitem_detail', kwargs=kwargs)
 
+
 class EconsensusActionitemListView(ActionItemListView):
     template_name = 'decision_list.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        if not switch_is_active('actionitems'):
+            raise Http404
         self.organization = get_object_or_404(Organization, slug=kwargs.get('org_slug', None))
         return super(EconsensusActionitemListView, self).dispatch(request, *args, **kwargs)
 
@@ -577,7 +604,7 @@ class EconsensusActionitemListView(ActionItemListView):
     #######################################
     # TODO The following is NOT DRY
     #######################################
-    
+
     # SORTING ##########################################################
 
     # sort_options
@@ -613,7 +640,7 @@ class EconsensusActionitemListView(ActionItemListView):
                          'responsible': 'Responsible',
                          'deadline': 'Deadline',
                          'done': 'Done?',
-                         'origin': 'Decision',
+                         'origin': 'Parent Item',
                          }
 
         self.header_list = []
@@ -714,6 +741,7 @@ class EconsensusActionitemListView(ActionItemListView):
 
     # END PAGINATION ##########################################################
 
+
 class OrganizationRedirectView(RedirectView):
     '''
     If the user only belongs to one organization then
@@ -729,6 +757,51 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, 'discussion'])
+            return reverse('publicweb_item_list', args = [users_org.slug, DecisionList.DEFAULT])
         except:
             return reverse('organization_list')
+
+
+class DecisionSearchView(SearchView):
+    DEFAULT_RESULTS_PER_PAGE = 10
+
+    def __init__(self, *args, **kwargs):
+        super(DecisionSearchView, self).__init__(*args, **kwargs)
+
+    def __call__(self, request, org_slug):
+        self.organization = get_object_or_404(Organization, slug=org_slug)
+
+        num = request.GET.get('num')
+        if not num: num = request.session.get('num')
+        if not num: num = str(self.DEFAULT_RESULTS_PER_PAGE)
+        request.session['num'] = num
+        self.results_per_page = int(num)
+
+        return super(DecisionSearchView, self).__call__(request)
+
+    def get_results(self):
+        results = super(DecisionSearchView, self).get_results()
+        return results.filter(organization=self.organization)
+
+    def extra_context(self):
+        context = {}
+        context['organization'] = self.organization
+        context['tab'] = 'search'
+        context['num'] = str(self.results_per_page)
+        context['queryurl'] = self.build_query_link()
+        context.update(super(DecisionSearchView, self).extra_context())
+        return context
+
+    def build_query_link(self):
+        link = '?q=' + self.query
+        if self.results_per_page != self.DEFAULT_RESULTS_PER_PAGE:
+            link = link + '&num=' + str(self.results_per_page)
+        return link
+
+    # Might have been logical to call this method "as_view", but
+    # that might imply that we inherit from View...
+    @classmethod
+    def make(cls):
+        def search_view(request, *args, **kwargs):
+            return cls()(request, *args, **kwargs)
+        return login_required(search_view)

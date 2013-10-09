@@ -2,6 +2,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load org_filters %}
+{% load waffle_tags %}
 
 {% block title %}
 {% if organization|is_member:user %}
@@ -17,6 +18,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/showhide.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/clickonce.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/parsley.min.js"></script>
 	<script type="text/javascript">
 	<!--
@@ -46,15 +48,19 @@
 		}
 
 		function updateCounters() {
-			var counters = {},
-			    feedback_type;
+			var counters = {};
+			$(".stats dt").each(function () {
+				var type = this.className;
+				counters[type] = 0;
+			});
 			$(".feedback_type").each(function () {
 				var type = $.trim(this.className.replace("feedback_type", ""));
-				counters[type] = counters[type] ? counters[type]+1 : 1;
+				counters[type] = counters[type]+1;
 			});
-			for(feedback_type in counters) {
-				$(".stats ."+feedback_type).next()
-						.html(counters[feedback_type]);
+			for(var feedback_type in counters) {
+				var dt = $(".stats ."+feedback_type);
+				var dd = dt.next();
+				dd.html(counters[feedback_type]);
 			}
 		}
 
@@ -337,7 +343,7 @@
 	<p>{% trans "You are not a member of this organization." %}<p>
 {% else %}
 {% include "decision_detail_snippet.html" %}
-{% comment %}
+{% switch "actionitems" %}
 <div class="envelope">
     <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
         {% if "edit_decisions_feedback" in organization_permissions %}
@@ -354,7 +360,7 @@
         </ol>
     </div>
 </div>
-{% endcomment %}
+{% endswitch %}
 <div class="envelope">
     <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
     {% if "edit_decisions_feedback" in organization_permissions %}

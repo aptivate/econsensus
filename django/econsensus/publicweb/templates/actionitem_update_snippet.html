@@ -1,6 +1,8 @@
 {% load i18n %}
 {% load url from future %}
+{% load waffle_tags %}
 
+{% switch "actionitems" %}
 {% block main_content %}
     <form class="actionitem-form" action="{% url 'actionitem_update' decisionpk=object.origin_id pk=object.id %}" method="POST">{% csrf_token %}
         <div class="formset_item actionitem">
@@ -28,3 +30,4 @@
         });
     </script>
 {% endblock %}
+{% endswitch %}

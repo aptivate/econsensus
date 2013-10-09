@@ -1,6 +1,7 @@
 {% load url from future %}
+{% load publicweb_filters %}
 
-You've been invited to join {{ organization }} on {{ domain.name }} by {{ sender.username }}.
+You've been invited to join {{ organization }} on {{ domain.name }} by {{ sender|get_user_name_for_notification }}.
 
 Follow this link to create your user account.
 

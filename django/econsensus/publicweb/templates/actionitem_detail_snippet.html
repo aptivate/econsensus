@@ -1,18 +1,28 @@
 {% load url from future %}
 {% load i18n %}
 {% load guardian_tags %}
+{% load waffle_tags %}
+
+{% switch "actionitems" %}
 {% get_obj_perms request.user for object.origin.organization as "organization_permissions" %}
 <li id="act_id_{{ actionitem.id }}">
-    <div class="actionitem_feedback_wrapper">
-	    {% if actionitem.done %}<del>{% endif %}
-	        <span class="actionitem_responsible">{{ actionitem.responsible }}</span> {% trans " is responsible for: " %}        
-	        {{ actionitem.title }} <br />
-	        {% if actionitem.deadline %}{% trans "by " %}<span class="actionitem_responsible">{{ actionitem.deadline }}</span>
-	        {% else %}{% trans "No deadline" %}
-	        {% endif %}
-	    {% if actionitem.done %}</del>{% endif %} <br />
-	    {% if "edit_decisions_feedback" in organization_permissions %}
-	    <a class="edit actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
-	    {% endif %}
-    </div>
+	<div class="actionitem_feedback_wrapper">
+		<div class="actionitem_metadata">
+			<ul>
+				<li>{% trans " Responsible: " %}<span class="actionitem_responsible">{{ actionitem.responsible }}</span></li>
+				<li>
+					{% if actionitem.deadline %}{% trans "By " %}<span class="actionitem_responsible">{{ actionitem.deadline }}</span>
+					{% else %}{% trans "No deadline" %}
+					{% endif %}
+				</li>
+			</ul>
+		</div>
+		{% if actionitem.done %}<del>{% endif %}
+			{{ actionitem.description|urlize|linebreaksbr }}
+		{% if actionitem.done %}</del>{% endif %} <br />
+		{% if "edit_decisions_feedback" in organization_permissions %}
+			<a class="edit button actionitem" href='{% url 'actionitem_update' decisionpk=actionitem.origin_id pk=actionitem.id %}'>{% trans "Edit" %}</a>
+		{% endif %}
+	</div>
 </li>
+{% endswitch %}

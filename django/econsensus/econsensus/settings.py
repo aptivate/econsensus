@@ -1,7 +1,8 @@
 # Django settings for Econsensus project.
 
 import os
-import private_settings #@UnresolvedImport
+import sys
+import private_settings  # @UnresolvedImport
 
 DJANGO_HOME = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
 DEBUG = True
@@ -11,11 +12,18 @@ ADMINS = (
     ('Econsensus Project', 'carers-econsensus@aptivate.org'),
 )
 
+ALLOWED_HOSTS = [
+    '.econsensus.org',
+    'www.econsensus.org',
+    'econsensus.stage.aptivate.org',
+    'fen-vz-econsensus.fen.aptivate.org',
+]
+
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
@@ -78,7 +86,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -88,7 +96,7 @@ SECRET_KEY = private_settings.SECRET_KEY
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -97,6 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 )
 
 ROOT_URLCONF = 'econsensus.urls'
@@ -131,8 +140,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.comments',
+    'django.contrib.flatpages',
+    'django.contrib.markup',
     'south',
     'registration',
+    'waffle',
     'notification',
     'custom_comments',
     'keyedcache',
@@ -146,9 +158,23 @@ INSTALLED_APPS = (
     'tagging',
     'remember_me',
     'actionitems',
+    'custom_flatpages',
+    'haystack',
+    'custom_haystack'
 )
 
 ACTIONITEMS_ORIGIN_MODEL = 'publicweb.Decision'
+
+# Search disabled by default.
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'custom_haystack.backends.disabled_backend.DisabledEngine',
+    },
+}
+
+# When search is enabled, updates to search index happens
+# in real time.
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -179,25 +205,25 @@ LOGGING = {
         },
     },
     'filters': {
-         'require_debug_false': {
-             '()': 'utils.log.RequireDebugFalse',
-         }
-     },
+        'require_debug_false': {
+            '()': 'utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
         },
-        'file':{
-            'level':'INFO',
+        'file': {
+            'level': 'INFO',
             'filters': ['require_debug_false'],
-            'class':'logging.FileHandler',
+            'class': 'logging.FileHandler',
             'formatter': 'verbose',
             'filename': LOG_FILE
         },
-        'console':{
-            'level':'ERROR',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
     },
@@ -208,7 +234,7 @@ LOGGING = {
             'propagate': True,
         },
         'econsensus': {
-            'handlers': ['file','console'],
+            'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,
         }
@@ -217,17 +243,17 @@ LOGGING = {
 
 # Set this to true to log emails marked as auto-replies. Default is False
 LOG_AUTO_REPLIES = True
- 
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 TINYMCE_DEFAULT_CONFIG = {
-            "theme" : "advanced",
-            "theme_advanced_buttons1" : "bold,italic,underline,link,unlink," +
-                "bullist,blockquote,undo",
-            "theme_advanced_buttons2" : "",
-            "theme_advanced_buttons3" : ""
-            }
+    "theme": "advanced",
+    "theme_advanced_buttons1": "bold,italic,underline,link,unlink,"
+                               "bullist,blockquote,undo",
+    "theme_advanced_buttons2": "",
+    "theme_advanced_buttons3": ""
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
@@ -246,8 +272,16 @@ CACHE_TIMEOUT = 0
 import logging
 logging.getLogger('keyedcache').setLevel(logging.INFO)
 
-TEST_RUNNER = 'test_runner.DiscoveryRunner' 
- 
+TEST_RUNNER = 'test_runner.DiscoveryRunner'
+
+# tests will go quite a bit faster, particularly when users are created
+# in almost every test
+if 'test' in sys.argv:
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+        'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
+    )
+
 # Override invitation email templates
 INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBackend"
 
