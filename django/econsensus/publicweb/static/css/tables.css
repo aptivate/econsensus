@@ -33,6 +33,7 @@
     .proposal-list .summary-list tr {border-color: #FFCC00; }
     .decision-list .summary-list tr {border-color: #AAD400; }
     .archived-list .summary-list tr {border-color: #D1D7DF; }
+    .actionitems-list .summary-list tr {border-color: #F7D9E5; }
 
 	.object-list td {
 		/* Behave  like a "row" */
@@ -113,4 +114,11 @@
 	.archived-list td:nth-of-type(1):before { font-weight:bold;content:"ID";}
 	.archived-list td:nth-of-type(3):before { font-weight:bold;content:"Created Date"; }
 	.archived-list td:nth-of-type(4):before { font-weight:bold;content:"Archived Date"; }
+
+	.actionitems-list td:nth-of-type(1):before { font-weight:bold;content:"ID"; }
+	.actionitems-list td:nth-of-type(3):before { font-weight:bold;content:"Responsible"; }
+	.actionitems-list td:nth-of-type(4):before { font-weight:bold;content:"Deadline"; }
+	.actionitems-list td:nth-of-type(5):before { font-weight:bold;content:"Done?"; }
+	.actionitems-list td:nth-of-type(6):before { font-weight:bold;content:"Parent item"; }
 }
+
