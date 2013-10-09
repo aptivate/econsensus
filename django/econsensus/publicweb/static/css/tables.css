@@ -29,6 +29,7 @@
 	.object-list td {display:table-row;position:relative;}
     .object-list td.excerpt {display:block;width:100%}
 
+    .discussion-list .summary-list tr {border-color: #3E6EA3; }
     .proposal-list .summary-list tr {border-color: #FFCC00; }
     .decision-list .summary-list tr {border-color: #AAD400; }
     .archived-list .summary-list tr {border-color: #D1D7DF; }
