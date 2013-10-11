@@ -343,7 +343,6 @@
 	<p>{% trans "You are not a member of this organization." %}<p>
 {% else %}
 {% include "decision_detail_snippet.html" %}
-
 {% switch "actionitems" %}
 <div class="envelope">
     <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
@@ -362,7 +361,6 @@
     </div>
 </div>
 {% endswitch %}
-
 <div class="envelope">
     <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
     {% if "edit_decisions_feedback" in organization_permissions %}
