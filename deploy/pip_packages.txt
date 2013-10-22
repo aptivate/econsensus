@@ -1,7 +1,7 @@
 # deploy stuff
 fabric==1.4
 virtualenv
--e git+git://github.com/aptivate/dye.git@ce779adda26d1815886c88eadef18016ffbd207c#egg=dye
+-e git+git://github.com/aptivate/dye.git@52b8472869ea2c129e4b4ae955fd0e96e59c4507#egg=dye
 
 # core django
 Django==1.4.8
@@ -22,12 +22,7 @@ django-registration==1.0
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
 git+git://github.com/birdsarah/django-actionitems.git
 django-guardian==1.1.1
-factory-boy==2.1.1
-MiniMock==1.2.8
 django-remember_me==0.2d0
-selenium==2.34.0
-django-dynamic-fixture==1.6.5
-django-selenium==0.9.6
 django-parsley==0.0.2a0
 django-waffle==0.9.1
 Markdown==2.3.1
@@ -39,6 +34,13 @@ requests==1.2.3
 simplejson==3.3.0
 pyelasticsearch==0.6
 Whoosh==2.5.4
+
+# for testing
+factory-boy==2.1.1
+MiniMock==1.2.8
+selenium==2.34.0
+django-dynamic-fixture==1.6.5
+django-selenium==0.9.6
 
 # only required for developer machines
 django-debug-toolbar==0.9.4
