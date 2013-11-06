@@ -54,6 +54,9 @@ table.user_list {
     border-spacing: 10px 0;
 }
 
+.user_list th {
+    text-align: left;
+}
 
 /* General Styles */
 
@@ -1799,4 +1802,13 @@ del > .actionitem_responsible {
 .actionitems-list .summary-list th.description a {
     text-align: left;
     padding: 10px 10px 10px 0px;
+}
+
+.actionitem_metadata {
+	float: right;
+	border: 5px solid #ECECEC;
+	border-radius: 15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	padding: 20px;
 }

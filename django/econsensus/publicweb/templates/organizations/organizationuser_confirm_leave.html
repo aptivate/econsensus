@@ -1,0 +1,30 @@
+{% extends "base_org_admin.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load org_tags %}
+
+{% block title %}
+Confirm leaving {{ organization }}
+{% endblock %}
+
+{% block heading %}
+Confirm that you want to leave {{ organization }}
+{% endblock %}
+
+{% block main_content %}
+<br />
+<br />
+Once you have left {{ organization }} you cannot rejoin by yourself - you will have
+to be re-invited by an admin.
+<br />
+<br />
+<form action="." method="post">{% csrf_token %}
+    {{ form }}
+    <input class="loose button" type="submit" value="Leave">
+</form>
+
+<form method="GET" action="{% url 'organization_list' %}">
+    <input class="loose button" type="submit" value="Cancel">
+</form>
+<br />
+{% endblock %}

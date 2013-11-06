@@ -17,15 +17,24 @@
 <br />
 <ul>
 {% for organization_user in organization_users %}
-{% if forloop.first %}<table class="user_list"><tbody>{% endif %}
+{% if forloop.first %}
+<table class="user_list"><tbody>
+<tr>
+	<th>Username</th>
+	<th>Name</th>
+	<th>Email</th>
+	<th>Role</th>
+	<th>Actions</th>
+</tr>
+{% endif %}
 {% if organization_user.user.is_active %}
 
 <tr>
-    <td><h3>{{ organization_user.user }}</h3></td>
-    <td>{{ organization_user.user.first_name }}</td> 
-    <td>{{ organization_user.user.last_name }}</td> 
-    <td>{{ organization_user.user.email }}</td> 
-    <td><a href="{% url 'organization_user_edit' organization.id organization_user.user.id %}">edit</a> | <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a></td>
+	<td><h3>{{ organization_user.user }}</h3></td>
+	<td>{{ organization_user.name }}</td>
+	<td>{{ organization_user.user.email }}</td>
+	<td>{{ organization_user.get_role|capfirst }}</td>
+	<td><a href="{% url 'organization_user_edit' organization.id organization_user.user.id %}">edit</a> | {% if organization_user.is_owner %}Cannot remove owner {% else %} <a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">remove</a>{% endif %}</td>
 </tr>
 
 {% endif %}
@@ -53,7 +62,7 @@ Pending users
 {% endif %}
 <tr>
     <td style="text-align: left"> {{ organization_user.user.email }}</td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">delete</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'organization_user_delete' organization.id organization_user.user.id %}">remove</a> | <a href="{% url 'organization_user_remind' organization.id organization_user.user.id %}">send reminder</a></td>
 </tr>
 
 

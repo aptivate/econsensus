@@ -2,19 +2,30 @@ from django.utils.unittest import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse, resolve
 from django.contrib.auth.models import User
+from BeautifulSoup import BeautifulSoup
+from waffle import Switch
 
 from decision_test_case import DecisionTestCase
 
-from publicweb.views import EconsensusActionitemCreateView, EconsensusActionitemUpdateView, EconsensusActionitemListView
-from organizations.models import Organization
 from actionitems.models import ActionItem
 
-from BeautifulSoup import BeautifulSoup
-from publicweb.forms import EconsensusActionItemCreateForm,\
-    EconsensusActionItemUpdateForm
+from publicweb.forms import (EconsensusActionItemCreateForm,
+                             EconsensusActionItemUpdateForm)
+from publicweb.views import (EconsensusActionitemCreateView,
+                             EconsensusActionitemUpdateView,
+                             EconsensusActionitemListView)
 
 
 class ActionitemsViewTestFast(TestCase):
+
+    def setUp(self):
+        # ensure the waffle stuff is set up
+        Switch.objects.create(name='actionitems', active=True)
+        super(ActionitemsViewTestFast, self).setUp()
+
+    def tearDown(self):
+        Switch.objects.all().delete()
+        super(ActionitemsViewTestFast, self).tearDown()
 
     def test_create_model(self):
         assert EconsensusActionitemCreateView.model == ActionItem
@@ -43,7 +54,7 @@ class ActionitemsViewTestFast(TestCase):
     def test_update_get_successurl(self):
         updateview = EconsensusActionitemUpdateView()
         updateview.object = ActionItem(id=1)
-        updateview.kwargs = {'decisionpk' : 1}
+        updateview.kwargs = {'decisionpk': 1}
         assert updateview.get_success_url() == reverse('actionitem_detail', kwargs={'decisionpk': 1, 'pk': 1})
 
     def test_create_get_origin(self):
@@ -67,7 +78,7 @@ class ActionitemsViewTestFast(TestCase):
 
     def test_create_login_and_editor_not_logged_in(self):
         get_request = RequestFactory().get('/')
-        user = User.objects.create()        
+        user = User.objects.create()
         user.is_authenticated = lambda: False
         get_request.user = user
         response = EconsensusActionitemCreateView.as_view()(get_request, pk=1)
@@ -76,7 +87,7 @@ class ActionitemsViewTestFast(TestCase):
 
     def test_update_login_and_editor_not_logged_in(self):
         get_request = RequestFactory().get('/')
-        user = User.objects.create()        
+        user = User.objects.create()
         user.is_authenticated = lambda: False
         get_request.user = user
         response = EconsensusActionitemUpdateView.as_view()(get_request)
@@ -85,22 +96,22 @@ class ActionitemsViewTestFast(TestCase):
 
     def test_list_login_not_logged_in(self):
         get_request = RequestFactory().get('/')
-        user = User.objects.create()        
+        user = User.objects.create()
         user.is_authenticated = lambda: False
         get_request.user = user
         response = EconsensusActionitemListView.as_view()(get_request)
         assert response.status_code == 302  # Redirects to login
         user.delete()
-    
+
     def test_list_sort_options_contain_done(self):
         assert 'done' in EconsensusActionitemListView.sort_options
-    
+
     def test_list_sort_options_doesnt_contain_is_done(self):
         assert not 'is_done' in EconsensusActionitemListView.sort_options
-    
+
     def test_sort_table_headers_contains_done(self):
         assert 'done' in EconsensusActionitemListView.sort_table_headers['actionitems']
-    
+
     def test_sort_table_headers_doesnt_contain_is_done(self):
         assert not 'is_done' in EconsensusActionitemListView.sort_table_headers['actionitems']
 
@@ -116,13 +127,24 @@ class ActionitemsViewTestFast(TestCase):
 # - minimizer
 # sorting <- will be handled by refactor
 
+
 class ActionitemsViewTest(DecisionTestCase):
+
+    def setUp(self):
+        # ensure the waffle stuff is set up
+        Switch.objects.create(name='actionitems', active=True)
+        super(ActionitemsViewTest, self).setUp()
+
+    def tearDown(self):
+        Switch.objects.all().delete()
+        super(ActionitemsViewTest, self).tearDown()
 
     def test_create_login_and_editor(self):
         decision = self.create_and_return_decision()
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
-        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        # The pk is what django-guardian checks for
+        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk)
         assert response.status_code == 200
         decision.delete()
 
@@ -131,7 +153,8 @@ class ActionitemsViewTest(DecisionTestCase):
         get_request = RequestFactory().get('/')
         assert self.charlie.is_authenticated()  # Confirm user is logged in
         get_request.user = self.charlie
-        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk) # The pk is what django-guardian checks for
+        # The pk is what django-guardian checks for
+        response = EconsensusActionitemCreateView.as_view()(get_request, pk=decision.pk)
         assert response.status_code == 403
         decision.delete()
 
@@ -154,8 +177,8 @@ class ActionitemsViewTest(DecisionTestCase):
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
         response = EconsensusActionitemUpdateView.as_view()(
-                   get_request, decisionpk=decision.pk, pk=actionitem.pk
-        ) # The decisionpk is what django-guardian checks for
+            get_request, decisionpk=decision.pk, pk=actionitem.pk
+        )  # The decisionpk is what django-guardian checks for
         assert response.status_code == 200
         decision.delete()
         actionitem.delete()
@@ -167,8 +190,8 @@ class ActionitemsViewTest(DecisionTestCase):
         assert self.charlie.is_authenticated()  # Confirm user is logged in
         get_request.user = self.charlie
         response = EconsensusActionitemUpdateView.as_view()(
-                   get_request, decisionpk=decision.pk, pk=actionitem.pk
-        ) # The decisionpk is what django-guardian checks for
+            get_request, decisionpk=decision.pk, pk=actionitem.pk
+        )  # The decisionpk is what django-guardian checks for
         assert response.status_code == 403
         decision.delete()
         actionitem.delete()
@@ -177,14 +200,14 @@ class ActionitemsViewTest(DecisionTestCase):
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
         get_request.session = {}
-        response = EconsensusActionitemListView.as_view()(get_request, org_slug=self.bettysorg.slug) 
+        response = EconsensusActionitemListView.as_view()(get_request, org_slug=self.bettysorg.slug)
         assert response.status_code == 200
 
     def test_list_wrongorg(self):
         get_request = RequestFactory().get('/')
         get_request.user = self.betty
         get_request.session = {}
-        response = EconsensusActionitemListView.as_view()(get_request, org_slug='wild-about-town') 
+        response = EconsensusActionitemListView.as_view()(get_request, org_slug='wild-about-town')
         assert response.status_code == 200  # This seems like we could aim for better?
         response.render()
         soup = BeautifulSoup(str(response.content))

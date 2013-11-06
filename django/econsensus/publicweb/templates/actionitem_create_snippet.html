@@ -1,7 +1,9 @@
 {% load i18n %}
 {% load url from future %}
+{% load waffle_tags %}
 
 {% block main_content %}
+{% switch "actionitems" %}
     <form class="actionitem-form" action="{% url 'actionitem_create' pk=form.origin.value %}" method="POST">{% csrf_token %}
         <div class="formset_item actionitem">
             <div class="form_item{{form.description.html_name}}">
@@ -29,4 +31,5 @@
             $('.actionitems-date-widget').datepicker({ dateFormat: "dd/mm/yy"});
         });
     </script>
+{% endswitch %}
 {% endblock %}

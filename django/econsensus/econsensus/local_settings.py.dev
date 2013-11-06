@@ -13,13 +13,13 @@ TEMPLATE_DEBUG = True
 PROJECT_HOME = os.path.dirname(os.path.realpath(__file__))
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(PROJECT_HOME,'econsensus-messages')
+EMAIL_FILE_PATH = os.path.join(PROJECT_HOME, 'econsensus-messages')
 
 thisdir = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': os.path.join(thisdir, "econsensus.sqlite"),                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',   # Not used with sqlite3.
@@ -37,15 +37,25 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
+# don't bother with migrations for tests
+SOUTH_TESTS_MIGRATE = False
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(thisdir, os.pardir, 'whoosh_index'),
+    },
+}
+
 #-----------------------------------
 # The "extra" nomenclature is used to append values
 # to lists/dictionaries already defined in settings.py
 #-----------------------------------
 
-EXTRA_MIDDLEWARE_CLASSES = ( 
+EXTRA_MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-EXTRA_INSTALLED_APPS = ( 
+EXTRA_INSTALLED_APPS = (
     'debug_toolbar',
 )
