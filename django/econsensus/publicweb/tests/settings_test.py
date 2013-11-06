@@ -10,7 +10,6 @@ from django.test.client import RequestFactory
 from publicweb.views import UserNotificationSettings
 from publicweb.forms import NotificationSettingsForm
 from django.core.urlresolvers import reverse
-from dbsettings.models import Root
 from django.http import HttpResponseRedirect
 
 def create_fake_organization(**kwargs):

@@ -15,8 +15,6 @@ from publicweb.models import NotificationSettings
 
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
-from dbsettings.models import Root
-
 
 class YourDetailsForm(forms.ModelForm):
 

@@ -6,9 +6,7 @@ from organizations.backends import invitation_backend
 from custom_auth.forms import CustomAuthenticationForm, CustomPasswordResetForm
 from registration.backends.default.views import RegistrationView
 from custom_organizations.forms import CustomUserSignupRegistrationForm
-import dbsettings
 
-dbsettings.add_to_admin(admin.site)
 admin.autodiscover()
 
 urlpatterns = patterns(

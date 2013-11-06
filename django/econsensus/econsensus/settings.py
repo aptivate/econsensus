@@ -156,7 +156,6 @@ INSTALLED_APPS = (
     'signals',
     'tinymce',
     'tagging',
-    'dbsettings',
     'remember_me',
     'actionitems',
     'custom_flatpages',
