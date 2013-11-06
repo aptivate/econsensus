@@ -270,20 +270,15 @@ class ObservationManagerTest(SimpleTestCase):
         )
     
     @patch("notification.models.send", new=MagicMock())
-    def test_include_watchers_not_run_for_minor_edits(self):
+    @patch("publicweb.observation_manager.ObservationManager.include_watchers")
+    def test_include_watchers_not_run_for_minor_edits(self, include_watchers):
         item = DecisionFactory.build(id=1)
         item = add_watchers(item)
 
-        settings_handler = MagicMock(
-                 wraps=ObservationManager,
-                 include_watchers=MagicMock(), 
-                 _get_organization=_get_organization
-        )
+        settings_handler = ObservationManager()
         
-        settings_handler.send_notifications(
-            ObservationManager(), [], item, MINOR_CHANGE, {}, {}, ""
-        )
-        self.assertFalse(settings_handler.include_watchers.called)
+        settings_handler.send_notifications([], item, MINOR_CHANGE, {}, {}, "")
+        self.assertFalse(include_watchers.called)
     
     def test_get_organization_returns_organization_for_decision(self):
         expected_organization = OrganizationFactory.build(id=1)
