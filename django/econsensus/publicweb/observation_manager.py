@@ -52,7 +52,8 @@ class ObservationManager(object):
     
     def send_notifications(self, recipients, item, notification_type, 
                            extra_context, headers, from_email):
-        self.include_watchers(item)
+        if notification_type != MINOR_CHANGE:
+            self.include_watchers(item)
         organization = self._get_organization(item)
 
         for recipient in recipients:

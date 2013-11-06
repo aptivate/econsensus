@@ -35,6 +35,9 @@ def add_watchers(decision):
         )
     return decision
 
+def _get_organization():
+    return OrganizationFactory.build()
+
 class MockQueryset(set):
     def all(self):
         return list(self)
@@ -265,6 +268,22 @@ class ObservationManagerTest(SimpleTestCase):
                 set([watcher.user for watcher in decision.watchers.all()]),
                 settings_handler.recipient_list
         )
+    
+    @patch("notification.models.send", new=MagicMock())
+    def test_include_watchers_not_run_for_minor_edits(self):
+        item = DecisionFactory.build(id=1)
+        item = add_watchers(item)
+
+        settings_handler = MagicMock(
+                 wraps=ObservationManager,
+                 include_watchers=MagicMock(), 
+                 _get_organization=_get_organization
+        )
+        
+        settings_handler.send_notifications(
+            ObservationManager(), [], item, MINOR_CHANGE, {}, {}, ""
+        )
+        self.assertFalse(settings_handler.include_watchers.called)
     
     def test_get_organization_returns_organization_for_decision(self):
         expected_organization = OrganizationFactory.build(id=1)
