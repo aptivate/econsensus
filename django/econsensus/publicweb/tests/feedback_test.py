@@ -43,23 +43,16 @@ class FeedbackTest(DecisionTestCase):
         self.assertEqual(1, len(mail.outbox))
 
 
-    def test_no_email_sent_when_feedback_edited_by_author(self):
-        decision = self.create_and_return_example_decision_with_feedback()
-
-        feedback = decision.feedback_set.all()[0]
-        self.assertEqual(feedback.author, self.betty)
-        # edit feedback
-        self.login(self.betty)
-        form = FeedbackForm(instance=feedback)
-        form.fields['description'] = "New Updated description."
-        form.fields['rating'] = 4
-        form.fields['resolved'] = False
-        # Empty the test outbox
-        mail.outbox = []
-        response = self.client.post(reverse('publicweb_feedback_update',
-            args=[feedback.id]), form.fields)
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(0, len(mail.outbox))
+    def test_adding_feedback_adds_user_as_watcher(self):
+        decision = self.create_and_return_decision()
+        decision.watchers = []
+        decision.save()
+        
+        self.create_and_return_feedback(decision, "I can't decide", self.user)
+        
+        watchers = [watcher.user for watcher in decision.watchers.all()]
+        self.assertIn(self.user, watchers)
+        
 
 
 

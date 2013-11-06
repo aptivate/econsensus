@@ -316,6 +316,7 @@ def feedback_signal_handler(sender, **kwargs):
 
     if kwargs.get('created', True):
         #All watchers of parent get notified of new feedback.
+        notification.observe(instance.decision, instance.author, 'feedback_change')
         observation_manager.send_notifications(org_users, instance, FEEDBACK_NEW, extra_context, headers, from_email=instance.decision.get_email())
     else:
         # An edit by someone other than the author never counts as minor
@@ -342,6 +343,7 @@ def comment_signal_handler(sender, **kwargs):
     org_users = list(instance.content_object.decision.organization.users.filter(is_active=True))
     extra_context = dict({"observed": instance})
     if kwargs.get('created', True):
+        notification.observe(instance.content_object.decision, instance.user, 'comment_change')
         #All watchers of parent get notified of new feedback.
         observation_manager.send_notifications(org_users, instance, COMMENT_NEW, extra_context, headers, from_email=instance.content_object.decision.get_email())
     else:
