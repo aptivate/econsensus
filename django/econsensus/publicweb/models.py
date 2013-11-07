@@ -199,7 +199,10 @@ class Decision(models.Model):
 
     def _is_same(self, other):
         for field in self.TRIGGER_FIELDS:
-            if getattr(self, field) != getattr(other, field):
+            my_field = getattr(self, field)
+            other_field = getattr(other, field) 
+            if (my_field != other_field 
+                and not (my_field == u'' and other_field is None)):
                 return False
         return True
 
@@ -210,12 +213,12 @@ class Decision(models.Model):
         self.excerpt = self._get_excerpt()
         if self.id:
             prev = self.__class__.objects.get(id=self.id)
-            if not self.minor_edit:
-                self._send_major_change_notifications()
-            else:
-                self._send_minor_change_notifications()
             if not self._is_same(prev):
-                self._update_last_modified()
+                if not self.minor_edit:
+                    self._send_major_change_notifications()
+                else:
+                    self._send_minor_change_notifications()
+                    self._update_last_modified()
         super(Decision, self).save(*args, **kwargs)
 
     def note_external_modification(self):
