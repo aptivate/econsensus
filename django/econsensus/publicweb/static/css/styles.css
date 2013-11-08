@@ -65,6 +65,7 @@ body {
 	margin:0 auto;
 	min-width:320px;
 	font-size:1em;
+	overflow-y: scroll;
 }
 
 a, a:link, a:active a:visited {
