@@ -934,7 +934,7 @@ class DecisionSearchView(SearchView):
             return cls()(request, *args, **kwargs)
         return login_required(search_view)
 
-class AddWatcherView(View):
+class BaseWatcherView(View):
     def get_object(self):
         object_id = self.kwargs['decision_id']
         Decision.objects.get(pk=object_id)
@@ -942,8 +942,9 @@ class AddWatcherView(View):
     def get_user(self):
         return self.request.user
     
+class AddWatcherView(BaseWatcherView):
+    
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
         notification.observe(decision, user, 'decision_change')
-        
