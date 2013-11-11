@@ -8,7 +8,8 @@ from mock import patch, MagicMock
 
 class WatcherViewTests(SimpleTestCase):
     
-    def test_add_watcher_view_adds_observer_to_item(self):
+    @patch('publicweb.views.notification')
+    def test_add_watcher_view_adds_observer_to_item(self, notifications):
         decision = N(Decision)
         user = N(User)
         
@@ -18,7 +19,7 @@ class WatcherViewTests(SimpleTestCase):
         mock_view.get = AddWatcher.get
         
         mock_view.get(mock_view, RequestFactory().get('/', {'next': '/'}))
-        mock_view.observation_method.assert_called_with(decision, user, 
+        notifications.observe.assert_called_with(decision, user, 
           'decision_change')
     
     @patch("publicweb.views.Decision.objects")
@@ -37,8 +38,9 @@ class WatcherViewTests(SimpleTestCase):
         view.request = request
         
         self.assertEqual(user, view.get_user())
-
-    def test_remove_watcher_view_removes_observer_from_item(self):
+    
+    @patch('publicweb.views.notification')
+    def test_remove_watcher_view_removes_observer_from_item(self, notifications):
         decision = N(Decision)
         user = N(User)
         
@@ -46,7 +48,6 @@ class WatcherViewTests(SimpleTestCase):
         mock_view.get_object = lambda: decision
         mock_view.get_user = lambda: user
         mock_view.get = RemoveWatcher.get
-
+        
         mock_view.get(mock_view, RequestFactory().get('/', {'next': '/'}))
-        mock_view.observation_method.assert_called_with(decision, user, 
-          'decision_change')
+        notifications.stop_observing.assert_called_with(decision, user)
