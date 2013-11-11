@@ -313,11 +313,7 @@ class DecisionList(ListView):
         return sort_class
 
     def toggle_sort_order(self, sort_order):
-        if sort_order == '-':
-            toggled_sort_order = ''
-        if sort_order == '':
-            toggled_sort_order = '-'
-        return toggled_sort_order
+        return '' if sort_order == '-' else '-'
 
     def get_sort_query(self, request, field):
         current_sort = self.sort_order + self.sort_field
@@ -325,8 +321,8 @@ class DecisionList(ListView):
 
         # Unless field is sort_field, when next_sort is inverse
         if current_sort == default_sort:
-            next_sort = (self.toggle_sort_order(self.sort_order) + 
-                         self.sort_field)
+            next_sort_order = self.toggle_sort_order(self.sort_order) 
+            next_sort = "{0}}{1}".format(next_sort_order, self.sort_field)
         else:
             next_sort = default_sort
 
@@ -937,3 +933,17 @@ class DecisionSearchView(SearchView):
         def search_view(request, *args, **kwargs):
             return cls()(request, *args, **kwargs)
         return login_required(search_view)
+
+class AddWatcherView(View):
+    def get_object(self):
+        object_id = self.kwargs['decision_id']
+        Decision.objects.get(pk=object_id)
+    
+    def get_user(self):
+        return self.request.user
+    
+    def get(self, request, *args, **kwargs):
+        decision = self.get_object()
+        user = self.get_user()
+        notification.observe(decision, user, 'decision_change')
+        
