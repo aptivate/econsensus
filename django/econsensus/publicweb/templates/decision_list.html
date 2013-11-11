@@ -65,6 +65,11 @@
                         <tr>
                             {% if tab != 'actionitems' %}
                                 <td class="id"><a href="{% url 'publicweb_item_detail' object.id %}"><span class="iconified">{{ object.id }}</span></a></td>
+                                <td>
+                                    <a href="{% if request.user|is_watching:object %}{% url 'remove_watcher' object.id %}{% else %}{% url 'add_watcher' object.id %}{% endif %}?next={{ request.path_info }}">
+                                        <input type="checkbox"{% if request.user|is_watching:object %} checked="True"{% endif %} />
+                                    </a>
+                                 </td>
 				                <td class="excerpt"><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.excerpt }}	</a></td>
 				                {% if tab == 'decision' %}
 				                    <td><a href="{% url 'publicweb_item_detail' object.id %}">{{ object.decided_date }}</a></td>
