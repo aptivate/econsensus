@@ -17,7 +17,7 @@ class WatcherViewTests(SimpleTestCase):
         mock_view.get_user = lambda: user
         mock_view.get = AddWatcher.get
         
-        mock_view.get(mock_view, None)
+        mock_view.get(mock_view, RequestFactory().get('/', {'next': '/'}))
         mock_view.observation_method.assert_called_with(decision, user, 
           'decision_change')
     
@@ -47,6 +47,6 @@ class WatcherViewTests(SimpleTestCase):
         mock_view.get_user = lambda: user
         mock_view.get = RemoveWatcher.get
 
-        mock_view.get(mock_view, None)
+        mock_view.get(mock_view, RequestFactory().get('/', {'next': '/'}))
         mock_view.observation_method.assert_called_with(decision, user, 
           'decision_change')

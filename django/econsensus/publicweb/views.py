@@ -939,7 +939,8 @@ class BaseWatcherView(View):
     
     def get_object(self):
         object_id = self.kwargs['decision_id']
-        Decision.objects.get(pk=object_id)
+        decision = Decision.objects.get(pk=object_id)
+        return decision
     
     def get_user(self):
         return self.request.user
@@ -948,6 +949,7 @@ class BaseWatcherView(View):
         decision = self.get_object()
         user = self.get_user()
         self.observation_method(decision, user, 'decision_change')
+        return HttpResponseRedirect(request.GET['next'])
     
 class AddWatcher(BaseWatcherView):
     observation_method = staticmethod(notification.observe)
