@@ -935,6 +935,8 @@ class DecisionSearchView(SearchView):
         return login_required(search_view)
 
 class BaseWatcherView(View):
+    observation_method = None
+    
     def get_object(self):
         object_id = self.kwargs['decision_id']
         Decision.objects.get(pk=object_id)
@@ -942,9 +944,13 @@ class BaseWatcherView(View):
     def get_user(self):
         return self.request.user
     
-class AddWatcherView(BaseWatcherView):
-    
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
-        notification.observe(decision, user, 'decision_change')
+        self.observation_method(decision, user, 'decision_change')
+    
+class AddWatcher(BaseWatcherView):
+    observation_method = staticmethod(notification.observe)
+
+class RemoveWatcher(BaseWatcherView):
+    observation_method = staticmethod(notification.stop_observing)
