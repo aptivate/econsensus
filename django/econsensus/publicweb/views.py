@@ -322,7 +322,7 @@ class DecisionList(ListView):
         # Unless field is sort_field, when next_sort is inverse
         if current_sort == default_sort:
             next_sort_order = self.toggle_sort_order(self.sort_order) 
-            next_sort = "{0}}{1}".format(next_sort_order, self.sort_field)
+            next_sort = "{0}{1}".format(next_sort_order, self.sort_field)
         else:
             next_sort = default_sort
 
