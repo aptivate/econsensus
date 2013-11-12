@@ -286,6 +286,7 @@ def decision_signal_handler(sender, **kwargs):
         extra_context.update({"observed": instance})
         notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
 
+
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
 def feedback_signal_handler(sender, **kwargs):
     """
@@ -294,9 +295,12 @@ def feedback_signal_handler(sender, **kwargs):
     All watchers become observers of the feedback.
     """
     instance = kwargs.get('instance')
-    headers = {'Message-ID' : instance.get_message_id()}
+    headers = {
+        'Message-ID': instance.get_message_id(),
+        'In-Reply-To': instance.decision.get_message_id(),
+        'References': instance.decision.get_message_id()
+    }
     headers.update(STANDARD_SENDING_HEADERS)
-    headers.update({'In-Reply-To' : instance.decision.get_message_id()})
 
     instance.decision.note_external_modification()
 
@@ -314,6 +318,7 @@ def feedback_signal_handler(sender, **kwargs):
         if instance.author != instance.editor or not instance.minor_edit:
             send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
 
+
 @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
 def comment_signal_handler(sender, **kwargs):
     """
@@ -322,9 +327,14 @@ def comment_signal_handler(sender, **kwargs):
     All watchers become observers of the comment.
     """
     instance = kwargs.get('instance')
-    headers = {'Message-ID' : "comment-%s@%s" % (instance.id, Site.objects.get_current().domain)}
+    headers = {
+        'Message-ID': "comment-%s@%s" % (instance.id, Site.objects.get_current().domain),
+        'In-Reply-To': instance.content_object.get_message_id(),
+        'References': ' '.join((
+            instance.content_object.decision.get_message_id(),
+            instance.content_object.get_message_id()))
+    }
     headers.update(STANDARD_SENDING_HEADERS)
-    headers.update({'In-Reply-To' : instance.content_object.get_message_id()})
 
     instance.content_object.decision.note_external_modification()
 
@@ -340,6 +350,7 @@ def comment_signal_handler(sender, **kwargs):
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
 
+
 def actionitem_signal_handler(sender, **kwargs):
     """
     Triggers external update to decision associated with this action item.
@@ -349,6 +360,7 @@ def actionitem_signal_handler(sender, **kwargs):
     instance = kwargs.get('instance')
     if isinstance(instance.origin, Decision):
         instance.origin.note_external_modification()
+
 
 # We can't register our ActionItem post-save signal handler, as importing the
 # ActionItem model in this file would result in a circular dependency. So
