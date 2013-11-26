@@ -2,6 +2,7 @@ from django.contrib.comments.forms import CommentForm, COMMENT_MAX_LENGTH
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django import forms
 from parsley.decorators import parsleyfy
+from django.forms.fields import BooleanField
 
 
 """
@@ -17,3 +18,7 @@ class CustomCommentForm(CommentForm):
 
     comment = forms.CharField(label=_('Comment'), widget=forms.Textarea(attrs={'rows':4}),
                                     max_length=COMMENT_MAX_LENGTH)
+    watch = BooleanField(required=False, label="Watch this discussion?",
+        help_text="If you check this box, you will receive notifications about "
+        "all major updates on this discussion regardless of your notification "
+        "settings.")
