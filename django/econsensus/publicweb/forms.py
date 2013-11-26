@@ -15,6 +15,7 @@ from publicweb.models import NotificationSettings
 
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
+from notification import models as notification
 
 class YourDetailsForm(forms.ModelForm):
 
@@ -33,6 +34,11 @@ class YourDetailsForm(forms.ModelForm):
 
 class FeedbackForm(forms.ModelForm):
     minor_edit = forms.BooleanField(required=False, initial=False)
+    watch = forms.BooleanField(required=False, label="Watch this conversation",
+        help_text="If you check this box, you will receive notifications about "
+        "further updates to this conversation. This overrides your notification"
+        " settings.", initial=True)
+        
     class Meta:
         model = Feedback
         exclude = ("decision",)
@@ -40,7 +46,10 @@ class FeedbackForm(forms.ModelForm):
 @parsleyfy
 class DecisionForm(forms.ModelForm):
     
-    watch = forms.BooleanField(required=False, initial=True)
+    watch = forms.BooleanField(required=False, label="Watch this conversation",
+        help_text="If you check this box, you will receive notifications about "
+        "further updates to this conversation. This overrides your notification"
+        " settings.", initial=True)
     minor_edit = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Decision

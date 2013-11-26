@@ -18,7 +18,7 @@ class CustomCommentForm(CommentForm):
 
     comment = forms.CharField(label=_('Comment'), widget=forms.Textarea(attrs={'rows':4}),
                                     max_length=COMMENT_MAX_LENGTH)
-    watch = BooleanField(required=False, label="Watch this conversation?",
+    watch = BooleanField(required=False, label="Watch this conversation",
         help_text="If you check this box, you will receive notifications about "
-        "all major updates on this conversation regardless of your notification"
-        " settings.")
+        "further updates to this conversation. This overrides your notification"
+        " settings.", initial=True)
