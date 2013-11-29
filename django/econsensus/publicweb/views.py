@@ -949,7 +949,7 @@ class AddWatcher(BaseWatcherView):
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
-        notification.observe(decision, user, 'decision_change')
+        notification.observe(decision, user, DECISION_CHANGE)
         return HttpResponseRedirect(request.GET['next'])
 
 

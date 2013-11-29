@@ -5,6 +5,7 @@ from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from publicweb.views import AddWatcher, RemoveWatcher
 from mock import patch, MagicMock
+from signals.management import DECISION_CHANGE
 
 class WatcherViewTests(SimpleTestCase):
     
@@ -20,7 +21,7 @@ class WatcherViewTests(SimpleTestCase):
         
         mock_view.get(mock_view, RequestFactory().get('/', {'next': '/'}))
         notifications.observe.assert_called_with(decision, user, 
-          'decision_change')
+          DECISION_CHANGE)
     
     @patch("publicweb.views.Decision.objects")
     def test_get_object_tries_to_get_decision(self, decisions):
