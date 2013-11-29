@@ -328,6 +328,7 @@ def decision_signal_handler(sender, **kwargs):
         observation_manager = ObservationManager()
         observation_manager.send_notifications(active_users, instance, DECISION_NEW, extra_context, headers, from_email=instance.get_email())
 
+
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
 def feedback_signal_handler(sender, **kwargs):
     """
@@ -336,9 +337,14 @@ def feedback_signal_handler(sender, **kwargs):
     All watchers become observers of the feedback.
     """
     instance = kwargs.get('instance')
-    headers = {'Message-ID' : instance.get_message_id()}
+    headers = {
+        'Message-ID': instance.get_message_id(),
+        'In-Reply-To': instance.decision.get_message_id(),
+        'References': ' '.join((
+            instance.content_object.decision.get_message_id(),
+            instance.content_object.get_message_id()))
+    }
     headers.update(STANDARD_SENDING_HEADERS)
-    headers.update({'In-Reply-To' : instance.decision.get_message_id()})
 
     instance.decision.note_external_modification()
 
@@ -356,7 +362,6 @@ def feedback_signal_handler(sender, **kwargs):
         else: 
             observation_manager.send_notifications(org_users, instance, MINOR_CHANGE, extra_context, headers, from_email=instance.decision.get_email())
 
-    
 @receiver(comment_was_posted, sender=Comment, dispatch_uid="publicweb.models.comment_posted_signal_handler")
 def comment_posted_signal_handler(sender, **kwargs):
     """
@@ -391,6 +396,7 @@ def comment_saved_signal_handler(sender, **kwargs):
         #All watchers of parent get notified of new feedback.
         send_comment_notifications(instance, org_users)
 
+
 def actionitem_signal_handler(sender, **kwargs):
     """
     Triggers external update to decision associated with this action item.
@@ -400,6 +406,7 @@ def actionitem_signal_handler(sender, **kwargs):
     instance = kwargs.get('instance')
     if isinstance(instance.origin, Decision):
         instance.origin.note_external_modification()
+
 
 # We can't register our ActionItem post-save signal handler, as importing the
 # ActionItem model in this file would result in a circular dependency. So

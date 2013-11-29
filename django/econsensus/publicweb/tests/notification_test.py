@@ -326,6 +326,7 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
+        self.assertEqual(outbox[0].extra_headers['References'], feedback.decision.get_message_id())
         mail.outbox = []
 
         self.login('charlie')
@@ -336,6 +337,7 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
+        self.assertEqual(outbox[0].extra_headers['References'], feedback.decision.get_message_id())
 
 class DecisionNotificationTest(TestCase):
     def setUp(self):
