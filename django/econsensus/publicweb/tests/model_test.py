@@ -13,6 +13,7 @@ from publicweb.tests.factories import DecisionFactory, \
 
 import datetime
 from mock import patch, MagicMock
+from signals.management import DECISION_CHANGE
 
 # Ensure value of "now" always increases by amount sufficient
 # to show up as a change, even if db resolution for datetime
@@ -64,7 +65,7 @@ class DecisionLastModifiedTest(TestCase):
 
     def test_add_watcher_triggers_no_update(self):
         orig_last_modified = self.last_modified()
-        notification.observe(self.decision, UserFactory(), 'decision_change')
+        notification.observe(self.decision, UserFactory(), DECISION_CHANGE)
         self.decision.save()
         self.assertTrue(orig_last_modified == self.last_modified())
 

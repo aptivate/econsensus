@@ -11,10 +11,12 @@ from django.forms.widgets import RadioSelect
 
 from widgets import JQueryUIDateWidget
 
-from publicweb.models import NotificationSettings
+from publicweb.models import NotificationSettings, change_observers,\
+    additional_message_required, send_decision_notifications
 
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
+from publicweb.extra_models import MAIN_ITEMS_NOTIFICATIONS_ONLY
 
 class YourDetailsForm(forms.ModelForm):
 
@@ -30,18 +32,58 @@ class YourDetailsForm(forms.ModelForm):
             raise forms.ValidationError(_("This email address is already in use. Please supply a different email address."))
         return self.cleaned_data['email']
 
+class NotificationsForm(forms.ModelForm):
+    watch = forms.BooleanField(required=False, label="Watch this conversation",
+        help_text="If you check this box, you will receive notifications about "
+        "further updates to this conversation. This overrides your notification"
+        " settings.", initial=True)
+    
+    def get_decision(self):
+        raise NotImplementedError
+    
+    def change_observers(self, decision, watcher):
+        watch = self.cleaned_data.get('watch', False)
+        change_observers(watch, decision, watcher)
+    
+    def save(self, commit=True):
+        # The only time a decision won't have an id is when it's created.
+        # In this case, we'll want to handle it in the post save handler
+        decision = self.get_decision()
+        if commit and decision.id:
+            user = self.instance.editor or self.instance.author
+            self.change_observers(decision, user)
+        return super(NotificationsForm, self).save(commit)
 
-class FeedbackForm(forms.ModelForm):
+class FeedbackForm(NotificationsForm):
     minor_edit = forms.BooleanField(required=False, initial=False)
+    
+    def get_decision(self):
+        return self.instance.decision
+        
     class Meta:
         model = Feedback
         exclude = ("decision",)
 
 @parsleyfy
-class DecisionForm(forms.ModelForm):
-    
-    watch = forms.BooleanField(required=False, initial=True)
+class DecisionForm(NotificationsForm):
     minor_edit = forms.BooleanField(required=False, initial=False)
+    
+    def get_decision(self):
+        return self.instance
+    
+    def save(self, commit=True):
+        created = not self.instance.id
+        decision = super(DecisionForm, self).save(commit)
+
+        send_new_message = additional_message_required(
+           decision.author or decision.editor, 
+           decision, MAIN_ITEMS_NOTIFICATIONS_ONLY)
+        if commit and created:
+            self.change_observers(decision, decision.author)
+            if send_new_message:
+                send_decision_notifications(decision, [decision.author])
+        return decision
+    
     class Meta:
         model = Decision
         exclude = ('organization',)

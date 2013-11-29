@@ -11,6 +11,7 @@ from views import (DecisionCreate, DecisionUpdate, DecisionDetail, DecisionList,
                     EconsensusActionitemDetailView, DecisionSearchView)
 
 from models import Feedback
+from publicweb.views import AddWatcher, RemoveWatcher
  
 
 urlpatterns = patterns('econsensus.publicweb.views',
@@ -19,6 +20,10 @@ urlpatterns = patterns('econsensus.publicweb.views',
         name='your_details'),
     url(r'^user_settings/notification_settings/(?P<organization>[\d]+)/$',
         UserNotificationSettings.as_view(), name='notification_settings'),
+    url(r'^add_watcher/(?P<decision_id>\d+)/$', AddWatcher.as_view(),
+        name="add_watcher"),
+    url(r'^remove_watcher/(?P<decision_id>\d+)/$', RemoveWatcher.as_view(),
+        name="remove_watcher"),
 
     url(r'^(?P<org_slug>[-\w]+)/export_csv/$',
         ExportCSV.as_view(),

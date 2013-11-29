@@ -14,6 +14,10 @@ from publicweb.forms import DecisionForm
 from publicweb.widgets import JQueryUIDateWidget
 from decision_test_case import DecisionTestCase
 from django.contrib.auth.models import User
+from signals.management import DECISION_CHANGE
+from notification.models import observe
+from organizations.models import Organization
+from django_dynamic_fixture import G
 
 ### As a general note, I can see our tests are evolving into...
 ### 1 - model tests (does the model have x property?)
@@ -254,5 +258,13 @@ class DecisionsTest(DecisionTestCase):
         decision = self.create_and_return_decision("A.B.C.")
         self.assertEqual(decision.excerpt, "A")
         
+    def test_changing_organization_deletes_watchers(self):
+        decision = self.create_and_return_decision()
         
-    
+        observe(decision, self.user, DECISION_CHANGE)
+        
+        decision.organization = G(Organization)
+        decision.save()
+            
+        decision = Decision.objects.get(pk=decision.id)
+        self.assertSequenceEqual([], decision.watchers.all())
