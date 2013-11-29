@@ -25,11 +25,13 @@ class NotificationTest(DecisionTestCase):
     This class is used to test django-notification functionality
     """
     
-    def create_settings(self, user, notification_level):
-        users_organizations = Organization.active.get_for_user(user) 
+    def create_settings(self, user, notification_level, organization=None):
+        users_organizations = Organization.active.get_for_user(user)
+        if not organization:
+            organization = users_organizations.latest('id')
         NotificationSettings.objects.create(
             user=user, 
-            organization=users_organizations.latest('id'),
+            organization=organization,
             notification_level=notification_level
         )
     
@@ -150,13 +152,7 @@ class NotificationTest(DecisionTestCase):
         self.assertNotIn('&amp', outbox[0].subject)
         self.assertNotIn('&amp', outbox[0].body)
 
-    def test_notifications_sent_to_author(self):
-        """
-        We want to make sure that when a user creates or changes an
-        item they are not sent a notification. The message goes to those
-        that do not already know the item has changed!
-        """
-        
+    def test_notifications_sent_to_author(self):        
         self.create_decision_through_browser()
 
         outbox = getattr(mail, 'outbox')
@@ -175,8 +171,7 @@ class NotificationTest(DecisionTestCase):
     def test_new_feedback_notification(self):
         """
         When new feedback is added to a decision notifcations
-        should be sent to all users watching the decision
-        minus the author of the new feedback.
+        should be sent to all users watching the decision.
         """
         org = self.bettysorg
         [
@@ -199,8 +194,7 @@ class NotificationTest(DecisionTestCase):
     def test_new_comment_notification(self):
         """
         When a new comment is added to feedback notifcations
-        should be sent to all users watching the decision,
-        minus the author of the new comment.
+        should be sent to all users watching the decision.
         """
         [
             NotificationSettingsFactory(
@@ -227,9 +221,9 @@ class NotificationTest(DecisionTestCase):
 
     def test_changed_feedback_notification(self):
         """
-        When feedback is changed only the original author of the feedback
-        should be notified.
-        """ 
+        With no settings, betty shouldn't get messages about comments relating
+        to decisions she isn't watching 
+        """
         NotificationSettings.objects.create(
             user=self.charlie, 
             organization=self.bettysorg,
@@ -246,7 +240,7 @@ class NotificationTest(DecisionTestCase):
         # Betty changes the feedback...
         self.login('betty')
         assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
-        self.update_feedback_through_browser(feedback.id)
+        self.update_feedback_through_browser(feedback.id, watch=False)
         # Check email
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
@@ -255,6 +249,8 @@ class NotificationTest(DecisionTestCase):
 
     def test_emails_come_from_organization(self):
         users_orgs = Organization.active.get_for_user(self.user)
+        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS, 
+             users_orgs[0])
         self.assertGreaterEqual(len(users_orgs), 2)
         # Add Decision for first organization
         decision = self.make_decision(organization=users_orgs[0])
@@ -290,14 +286,18 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
         mail.outbox = []
-        # Edit the comment
+        """# Edit the comment
+        Editing comments is not supported at this time
         comment.decision = "edited"
         comment.save()
+        self.send_comment_posted_signal(comment=comment)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
-        self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
+        self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())"""
         mail.outbox = []
         # Add Decision for second organization
+        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS, 
+             users_orgs[1])
         decision = self.make_decision(organization=users_orgs[1])
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)

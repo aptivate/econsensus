@@ -4,6 +4,7 @@ from guardian.shortcuts import assign_perm
 from publicweb.forms import FeedbackForm
 from django.core import mail
 from publicweb.extra_models import FEEDBACK_MAJOR_CHANGES, NotificationSettings
+from publicweb.models import Feedback
 
 class FeedbackTest(DecisionTestCase):
 
@@ -34,6 +35,7 @@ class FeedbackTest(DecisionTestCase):
         form.fields['rating'] = 4
         form.fields['resolved'] = False
         form.fields['minor_edit'] = False
+        form.fields['watch'] = False
         # Empty the test outbox
         mail.outbox = []
         response = self.client.post(reverse('publicweb_feedback_update',
@@ -43,16 +45,43 @@ class FeedbackTest(DecisionTestCase):
         self.assertEqual(1, len(mail.outbox))
 
 
-    def test_adding_feedback_adds_user_as_watcher(self):
+    def test_adding_feedback_with_watch_set_adds_user_as_watcher(self):
         decision = self.create_and_return_decision()
         decision.watchers = []
         decision.save()
         
-        self.create_and_return_feedback(decision, "I can't decide", self.user)
+        # edit feedback, not as author
+        self.login(self.charlie)
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
+        
+        data = {'watch': "True",
+                'description': "New Updated description.",
+                'rating': Feedback.CONSENT_STATUS
+                }
+        
+        self.client.post(reverse('publicweb_feedback_create',
+            args=[decision.id]), data)
         
         watchers = [watcher.user for watcher in decision.watchers.all()]
         self.assertIn(self.user, watchers)
         
+    def test_adding_feedback_without_watch_set_doesnt_add_user_as_watcher(self):
+        decision = self.create_and_return_decision()
+        decision.watchers = []
+        decision.save()
+        
+        # edit feedback, not as author
+        self.login(self.charlie)
+        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
+        
+        data = {
+                'description': "New Updated description.",
+                'rating': Feedback.CONSENT_STATUS
+                }
 
-
-
+        mail.outbox = []
+        self.client.post(reverse('publicweb_feedback_create',
+            args=[decision.id]), data)
+        
+        watchers = [watcher.user for watcher in decision.watchers.all()]
+        self.assertNotIn(self.user, watchers)

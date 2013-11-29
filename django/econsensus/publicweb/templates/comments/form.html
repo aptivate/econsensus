@@ -11,12 +11,14 @@
     {% if field.errors %}{{ field.errors }}{% endif %}
         <p{% if field.errors %} class="error"{% endif %}{% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
         {% if user.is_authenticated %}
-        {% if field.name == "comment" or field.name == "watch"%}
+        {% if field.name == "comment" %}
           {{ field }}
         {% endif %}
         {% if field.name == "watch"%}
-            {{ field.label_tag }}
-            {{ field.help_text }}
+            <div class="watch" title="{{ form.watch.help_text }}">
+                  {{ field.errors }}
+                  {{ field }} {{ field.label_tag }}
+             </div>
         {% endif %} 
         {% else %}
           <p>You need to be logged in to leave comments.</p>

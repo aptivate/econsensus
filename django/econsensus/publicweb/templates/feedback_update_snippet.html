@@ -21,6 +21,10 @@
 		                    <label for="id_minor_edit">{% trans "This is a minor edit" %}</label>
 		                </div>
                         {% endif %}
+                        <div class="watch" title="{{ form.watch.help_text }}">
+                            {{ form.watch.errors }}
+                            {{ form.watch }} {{ form.watch.label_tag }}
+                        </div>
                     </div>
                 <div class="update-buttons">
 				    <div><input class="button go feedback_cancel" type="submit" name="submit" value="{% trans "Cancel" %}" /></div>
