@@ -49,13 +49,13 @@
                         <tr class="summary-header">
                             {% for header in header_list %}
                             <th class="{{ header.attrs }}">
-                                <a href="{{ header.path }}">
+                                {% if not header.unsortable %}<a href="{{ header.path }}">{% endif %}
                                     <span class="{{ header.sortclass }}">
                                         {{ header.title }}
                                         {% if header.sortclass == 'sort-asc' %} ▲{% endif %} 
                                         {% if header.sortclass == 'sort-desc' %} ▼{% endif %}
                                     </span>
-                                </a>
+                                {% if not header.unsortable %}</a>{% endif %}
                             </th>
                             {% endfor %}
             			</tr>

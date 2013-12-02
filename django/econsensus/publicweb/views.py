@@ -263,11 +263,13 @@ class DecisionList(ListView):
     sort_by_alpha_fields = ['excerpt']
     
     sort_table_headers = {
-       'discussion': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
-       'proposal': ['id', 'excerpt', 'feedback', 'deadline', 'last_modified'],
-       'decision': ['id', 'excerpt', 'decided_date', 'review_date'],
-       'archived': ['id', 'excerpt', 'creation', 'archived_date']
+       'discussion': ['id', 'watch', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+       'proposal': ['id', 'watch', 'excerpt', 'feedback', 'deadline', 'last_modified'],
+       'decision': ['id', 'watch', 'excerpt', 'decided_date', 'review_date'],
+       'archived': ['id', 'watch', 'excerpt', 'creation', 'archived_date']
     }
+    
+    unsortable_fields = ["watch"]
 
     def set_sorting(self, request):
         sort_request = request.GET.get('sort', '-id')
@@ -285,6 +287,7 @@ class DecisionList(ListView):
     def get_table_headers(self, request):
         #TODO How to handle this with internationalization
         header_titles = {'id': 'ID',
+                         'watch': 'Watch',
                          'excerpt': 'Excerpt',
                          'feedback': 'Feedback',
                          'deadline': 'Deadline',
@@ -300,7 +303,8 @@ class DecisionList(ListView):
                     'attrs': header, 
                     'path': self.get_sort_query(request, header), 
                     'sortclass': self.get_sort_class(header), 
-                    'title': header_titles[header]
+                    'title': header_titles[header],
+                    'unsortable': header in self.unsortable_fields
                 }
                 self.header_list.append(header)
 
@@ -317,7 +321,7 @@ class DecisionList(ListView):
 
     def get_sort_query(self, request, field):
         current_sort = self.sort_order + self.sort_field
-        default_sort = self.sort_options[field] + field
+        default_sort = self.sort_options.get(field, "") + field
 
         # Unless field is sort_field, when next_sort is inverse
         if current_sort == default_sort:
