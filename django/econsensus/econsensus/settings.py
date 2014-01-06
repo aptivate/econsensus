@@ -193,6 +193,23 @@ LOG_FILE = os.path.join(DJANGO_HOME, 'log', 'econsensus.log')
 if not os.path.exists(LOG_FILE):
     open(LOG_FILE, 'w').close()
 
+
+# Stop SuspiciousOperation errors being sent through - a workaround until
+# we upgrade to Django 1.6 (which has a proper fix). References:
+# - http://www.tiwoc.de/blog/2013/03/django-prevent-email-notification-on-suspiciousoperation/
+# - https://code.djangoproject.com/ticket/19866
+# - http://stackoverflow.com/questions/15238506/djangos-suspiciousoperation-invalid-http-host-header
+from django.core.exceptions import SuspiciousOperation
+
+
+def skip_suspicious_operations(record):
+    if record.exc_info:
+        exc_value = record.exc_info[1]
+        if isinstance(exc_value, SuspiciousOperation):
+            return False
+    return True
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -207,11 +224,16 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'utils.log.RequireDebugFalse',
+        },
+        'skip_suspicious_operations': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_suspicious_operations,
         }
     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
+            'filters': ['require_debug_false', 'skip_suspicious_operations'],
             'class': 'django.utils.log.AdminEmailHandler',
         },
         'file': {
