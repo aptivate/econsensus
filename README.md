@@ -32,9 +32,10 @@ $ git checkout my_branch
 Please run the tests as you develop, and certainly before submitting your changes to us:
 
 ```
-$ cd django/econsensus
+$ cd django/econsensus/econsensus
 $ rm local_settings.py
 $ ln -s local_settings.py.dev_fasttests local_settings.py
+$ cd ..
 $ ./manage.py test publicweb
 ```
 
