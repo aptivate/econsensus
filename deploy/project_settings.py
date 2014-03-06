@@ -62,8 +62,8 @@ test_cmd = ' manage.py test -v0 ' + ' '.join(django_apps)
 # production server - if commented out then the production task will abort
 host_list = {
     'production':   ['lin-' + project_name + '.aptivate.org:48001'],
-    'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org'],
-    'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org'],
+    'staging':      ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
+    'staging_test': ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
     'localhost':   ['localhost:2222'],  # vagrant
     #'localhost': ['localhost'],
 }
