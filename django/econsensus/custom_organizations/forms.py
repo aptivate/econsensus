@@ -81,21 +81,33 @@ class CustomOrganizationAddForm(CustomOrganizationForm):
         return organization
 
 class CustomOrganizationUserForm(OrganizationUserForm):
-    is_editor = forms.BooleanField(required=False)
+    USER_TYPES = (
+        ('admin', _("Admin (can edit and invite users)")),
+        ('editor', _("Normal User")),
+        ('viewer', _("Viewer Only (can't add or edit information)")),
+    )
+    user_type = forms.ChoiceField(required=True, choices=USER_TYPES) 
 
     def save(self, commit=True):
-        if self.cleaned_data['is_editor']:
+        self.instance.is_admin = (self.cleaned_data['user_type'] == 'admin')
+        if self.cleaned_data['user_type'] != 'viewer':
             assign_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         return super(CustomOrganizationUserForm, self).save(commit=commit)
 
 class CustomOrganizationUserAddForm(OrganizationUserAddForm):
-    is_editor = forms.BooleanField(required=False, initial=True)
+    USER_TYPES = (
+        ('admin', _("Admin (can edit and invite users)")),
+        ('editor', _("Normal User")),
+        ('viewer', _("Viewer Only (can't add or edit information)")),
+    )
+    user_type = forms.ChoiceField(required=True, choices=USER_TYPES)
 
     def save(self, commit=True):
+        self.cleaned_data['is_admin'] = (self.cleaned_data['user_type'] == 'admin')
         self.instance = super(CustomOrganizationUserAddForm, self).save(commit=commit)
-        if self.cleaned_data['is_editor']:
+        if self.cleaned_data['user_type'] != 'viewer':
             assign_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)

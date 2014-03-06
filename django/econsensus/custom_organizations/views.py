@@ -68,10 +68,20 @@ class CustomOrganizationUserRemind(OrganizationUserRemind):
 class CustomOrganizationUserUpdate(OrganizationUserUpdate):
     form_class = CustomOrganizationUserForm
 
+    def compose_user_type(self, is_editor, is_admin):
+        if is_admin: return 'admin'
+        if is_editor: return 'editor'
+        return 'viewer'
+
+    def decompose_user_type(self, user_type):
+        is_admin = user_type == 'admin'
+        is_editor = user_type != 'observer'
+        return is_admin, is_editor
+
     def get_initial(self):
         super(CustomOrganizationUserUpdate, self).get_initial()
         is_editor = self.object.user.has_perm('edit_decisions_feedback', self.object.organization)
-        self.initial = {"is_editor": is_editor}
+        self.initial = {"user_type" : self.compose_user_type(is_editor, self.object.is_admin)}
         return self.initial
 
 
