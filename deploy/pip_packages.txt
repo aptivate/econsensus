@@ -1,7 +1,7 @@
 # deploy stuff
 fabric==1.4
 virtualenv
--e git+git://github.com/aptivate/dye.git@d4359e933b671050719905654dee48e5db1afcdd#egg=dye
+-e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
 
 # core django
 Django==1.4.8
