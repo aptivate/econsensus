@@ -3,6 +3,8 @@ import private_settings
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+DEPLOY_ENV = 'staging'
+
 STATIC_URL = '/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -26,7 +28,9 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'URL': 'http://fen-vz-elasticsearch.fen.aptivate.org:9200/',
+        'INDEX_NAME': 'econsensus_%s' % DEPLOY_ENV,
     },
 }
+
+# vi: ft=python

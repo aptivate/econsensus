@@ -59,3 +59,5 @@ EXTRA_MIDDLEWARE_CLASSES = (
 EXTRA_INSTALLED_APPS = (
     'debug_toolbar',
 )
+
+# vi: ft=python
