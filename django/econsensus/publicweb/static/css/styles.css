@@ -1145,9 +1145,9 @@ div#tags {
 	margin-bottom: 0.25em;
 }
 
-.form_comment {
+.showable {
 	display :none;
-	}
+}
 
 .form_comment textarea {
 	width: 100%;
