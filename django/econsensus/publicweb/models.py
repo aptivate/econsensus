@@ -22,7 +22,7 @@ from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
 
-from custom_notification.utils import send_observation_notices_for
+from custom_notification.utils import send_observation_notices_for, send_notice_for
 
 from publicweb.utils import get_excerpt
 
@@ -182,7 +182,10 @@ class Decision(models.Model):
     def _send_change_notifications(self):
         headers = {'Message-ID' : self.get_message_id()}
         headers.update(STANDARD_SENDING_HEADERS)
-        send_observation_notices_for(self, headers=headers, from_email=self.get_email())
+        from_email = self.get_email()
+        send_observation_notices_for(self, headers=headers, from_email=from_email)
+        if self.editor and not notification.is_observing(self, self.editor):
+            send_notice_for(self, self.editor, 'decision_change', headers=headers, from_email=from_email)
 
     def _is_same(self, other):
         for field in self.TRIGGER_FIELDS:
@@ -313,10 +316,15 @@ def feedback_signal_handler(sender, **kwargs):
         observer_list = [x.user for x in all_observed_items_but_authors]
         extra_context = dict({"observed": instance})
         notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
+    elif instance.author == instance.editor and instance.minor_edit:
+        # No notification if the edit is minor
+        # (An edit by someone other than the author never counts as minor.)
+        pass
     else:
-        # An edit by someone other than the author never counts as minor
-        if instance.author != instance.editor or not instance.minor_edit:
-            send_observation_notices_for(instance, headers=headers, from_email=instance.decision.get_email())
+        from_email = instance.decision.get_email()
+        send_observation_notices_for(instance, headers=headers, from_email=from_email)
+        if instance.editor and not notification.is_observing(instance, instance.editor):
+            send_notice_for(instance, instance.editor, 'feedback_change', headers=headers, from_email=from_email)
 
 
 @receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
@@ -349,7 +357,6 @@ def comment_signal_handler(sender, **kwargs):
         notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
     else:
         send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
-
 
 def actionitem_signal_handler(sender, **kwargs):
     """
