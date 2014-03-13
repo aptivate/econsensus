@@ -23,7 +23,7 @@
         </li>
             <li>
                 {% if organization|is_owner:user %}
-                <span>{% trans "can't leave - you're the owner" %}</span>
+                <span>{% trans "owner" %}</span>
                 {% else %}
                 <a href="{% url 'organization_user_leave' organization.pk %}">{% trans "leave" %}</a>
                 {% endif %}
