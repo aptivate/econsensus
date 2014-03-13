@@ -292,8 +292,9 @@ class NotificationTest(DecisionTestCase):
 
     def test_changed_feedback_notification(self):
         """
-        When feedback is changed only the original author of the feedback
-        should be notified.
+        When feedback is changed the original author of the feedback
+        should be notified. The editor should be too, according to
+        kanban card #1222813.
         """
         # Betty creates a decision
         decision = self.create_decision_through_browser()
@@ -309,7 +310,7 @@ class NotificationTest(DecisionTestCase):
         # Check email
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [self.charlie.email]
+        user_list = [self.betty.email, self.charlie.email]
         self.assertItemsEqual(user_list, outbox_to)
 
     def test_emails_come_from_organization(self):

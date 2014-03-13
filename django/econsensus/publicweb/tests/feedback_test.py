@@ -33,7 +33,11 @@ class FeedbackTest(DecisionTestCase):
             args=[feedback.id]), form.fields)
         ##import pdb; pdb.set_trace()
         self.assertEqual(302, response.status_code)
-        self.assertEqual(1, len(mail.outbox))
+        outbox_to = [to for to_list in mail.outbox for to in to_list.to]
+        # Both feedback author and editor get notified.
+        # (Apparently not notifying the editor is confusing for users.)
+        user_list = [self.betty.email, self.charlie.email]
+        self.assertItemsEqual(user_list, outbox_to)
 
 
     def test_no_email_sent_when_feedback_edited_by_author(self):
