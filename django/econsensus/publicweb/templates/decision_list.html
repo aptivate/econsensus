@@ -85,7 +85,7 @@
 															<td><a href="{% url "publicweb_item_detail" object.origin.id %}#act_id_{{ object.id }}">{{ object.responsible }}</a></td>
 															<td><a href="{% url "publicweb_item_detail" object.origin.id %}#act_id_{{ object.id }}">{{ object.deadline }}</a></td>
 															<td><input id="id_done" type="checkbox" name="done" {% if object.done %}checked{% endif %} disabled/></td>
-															<td class="id"><a href="{{ object.origin.get_absolute_url }}"><span class="iconified">{{ object.origin.id }}</span></a></td>
+															<td class="id parent-id"><a href="{{ object.origin.get_absolute_url }}"><span class="iconified">{{ object.origin.id }}</span></a></td>
 															{% endswitch %}
                             {% endif %}
                         </tr>
