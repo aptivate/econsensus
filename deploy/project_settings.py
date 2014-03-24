@@ -57,13 +57,15 @@ local_requirements_file = path.join(local_deploy_dir, 'pip_packages.txt')
 
 test_cmd = ' manage.py test -v0 ' + ' '.join(django_apps)
 
+django_jenkins_version = '0.14.0'
+
 # servers, for use by fabric
 
 # production server - if commented out then the production task will abort
 host_list = {
     'production':   ['lin-' + project_name + '.aptivate.org:48001'],
-    'staging':      ['fen-vz-' + project_name + '.fen.aptivate.org'],
-    'staging_test': ['fen-vz-' + project_name + '.fen.aptivate.org'],
+    'staging':      ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
+    'staging_test': ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
     'localhost':   ['localhost:2222'],  # vagrant
     #'localhost': ['localhost'],
 }
@@ -87,6 +89,10 @@ server_project_home = path.join(server_home, project_name)
 
 # which web server to use (or None)
 webserver = 'apache'
+
+import socket
+if socket.getfqdn().endswith('.fen.aptivate.org'):
+    pypi_cache_url = 'http://fen-vz-pypicache.fen.aptivate.org/simple'
 
 ###################################################
 # OPTIONAL SETTINGS FOR FABRIC - will be put in env

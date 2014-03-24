@@ -32,9 +32,10 @@ $ git checkout my_branch
 Please run the tests as you develop, and certainly before submitting your changes to us:
 
 ```
-$ cd django/econsensus
+$ cd django/econsensus/econsensus
 $ rm local_settings.py
 $ ln -s local_settings.py.dev_fasttests local_settings.py
+$ cd ..
 $ ./manage.py test publicweb
 ```
 
@@ -121,7 +122,7 @@ via the django admin screen. Pages are 'flatpage' instances, and their
 content is in [Markdown](http://en.wikipedia.org/wiki/Markdown) format.
 
 Important note on email notifications
--------------------------------------
+=====================================
 
 Please note that the processes described above involve email interaction. An
 econsensus instance installed as above is not set up to send out actual emails,
@@ -130,7 +131,7 @@ the `EMAIL_FILE_PATH` setting in `local_settings.py`. This email behaviour is
 controlled by the `EMAIL_BACKEND` setting also in `local_settings.py`.
 
 Enabling search
----------------
+===============
 
 If you are using the dev settings (as set up above) then whoosh is the search
 backend used.  See the `HAYSTACK_CONNECTIONS` section of
@@ -143,3 +144,18 @@ run:
 
 This will create a directory called `whoosh_index` in `django/econsensus/`
 that will contain the files required.
+
+Versioning
+==========
+
+We've decided to update the version number for every release,  using the following pattern:
+
+v[release number].[major functionality number].[deployment number]
+
+So, v0.4.7 means "Deployment #7, working towards major functionality #5 (which happens to be Action Items), which is part of Release #1"
+
+It's possible that some pieces of major functionality will overtake one-another in terms of completion time - in which case we'll re-number them.
+
+If we get to a double digit, we just roll over, e.g. v0.4.12  .
+
+When we update the version, we also create a bit of documentation on the "updates" flatpage to explain what's new.

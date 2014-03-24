@@ -16,7 +16,7 @@ def deploy(revision=None, keep=None):
     fablib._set_vcs_root_dir_timestamp()
     fablib._create_dir_if_not_exists(env.server_project_home)
 
-    fablib.check_for_local_changes()
+    fablib.check_for_local_changes(revision)
 
     fablib.create_copy_for_next()
     fablib.checkout_or_update(in_next=True, revision=revision)

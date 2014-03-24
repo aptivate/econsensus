@@ -46,15 +46,9 @@ Change user permissions below
     </div>
     {% endif %}
     <div class="fieldWrapper">
-    	{{ form.is_admin.errors }}
-    	<label for="id_email">Is Admin:</label>
-    	{{ form.is_admin }}
-    </div>
-    <div class="fieldWrapper">
-    	{{ form.is_editor.errors }}
-    	<label for="id_email">Is Editor:</label>
-    	{{ form.is_editor }}
-    </div>        
+        <label for = "id_email">User Type:</label>
+        {{ form.user_type }}
+    </div>    
 <br />
     <input class="loose button" type="submit" value="OK">
 </form>

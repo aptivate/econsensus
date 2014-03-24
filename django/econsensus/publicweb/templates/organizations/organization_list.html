@@ -21,6 +21,13 @@
         <li>
             <a href="{% url 'publicweb_item_list' organization.slug 'discussion'%}">{{ organization.name }}</a>
         </li>
+            <li>
+                {% if organization|is_owner:user %}
+                <span>{% trans "can't leave - you're the owner" %}</span>
+                {% else %}
+                <a href="{% url 'organization_user_leave' organization.pk %}">{% trans "leave" %}</a>
+                {% endif %}
+            </li>
             {% if organization|is_admin:user %}
             <li>
                 <a href="{% url 'organization_admin' organization.pk %}">{% trans "admin" %}</a>

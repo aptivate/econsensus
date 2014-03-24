@@ -10,7 +10,7 @@ from custom_organizations.forms import CustomOrganizationAddForm,\
 from django.template.defaultfilters import slugify
 
 from guardian.shortcuts import assign_perm
-from django.forms.fields import BooleanField
+from django.forms.fields import BooleanField, ChoiceField
 GUARDIAN_PERMISSION = 'edit_decisions_feedback'
 
 
@@ -86,19 +86,19 @@ class TestCustomOrganizationAddForm(TestCase):
 
 class TestCustomOrganizationUserForm(TestCase):
 
-    def test_new_is_editor_field_is_present_and_boolean_type(self):
+    def test_user_type_field_is_present_and_boolean_type(self):
         """
         Check that the form contains a boolean for is_editor.
         """
         form = CustomOrganizationUserForm()
-        self.assertIn('is_editor', form.fields)
+        self.assertIn('user_type', form.fields)
         self.assertTrue(
-            isinstance(form.fields['is_editor'], BooleanField)
+            isinstance(form.fields['user_type'], ChoiceField)
         )
 
-    def test_is_editor_is_true_adds_permission_to_instance(self):
+    def test_user_type_editor_adds_permission_to_instance(self):
         """
-        When is_editor is ticked, the correct permission is set for that user
+        When editor is selected, the correct permission is set for that user
         for that organization.
         """
         org_owner = OrganizationOwnerFactory()
@@ -108,14 +108,13 @@ class TestCustomOrganizationUserForm(TestCase):
         # Check the user doesn't have the permission
         self.assertFalse(user.has_perm(GUARDIAN_PERMISSION, org))
         # Need to pass {'is_admin': True} for clean_is_admin to validate
-        form = CustomOrganizationUserForm(data={'is_admin': True},
-                                          instance=org_user)
-        form.cleaned_data = {'is_editor': True}
+        form = CustomOrganizationUserForm(instance=org_user)
+        form.cleaned_data = {'user_type': 'editor'}
         form.save()
         # Now they should have the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
 
-    def test_is_editor_is_false_removes_permission_from_instance(self):
+    def test_user_type_viewer_removes_permission_from_instance(self):
         """
         When is_editor gets unticked, the permission is removed. 
         Also implicitly tests is_editor form field's required property because 
@@ -128,9 +127,8 @@ class TestCustomOrganizationUserForm(TestCase):
         assign_perm(GUARDIAN_PERMISSION, user, org)
         # Confirm user has the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
-        form = CustomOrganizationUserForm(data={'is_admin': True},
-                                          instance=org_user)
-        form.cleaned_data = {'is_editor': False}
+        form = CustomOrganizationUserForm(instance=org_user)
+        form.cleaned_data = {'user_type': 'viewer'}
         form.save()
         # Now they shouldn't have the permission
         self.assertFalse(user.has_perm(GUARDIAN_PERMISSION, org))
@@ -139,23 +137,22 @@ class TestCustomOrganizationUserForm(TestCase):
 class TestCustomOrganizationUserAddForm(TestCase):
     """Form class for adding OrganizationUsers to an existing Organization"""
 
-    def test_new_is_editor_field_is_present_and_boolean_type(self):
+    def test_user_type_field_is_present_and_choice_type(self):
         """
-        Check that the form contains a boolean for is_editor, and that it has
+        Check that the form contains a boolean for user_type, and that it has
         the expected initial value.
         """
         request = RequestFactory()
         organization = OrganizationFactory()
         form = CustomOrganizationUserAddForm(request, organization)
-        self.assertIn('is_editor', form.fields)
+        self.assertIn('user_type', form.fields)
         self.assertTrue(
-            isinstance(form.fields['is_editor'], BooleanField)
+            isinstance(form.fields['user_type'], ChoiceField)
         )
-        self.assertTrue(form.fields['is_editor'].initial)
 
-    def test_is_editor_is_true_adds_permission_to_instance(self):
+    def test_user_type_editor_adds_permission_to_instance(self):
         """
-        When is_editor is ticked, the correct permission is set for that user
+        When user_type is editor, the correct permission is set for that user
         for that organization.
         """
         org = OrganizationFactory()
@@ -165,30 +162,25 @@ class TestCustomOrganizationUserAddForm(TestCase):
         request = RequestFactory()
         request.user = UserFactory.build()
         form = CustomOrganizationUserAddForm(request, org)
-        # Need to pass {'is_admin': True} for clean_is_admin to validate
-        form.cleaned_data = {'is_editor': True,
-                             'is_admin': True,
+        form.cleaned_data = {'user_type' : 'editor',
                              'email': user.email}
         form.save()
         # Now they should have the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
 
-    def test_is_editor_is_false_removes_permission_from_instance(self):
+    def test_user_type_viewer_removes_permission_from_instance(self):
         """
-        When is_editor gets unticked, the permission is removed. 
-        Also implicitly tests is_editor form field's required property because 
-        for a BooleanField, False is empty.
+        When user_type is set to viewer, the permission is removed. 
         """
         org = OrganizationFactory()
         user = UserFactory(email='test@test.com')
         assign_perm(GUARDIAN_PERMISSION, user, org)
         # Confirm the user has the permission
         self.assertTrue(user.has_perm(GUARDIAN_PERMISSION, org))
-        request = RequestFactory()
+        request = RequestFactory()  
         request.user = UserFactory.build()
         form = CustomOrganizationUserAddForm(request, org)
-        form.cleaned_data = {'is_editor': False,
-                             'is_admin': True,
+        form.cleaned_data = {'user_type': 'viewer',
                              'email': user.email}
         form.save()
         # Now they shouldn't have the permission

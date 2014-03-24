@@ -40,7 +40,7 @@ class FeedbackTest(DecisionTestCase):
         mail.outbox = []
         response = self.client.post(reverse('publicweb_feedback_update',
             args=[feedback.id]), form.fields)
-        ##import pdb; pdb.set_trace()
+
         self.assertEqual(302, response.status_code)
         self.assertEqual(1, len(mail.outbox))
 

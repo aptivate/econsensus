@@ -50,7 +50,7 @@ class TestCustomOrganizationUserUpdate(TestCase):
         # This will provide an organization and user, but no permissions will
         # be assigned so is_editor will be False
         custom_org_user_update_view.object = OrganizationUserFactory.build()
-        expected_initial = {'is_editor': False}
+        expected_initial = {'user_type': 'viewer'}
         self.assertDictEqual(custom_org_user_update_view.get_initial(),
                              expected_initial)
 

@@ -41,6 +41,11 @@ urlpatterns = patterns('econsensus.publicweb.views',
             model = Feedback,
             template_name = 'feedback_detail_page.html')),
         name='publicweb_feedback_detail'),
+    url(r'^feedback/comment/(?P<pk>[\d]+)/$', 
+        login_required(DetailView.as_view(
+            model = Feedback,
+            template_name = 'feedback_comment_page.html')),
+        name='publicweb_feedback_comment'),
     #snippets
     url(r'^feedback/create/snippet/(?P<parent_pk>[\d]+)/$', 
         FeedbackSnippetCreate.as_view(
