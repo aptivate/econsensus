@@ -7,11 +7,9 @@ from notification import models as notification
 
 from django.db import models
 from django.utils import timezone
-from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _, ugettext_noop
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db.models import Count
@@ -36,12 +34,13 @@ from publicweb.observation_manager import ObservationManager
 # separate file to prevent circular imports. They need to be here or django
 # won't detect them.
 from publicweb.extra_models import (STANDARD_SENDING_HEADERS,
-    NotificationSettings, OrganizationSettings, FEEDBACK_MAJOR_CHANGES)  # pylint: disable=W0611
+    NotificationSettings, FEEDBACK_MAJOR_CHANGES)  # pylint: disable=W0611
 from django.dispatch.dispatcher import receiver
 from django.contrib.comments.models import Comment
 from django.contrib.comments.signals import comment_was_posted
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
+
 
 class Decision(models.Model):
 
@@ -169,7 +168,7 @@ class Decision(models.Model):
         return "<decision-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
     def _send_change_notifications(self, notification_type):
-        headers = {'Message-ID' : self.get_message_id()}
+        headers = {'Message-ID': self.get_message_id()}
         headers.update(STANDARD_SENDING_HEADERS)
         org_users = self.organization.users.all()
         observation_manager = ObservationManager()
@@ -199,11 +198,13 @@ class Decision(models.Model):
             prev = self.__class__.objects.get(id=self.id)
             if prev.organization.id != self.organization.id:
                 self.watchers.all().delete()
+
             if not self._is_same(prev):
                 if not self.minor_edit:
                     self._send_major_change_notifications()
                 else:
                     self._send_minor_change_notifications()
+                self._update_last_modified()
 
         super(Decision, self).save(*args, **kwargs)
 
@@ -216,6 +217,7 @@ class Decision(models.Model):
         self._update_last_modified()
         # Go to superclass to avoid sending email notifications
         super(Decision, self).save()
+
 
 class Feedback(models.Model):
 
@@ -297,7 +299,6 @@ def additional_message_required(user, decision, level):
     organization = decision.organization
 
     result = notification.is_observing(decision, user)
-
 
     notification_settings, _ = NotificationSettings.objects.get_or_create(user=user, organization=organization)
     result = not result and notification_settings.notification_level < level

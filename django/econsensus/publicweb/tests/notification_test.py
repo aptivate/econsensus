@@ -16,25 +16,26 @@ from django.utils import timezone
 
 from publicweb.tests.factories import DecisionFactory, UserFactory, \
         FeedbackFactory, NotificationSettingsFactory, OrganizationUserFactory
-from publicweb.extra_models import NotificationSettings, NO_NOTIFICATIONS,\
-    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_ADDED_NOTIFICATIONS,\
+from publicweb.extra_models import NotificationSettings, NO_NOTIFICATIONS, \
+    MAIN_ITEMS_NOTIFICATIONS_ONLY, FEEDBACK_ADDED_NOTIFICATIONS, \
     FEEDBACK_MAJOR_CHANGES
+
 
 class NotificationTest(DecisionTestCase):
     """
     This class is used to test django-notification functionality
     """
-    
+
     def create_settings(self, user, notification_level, organization=None):
         users_organizations = Organization.active.get_for_user(user)
         if not organization:
             organization = users_organizations.latest('id')
         NotificationSettings.objects.create(
-            user=user, 
+            user=user,
             organization=organization,
             notification_level=notification_level
         )
-    
+
     def get_addresses_from_outbox(self, outbox):
         return_list = list()
         for thismail in outbox:
@@ -68,7 +69,7 @@ class NotificationTest(DecisionTestCase):
         self.assertEqual(msg, outbox[0])
 
     def test_create_triggers_notification(self):
-        #add a decision
+        # add a decision
         decision = self.make_decision()
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
@@ -78,7 +79,7 @@ class NotificationTest(DecisionTestCase):
         mailed_users = self.get_addresses_from_outbox(outbox)
         self.assertEqual(mailed_users, mail_list)
 
-    def test_change_triggers_notification_if_notification_level_high_enough(self):        
+    def test_change_triggers_notification_if_notification_level_high_enough(self):
         """
         Check that betty gets a mail when charlie makes a change.
         """
@@ -94,7 +95,7 @@ class NotificationTest(DecisionTestCase):
 
         mailed_users = self.get_addresses_from_outbox(outbox)
         self.assertIn(self.betty.email, mailed_users)
-    
+
     def test_change_doesnt_trigger_notification_if_notification_level_too_low(self):
         self.create_settings(self.user, MAIN_ITEMS_NOTIFICATIONS_ONLY)
         decision = self.make_decision()
@@ -102,40 +103,10 @@ class NotificationTest(DecisionTestCase):
         other_members = decision.organization.users.exclude(username=self.user.username)
         self.login(other_members[0].username)
         self.update_decision_through_browser(decision.id)
-        
+
         outbox = getattr(mail, 'outbox')
         mailed_users = self.get_addresses_from_outbox(outbox)
         self.assertNotIn(self.betty.email, mailed_users)
-
-    def test_changing_new_decisions_org_correct_email_content(self):
-        """
-        Check that the notification emails states that the Decision
-        has changed, not its status (altering Decision via admin
-        screens now sets last_status=status as for user screens).
-        """
-        orig_org = self.bettysorg
-        orig_user = User.objects.get(username="nobbie")
-        new_org = Organization.objects.get(name="Ferocious Feral Furrballs")
-        self.login(orig_user)
-        decision = self.make_decision(organization=orig_org)
-        [
-            NotificationSettingsFactory(
-                user=user, 
-                organization=new_org,
-                notification_level=FEEDBACK_ADDED_NOTIFICATIONS
-            ) for user in new_org.users.all()
-        ]
-        mail.outbox = []
-        admin_user = self.change_organization_via_admin_screens(decision, new_org)
-        outbox = getattr(mail, 'outbox')
-        self.assertEqual(len(outbox), new_org.users.all().count())
-        self.assertTrue(orig_user.email not in self.get_addresses_from_outbox(outbox))
-        first_email = outbox[0]
-        exp_subject_snippet = "] Change to "
-        exp_body_snippet = "This is to let you know that %s has changed the " \
-            "following item." % admin_user.username
-        self.assertTrue(first_email.subject.find(exp_subject_snippet) >= 0)
-        self.assertTrue(first_email.body.find(exp_body_snippet) >= 0)
 
     def test_notifications_dont_contain_amp(self):
         """
@@ -152,7 +123,7 @@ class NotificationTest(DecisionTestCase):
         self.assertNotIn('&amp', outbox[0].subject)
         self.assertNotIn('&amp', outbox[0].body)
 
-    def test_notifications_sent_to_author(self):        
+    def test_notifications_sent_to_author(self):
         self.create_decision_through_browser()
 
         outbox = getattr(mail, 'outbox')
@@ -176,7 +147,7 @@ class NotificationTest(DecisionTestCase):
         org = self.bettysorg
         [
             NotificationSettingsFactory(
-                user=user, 
+                user=user,
                 organization=org,
                 notification_level=FEEDBACK_ADDED_NOTIFICATIONS
             ) for user in org.users.all()
@@ -198,7 +169,7 @@ class NotificationTest(DecisionTestCase):
         """
         [
             NotificationSettingsFactory(
-                user=user, 
+                user=user,
                 organization=self.bettysorg,
                 notification_level=FEEDBACK_MAJOR_CHANGES
             ) for user in self.bettysorg.users.all()
@@ -211,8 +182,8 @@ class NotificationTest(DecisionTestCase):
                                     content_object=feedback,
                                     object_pk=feedback.id,
                                     content_type=feedback_type,
-                                    submit_date = timezone.now(),
-                                    site = Site.objects.get_current())
+                                    submit_date=timezone.now(),
+                                    site=Site.objects.get_current())
         outbox = getattr(mail, 'outbox')
         outbox_to = [to for to_list in outbox for to in to_list.to]
         all_members = comment.content_object.decision.organization.users.exclude(is_active=False)
@@ -222,10 +193,10 @@ class NotificationTest(DecisionTestCase):
     def test_changed_feedback_notification(self):
         """
         With no settings, betty shouldn't get messages about comments relating
-        to decisions she isn't watching 
+        to decisions she isn't watching
         """
         NotificationSettings.objects.create(
-            user=self.charlie, 
+            user=self.charlie,
             organization=self.bettysorg,
             notification_level=FEEDBACK_MAJOR_CHANGES
         )
@@ -249,7 +220,7 @@ class NotificationTest(DecisionTestCase):
 
     def test_emails_come_from_organization(self):
         users_orgs = Organization.active.get_for_user(self.user)
-        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS, 
+        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS,
              users_orgs[0])
         self.assertGreaterEqual(len(users_orgs), 2)
         # Add Decision for first organization
@@ -279,9 +250,9 @@ class NotificationTest(DecisionTestCase):
         # Add a comment
         feedback_type = ContentType.objects.get(app_label="publicweb", model="feedback")
         comment = self.make_comment(user=self.charlie,
-            content_object = feedback,
-            object_pk = feedback.id,
-            content_type = feedback_type)
+            content_object=feedback,
+            object_pk=feedback.id,
+            content_type=feedback_type)
         outbox = getattr(mail, 'outbox')
         self.assertTrue(outbox)
         self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())
@@ -296,7 +267,7 @@ class NotificationTest(DecisionTestCase):
         self.assertEqual(outbox[0].from_email, comment.content_object.decision.get_email())"""
         mail.outbox = []
         # Add Decision for second organization
-        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS, 
+        self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS,
              users_orgs[1])
         decision = self.make_decision(organization=users_orgs[1])
         outbox = getattr(mail, 'outbox')
@@ -326,7 +297,12 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
-        self.assertEqual(outbox[0].extra_headers['References'], feedback.decision.get_message_id())
+        self.assertEqual(
+            outbox[0].extra_headers['References'],
+            " ".join(
+                [feedback.decision.get_message_id(), feedback.get_message_id()]
+            )
+        )
         mail.outbox = []
 
         self.login('charlie')
@@ -337,7 +313,12 @@ class NotificationTest(DecisionTestCase):
         self.assertTrue(outbox[0].extra_headers)
         self.assertEqual(outbox[0].extra_headers['Message-ID'], feedback.get_message_id())
         self.assertEqual(outbox[0].extra_headers['In-Reply-To'], feedback.decision.get_message_id())
-        self.assertEqual(outbox[0].extra_headers['References'], feedback.decision.get_message_id())
+        self.assertEqual(
+            outbox[0].extra_headers['References'],
+            " ".join(
+                [feedback.decision.get_message_id(), feedback.get_message_id()]
+            )
+        )
 
 class DecisionNotificationTest(TestCase):
     def setUp(self):
@@ -346,7 +327,7 @@ class DecisionNotificationTest(TestCase):
         watcher = UserFactory(email="bob@bobbins.org")
         organization = self.decision.organization
         self.settings = NotificationSettingsFactory(
-            user=watcher, 
+            user=watcher,
             organization=organization,
             notification_level=FEEDBACK_ADDED_NOTIFICATIONS
         )
@@ -377,7 +358,7 @@ class FeedbackNotificationTest(TestCase):
                                         editor=feedbackAuthor)
         organization = decision.organization
         self.settings = NotificationSettingsFactory(
-            user=self.user, 
+            user=self.user,
             organization=organization,
             notification_level=FEEDBACK_MAJOR_CHANGES
         )

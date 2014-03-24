@@ -8,8 +8,7 @@ from publicweb.views import DecisionSearchView
 from publicweb.models import Decision
 
 from publicweb.tests.factories import DecisionFactory, OrganizationFactory, UserFactory
-
-import minimock
+import  minimock
 
 class MockSearchQuerySet(object):
     """

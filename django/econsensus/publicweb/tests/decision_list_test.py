@@ -9,6 +9,7 @@ from publicweb.models import Decision, Feedback
 from publicweb.views import DecisionList
 from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
+from copy import deepcopy
 
 
 class DecisionListTest(DecisionTestCase):
@@ -20,7 +21,14 @@ class DecisionListTest(DecisionTestCase):
         """Assert only one sort class is present in the decision list view"""
 
         # Assumes CSS will be correctly displaying the sort status
-        sort_options = DecisionList().sort_table_headers
+        decision_list = DecisionList()
+        sort_options = deepcopy(decision_list.sort_table_headers)
+        unsortable_headers = decision_list.unsortable_fields[:]
+
+        for header_list in sort_options.values():
+            for header in unsortable_headers:
+                index = header_list.index(header)
+                header_list.pop(index)
 
         self.create_decisions_with_different_statuses()
 
@@ -110,7 +118,7 @@ class DecisionListTest(DecisionTestCase):
             object_list_last_modified = getattr(object_list[index], 'last_modified').replace(microsecond=0)
             self.assertEquals(sorted_list_last_modified, object_list_last_modified, 'Testing date sort failed for last_modified')
 
-        #At this point, the ids in browser are all out of order, so good time to test id sort
+        # At this point, the ids in browser are all out of order, so good time to test id sort
         response = self.client.get(reverse('publicweb_item_list', args=[self.bettysorg.slug, 'proposal']), {'sort': 'id'})
         object_list = response.context['object_list']
         for index, sorted_id in enumerate(sorted_ids):
@@ -231,8 +239,14 @@ class DecisionListTest(DecisionTestCase):
         self.create_decisions_with_different_statuses()
 
         decision = DecisionList()
-        default_sort_options = decision.sort_options
-        sort_table_headers = decision.sort_table_headers
+        default_sort_options = deepcopy(decision.sort_options)
+        sort_table_headers = deepcopy(decision.sort_table_headers)
+        unsortable_headers = decision.unsortable_fields[:]
+
+        for header_list in sort_table_headers.values():
+            for header in unsortable_headers:
+                index = header_list.index(header)
+                header_list.pop(index)
 
         for page, sort_queries in sort_table_headers.iteritems():
             page_url = reverse('publicweb_item_list', args=[self.bettysorg.slug, page])
@@ -275,7 +289,7 @@ class DecisionListTest(DecisionTestCase):
         self.assertEquals('-', decision.toggle_sort_order(''))
 
     def _get_random_string(self, max_length_of_string):
-        #TODO This does not generate non-english charaters
+        # TODO This does not generate non-english charaters
         chars = ascii_letters + digits + ' '
         return ''.join([chars[randint(0, len(chars) - 1)] for x in range(randint(1, max_length_of_string))])
 

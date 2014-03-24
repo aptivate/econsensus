@@ -36,7 +36,8 @@ pyelasticsearch==0.6
 Whoosh==2.5.4
 
 # for testing
-factory-boy==2.1.1
+factory-boy==2.3.1
+minimock
 mock==1.0.1
 selenium==2.34.0
 django-dynamic-fixture==1.6.5

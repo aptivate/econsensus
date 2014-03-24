@@ -45,7 +45,7 @@ class DecisionLastModifiedTest(TestCase):
         self.decision.editor = UserFactory()
         self.decision.save()
         self.assertEquals(orig_last_modified, self.last_modified())
-        
+
     def test_edit_decision_description(self):
         orig_last_modified = self.last_modified()
         self.decision.description += "x"
@@ -80,10 +80,10 @@ class ModelTest(TestCase):
 
 class ModelTestSlow(DecisionTestCase):
 
-#Generic test functions:
+# Generic test functions:
     def model_has_attribute(self, model, attr):
-        self.assertTrue(hasattr(model, attr), 
-                          "Model %s does not have attribute %s" % (model.__class__,attr))
+        self.assertTrue(hasattr(model, attr),
+                          "Model %s does not have attribute %s" % (model.__class__, attr))
 
     def instance_attribute_has_value(self, instance, attr, value):
         target = getattr(instance, attr)
@@ -91,9 +91,9 @@ class ModelTestSlow(DecisionTestCase):
             result = target()
         else:
             result = target
-            
-        self.assertEqual(value, result, 
-                          "Attribute %s does not have expected value %s" % (attr,value))
+
+        self.assertEqual(value, result,
+                          "Attribute %s does not have expected value %s" % (attr, value))
 
     def instance_validates(self, instance):
         try:
@@ -104,7 +104,7 @@ class ModelTestSlow(DecisionTestCase):
     def get_column(self, matrix, i):
         return [row[i] for row in matrix]
 
-#The real work:
+# The real work:
     def test_decision_has_expected_fields(self):
         decision = self.make_decision()
         self.model_has_attribute(decision, "feedbackcount")
@@ -123,17 +123,17 @@ class ModelTestSlow(DecisionTestCase):
         self.instance_attribute_has_value(decision, "feedbackcount", 0)
         feedback = Feedback(description="Feedback test data", decision=decision, author=self.user)
         feedback.save()
-        self.instance_attribute_has_value(decision, "feedbackcount", 1)       
-        
+        self.instance_attribute_has_value(decision, "feedbackcount", 1)
+
     def test_feedback_rating_has_values(self):
         expected = ('question', 'danger', 'concerns', 'consent', 'comment')
         names = self.get_column(Feedback.RATING_CHOICES, 1)
         actual = []
         for name in names:
             actual.append(unicode(name))
-        
+
         self.assertEqual(expected, tuple(actual), "Unexpected feedback rating values!")
-    
+
     def test_feedback_has_author(self):
         decision = self.make_decision()
         feedback = Feedback(description="Feedback test data", decision=decision)
@@ -142,7 +142,7 @@ class ModelTestSlow(DecisionTestCase):
     def test_decision_has_meeting_people(self):
         decision = self.make_decision()
         self.model_has_attribute(decision, "meeting_people")
-        
+
     def test_save_when_no_author(self):
         decision = self.make_decision()
         decision.author = None
@@ -151,7 +151,7 @@ class ModelTestSlow(DecisionTestCase):
             decision.save()
         except:
             self.fail("Failed to save object.")
-    
+
     def test_feedback_statistics(self):
         decision = self.make_decision()
         self.model_has_attribute(decision, "get_feedback_statistics")
@@ -162,4 +162,4 @@ class ModelTestSlow(DecisionTestCase):
         self.assertTrue("question" in statistics)
         self.assertTrue("comment" in statistics)
 
-        
+
