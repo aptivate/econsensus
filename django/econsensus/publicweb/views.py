@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from django.http import (HttpResponse, HttpResponseRedirect, 
+from django.http import (HttpResponse, HttpResponseRedirect,
     HttpResponseForbidden, Http404)
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -23,12 +23,12 @@ from haystack.views import SearchView
 from waffle import switch_is_active
 
 from publicweb.forms import (YourDetailsForm,
-        NotificationSettingsForm, EconsensusActionItemCreateForm, 
+        NotificationSettingsForm, EconsensusActionItemCreateForm,
         EconsensusActionItemUpdateForm, DecisionForm, FeedbackForm)
 from publicweb.models import Decision, Feedback, NotificationSettings
 
 from actionitems.models import ActionItem
-from actionitems.views import (ActionItemCreateView, ActionItemUpdateView, 
+from actionitems.views import (ActionItemCreateView, ActionItemUpdateView,
     ActionItemListView)
 from django.core.urlresolvers import reverse
 from signals.management import DECISION_CHANGE
@@ -46,8 +46,8 @@ class YourDetails(UpdateView):
 
     def form_valid(self, form):
         messages.add_message(
-             self.request, 
-             messages.INFO, 
+             self.request,
+             messages.INFO,
              _('Your details have been updated successfully.')
         )
         return super(YourDetails, self).form_valid(form)
@@ -67,23 +67,23 @@ class ExportCSV(View):
         return super(ExportCSV, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        ''' 
-        Create the HttpResponse object with the appropriate CSV header and 
+        '''
+        Create the HttpResponse object with the appropriate CSV header and
         corresponding CSV data from Decision, Feedback and Comment.
         Expected input: request (not quite sure what this is!)
-        Expected output: http containing MIME info followed by the data itself 
+        Expected output: http containing MIME info followed by the data itself
         as CSV.
         '''
 
         response = HttpResponse(mimetype='text/csv')
         response['Content-Disposition'] = ('attachment; '
-               'filename=econsensus_decision_data_%s.csv' % 
+               'filename=econsensus_decision_data_%s.csv' %
                unicode(self.organization.slug))
 
         def field_sorter(s):
             """
             Impose an order on certain fields.
-            Fields not specified below will appear in arbitrary order at end of 
+            Fields not specified below will appear in arbitrary order at end of
             list.
             """
             if s == 'id': return '\t 00 %s' % s
@@ -126,13 +126,13 @@ class ExportCSV(View):
         decision_field_names = sorted(
           list(
             set([field.name for field in Decision._meta.fields])
-          ), 
+          ),
           key=field_sorter
         )
         feedback_field_names = sorted(
           list(
             set([field.name for field in Feedback._meta.fields])
-          ), 
+          ),
           key=field_sorter)
         comment_field_names = sorted(list(set([field.name for field in Comment._meta.fields])), key=field_sorter)
         actionitem_field_names = sorted(list(set([field.name for field in ActionItem._meta.fields])), key=field_sorter)
@@ -153,10 +153,10 @@ class ExportCSV(View):
         writer.writerow(decision_column_titles + feedback_column_titles +
                         comment_column_titles + actionitem_column_titles)
 
-        no_decision_data   = [u""]*len(decision_field_names)
-        no_feedback_data   = [u""]*len(feedback_field_names)
-        no_comment_data    = [u""]*len(comment_field_names)
-        no_actionitem_data = [u""]*len(actionitem_field_names)
+        no_decision_data = [u""] * len(decision_field_names)
+        no_feedback_data = [u""] * len(feedback_field_names)
+        no_comment_data = [u""] * len(comment_field_names)
+        no_actionitem_data = [u""] * len(actionitem_field_names)
 
         for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
             decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
@@ -261,14 +261,14 @@ class DecisionList(ListView):
                     }
     sort_by_count_fields = ['feedback']
     sort_by_alpha_fields = ['excerpt']
-    
+
     sort_table_headers = {
        'discussion': ['id', 'watch', 'excerpt', 'feedback', 'deadline', 'last_modified'],
        'proposal': ['id', 'watch', 'excerpt', 'feedback', 'deadline', 'last_modified'],
        'decision': ['id', 'watch', 'excerpt', 'decided_date', 'review_date'],
        'archived': ['id', 'watch', 'excerpt', 'creation', 'archived_date']
     }
-    
+
     unsortable_fields = ["watch"]
 
     def set_sorting(self, request):
@@ -279,13 +279,13 @@ class DecisionList(ListView):
         else:
             self.sort_order = ''
             self.sort_field = sort_request
-        #Invalid sort requests fail silently
+        # Invalid sort requests fail silently
         if not self.sort_field in self.sort_options:
             self.sort_order = '-'
             self.sort_field = 'id'
 
     def get_table_headers(self, request):
-        #TODO How to handle this with internationalization
+        # TODO How to handle this with internationalization
         header_titles = {'id': 'ID',
                          'watch': 'Watch',
                          'excerpt': 'Excerpt',
@@ -300,9 +300,9 @@ class DecisionList(ListView):
         self.header_list = []
         for header in self.sort_table_headers[self.status]:
                 header = {
-                    'attrs': header, 
-                    'path': self.get_sort_query(request, header), 
-                    'sortclass': self.get_sort_class(header), 
+                    'attrs': header,
+                    'path': self.get_sort_query(request, header),
+                    'sortclass': self.get_sort_class(header),
                     'title': header_titles[header],
                     'unsortable': header in self.unsortable_fields
                 }
@@ -325,7 +325,7 @@ class DecisionList(ListView):
 
         # Unless field is sort_field, when next_sort is inverse
         if current_sort == default_sort:
-            next_sort_order = self.toggle_sort_order(self.sort_order) 
+            next_sort_order = self.toggle_sort_order(self.sort_order)
             next_sort = "{0}{1}".format(next_sort_order, self.sort_field)
         else:
             next_sort = default_sort
@@ -370,7 +370,7 @@ class DecisionList(ListView):
 
         # Standard case
         else:
-            self.paginate_by = request.GET.get('num', 
+            self.paginate_by = request.GET.get('num',
                 request.session.get('num', self.default_num_items))
 
         # Finally set as user's session value
@@ -380,22 +380,22 @@ class DecisionList(ListView):
         if not context['page_obj']:
             return None
         else:
-            return self.build_query_string(context, 
+            return self.build_query_string(context,
                 context['page_obj'].previous_page_number())
 
     def build_next_query_string(self, context):
         if not context['page_obj']:
             return None
         else:
-            return self.build_query_string(context, 
+            return self.build_query_string(context,
                 context['page_obj'].next_page_number())
 
     def build_query_string(self, context, page_num):
         page_query = 'page=' + str(page_num)
-        #prepend non-default number of items per page
+        # prepend non-default number of items per page
         if not context['num'] == self.default_num_items:
             page_query = 'num=' + str(context['num']) + '&' + page_query
-        #prepend non-default sort
+        # prepend non-default sort
         if not context['sort'] == '-id':
             page_query = 'sort=' + context['sort'] + '&' + page_query
         return '?' + page_query
@@ -411,7 +411,7 @@ class DecisionCreate(CreateView):
     @method_decorator(login_required)
     @method_decorator(
         permission_required_or_403(
-            'edit_decisions_feedback', 
+            'edit_decisions_feedback',
             (Organization, 'slug', 'org_slug')
         )
     )
@@ -444,7 +444,7 @@ class DecisionCreate(CreateView):
 
     def get_success_url(self, *args, **kwargs):
         status = getattr(self, 'object', self).status
-        return reverse('publicweb_item_list', 
+        return reverse('publicweb_item_list',
                        args=[self.organization.slug, status])
 
     def post(self, *args, **kwargs):
@@ -460,10 +460,10 @@ class DecisionUpdate(UpdateView):
     @method_decorator(login_required)
     @method_decorator(
         permission_required_or_403(
-            'edit_decisions_feedback', 
+            'edit_decisions_feedback',
             (Organization, 'decision', 'pk')
         )
-    )    
+    )
     def dispatch(self, *args, **kwargs):
         return super(DecisionUpdate, self).dispatch(*args, **kwargs)
 
@@ -471,14 +471,14 @@ class DecisionUpdate(UpdateView):
         form.instance.editor = self.request.user
         form.instance.last_status = self.last_status
         form.instance.minor_edit = form.cleaned_data['minor_edit']
-        if (not form.cleaned_data['watch'] and 
+        if (not form.cleaned_data['watch'] and
             notification.is_observing(self.object, self.request.user)):
             notification.stop_observing(self.object, self.request.user)
-        elif (form.cleaned_data['watch'] and 
+        elif (form.cleaned_data['watch'] and
               not notification.is_observing(self.object, self.request.user)):
             notification.observe(
-                self.object,  
-                self.request.user, 
+                self.object,
+                self.request.user,
                 DECISION_CHANGE
             )
 
@@ -510,15 +510,15 @@ class FeedbackCreate(CreateView):
     @method_decorator(login_required)
     @method_decorator(
         permission_required_or_403(
-            'edit_decisions_feedback', 
+            'edit_decisions_feedback',
             (Organization, 'decision', 'parent_pk')
         )
-    )    
+    )
     def dispatch(self, request, *args, **kwargs):
         self.rating_initial = Feedback.COMMENT_STATUS
         rating = request.GET.get('rating')
         if rating:
-            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
+            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name == rating][0]
         return super(FeedbackCreate, self).dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -543,7 +543,7 @@ class FeedbackCreate(CreateView):
 
 class FeedbackSnippetCreate(FeedbackCreate):
     def get_success_url(self, *args, **kwargs):
-        return reverse('publicweb_feedback_snippet_detail', 
+        return reverse('publicweb_feedback_snippet_detail',
                        args=[self.object.pk])
 
 
@@ -554,10 +554,10 @@ class FeedbackUpdate(UpdateView):
     @method_decorator(login_required)
     @method_decorator(
         permission_required_or_403(
-            'edit_decisions_feedback', 
+            'edit_decisions_feedback',
             (Organization, 'decision__feedback', 'pk')
         )
-    )        
+    )
     def dispatch(self, *args, **kwargs):
         return super(FeedbackUpdate, self).dispatch(*args, **kwargs)
 
@@ -694,13 +694,13 @@ class EconsensusActionitemListView(ActionItemListView):
         else:
             self.sort_order = ''
             self.sort_field = sort_request
-        #Invalid sort requests fail silently
+        # Invalid sort requests fail silently
         if not self.sort_field in self.sort_options:
             self.sort_order = '-'
             self.sort_field = 'id'
 
     def get_table_headers(self, request):
-        #TODO How to handle this with internationalization
+        # TODO How to handle this with internationalization
         header_titles = {'id': 'ID',
                          'description': 'Excerpt',
                          'responsible': 'Responsible',
@@ -752,7 +752,7 @@ class EconsensusActionitemListView(ActionItemListView):
     # PAGINATION ##########################################################
 
     def set_paginate_by(self, request):
-        # NB Don't know how to handle invalid Page # - 
+        # NB Don't know how to handle invalid Page # -
         # https://docs.djangoproject.com/en/1.4/ref/class-based-views/
         # "Note that page must be either a valid page number or the value last;
         # any other value for page will result in a 404 error."
@@ -763,7 +763,7 @@ class EconsensusActionitemListView(ActionItemListView):
         page_num = request.GET.get('page')
         num_num = request.GET.get('num')
 
-        # Clean-up if invalid num request was given 
+        # Clean-up if invalid num request was given
         # (i.e. handles error silently)
         if num_num:
             try:
@@ -775,7 +775,7 @@ class EconsensusActionitemListView(ActionItemListView):
                     self.paginate_by = self.default_num_items
                 return
 
-        # Set to default in case where a link has been sent that includes page 
+        # Set to default in case where a link has been sent that includes page
         # number, but doesn't include a num
         if page_num and not num_num:
             self.paginate_by = self.default_num_items
@@ -793,7 +793,7 @@ class EconsensusActionitemListView(ActionItemListView):
             return None
         else:
             return self.build_query_string(
-                context, 
+                context,
                 context['page_obj'].previous_page_number()
             )
 
@@ -802,16 +802,16 @@ class EconsensusActionitemListView(ActionItemListView):
             return None
         else:
             return self.build_query_string(
-                context, 
+                context,
                 context['page_obj'].next_page_number()
             )
 
     def build_query_string(self, context, page_num):
         page_query = 'page=' + str(page_num)
-        #prepend non-default number of items per page
+        # prepend non-default number of items per page
         if not context['num'] == self.default_num_items:
             page_query = 'num=' + str(context['num']) + '&' + page_query
-        #prepend non-default sort
+        # prepend non-default sort
         if not context['sort'] == '-id':
             page_query = 'sort=' + context['sort'] + '&' + page_query
         return '?' + page_query
@@ -834,51 +834,51 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', 
+            return reverse('publicweb_item_list',
                 args=[users_org.slug, DecisionList.DEFAULT]
             )
         except:
             return reverse('organization_list')
 
-class UserNotificationSettings(ModelFormMixin, ProcessFormView, 
+class UserNotificationSettings(ModelFormMixin, ProcessFormView,
         SingleObjectTemplateResponseMixin):
     model = NotificationSettings
     form_class = NotificationSettingsForm
     template_name = "notificationsettings_update.html"
-    
+
     def get_success_url(self):
         return reverse('organization_list')
-    
+
     def get_object(self):
-        org_id = self.kwargs['organization']
-        organization = Organization.objects.get(pk=org_id)
-        
+        org_id = self.kwargs['org_slug']
+        organization = Organization.objects.get(slug=org_id)
+
         try:
             the_object = self.model.objects.get(
-               organization=organization.pk, 
+               organization=organization.pk,
                user=self.request.user.pk
             )
         except self.model.DoesNotExist:
             the_object = self.model(
-                organization=organization, 
+                organization=organization,
                 user=self.request.user
             )
-        
+
         return the_object
-    
+
     def get_context_data(self, **kwargs):
         context = super(
-            UserNotificationSettings, 
+            UserNotificationSettings,
             self
         ).get_context_data(**kwargs)
         context['organization'] = self.object.organization
         return context
-    
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(UserNotificationSettings, self).dispatch(
-               request, *args, **kwargs)    
-    
+               request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super(UserNotificationSettings, self).get(
@@ -889,8 +889,8 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView,
         if self.request.POST.get('submit', None) == _("Cancel"):
             return HttpResponseRedirect(self.get_success_url())
         return super(UserNotificationSettings, self).post(
-              request, 
-              *args, 
+              request,
+              *args,
               **kwargs
         )
 
@@ -939,17 +939,17 @@ class DecisionSearchView(SearchView):
         return login_required(search_view)
 
 
-class BaseWatcherView(View):    
+class BaseWatcherView(View):
     def get_object(self):
         object_id = self.kwargs['decision_id']
         decision = Decision.objects.get(pk=object_id)
         return decision
-    
+
     def get_user(self):
         return self.request.user
-    
 
-class AddWatcher(BaseWatcherView):    
+
+class AddWatcher(BaseWatcherView):
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
@@ -957,7 +957,7 @@ class AddWatcher(BaseWatcherView):
         return HttpResponseRedirect(request.GET['next'])
 
 
-class RemoveWatcher(BaseWatcherView):    
+class RemoveWatcher(BaseWatcherView):
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
