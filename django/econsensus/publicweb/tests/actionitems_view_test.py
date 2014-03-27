@@ -45,6 +45,15 @@ class ActionitemsViewTestFast(TestCase):
     def test_update_template(self):
         assert EconsensusActionitemUpdateView.template_name == 'actionitem_update_snippet.html'
 
+    def test_update_form_kwargs_contain_prefix(self):
+        updateview = EconsensusActionitemUpdateView()
+        updateview.object = ActionItem(id=1)
+        updateview.request = RequestFactory().get('/')
+        updateview.kwargs = {'decisionpk': 1}
+        form_kwargs = updateview.get_form_kwargs()
+        assert 'prefix' in form_kwargs
+        assert form_kwargs['prefix'] == "actionitem-1"
+
     def test_create_get_successurl(self):
         createview = EconsensusActionitemCreateView()
         createview.object = ActionItem(id=1)

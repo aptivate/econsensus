@@ -20,7 +20,7 @@ from organizations.models import Organization
 from haystack.views import SearchView
 from waffle import switch_is_active
 
-from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm,\
+from publicweb.forms import DecisionForm, FeedbackForm, YourDetailsForm, \
     EconsensusActionItemCreateForm, EconsensusActionItemUpdateForm
 from publicweb.models import Decision, Feedback
 
@@ -129,10 +129,10 @@ class ExportCSV(View):
         writer.writerow(decision_column_titles + feedback_column_titles +
                         comment_column_titles + actionitem_column_titles)
 
-        no_decision_data   = [u""]*len(decision_field_names)
-        no_feedback_data   = [u""]*len(feedback_field_names)
-        no_comment_data    = [u""]*len(comment_field_names)
-        no_actionitem_data = [u""]*len(actionitem_field_names)
+        no_decision_data = [u""] * len(decision_field_names)
+        no_feedback_data = [u""] * len(feedback_field_names)
+        no_comment_data = [u""] * len(comment_field_names)
+        no_actionitem_data = [u""] * len(actionitem_field_names)
 
         for decision in Decision.objects.filter(organization=self.organization).order_by('id'):
             decision_data = [field_value(decision, field_name) for field_name in decision_field_names]
@@ -247,13 +247,13 @@ class DecisionList(ListView):
         else:
             self.sort_order = ''
             self.sort_field = sort_request
-        #Invalid sort requests fail silently
+        # Invalid sort requests fail silently
         if not self.sort_field in self.sort_options:
             self.sort_order = '-'
             self.sort_field = 'id'
 
     def get_table_headers(self, request):
-        #TODO How to handle this with internationalization
+        # TODO How to handle this with internationalization
         header_titles = {'id': 'ID',
                          'excerpt': 'Excerpt',
                          'feedback': 'Feedback',
@@ -352,10 +352,10 @@ class DecisionList(ListView):
 
     def build_query_string(self, context, page_num):
         page_query = 'page=' + str(page_num)
-        #prepend non-default number of items per page
+        # prepend non-default number of items per page
         if not context['num'] == self.default_num_items:
             page_query = 'num=' + str(context['num']) + '&' + page_query
-        #prepend non-default sort
+        # prepend non-default sort
         if not context['sort'] == '-id':
             page_query = 'sort=' + context['sort'] + '&' + page_query
         return '?' + page_query
@@ -456,7 +456,7 @@ class FeedbackCreate(CreateView):
         self.rating_initial = Feedback.COMMENT_STATUS
         rating = request.GET.get('rating')
         if rating:
-            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name==rating][0]
+            self.rating_initial = [value for value, name in Feedback.RATING_CHOICES if name == rating][0]
         return super(FeedbackCreate, self).dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -563,6 +563,11 @@ class EconsensusActionitemUpdateView(ActionItemUpdateView):
                   'pk': self.object.pk}
         return reverse('actionitem_detail', kwargs=kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super(EconsensusActionitemUpdateView, self).get_form_kwargs()
+        kwargs['prefix'] = "actionitem-{0}".format(self.object.id)
+        return kwargs
+
 
 class EconsensusActionitemListView(ActionItemListView):
     template_name = 'decision_list.html'
@@ -628,13 +633,13 @@ class EconsensusActionitemListView(ActionItemListView):
         else:
             self.sort_order = ''
             self.sort_field = sort_request
-        #Invalid sort requests fail silently
+        # Invalid sort requests fail silently
         if not self.sort_field in self.sort_options:
             self.sort_order = '-'
             self.sort_field = 'id'
 
     def get_table_headers(self, request):
-        #TODO How to handle this with internationalization
+        # TODO How to handle this with internationalization
         header_titles = {'id': 'ID',
                          'description': 'Excerpt',
                          'responsible': 'Responsible',
@@ -731,10 +736,10 @@ class EconsensusActionitemListView(ActionItemListView):
 
     def build_query_string(self, context, page_num):
         page_query = 'page=' + str(page_num)
-        #prepend non-default number of items per page
+        # prepend non-default number of items per page
         if not context['num'] == self.default_num_items:
             page_query = 'num=' + str(context['num']) + '&' + page_query
-        #prepend non-default sort
+        # prepend non-default sort
         if not context['sort'] == '-id':
             page_query = 'sort=' + context['sort'] + '&' + page_query
         return '?' + page_query
@@ -757,7 +762,7 @@ class OrganizationRedirectView(RedirectView):
     def get_redirect_url(self):
         try:
             users_org = Organization.objects.get(users=self.request.user)
-            return reverse('publicweb_item_list', args = [users_org.slug, DecisionList.DEFAULT])
+            return reverse('publicweb_item_list', args=[users_org.slug, DecisionList.DEFAULT])
         except:
             return reverse('organization_list')
 
