@@ -140,15 +140,6 @@
             actionitem_button = $(".button.add_actionitem").clone().wrap('<div>').parent().html();
         // Add
 		$(actionitem_form_parent).on("click", ".button.add_actionitem", function (e) {
-			var forms = $(".actionitem-form");
-            if(forms.length > 0) {
-                for(i=0; i < forms.length; i++) {
-                    $form = $(forms[i]);
-                    var old_actionitempk = $form.parents("li").attr("id").slice(7);
-                    var detail_url = actionitem_detail_url.replace(/\/0/, '/'+old_actionitempk);
-                    replaceWithRemote(detail_url, "#act_id_"+old_actionitempk+" .actionitem-form");
-                }
-            }
             replaceWithRemote(actionitem_add_url, ".button.add_actionitem");
             $('.actionitem-form').parsley();
 			e.preventDefault();
@@ -157,22 +148,10 @@
 		$(".list.decision_actionitem").on("click", ".edit.actionitem", function (e) {
 			var actionitempk = $(this).parents("li").attr("id").slice(7);
 			var snippet_update_url = actionitem_edit_url.replace(/\/0/, '/'+actionitempk);
-		    var forms = $(".actionitem-form");
-		    if(forms.length > 0) {
-		    	for(i=0; i < forms.length; i++) {
-		    		$form = $(forms[i]);
-		    		if($form.parents("li").length > 0) {
-		    		    var old_actionitempk = $form.parents("li").attr("id").slice(7);
-		    		    var detail_url = actionitem_detail_url.replace(/\/0/, '/'+old_actionitempk);
-		    		    replaceWithRemote(detail_url, "#act_id_"+old_actionitempk+" .actionitem-form");
-		    		} else {
-		    			$form.replaceWith(actionitem_button);
-		    		}
-		    	}
-		    }
-		    
+
             replaceWithRemote(snippet_update_url, "#act_id_"+actionitempk+" .actionitem_feedback_wrapper");
             $('.actionitem-form').parsley();
+            $('#act_id_'+actionitempk+' .actionitems-date-widget').datepicker()
 			e.preventDefault();
 		});
 		
@@ -197,7 +176,7 @@
         }); 
 
 		$(".list.decision_actionitem").on("submit", "form", function (e) {
-            var form = $("ol.actionitem_list form"),
+            var form = $(this),
                 parameters = form.serialize();
             // This is necessary because otherwise javascript doesn't recognise
             // .split as a function. Don't know why this is.
@@ -227,11 +206,12 @@
         $(".list.decision_actionitem").on("click", ".actionitem_cancel", function (e) {
             e.stopPropagation();
             e.preventDefault();
-            var actionitem_form = $(".list.decision_actionitem form");
+            var actionitem_form = $(this).parents('.actionitem-form');
             var actionitempk = $(this).parents("li").attr("id").slice(7);
             var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
-
+            
             replaceWithRemote(snippet_detail_url, actionitem_form.parent());
+            e.preventDefault();
         });
         	
 		/*
