@@ -952,7 +952,8 @@ p.title {
 	float:left;
 }
 
-#id_description, #id_budget, #id_people, #id_meeting_people {
+#id_description, #id_budget, #id_people, #id_meeting_people, 
+.form_item.description span textarea.description_text {
     clear: both;
     display: inline;
     margin: 2%;
