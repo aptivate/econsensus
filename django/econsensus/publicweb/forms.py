@@ -11,6 +11,7 @@ from django.forms.fields import ChoiceField
 from widgets import JQueryUIDateWidget
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
+from actionitems.models import ActionItem
 
 class YourDetailsForm(forms.ModelForm):
 
@@ -35,7 +36,7 @@ class FeedbackForm(forms.ModelForm):
 
 @parsleyfy
 class DecisionForm(forms.ModelForm):
-    
+
     watch = forms.BooleanField(required=False, initial=True)
     minor_edit = forms.BooleanField(required=False, initial=False)
     class Meta:
@@ -50,25 +51,33 @@ class DecisionForm(forms.ModelForm):
                    'deadline': JQueryUIDateWidget
                    }
 
-EXTRA_CHOICE = (3, _('All')) #pylint: disable=E1102
+EXTRA_CHOICE = (3, _('All'))  # pylint: disable=E1102
 
 @parsleyfy
 class EconsensusActionItemCreateForm(ActionItemCreateForm):
     pass
-#TODO: Sort and filter forms have nothing to do with the app itself.
-#Move to site when site and app are split.
+# TODO: Sort and filter forms have nothing to do with the app itself.
+# Move to site when site and app are split.
 
 @parsleyfy
 class EconsensusActionItemUpdateForm(ActionItemUpdateForm):
-    pass
+    class Meta:
+        model = ActionItem
+        exclude = ('completed_on', 'created_on', 'updated_on', 'origin', 'manager')
+        widgets = {
+            'description': forms.widgets.Textarea(
+                attrs={'class': 'description_text'}
+            )
+        }
+
 
 class FilterForm(forms.Form):
-    #this seems clunky...
+    # this seems clunky...
     list_choices = list(Decision.STATUS_CHOICES)
     list_choices.append(EXTRA_CHOICE)
     FILTER_CHOICES = tuple(list_choices)
     filtar = ChoiceField(choices=FILTER_CHOICES,
-                         label = _('Status'), #pylint: disable=E1102
+                         label=_('Status'),  # pylint: disable=E1102
                          initial=EXTRA_CHOICE[0],
                          required=False,
-                         widget = forms.Select(attrs={'onchange':'this.form.submit()'}))
+                         widget=forms.Select(attrs={'onchange':'this.form.submit()'}))
