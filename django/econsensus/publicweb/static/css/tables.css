@@ -87,6 +87,10 @@
         width: 7em;
         padding:0;
         }
+        
+        .object-list td.id.parent-id a {
+        position: relative;
+        }
        
        .object-list td:nth-of-type(1):before {
         content: "ID";
