@@ -729,14 +729,18 @@ span.excerpt {
 	margin:0 20px 20px 20px; 
 }
 
-#decision_detail .meta_people {
+#decision_detail .meta_people, #decision_detail .meta_resources {
     margin: 10px 20px 40px;
     padding: 0;
     font-size:0.8em;
     color:#333;
 }
 
-#decision_detail .meta_people dt {
+#decision_detail .meta_resources {
+	margin: 10px 20px 10px;
+}
+
+#decision_detail .meta_people dt, #decision_detail .meta_resources dt{
 	margin:0;
 	font-weight:bold;
 	clear:both;

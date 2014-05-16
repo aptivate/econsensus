@@ -12,6 +12,12 @@
 		<div class="summary">
 			<div class="description">
 				<p>{{ object.description|urlize|linebreaksbr }}</p>
+				{% if object.budget %}
+				<dl class="meta_resources">
+				    <dt>{% trans "Resources/Budget:" %}</dt>
+				    <dd>{{ object.budget }}</dd>
+				</dl>
+				{% endif %}
 				<dl class="meta_people">
 					<dt>{% trans "Added to list by: " %}</dt>
 					<dd> {{ object.author }}</dd>
