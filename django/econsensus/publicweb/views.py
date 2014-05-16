@@ -629,6 +629,11 @@ class EconsensusActionitemUpdateView(ActionItemUpdateView):
                   'pk': self.object.pk}
         return reverse('actionitem_detail', kwargs=kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super(EconsensusActionitemUpdateView, self).get_form_kwargs()
+        kwargs['prefix'] = "actionitem-{0}".format(self.object.id)
+        return kwargs
+
 
 class EconsensusActionitemListView(ActionItemListView):
     template_name = 'decision_list.html'
@@ -840,6 +845,7 @@ class OrganizationRedirectView(RedirectView):
         except:
             return reverse('organization_list')
 
+
 class UserNotificationSettings(ModelFormMixin, ProcessFormView,
         SingleObjectTemplateResponseMixin):
     model = NotificationSettings
@@ -893,6 +899,7 @@ class UserNotificationSettings(ModelFormMixin, ProcessFormView,
               *args,
               **kwargs
         )
+
 
 class DecisionSearchView(SearchView):
     DEFAULT_RESULTS_PER_PAGE = 10

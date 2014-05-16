@@ -17,6 +17,7 @@ from publicweb.models import NotificationSettings, change_observers, \
 from parsley.decorators import parsleyfy
 from actionitems.forms import ActionItemCreateForm, ActionItemUpdateForm
 from publicweb.extra_models import MAIN_ITEMS_NOTIFICATIONS_ONLY
+from actionitems.models import ActionItem
 
 
 class YourDetailsForm(forms.ModelForm):
@@ -81,6 +82,8 @@ class FeedbackForm(NotificationsForm):
 
 @parsleyfy
 class DecisionForm(NotificationsForm):
+
+    watch = forms.BooleanField(required=False, initial=True)
     minor_edit = forms.BooleanField(required=False, initial=False)
 
     def get_decision(self):
