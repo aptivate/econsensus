@@ -151,6 +151,7 @@
 
             replaceWithRemote(snippet_update_url, "#act_id_"+actionitempk+" .actionitem_feedback_wrapper");
             $('.actionitem-form').parsley();
+            $('#act_id_'+actionitempk+' .actionitems-date-widget').datepicker()
 			e.preventDefault();
 		});
 		
@@ -175,7 +176,7 @@
         }); 
 
 		$(".list.decision_actionitem").on("submit", "form", function (e) {
-            var form = $("ol.actionitem_list form"),
+            var form = $(this),
                 parameters = form.serialize();
             // This is necessary because otherwise javascript doesn't recognise
             // .split as a function. Don't know why this is.
@@ -205,11 +206,12 @@
         $(".list.decision_actionitem").on("click", ".actionitem_cancel", function (e) {
             e.stopPropagation();
             e.preventDefault();
-            var actionitem_form = $(".list.decision_actionitem form");
+            var actionitem_form = $(this).parents('.actionitem-form');
             var actionitempk = $(this).parents("li").attr("id").slice(7);
             var snippet_detail_url = actionitem_detail_url.replace(/\/0/, '/'+actionitempk);
-
+            
             replaceWithRemote(snippet_detail_url, actionitem_form.parent());
+            e.preventDefault();
         });
         	
 		/*

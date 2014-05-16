@@ -22,3 +22,4 @@ deploy/*.sql
 /.metadata
 /.settings
 /.project
+/reports

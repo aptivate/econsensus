@@ -6,7 +6,7 @@
 {% block main_content %}
     <form class="actionitem-form" action="{% url 'actionitem_update' decisionpk=object.origin_id pk=object.id %}" method="POST">{% csrf_token %}
         <div class="formset_item actionitem">
-            <div class="form_item{{form.description.html_name}}">
+            <div class="form_item {{form.description.name}}">
                 <span{% if form.description.errors %} class="error"{% endif %}>{{ form.description.errors }}{{ form.description }}</span>
             </div>
             <div class="form_item {{form.responsible.html_name}}">
