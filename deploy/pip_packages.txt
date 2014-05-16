@@ -4,7 +4,7 @@ virtualenv
 -e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
 
 # core django
-Django==1.4.11
+Django==1.4.13
 mysql-python==1.2.3
 South==0.7.5
 
@@ -36,11 +36,14 @@ pyelasticsearch==0.6
 Whoosh==2.5.4
 
 # for testing
-factory-boy==2.1.1
+factory-boy==2.3.1
 MiniMock==1.2.8
+mock==1.0.1
 selenium==2.34.0
 django-dynamic-fixture==1.6.5
 django-selenium==0.9.6
+
+pytz==2013d
 
 # only required for developer machines
 django-debug-toolbar==0.9.4
