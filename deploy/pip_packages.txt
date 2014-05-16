@@ -4,7 +4,7 @@ virtualenv
 -e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
 
 # core django
-Django==1.4.8
+Django==1.4.13
 mysql-python==1.2.3
 South==0.7.5
 
