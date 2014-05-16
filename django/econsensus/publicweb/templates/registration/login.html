@@ -27,10 +27,31 @@ Login
 {% block main_content %}
 <form id="short-form" method="post" action=".">
   {% csrf_token %} 
+  {% if form.non_field_errors %}
+    <ul class="errorlist">
+    {% for error in form.non_field_errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
   <p class="required">
+  {% if form.username.errors %}
+    <ul class="errorlist">
+    {% for error in form.username.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
     {{ form.username.label_tag }} {{ form.username }}
    </p>
   <p class="required">
+  {% if form.password.errors %}
+    <ul class="errorlist">
+    {% for error in form.password.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
     {{ form.password.label_tag }} {{ form.password }}
    </p>
    <p class="checkbox">
