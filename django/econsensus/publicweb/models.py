@@ -1,5 +1,5 @@
-#pylint: disable=E1102
-#config import is unused but required here for livesettings
+# pylint: disable=E1102
+# config import is unused but required here for livesettings
 import config  # pylint: disable=W0611
 import re
 
@@ -7,13 +7,9 @@ from notification import models as notification
 
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext_noop
+from django.utils.translation import ugettext_lazy as _, ugettext_noop
 from django.contrib.auth.models import User
-from django.contrib.comments.models import Comment
 from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
-from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db.models import Count
@@ -21,8 +17,6 @@ from django.db.models import Count
 from tagging.fields import TagField
 from organizations.models import Organization
 from managers import DecisionManager
-
-from custom_notification.utils import send_observation_notices_for, send_notice_for
 
 from publicweb.utils import get_excerpt
 
@@ -33,10 +27,19 @@ from publicweb.utils import get_excerpt
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
+    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW)
+from publicweb.observation_manager import ObservationManager
+# The NotificationSettings and OrganizationSettings models were moved to a
+# separate file to prevent circular imports. They need to be here or django
+# won't detect them.
+from publicweb.extra_models import (STANDARD_SENDING_HEADERS,
+    NotificationSettings, FEEDBACK_MAJOR_CHANGES)  # pylint: disable=W0611
+from django.dispatch.dispatcher import receiver
+from django.contrib.comments.models import Comment
+from django.contrib.comments.signals import comment_was_posted
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
-
-STANDARD_SENDING_HEADERS = {'Precedence': 'bulk', 'Auto-Submitted': 'auto-generated'}
 
 
 class Decision(models.Model):
@@ -54,7 +57,9 @@ class Decision(models.Model):
                   (ARCHIVED_STATUS, _('archived')),
                   )
 
-    #User entered fields
+    DEFAULT_SIZE = 140
+
+    # User entered fields
     description = models.TextField(verbose_name=_('Description'))
     decided_date = models.DateField(null=True, blank=True,
         verbose_name=_('Decided Date'))
@@ -78,7 +83,7 @@ class Decision(models.Model):
     tags = TagField(null=True, blank=True, editable=True,
                     help_text=TAGS_HELP_FIELD_TEXT)
     organization = models.ForeignKey(Organization)
-    #admin stuff
+    # admin stuff
     author = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_authored")
     editor = models.ForeignKey(User, blank=True, null=True, editable=False, related_name="%(app_label)s_%(class)s_edited")
     last_modified = models.DateTimeField(null=True, auto_now_add=True, verbose_name=_('Last Modified'))
@@ -88,8 +93,8 @@ class Decision(models.Model):
 
     watchers = generic.GenericRelation(notification.ObservedItem)
 
-    #Autocompleted fields
-    #should use editable=False?
+    # Autocompleted fields
+    # should use editable=False?
     excerpt = models.CharField(verbose_name=_('Excerpt'), max_length=255, blank=True)
     creation = models.DateField(null=True, auto_now_add=True,
         verbose_name=_('Creation'))
@@ -107,7 +112,7 @@ class Decision(models.Model):
 
         super(Decision, self).__init__(*args, **kwargs)
 
-    #methods
+    # methods
     def unresolvedfeedback(self):
         answer = _("No")
         linked_feedback = self.feedback_set.all()
@@ -149,7 +154,7 @@ class Decision(models.Model):
         return re.sub('\w+@', "%s@" % self.organization.slug, default_from_email)
 
     def get_feedback_statistics(self):
-        statistics = dict([(unicode(x),0) for x in Feedback.rating_names])
+        statistics = dict([(unicode(x), 0) for x in Feedback.rating_names])
         raw_data = self.feedback_set.values('rating').annotate(Count('rating'))
         for x in raw_data:
             key = unicode(Feedback.rating_names[x['rating']])
@@ -162,34 +167,25 @@ class Decision(models.Model):
         """
         return "<decision-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
-    def _update_notification_for_org_change(self):
-        self.watchers.all().delete()
-        org_users = self.organization.users.all()
-        for user in org_users:
-            notification.observe(self, user, 'decision_change')
-        for feedback in self.feedback_set.all():
-            feedback.watchers.all().delete()
-            for user in org_users:
-                notification.observe(feedback, user, 'feedback_change')
-            for comment in feedback.comments.all():
-                comment_watchers = notification.ObservedItem.objects.filter(
-                    content_type = ContentType.objects.get(name='comment'),
-                    object_id = comment.id)
-                comment_watchers.delete()
-                for user in org_users:
-                    notification.observe(comment, user, 'comment_change')
-
-    def _send_change_notifications(self):
-        headers = {'Message-ID' : self.get_message_id()}
+    def _send_change_notifications(self, notification_type):
+        headers = {'Message-ID': self.get_message_id()}
         headers.update(STANDARD_SENDING_HEADERS)
-        from_email = self.get_email()
-        send_observation_notices_for(self, headers=headers, from_email=from_email)
-        if self.editor and not notification.is_observing(self, self.editor):
-            send_notice_for(self, self.editor, 'decision_change', headers=headers, from_email=from_email)
+        org_users = self.organization.users.all()
+        observation_manager = ObservationManager()
+        observation_manager.send_notifications(org_users, self, notification_type, {"observed": self}, headers=headers, from_email=self.get_email())
+
+    def _send_minor_change_notifications(self):
+        self._send_change_notifications(MINOR_CHANGE)
+
+    def _send_major_change_notifications(self):
+        self._send_change_notifications(DECISION_CHANGE)
 
     def _is_same(self, other):
         for field in self.TRIGGER_FIELDS:
-            if getattr(self, field) != getattr(other, field):
+            my_field = getattr(self, field)
+            other_field = getattr(other, field)
+            if (my_field != other_field
+                and not (my_field == u'' and other_field is None)):
                 return False
         return True
 
@@ -201,11 +197,15 @@ class Decision(models.Model):
         if self.id:
             prev = self.__class__.objects.get(id=self.id)
             if prev.organization.id != self.organization.id:
-                self._update_notification_for_org_change()
-            if not self.minor_edit:
-                self._send_change_notifications()
+                self.watchers.all().delete()
+
             if not self._is_same(prev):
+                if not self.minor_edit:
+                    self._send_major_change_notifications()
+                else:
+                    self._send_minor_change_notifications()
                 self._update_last_modified()
+
         super(Decision, self).save(*args, **kwargs)
 
     def note_external_modification(self):
@@ -217,6 +217,7 @@ class Decision(models.Model):
         self._update_last_modified()
         # Go to superclass to avoid sending email notifications
         super(Decision, self).save()
+
 
 class Feedback(models.Model):
 
@@ -270,6 +271,48 @@ class Feedback(models.Model):
         """
         return "<feedback-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
+
+def send_decision_notifications(decision, users):
+    headers = {'Message-ID' : decision.get_message_id()}
+    headers.update(STANDARD_SENDING_HEADERS)
+    extra_context = {"observed": decision}
+    observation_manager = ObservationManager()
+    observation_manager.send_notifications(
+                    users, decision, DECISION_NEW, extra_context, headers,
+                    from_email=decision.get_email())
+
+# TODO: Test this
+def send_comment_notifications(comment, users):
+    headers = {'Message-ID' : "comment-%s@%s" % (comment.id, Site.objects.get_current().domain)}
+    headers.update(STANDARD_SENDING_HEADERS)
+    headers.update({'In-Reply-To' : comment.content_object.get_message_id()})
+
+    comment.content_object.decision.note_external_modification()
+
+    observation_manager = ObservationManager()
+
+    extra_context = dict({"observed": comment})
+    observation_manager.send_notifications(users, comment, COMMENT_NEW, extra_context, headers, from_email=comment.content_object.decision.get_email())
+
+
+def additional_message_required(user, decision, level):
+    organization = decision.organization
+
+    result = notification.is_observing(decision, user)
+
+    notification_settings, _ = NotificationSettings.objects.get_or_create(user=user, organization=organization)
+    result = not result and notification_settings.notification_level < level
+
+    return result
+
+def change_observers(watch, decision, watcher):
+    if watch:
+        if not notification.is_observing(decision, watcher):
+            notification.observe(decision, watcher, DECISION_CHANGE)
+    else:
+        if notification.is_observing(decision, watcher):
+            notification.stop_observing(decision, watcher)
+
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):
     """
@@ -282,12 +325,9 @@ def decision_signal_handler(sender, **kwargs):
     headers.update(STANDARD_SENDING_HEADERS)
     if kwargs.get('created', True):
         active_users = instance.organization.users.filter(is_active=True)
-        all_but_author = active_users.exclude(username=instance.author)
-        for user in active_users:
-            notification.observe(instance, user, 'decision_change')
-        extra_context = {}
-        extra_context.update({"observed": instance})
-        notification.send(all_but_author, "decision_new", extra_context, headers, from_email=instance.get_email())
+        extra_context = {"observed": instance}
+        observation_manager = ObservationManager()
+        observation_manager.send_notifications(active_users, instance, DECISION_NEW, extra_context, headers, from_email=instance.get_email())
 
 
 @receiver(models.signals.post_save, sender=Feedback, dispatch_uid="publicweb.models.feedback_signal_handler")
@@ -301,62 +341,62 @@ def feedback_signal_handler(sender, **kwargs):
     headers = {
         'Message-ID': instance.get_message_id(),
         'In-Reply-To': instance.decision.get_message_id(),
-        'References': instance.decision.get_message_id()
+        'References': ' '.join((
+            instance.decision.get_message_id(),
+            instance.get_message_id()))
     }
     headers.update(STANDARD_SENDING_HEADERS)
 
     instance.decision.note_external_modification()
 
+    observation_manager = ObservationManager()
+    org_users = list(instance.decision.organization.users.filter(is_active=True))
+    extra_context = dict({"observed": instance})
+
     if kwargs.get('created', True):
-        #author gets notified if the feedback is edited.
-        notification.observe(instance, instance.author, 'feedback_change')
-
-        #All watchers of parent get notified of new feedback.
-        all_observed_items_but_authors = list(instance.decision.watchers.exclude(user=instance.author))
-        observer_list = [x.user for x in all_observed_items_but_authors]
-        extra_context = dict({"observed": instance})
-        notification.send(observer_list, "feedback_new", extra_context, headers, from_email=instance.decision.get_email())
-    elif instance.author == instance.editor and instance.minor_edit:
-        # No notification if the edit is minor
-        # (An edit by someone other than the author never counts as minor.)
-        pass
+        # All watchers of parent get notified of new feedback.
+        observation_manager.send_notifications(org_users, instance, FEEDBACK_NEW, extra_context, headers, from_email=instance.decision.get_email())
     else:
-        from_email = instance.decision.get_email()
-        send_observation_notices_for(instance, headers=headers, from_email=from_email)
-        if instance.editor and not notification.is_observing(instance, instance.editor):
-            send_notice_for(instance, instance.editor, 'feedback_change', headers=headers, from_email=from_email)
+        # An edit by someone other than the author never counts as minor
+        if instance.author != instance.editor or not instance.minor_edit:
+            observation_manager.send_notifications(org_users, instance, FEEDBACK_CHANGE, extra_context, headers, from_email=instance.decision.get_email())
+        else:
+            observation_manager.send_notifications(org_users, instance, MINOR_CHANGE, extra_context, headers, from_email=instance.decision.get_email())
+
+@receiver(comment_was_posted, sender=Comment, dispatch_uid="publicweb.models.comment_posted_signal_handler")
+def comment_posted_signal_handler(sender, **kwargs):
+    """
+    If the user wishes to be a watcher, add them as a watcher and send them a
+    notification
+    """
+    comment = kwargs.get('comment')
+    post = kwargs['request'].POST.copy()
+
+    decision = comment.content_object.decision
+    user = comment.user
+
+    need_to_resend_message = additional_message_required(
+        user, decision, FEEDBACK_MAJOR_CHANGES
+    )
+
+    change_observers(post.get('watch', False), decision, user)
+
+    if need_to_resend_message:
+        send_comment_notifications(comment, [comment.user])
 
 
-@receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_signal_handler")
-def comment_signal_handler(sender, **kwargs):
-    """
-    All watchers of a decision will get a notification informing them of
-    new comment.
-    All watchers become observers of the comment.
-    """
+# TODO: Test this
+@receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_saved_signal_handler")
+def comment_saved_signal_handler(sender, **kwargs):
     instance = kwargs.get('instance')
-    headers = {
-        'Message-ID': "comment-%s@%s" % (instance.id, Site.objects.get_current().domain),
-        'In-Reply-To': instance.content_object.get_message_id(),
-        'References': ' '.join((
-            instance.content_object.decision.get_message_id(),
-            instance.content_object.get_message_id()))
-    }
-    headers.update(STANDARD_SENDING_HEADERS)
 
     instance.content_object.decision.note_external_modification()
 
     if kwargs.get('created', True):
-        # Creator gets notified if the comment is edited.
-        notification.observe(instance, instance.user, 'comment_change')
+        org_users = list(instance.content_object.decision.organization.users.filter(is_active=True))
+        # All watchers of parent get notified of new feedback.
+        send_comment_notifications(instance, org_users)
 
-        #All watchers of parent get notified of new comment.
-        all_observed_items_but_author = list(instance.content_object.decision.watchers.exclude(user=instance.user))
-        observer_list = [x.user for x in all_observed_items_but_author]
-        extra_context = dict({"observed": instance})
-        notification.send(observer_list, "comment_new", extra_context, headers, from_email=instance.content_object.decision.get_email())
-    else:
-        send_observation_notices_for(instance, headers=headers, from_email=instance.content_object.decision.get_email())
 
 def actionitem_signal_handler(sender, **kwargs):
     """

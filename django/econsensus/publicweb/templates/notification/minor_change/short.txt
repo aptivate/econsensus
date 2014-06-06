@@ -1,0 +1,5 @@
+{% if observed.decision %}
+[EC#{{observed.decision.id}}\{{observed.id}}] {{ observed.editor }} made a minor edit to your feedback.
+{% else %}
+[EC#{{ observed.id }}]-> {{ observed.status|capfirst }} Minor Edit: {{ observed.excerpt|safe }}
+{% endif %}

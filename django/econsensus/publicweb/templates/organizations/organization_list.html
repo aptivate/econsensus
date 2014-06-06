@@ -33,6 +33,12 @@
                 <a href="{% url 'organization_admin' organization.pk %}">{% trans "admin" %}</a>
             </li>
             {% endif %}
+            <li>
+                <a href="{% url 'notification_settings' organization.pk %}">{% trans "notification settings" %}</a>
+            </li>
+            <li>
+                <a href="{% url 'organization_user_leave' organization.pk %}">{% trans "leave" %}</a>
+            </li>
         </ul>
     </li>
 {% if forloop.last %}</ul>{% endif %}

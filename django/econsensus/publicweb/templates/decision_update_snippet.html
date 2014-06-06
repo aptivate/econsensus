@@ -85,10 +85,10 @@
 		</div>
 		<div class="update-controls">
             <div class="update-options">
-	            <div class="watch">
+	            <div class="watch" title="{{ form.watch.help_text }}">
 	                {{ form.watch.errors }}
 	                {{ form.watch }}
-	                <label for="id_watch">{% trans "Watch this" %}</label>
+	                <label for="id_watch">{% trans "Watch this conversation" %}</label>
 	            </div>
 	            {% if form.instance.id %}
 	            <div class="minor_edit" title="{% trans "Minor edits will not cause notification emails to be sent" %}">

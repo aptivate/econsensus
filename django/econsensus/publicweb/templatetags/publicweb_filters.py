@@ -34,3 +34,7 @@ def get_excerpt(value):
 @register.filter
 def get_actionitems(decision):
     return ActionItem.objects.filter(origin=decision.id)
+
+@register.filter
+def is_watching(user, decision):
+    return user in [watcher.user for watcher in decision.watchers.all()]

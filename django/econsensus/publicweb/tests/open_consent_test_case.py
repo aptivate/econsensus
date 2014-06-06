@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db.models.fields import FieldDoesNotExist
 from django.contrib.admin.options import ModelAdmin
 from django.contrib.admin.sites import AdminSite
-from django.contrib.comments import Comment
+from django.contrib.comments import Comment, signals
 from django.contrib.sites.models import Site
 from django.utils import timezone
 
@@ -14,6 +14,7 @@ from guardian.shortcuts import assign_perm
 
 from publicweb.models import Decision, Feedback
 from publicweb.tests.econsensus_testcase import EconsensusTestCase
+from custom_comments.forms import CustomCommentForm
 
 class EconsensusFixtureTestCase(EconsensusTestCase):
     fixtures = ['organizations.json', 'users.json']
@@ -70,7 +71,16 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         for (key,value) in required.items():
             if key not in kwargs.keys():
                 kwargs[key] = value
-        return self.make_model_instance(Comment, **kwargs)
+        
+        comment = self.make_model_instance(Comment, **kwargs)
+        del kwargs['comment']
+        self.send_comment_posted_signal(comment, **kwargs)
+        return comment
+    
+    def send_comment_posted_signal(self, comment, **kwargs):
+        request = RequestFactory().post('/', kwargs)
+        signals.comment_was_posted.send(Comment, 
+            request=request, comment=comment)
 
     def make_model_instance(self, model, **kwargs):
         instance = model()
@@ -102,19 +112,23 @@ class EconsensusFixtureTestCase(EconsensusTestCase):
         response = self.client.post(path, post_dict)
         return Decision.objects.get(description=description)
 
-    def create_feedback_through_browser(self, idd):
+    def create_feedback_through_browser(self, idd, watch=True):
         description = 'a pulvinar tortor bibendum nec'
         path = reverse('publicweb_feedback_create', args=[idd])
         post_dict = {'description': description,
                      'rating': Feedback.COMMENT_STATUS }
+        if watch:
+            post_dict['watch'] = watch
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
 
     def update_feedback_through_browser(self, idd,
-            description = 'nibh ut dignissim. Sed a aliquet quam'):
+            description = 'nibh ut dignissim. Sed a aliquet quam', watch=True):
         path = reverse('publicweb_feedback_update', args=[idd])
         post_dict = {'description': description,
-                     'rating': Feedback.COMMENT_STATUS }
+                     'rating': Feedback.COMMENT_STATUS}
+        if watch:
+            post_dict['watch'] = watch
         self.client.post(path, post_dict)
         return Feedback.objects.get(description=description)
 

@@ -15,6 +15,10 @@ from organizations.models import Organization
 from publicweb.tests.econsensus_testcase import EconsensusTestCase
 from publicweb.tests.factories import DecisionFactory, OrganizationFactory, \
     OrganizationUserFactory, UserFactory
+from django.contrib.contenttypes.models import ContentType
+from notification.models import ObservedItem, NoticeType
+from signals.management import DECISION_CHANGE
+import notification
 
 
 class TestDecisionListView(TestCase):
@@ -127,6 +131,7 @@ class TestDecisionUpdateView(EconsensusTestCase):
         org = org_user.organization
         user = org_user.user
         decision = DecisionFactory(organization=org)
+        notification.models.observe(decision, user, DECISION_CHANGE)
         # Confirm decision has a single watcher
         self.assertEqual(decision.watchers.count(), 1)
         # Get the view ready
@@ -227,32 +232,6 @@ class TestFeedbackCreateView(TestCase):
         feedback_create_view.form_valid(form)
         feedback = decision.feedback_set.get()
         self.assertEqual(feedback.author, user)
-
-
-class TestDecisionModel(TestCase):
-
-    def test_active_users_of_org_added_to_watchers_of_new_decision(self):
-        """
-        See no reason to have this in a view test, this behavior is almost
-        entirely tested already in the model tests in tests/decisions_test.py
-        Suggest, moving this test to there.
-        """
-        org = OrganizationFactory()
-        active_org_user1 = OrganizationUserFactory(
-            organization=org)
-        active_org_user2 = OrganizationUserFactory(
-            organization=org)
-        inactive_org_user = OrganizationUserFactory(
-            user = UserFactory(is_active=False),
-            organization = org)
-        active_other_org_user = OrganizationUserFactory()
-        
-        decision = DecisionFactory(organization=org)
-        watching_user_ids = decision.watchers.values_list('user_id', flat=True)
-        self.assertIn(active_org_user1.user.id, watching_user_ids)
-        self.assertIn(active_org_user2.user.id, watching_user_ids)
-        self.assertEqual(len(watching_user_ids), 2)
-
 
 class TestOrganizationRedirectView(TestCase):
 
