@@ -36,9 +36,6 @@
             <li>
                 <a href="{% url 'notification_settings' organization.slug %}">{% trans "notification settings" %}</a>
             </li>
-            <li>
-                <a href="{% url 'organization_user_leave' organization.pk %}">{% trans "leave" %}</a>
-            </li>
         </ul>
     </li>
 {% if forloop.last %}</ul>{% endif %}
