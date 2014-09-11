@@ -1,0 +1,1 @@
+[EC#{{ observed.id }}]-> {{ observed.status|capfirst }}: {{ observed.excerpt|safe }}

@@ -1,4 +1,4 @@
-This is to let you know that {{ observed.editor }} has changed the following item.
+{{ observed.editor }} has moved an item from "{{ observed.last_status|capfirst }}" to "{{ observed.status|capfirst }}"
 
 "{{ observed.description|safe }}"
 
