@@ -28,7 +28,7 @@ from publicweb.utils import get_excerpt
 
 from south.modelsinspector import add_introspection_rules
 from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
-    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW)
+    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE)
 from publicweb.observation_manager import ObservationManager
 # The NotificationSettings and OrganizationSettings models were moved to a
 # separate file to prevent circular imports. They need to be here or django
@@ -104,7 +104,7 @@ class Decision(models.Model):
     # Fields that'll trigger last_modified update upon change
     TRIGGER_FIELDS = ('description', 'decided_date', 'effective_date', 'review_date',
               'expiry_date', 'deadline', 'archived_date', 'budget', 'people',
-              'meeting_people', 'status', 'excerpt', 'creation')
+              'meeting_people', 'excerpt', 'creation')
 
     def __init__(self, *args, **kwargs):
         # Unpersisted flag for suppressing notifications at save time
@@ -199,7 +199,13 @@ class Decision(models.Model):
             if prev.organization.id != self.organization.id:
                 self.watchers.all().delete()
 
-            if not self._is_same(prev):
+            notification_sent = False
+            if self.status != prev.status:
+                self._send_change_notifications(DECISION_STATUS_CHANGE)
+                self._update_last_modified()
+                notification_sent = True
+
+            if not self._is_same(prev) and not notification_sent:
                 if not self.minor_edit:
                     self._send_major_change_notifications()
                 else:
