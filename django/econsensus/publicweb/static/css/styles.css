@@ -56,6 +56,11 @@ table.user_list {
 
 .user_list th {
     text-align: left;
+    padding: 5px;
+}
+
+.user_list td {
+    padding: 5px;
 }
 
 /* General Styles */
@@ -91,9 +96,9 @@ h4 { font-size:1em;}
 h5 { font-size:1em;}
 h6 { font-size:1em;}
 
-th, td {
+/*th, td {
     padding: 5px;
-}
+}*/
 
 a.button {
 	line-height:2.5em;
