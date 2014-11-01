@@ -56,6 +56,11 @@ table.user_list {
 
 .user_list th {
     text-align: left;
+    padding: 5px;
+}
+
+.user_list td {
+    padding: 5px;
 }
 
 /* General Styles */
@@ -138,6 +143,7 @@ input {
 .button:hover {
     cursor: pointer;
 }
+
 
 /* Main Blocks */
 

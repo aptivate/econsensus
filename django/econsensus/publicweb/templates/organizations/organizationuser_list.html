@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block main_content %}
+
 <br />
 <br />
 <ul>
@@ -30,7 +31,7 @@
 {% if organization_user.user.is_active %}
 
 <tr>
-	<td><h3>{{ organization_user.user }}</h3></td>
+	<td>{{ organization_user.user }}</td>
 	<td>{{ organization_user.name }}</td>
 	<td>{{ organization_user.user.email }}</td>
 	<td>{{ organization_user.get_role|capfirst }}</td>
