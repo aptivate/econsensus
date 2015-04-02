@@ -320,8 +320,15 @@ input {
     text-indent:70px;
 }
 
-#your-organizations li.group_list_member  {
-    font-weight: bold;
+#your-organizations ul.group_list ul li:first-child  {
+    border-width:0;
+    padding-left:0;
+}
+
+#your-organizations ul.group_list ul li  {
+    display:inline;
+    border-left:1px solid #666;
+    padding:0 0.5em;
 }
 
 #your-organizations h3.groups_title {

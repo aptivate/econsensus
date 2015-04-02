@@ -13,5 +13,9 @@ def is_member_of_group(group, user):
     return result
 
 @register.filter
+def is_group_owner(group, user):
+    return group.owner.user == user
+
+@register.filter
 def get_organization_groups(org):
     return Group.objects.filter(organization=org)

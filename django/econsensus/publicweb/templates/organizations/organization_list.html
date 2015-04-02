@@ -35,18 +35,29 @@
 </ul>
 <h3 class = "groups_title">Subgroups:</h3>
 <ul class="group_list">
-    {% for group in organization|get_organization_groups %}
-    {% if group|is_member_of_group:user %}
-        <li class="group_list_member">
-            <a href="{% url 'group_detail' organization.pk group.pk %}"> {{ group }}</a>
-        {% else %}
-        <li>
-            {{ group }} <a href="{% url 'join_group' organization.pk group.pk %}">Join</a>
+{% for group in organization|get_organization_groups %}
+    <li>
+        <ul>
+            {% if group|is_member_of_group:user %}
+            <li>
+                <a href="{% url 'group_detail' organization.pk group.pk %}"> {{ group }}</a>
+            </li>
+            <li>
+                <a href="{% url 'leave_group' organization.pk group.pk  %}"> {% trans "leave" %}</a>
+             </li>
+            {% else %}
+            <li>
+                {{ group }}
+            </li>
+            <li>
+                <a href="{% url 'join_group' organization.pk group.pk %}">{% trans "join" %}</a>
+            </li>
         {% endif %}
-    {% empty %}
-    <li> <p> There are no subgroups for this organization. </p> </li>
+        </ul>
     </li>
-    {% endfor %}
+{% empty %}
+<p> There are no subgroups for this organization. </p>
+{% endfor %}
 </ul>
 {% empty %}
 <p>{% trans "You do not currently belong to any organizations."%}</p>
