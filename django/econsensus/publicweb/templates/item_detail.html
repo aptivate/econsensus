@@ -358,9 +358,11 @@
 {% block main_content %}
 
 {% if not organization|is_member:user %}
-	<p>{% trans "You are not a member of this organization." %}<p>
+<p>{% trans "You are not a member of this organization." %}<p>
+
 {% else %}
 {% include "decision_detail_snippet.html" %}
+
 {% switch "actionitems" %}
 <div class="envelope">
     <h2 class="page_title actionitem hide" title="click to hide / unhide">{% trans "Action Items" %}</h2>
@@ -380,19 +382,19 @@
 </div>
 {% endswitch %}
 <div class="envelope">
-    <h2 class="page_title feedback hide" title="click to hide / unhide"">{% trans "Feedback" %}</h2>
-    {% if "edit_decisions_feedback" in organization_permissions %}
-    <div class="add_anchor" id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
-    {% endif %}
-    <div class="list decision_feedback">
-        <ol class="feedback_list">
-            {% for feedback in object.feedback_set.all %}
-            {% include "feedback_detail_snippet.html" with object=feedback %}
-            {% empty %}
-            <li class="no_feedback">{% trans "No feedback yet." %}</li>
-            {% endfor %}
-        </ol>
-    </div>
+  <h2 class="page_title feedback hide" title="click to hide / unhide">{% trans "Feedback" %}</h2>
+  {% if "edit_decisions_feedback" in organization_permissions %}
+  <div class="add_anchor" id="feedback_add_anchor"><a class="button add_feedback" href='{% url 'publicweb_feedback_create' object.id %}'><span>Add new feedback</span></a></div>
+  {% endif %}
+  <div class="list decision_feedback">
+    <ol class="feedback_list">
+      {% for feedback in object.feedback_set.all %}
+      {% include "feedback_detail_snippet.html" with object=feedback %}
+      {% empty %}
+      <li class="no_feedback">{% trans "No feedback yet." %}</li>
+      {% endfor %}
+    </ol>
+  </div>
 </div>
 {% endif %}
 {% endblock %}
