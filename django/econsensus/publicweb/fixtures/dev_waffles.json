@@ -1,0 +1,13 @@
+[
+    {
+        "fields": {
+            "active": true,
+            "created": "2015-05-11T14:54:50Z",
+            "modified": "2015-05-11T14:55:00.609Z",
+            "name": "actionitems",
+            "note": "Enable action items"
+        },
+        "model": "waffle.switch",
+        "pk": 1
+    }
+]
