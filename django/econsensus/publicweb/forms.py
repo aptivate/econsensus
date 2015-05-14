@@ -2,6 +2,7 @@
 
 from django import forms
 from models import Decision, Feedback
+from organizations.models import OrganizationOwner, OrganizationUser
 from django.contrib.auth.models import User
 
 
@@ -152,3 +153,12 @@ class NotificationSettingsForm(forms.ModelForm):
         widgets = {
             'notification_level': RadioSelect
         }
+
+class ChangeOwnerForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationOwner
+        fields = ['organization_user']
+    def __init__(self, *args, **kwargs):
+        currentOrgPk = kwargs.pop("currentOrgPk")
+        super(ChangeOwnerForm, self).__init__(*args, **kwargs)
+        self.fields['organization_user'].queryset = OrganizationUser.objects.filter(organization=currentOrgPk)

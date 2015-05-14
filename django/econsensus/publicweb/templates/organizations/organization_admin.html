@@ -27,6 +27,10 @@
     <li>
         <a href="{% url 'organization_delete' organization.pk %}">{% trans "Delete Organization" %}</a>
     </li>
+    <li>
+        <a href="{% url 'organization_change_owner' organization.pk %}">{% trans "Change Owner" %}</a>
+    </li>
+
     {% endif %}
 </ul>
 

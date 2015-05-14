@@ -18,13 +18,13 @@ import unicodecsv
 
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
-from organizations.models import Organization
+from organizations.models import Organization, OrganizationOwner, OrganizationUser
 from haystack.views import SearchView
 from waffle import switch_is_active
 
 from publicweb.forms import (YourDetailsForm,
         NotificationSettingsForm, EconsensusActionItemCreateForm,
-        EconsensusActionItemUpdateForm, DecisionForm, FeedbackForm)
+        EconsensusActionItemUpdateForm, ChangeOwnerForm, DecisionForm, FeedbackForm)
 from publicweb.models import Decision, Feedback, NotificationSettings
 
 from actionitems.models import ActionItem
@@ -970,3 +970,16 @@ class RemoveWatcher(BaseWatcherView):
         user = self.get_user()
         notification.stop_observing(decision, user)
         return HttpResponseRedirect(request.GET['next'])
+
+
+class ChangeOwnerView(UpdateView):
+    model = OrganizationOwner
+    form_class = ChangeOwnerForm
+    template_name_suffix = '_update_form'
+    def get_success_url(self):
+        return reverse('organization_admin',
+                kwargs={'organization_pk': self.object.organization.pk})
+    def get_form_kwargs(self):
+        kwargs = super(ChangeOwnerView, self).get_form_kwargs()
+        kwargs.update({'currentOrgPk': self.object.organization.pk})
+        return kwargs

@@ -7,7 +7,7 @@ from views import (DecisionCreate, DecisionUpdate, DecisionDetail, DecisionList,
                     FeedbackUpdate, EconsensusActionitemCreateView,
                     EconsensusActionitemUpdateView,
                     EconsensusActionitemListView, OrganizationRedirectView,
-                    YourDetails, UserNotificationSettings,
+                    YourDetails, ChangeOwnerView, UserNotificationSettings,
                     EconsensusActionitemDetailView, DecisionSearchView)
 
 from models import Feedback
@@ -112,4 +112,7 @@ urlpatterns = patterns('econsensus.publicweb.views',
     url(r'^$',
         OrganizationRedirectView.as_view(),
         name='publicweb_root'),
+    url(r'^(?P<pk>[\d]+)/changeOwner/$',
+        ChangeOwnerView.as_view(),
+        name='organization_change_owner'),
     )
