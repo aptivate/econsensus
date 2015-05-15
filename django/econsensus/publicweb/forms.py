@@ -159,6 +159,6 @@ class ChangeOwnerForm(forms.ModelForm):
         model = OrganizationOwner
         fields = ['organization_user']
     def __init__(self, *args, **kwargs):
-        currentOrgPk = kwargs.pop("currentOrgPk")
+        current_org_pk = kwargs.pop("current_org_pk")
         super(ChangeOwnerForm, self).__init__(*args, **kwargs)
-        self.fields['organization_user'].queryset = OrganizationUser.objects.filter(organization=currentOrgPk)
+        self.fields['organization_user'].queryset = OrganizationUser.objects.filter(organization=current_org_pk)
