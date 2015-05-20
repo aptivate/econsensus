@@ -34,7 +34,7 @@ from publicweb.observation_manager import ObservationManager
 # separate file to prevent circular imports. They need to be here or django
 # won't detect them.
 from publicweb.extra_models import (STANDARD_SENDING_HEADERS,
-    NotificationSettings, FEEDBACK_MAJOR_CHANGES)  # pylint: disable=W0611
+    NotificationSettings, MINOR_CHANGES_NOTIFICATIONS)  # pylint: disable=W0611
 from django.dispatch.dispatcher import receiver
 from django.contrib.comments.models import Comment
 from django.contrib.comments.signals import comment_was_posted
@@ -311,6 +311,7 @@ def additional_message_required(user, decision, level):
 
     return result
 
+
 def change_observers(watch, decision, watcher):
     if watch:
         if not notification.is_observing(decision, watcher):
@@ -369,6 +370,7 @@ def feedback_signal_handler(sender, **kwargs):
         else:
             observation_manager.send_notifications(org_users, instance, MINOR_CHANGE, extra_context, headers, from_email=instance.decision.get_email())
 
+
 @receiver(comment_was_posted, sender=Comment, dispatch_uid="publicweb.models.comment_posted_signal_handler")
 def comment_posted_signal_handler(sender, **kwargs):
     """
@@ -381,27 +383,13 @@ def comment_posted_signal_handler(sender, **kwargs):
     decision = comment.content_object.decision
     user = comment.user
 
-    need_to_resend_message = additional_message_required(
-        user, decision, FEEDBACK_MAJOR_CHANGES
-    )
-
     change_observers(post.get('watch', False), decision, user)
 
-    if need_to_resend_message:
-        send_comment_notifications(comment, [comment.user])
+    decision.note_external_modification()
 
+    org_users = list(comment.content_object.decision.organization.users.filter(is_active=True))
 
-# TODO: Test this
-@receiver(models.signals.post_save, sender=Comment, dispatch_uid="publicweb.models.comment_saved_signal_handler")
-def comment_saved_signal_handler(sender, **kwargs):
-    instance = kwargs.get('instance')
-
-    instance.content_object.decision.note_external_modification()
-
-    if kwargs.get('created', True):
-        org_users = list(instance.content_object.decision.organization.users.filter(is_active=True))
-        # All watchers of parent get notified of new feedback.
-        send_comment_notifications(instance, org_users)
+    send_comment_notifications(comment, org_users)
 
 
 def actionitem_signal_handler(sender, **kwargs):

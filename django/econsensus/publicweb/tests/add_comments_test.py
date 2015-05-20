@@ -14,6 +14,7 @@ from signals.management import DECISION_CHANGE
 from publicweb.extra_models import (NotificationSettings,
     FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES)
 
+
 class AddCommentsTest(SimpleTestCase):
 
     @patch('notification.models.observe')
@@ -31,6 +32,7 @@ class AddCommentsTest(SimpleTestCase):
         observe):
         user_1 = N(User, id=1)
         decision = N(Decision, author=user_1, editor=user_1, id=1)
+        decision.note_external_modification = Mock()
         feedback = N(Feedback, author=user_1, editor=user_1, decision=decision,
                      id=1)
 
@@ -80,6 +82,7 @@ class AddCommentsTest(SimpleTestCase):
     ):
         user_1 = N(User, id=1)
         decision = N(Decision, author=user_1, editor=user_1, id=1)
+        decision.note_external_modification = Mock()
         feedback = N(Feedback, author=user_1, editor=user_1, decision=decision,
                      id=1)
 
@@ -127,6 +130,7 @@ class AddCommentsTest(SimpleTestCase):
     ):
         user_1 = N(User, id=1)
         decision = N(Decision, author=user_1, editor=user_1, id=1)
+        decision.note_external_modification = Mock()
         feedback = N(Feedback, author=user_1, editor=user_1, decision=decision,
                      id=1)
 
@@ -174,6 +178,7 @@ class AddCommentsTest(SimpleTestCase):
     ):
         user_1 = N(User, id=1)
         decision = N(Decision, author=user_1, editor=user_1, id=1)
+        decision.note_external_modification = Mock()
         feedback = N(Feedback, author=user_1, editor=user_1, decision=decision,
                      id=1)
 

@@ -10,6 +10,7 @@ from publicweb.tests.factories import DecisionFactory, \
                                         FeedbackFactory, \
                                         UserFactory, \
                                         CommentFactory
+from publicweb.tests.open_consent_test_case import EconsensusFixtureTestCase
 
 import datetime
 from mock import patch, MagicMock
@@ -26,7 +27,7 @@ def now_iter(start):
 
 magic_mock = MagicMock(wraps=timezone.now, side_effect=now_iter(timezone.now()))
 @patch("django.utils.timezone.now", new=magic_mock)
-class DecisionLastModifiedTest(TestCase):
+class DecisionLastModifiedTest(EconsensusFixtureTestCase):
     """
     Tests updating of 'last_modified' date on Decision.
     """
@@ -60,7 +61,8 @@ class DecisionLastModifiedTest(TestCase):
     def test_add_comment_triggers_update(self):
         feedback = FeedbackFactory(decision=self.decision, author=self.user)
         orig_last_modified = self.last_modified()
-        CommentFactory(content_object=feedback, user=self.user)
+        comment = CommentFactory(content_object=feedback, user=self.user)
+        self.send_comment_posted_signal(comment)
         self.assertTrue(orig_last_modified < self.last_modified())
 
     def test_add_watcher_triggers_no_update(self):
@@ -68,6 +70,7 @@ class DecisionLastModifiedTest(TestCase):
         notification.observe(self.decision, UserFactory(), DECISION_CHANGE)
         self.decision.save()
         self.assertTrue(orig_last_modified == self.last_modified())
+
 
 class ModelTest(TestCase):
     def test_get_author_name(self):
@@ -77,6 +80,7 @@ class ModelTest(TestCase):
         user = UserFactory()
         feedback = FeedbackFactory(author=user)
         self.assertEqual(feedback.get_author_name(), user.username)
+
 
 class ModelTestSlow(DecisionTestCase):
 
