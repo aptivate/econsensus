@@ -30,7 +30,8 @@ from tagging.fields import TagField
 
 from managers import DecisionManager
 from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
-    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE)
+    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE,
+    ACTIONITEM_NEW)
 
 
 from publicweb.observation_manager import ObservationManager
@@ -281,6 +282,13 @@ class Feedback(models.Model):
         return "<feedback-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
 
+def get_action_item_message_id(actionitem):
+    """
+    Generates a message id that can be used in email headers
+    """
+    return "<actionitem-%s@%s>" % (actionitem.id, Site.objects.get_current().domain)
+
+
 def send_decision_notifications(decision, users):
     headers = {'Message-ID' : decision.get_message_id()}
     headers.update(STANDARD_SENDING_HEADERS)
@@ -289,6 +297,7 @@ def send_decision_notifications(decision, users):
     observation_manager.send_notifications(
                     users, decision, DECISION_NEW, extra_context, headers,
                     from_email=decision.get_email())
+
 
 # TODO: Test this
 def send_comment_notifications(comment, users):
@@ -322,6 +331,7 @@ def change_observers(watch, decision, watcher):
     else:
         if notification.is_observing(decision, watcher):
             notification.stop_observing(decision, watcher)
+
 
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):
@@ -405,6 +415,21 @@ def actionitem_signal_handler(sender, **kwargs):
     if isinstance(instance.origin, Decision):
         instance.origin.note_external_modification()
 
+        org_users = list(instance.origin.organization.users.filter(is_active=True))
+
+        observation_manager = ObservationManager()
+        extra_context = dict({"observed": instance})
+
+        headers = {
+            'Message-ID': get_action_item_message_id(instance),
+            'In-Reply-To': instance.origin.get_message_id(),
+            'References': ' '.join((
+                instance.origin.get_message_id(),
+                get_action_item_message_id(instance)))
+        }
+        headers.update(STANDARD_SENDING_HEADERS)
+
+        observation_manager.send_notifications(org_users, instance.origin, ACTIONITEM_NEW, extra_context, headers, from_email=instance.origin.get_email())
 
 # We can't register our ActionItem post-save signal handler, as importing the
 # ActionItem model in this file would result in a circular dependency. So
