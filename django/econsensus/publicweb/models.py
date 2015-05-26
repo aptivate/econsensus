@@ -5,20 +5,19 @@ import re
 
 from notification import models as notification
 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
+from django.contrib.comments.signals import comment_was_posted
+from django.contrib.contenttypes import generic
+from django.contrib.sites.models import Site
 from django.db import models
+from django.db.models import Count
+from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _, ugettext_noop
-from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.db.models import Count
 
-from tagging.fields import TagField
 from organizations.models import Organization
-from managers import DecisionManager
-
-from publicweb.utils import get_excerpt
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -27,17 +26,21 @@ from publicweb.utils import get_excerpt
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from tagging.fields import TagField
+
+from managers import DecisionManager
 from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
     FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE)
+
+
 from publicweb.observation_manager import ObservationManager
 # The NotificationSettings and OrganizationSettings models were moved to a
 # separate file to prevent circular imports. They need to be here or django
 # won't detect them.
 from publicweb.extra_models import (STANDARD_SENDING_HEADERS,
     NotificationSettings, MINOR_CHANGES_NOTIFICATIONS)  # pylint: disable=W0611
-from django.dispatch.dispatcher import receiver
-from django.contrib.comments.models import Comment
-from django.contrib.comments.signals import comment_was_posted
+from publicweb.utils import get_excerpt
+
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
