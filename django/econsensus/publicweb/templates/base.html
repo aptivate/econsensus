@@ -28,7 +28,7 @@
 		<div id="header">
 			<h1>
 			  <a href="/"><img alt="Econsensus" src="{{ STATIC_URL }}images/econsensus-logo-header.png"/></a>
-			  {% if organization %} 
+			  {% if organization and organization|is_member:user %} 
 			  <span class="user-org not_translated">{{ organization.name }}</span>
 			  {% endif %}
 			</h1>
