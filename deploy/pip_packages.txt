@@ -1,7 +1,7 @@
 # deploy stuff
+setuptools==0.9.8
 fabric==1.4
 virtualenv
-setuptools>=0.8
 -e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
 
 # core django
