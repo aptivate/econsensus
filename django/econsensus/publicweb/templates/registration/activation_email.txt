@@ -1,7 +1,21 @@
 {% load i18n %}
 {% load url from future %}
-{% trans "Activate account at" %} {{ site.name }}:
+
+{% trans "Hi there!" %}
+
+
+{% blocktrans %}We've had a request to set up an account for you at Econsensus.
+To verify that the email given during the sign-up process is the correct one,
+please click the link below, so that we can activate your account.{% endblocktrans %}
 
 http://{{ site.domain }}{% url 'registration_activate' activation_key %}
 
-{% blocktrans %}Link is valid for {{ expiration_days }} days.{% endblocktrans %}
+
+{% blocktrans %}Link will be valid for {{ expiration_days }} days.{% endblocktrans %}
+
+
+{% trans "If you don't know why you are receiving this email, please ignore it." %}
+
+
+{% trans "All the best," %}
+{% trans "Your friendly" %} <a href="https://econsensus.org/">Econsensus</a> {% trans "server." %}
