@@ -100,20 +100,35 @@ class HtmlTest(EconsensusFixtureTestCase):
         decision = Decision.objects.get(description='ullamcorper nunc')
         self.assertNotEqual(decision.author, self.user)
         
-    def test_meeting_people_shown(self):
+    def test_meeting_people_shown_for_decision(self):
         test_string = 'vitae aliquet tellus'
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
         response = self.client.get(path)
         self.assertContains(response, 'meeting_people')
-        post_dict = {'description': 'Quisque sapien justo', 
-                     'meeting_people': test_string, 
-                     'status': Decision.PROPOSAL_STATUS}
+        post_dict = {'description': 'Quisque sapien justo',
+                     'meeting_people': test_string,
+                     'status': Decision.DECISION_STATUS}
         response = self.client.post(path, post_dict)
         self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, post_dict['status']]))
         decision = Decision.objects.get(meeting_people=test_string)
         path = reverse('publicweb_item_detail', args=[decision.id])
         response = self.client.get(path)
         self.assertContains(response, test_string)
+
+    def test_meeting_people_not_shown_for_proposal(self):
+        test_string = 'vitae aliquet tellus'
+        path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
+        response = self.client.get(path)
+        self.assertContains(response, 'meeting_people')
+        post_dict = {'description': 'Quisque sapien justo',
+                     'meeting_people': test_string,
+                     'status': Decision.PROPOSAL_STATUS}
+        response = self.client.post(path, post_dict)
+        self.assertRedirects(response, reverse('publicweb_item_list', args=[self.bettysorg.slug, post_dict['status']]))
+        proposal = Decision.objects.get(meeting_people=test_string)
+        path = reverse('publicweb_item_detail', args=[proposal.id])
+        response = self.client.get(path)
+        self.assertNotContains(response, test_string)
         
     def test_h2_header_on_form_matches_selected_status(self):
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.PROPOSAL_STATUS])
