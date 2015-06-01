@@ -118,8 +118,6 @@ class HtmlTest(EconsensusFixtureTestCase):
     def test_meeting_people_not_shown_for_proposal(self):
         test_string = 'vitae aliquet tellus'
         path = reverse('publicweb_decision_create', args=[self.bettysorg.slug, Decision.DECISION_STATUS])
-        response = self.client.get(path)
-        self.assertContains(response, 'meeting_people')
         post_dict = {'description': 'Quisque sapien justo',
                      'meeting_people': test_string,
                      'status': Decision.PROPOSAL_STATUS}
