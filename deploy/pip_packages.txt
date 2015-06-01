@@ -51,6 +51,6 @@ django-debug-toolbar==0.9.4
 # TODO: remove when bug fix release is available
 # working around bug
 # https://bitbucket.org/logilab/astroid/issue/3/error-after-upgrade-to-pylint-10
-hg+https://bitbucket.org/logilab/astroid
+astroid==1.2.1
 # pylint 1.4 does not support python 2.6, so until we upgrade to 2.7 we need
 pylint<1.3
