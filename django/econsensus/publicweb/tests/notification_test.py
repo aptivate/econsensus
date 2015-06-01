@@ -190,34 +190,6 @@ class NotificationTest(DecisionTestCase):
         user_list = [user_object.email for user_object in all_members]
         self.assertItemsEqual(user_list, outbox_to)
 
-    def test_changed_feedback_notification(self):
-        """
-        With no settings, betty shouldn't get messages about comments relating
-        to decisions she isn't watching
-        """
-        NotificationSettings.objects.create(
-            user=self.charlie,
-            organization=self.bettysorg,
-            notification_level=FEEDBACK_MAJOR_CHANGES
-        )
-        # Betty creates a decision
-        decision = self.create_decision_through_browser()
-        decision.watchers.all().delete()
-        # Charlie adds feedback to it
-        self.login('charlie')
-        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
-        feedback = self.create_feedback_through_browser(decision.id)
-        mail.outbox = []
-        # Betty changes the feedback...
-        self.login('betty')
-        assign_perm('edit_decisions_feedback', self.user, self.bettysorg)
-        self.update_feedback_through_browser(feedback.id, watch=False)
-        # Check email
-        outbox = getattr(mail, 'outbox')
-        outbox_to = [to for to_list in outbox for to in to_list.to]
-        user_list = [self.charlie.email]
-        self.assertListEqual(user_list, outbox_to)
-
     def test_emails_come_from_organization(self):
         users_orgs = Organization.active.get_for_user(self.user)
         self.create_settings(self.user, FEEDBACK_ADDED_NOTIFICATIONS,
