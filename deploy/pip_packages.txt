@@ -1,5 +1,4 @@
 # deploy stuff
-setuptools==0.9.8
 fabric==1.4
 virtualenv
 -e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
@@ -37,7 +36,7 @@ pyelasticsearch==0.6
 Whoosh==2.5.4
 
 # for testing
-factory-boy==2.3.1
+factory-boy==2.1.1
 MiniMock==1.2.8
 mock==1.0.1
 selenium==2.34.0
