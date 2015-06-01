@@ -235,7 +235,7 @@ class ObservationManagerTest(SimpleTestCase):
               organization=OrganizationFactory.build()
         )
         self.assertEqual(
-             MAIN_ITEMS_NOTIFICATIONS_ONLY, settings.notification_level
+             FEEDBACK_MAJOR_CHANGES, settings.notification_level
         )
 
     @patch('publicweb.models.Decision.watchers', new=MockQueryset())
