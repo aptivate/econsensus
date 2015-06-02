@@ -31,7 +31,7 @@ from tagging.fields import TagField
 from managers import DecisionManager
 from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
     FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE,
-    ACTIONITEM_NEW)
+    ACTIONITEM_NEW, ACTIONITEM_CHANGE)
 
 
 from publicweb.observation_manager import ObservationManager
@@ -415,6 +415,8 @@ def actionitem_signal_handler(sender, **kwargs):
     if isinstance(instance.origin, Decision):
         instance.origin.note_external_modification()
 
+        ACTION = ACTIONITEM_NEW if kwargs['created'] else ACTIONITEM_CHANGE
+
         org_users = list(instance.origin.organization.users.filter(is_active=True))
 
         observation_manager = ObservationManager()
@@ -429,7 +431,7 @@ def actionitem_signal_handler(sender, **kwargs):
         }
         headers.update(STANDARD_SENDING_HEADERS)
 
-        observation_manager.send_notifications(org_users, instance.origin, ACTIONITEM_NEW, extra_context, headers, from_email=instance.origin.get_email())
+        observation_manager.send_notifications(org_users, instance.origin, ACTION, extra_context, headers, from_email=instance.origin.get_email())
 
 # We can't register our ActionItem post-save signal handler, as importing the
 # ActionItem model in this file would result in a circular dependency. So

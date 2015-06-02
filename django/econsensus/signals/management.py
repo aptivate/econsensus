@@ -22,6 +22,7 @@ ACTIONITEM_NEW = "action_item_new"
 COMMENT_NEW = "comment_new"
 DECISION_CHANGE = "decision_change"
 FEEDBACK_CHANGE = "feedback_change"
+ACTIONITEM_CHANGE = "action_item_change"
 COMMENT_CHANGE = "comment_change"
 DECISION_STATUS_CHANGE = "decision_status_change"
 MINOR_CHANGE = "minor_change"
@@ -60,6 +61,11 @@ if "notification" in settings.INSTALLED_APPS:
             FEEDBACK_CHANGE,
             _("Feedback Change"),
             _("There has been a change to feedback."))
+
+        notification.create_notice_type(
+            ACTIONITEM_CHANGE,
+            _("Action Item Change"),
+            _("There has been a change to action item."))
 
         notification.create_notice_type(
             COMMENT_CHANGE,

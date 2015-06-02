@@ -10,7 +10,7 @@ from decision_test_case import DecisionTestCase
 
 from actionitems.models import ActionItem
 from notification import models as notifications
-from signals.management import ACTIONITEM_NEW
+from signals.management import ACTIONITEM_NEW, ACTIONITEM_CHANGE
 
 from publicweb.forms import (EconsensusActionItemCreateForm,
                              EconsensusActionItemUpdateForm)
@@ -245,5 +245,35 @@ class ActionitemsViewTest(DecisionTestCase):
         EconsensusActionitemCreateView.as_view()(post_request, pk=decision.pk)
 
         assert len(mail.outbox) > 0, "An email should have been sent to Betty"
+        assert mail.outbox[0].subject == "[EC#{0}] An action item was added.".format(decision.pk), mail.outbox[0].subject
 
         decision.delete()
+
+    def test_sends_notification_on_update(self):
+        decision = self.create_and_return_decision()
+        actionitem = ActionItem.objects.create(origin=decision)
+
+        mail.outbox = []
+
+        notifications.observe(decision, self.betty, ACTIONITEM_CHANGE)
+
+        post_request = RequestFactory().post(
+            '/',
+            {
+                'actionitem-{0}-description'.format(actionitem.pk): u'Lorum Ipsum',
+                'actionitem-{0}-responsible'.format(actionitem.pk): u'Betty',
+                'actionitem-{0}-manager'.format(actionitem.pk): u'internal'
+            }
+        )
+
+        assert self.betty.is_authenticated()  # Confirm user is logged in
+        post_request.user = self.betty
+        response = EconsensusActionitemUpdateView.as_view()(
+            post_request, decisionpk=decision.pk, pk=actionitem.pk
+        )  # The decisionpk is what django-guardian checks for
+
+        assert len(mail.outbox) > 0
+        assert mail.outbox[0].subject == '[EC#{0}] Action Item {1} was changed.'.format(decision.id, actionitem.id), mail.outbox[0].subject
+
+        decision.delete()
+        actionitem.delete()
