@@ -400,7 +400,7 @@ input {
     color: #000;
 }
 
-.discussion-list th > a > span {
+.discussion-list th > a > span, .discussion-list th > span {
     color: #FFF;
 }
 
