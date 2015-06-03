@@ -10,6 +10,7 @@ def post_deploy(environment=None, svnuser=None, svnpass=None):
     load_auth_user(environment)
     load_django_site_data(environment)
     load_required_flat_pages(environment)
+    load_waffles(environment)
     update_search_index()
 
 
@@ -43,6 +44,12 @@ def load_required_flat_pages(environment, force=False):
     fixture to create them. """
     _conditionally_load_data(environment, force, 'flat pages',
                              'flatpages_needs_initializing', '_flatpages')
+
+
+def load_waffles(environment, force=False):
+    """load waffle fixture based on environment. """
+    _conditionally_load_data(environment, force, 'waffles',
+                             'waffles_need_initializing', '_waffles')
 
 
 def _conditionally_load_data(environment, force, name, manage_cmd, fixture_suffix):

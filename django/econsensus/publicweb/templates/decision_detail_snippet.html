@@ -25,10 +25,12 @@
 					<dt>{% trans "Last edited by: " %}</dt>
 					<dd> {{ object.editor }}</dd>
 					{% endif %}
+					{% if object.status != 'proposal' and object.status != 'discussion'%}
 					{% if object.meeting_people %}
-					<dt>{% trans "Decision made by/which meeting?: " %}</dt>			
+					<dt>{% trans "Decision made by/which meeting?: " %}</dt>
 					<dd>{{ object.meeting_people }}</dd>
-					{% endif %}	
+					{% endif %}
+					{% endif %}
 					{% if object.status = 'decision' %}
 					{% if object.people %}
 					<dt>{% trans "Persons Responsible: " %}</dt>			
