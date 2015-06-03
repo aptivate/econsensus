@@ -3,7 +3,7 @@
 
 You've been invited to join {{ organization }} on {{ domain.name }} by {{ sender|get_user_name_for_notification }}.
 
-Follow this link to create your user account.
+Follow this link to create your user account. The link is valid for 7 days.
 
 http://{{ domain.domain }}{% url "invitations_register" user.id token %}
 
