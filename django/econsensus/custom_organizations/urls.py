@@ -9,7 +9,8 @@ from views import (OrganizationAdminView,
                   CustomOrganizationUserRemind,
                   CustomOrganizationUserDelete,
                   CustomOrganizationUserList,
-                  CustomOrganizationUserLeave)
+                  CustomOrganizationUserLeave,
+                  ChangeOwnerView)
 
 
 urlpatterns = patterns('',
@@ -43,5 +44,8 @@ urlpatterns = patterns('',
     url(r'^(?P<organization_pk>[\d]+)/people/leave/$',
         view=login_required(CustomOrganizationUserLeave.as_view()),
         name="organization_user_leave"),
+    url(r'^(?P<pk>[\d]+)/changeOwner/$',
+        ChangeOwnerView.as_view(),
+        name='organization_change_owner'),
     url(r'', include('organizations.urls')),
 )

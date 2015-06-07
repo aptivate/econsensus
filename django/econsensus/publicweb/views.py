@@ -970,16 +970,3 @@ class RemoveWatcher(BaseWatcherView):
         user = self.get_user()
         notification.stop_observing(decision, user)
         return HttpResponseRedirect(request.GET['next'])
-
-
-class ChangeOwnerView(UpdateView):
-    model = OrganizationOwner
-    form_class = ChangeOwnerForm
-    template_name_suffix = '_update_form'
-    def get_success_url(self):
-        return reverse('organization_admin',
-                kwargs={'organization_pk': self.object.organization.pk})
-    def get_form_kwargs(self):
-        kwargs = super(ChangeOwnerView, self).get_form_kwargs()
-        kwargs.update({'current_org_pk': self.object.organization.pk})
-        return kwargs

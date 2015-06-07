@@ -5,7 +5,7 @@ from publicweb.tests.factories import UserFactory, \
 
 from custom_organizations.forms import CustomOrganizationAddForm,\
     CustomOrganizationUserForm, CustomOrganizationUserAddForm, \
-    CustomOrganizationForm
+    CustomOrganizationForm, ChangeOwnerForm
 
 from django.template.defaultfilters import slugify
 
@@ -185,3 +185,11 @@ class TestCustomOrganizationUserAddForm(TestCase):
         form.save()
         # Now they shouldn't have the permission
         self.assertFalse(user.has_perm(GUARDIAN_PERMISSION, org))
+
+
+class TestCustomOrganizationChangeOwnerForm(TestCase):
+    fixtures = ['organizations.json', 'users.json']
+
+    def test_current_org_pk_is_correctly_set_when_kwarg_is_passed(self):
+        changeownerform = ChangeOwnerForm(current_org_pk=5)
+        self.assertEqual(changeownerform.fields['organization_user'].queryset.get().name, 'Andy Aardvark')
