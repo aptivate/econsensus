@@ -24,7 +24,7 @@ from waffle import switch_is_active
 
 from publicweb.forms import (YourDetailsForm,
         NotificationSettingsForm, EconsensusActionItemCreateForm,
-        EconsensusActionItemUpdateForm, ChangeOwnerForm, DecisionForm, FeedbackForm)
+        EconsensusActionItemUpdateForm, DecisionForm, FeedbackForm)
 from publicweb.models import Decision, Feedback, NotificationSettings
 
 from actionitems.models import ActionItem
