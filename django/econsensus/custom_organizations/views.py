@@ -165,7 +165,6 @@ class ChangeOwnerView(UpdateView):
                 kwargs={'organization_pk': self.object.organization.pk})
 
     def get_form_kwargs(self):
-        print self.object
         kwargs = super(ChangeOwnerView, self).get_form_kwargs()
         kwargs.update({'current_org_pk': self.object.organization.pk})
         return kwargs
