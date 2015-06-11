@@ -3,7 +3,7 @@ from publicweb.extra_models import (NotificationSettings,
     FEEDBACK_ADDED_NOTIFICATIONS, FEEDBACK_MAJOR_CHANGES)
 from signals.management import (DECISION_NEW, DECISION_STATUS_CHANGE,
     FEEDBACK_CHANGE, DECISION_CHANGE, FEEDBACK_NEW, COMMENT_NEW,
-    COMMENT_CHANGE, MINOR_CHANGE, ACTIONITEM_NEW)
+    COMMENT_CHANGE, MINOR_CHANGE, ACTIONITEM_NEW, ACTIONITEM_CHANGE)
 from notification import models as notification
 
 
@@ -39,7 +39,7 @@ class ObservationManager(object):
              MAIN_ITEMS_NOTIFICATIONS_ONLY: (DECISION_CHANGE, FEEDBACK_NEW),
              FEEDBACK_ADDED_NOTIFICATIONS: (
                     FEEDBACK_CHANGE, COMMENT_NEW, COMMENT_CHANGE,
-                    ACTIONITEM_NEW
+                    ACTIONITEM_NEW, ACTIONITEM_CHANGE
              ),
              FEEDBACK_MAJOR_CHANGES: (MINOR_CHANGE,)
         }
