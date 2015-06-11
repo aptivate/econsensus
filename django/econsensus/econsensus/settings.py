@@ -24,11 +24,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': '',  # Or path to database file if using sqlite3.
+        'USER': '',  # Not used with sqlite3.
+        'PASSWORD': '',  # Not used with sqlite3.
+        'HOST': '',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -45,7 +45,7 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-GB'
 
-#Need to figure out what this means...
+# Need to figure out what this means...
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -86,7 +86,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -96,7 +96,7 @@ SECRET_KEY = private_settings.SECRET_KEY
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -277,18 +277,17 @@ TINYMCE_DEFAULT_CONFIG = {
     "theme_advanced_buttons3": ""
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-#Emails from organizations will be built around this address
+# Emails from organizations will be built around this address
 DEFAULT_FROM_EMAIL = 'econsensus@econsensus.org'
 
-#Required for djangoregistration:
+# Required for djangoregistration:
 ACCOUNT_ACTIVATION_DAYS = 7
 
-#using custom comments app
+# using custom comments app
 COMMENTS_APP = 'custom_comments'
 
-#Requirements for django-keyedcache, which is a requirement of django-livesettings.
+# Requirements for django-keyedcache, which is a requirement of django-livesettings.
 CACHE_PREFIX = str(SITE_ID)
 CACHE_TIMEOUT = 0
 import logging
@@ -309,7 +308,7 @@ INVITATION_BACKEND = "custom_organizations.invitation_backend.CustomInvitationBa
 
 #--------------------------------
 # local settings import
-#from http://djangosnippets.org/snippets/1873/
+# from http://djangosnippets.org/snippets/1873/
 #--------------------------------
 try:
     import local_settings
