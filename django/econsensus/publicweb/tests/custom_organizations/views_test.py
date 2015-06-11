@@ -242,8 +242,6 @@ class TestCustomOrganizationUserLeave(TestCase):
 
 
 class TestCustomOrganizationChangeOwnerView(TestCase):
-    fixtures = ['organizations.json', 'users.json']
-
     def test_current_org_pk_is_included_in_kwargs(self):
         org_user = OrganizationUserFactory()
         user = org_user.user
@@ -256,4 +254,5 @@ class TestCustomOrganizationChangeOwnerView(TestCase):
         changeOwnerView = ChangeOwnerView()
         changeOwnerView.get_object = lambda: org_user
         changeOwnerView.dispatch(request, pk=org.pk)
+
         self.assertEqual(changeOwnerView.get_form_kwargs().pop("current_org_pk"), org.pk)

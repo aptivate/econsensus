@@ -188,8 +188,11 @@ class TestCustomOrganizationUserAddForm(TestCase):
 
 
 class TestCustomOrganizationChangeOwnerForm(TestCase):
-    fixtures = ['organizations.json', 'users.json']
 
     def test_current_org_pk_is_correctly_set_when_kwarg_is_passed(self):
-        changeownerform = ChangeOwnerForm(current_org_pk=5)
-        self.assertEqual(changeownerform.fields['organization_user'].queryset.get().name, 'Andy Aardvark')
+        org_owner = OrganizationOwnerFactory()
+        org_user = org_owner.organization_user
+        org = org_user.organization
+
+        changeownerform = ChangeOwnerForm(current_org_pk=org.pk)
+        self.assertEqual(changeownerform.fields['organization_user'].queryset.get().pk, org_user.pk)
