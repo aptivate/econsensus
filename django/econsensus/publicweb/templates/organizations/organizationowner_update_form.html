@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+Change Organization Owner
+{% endblock %}
+
+{% block heading %}
+Change Organization Owner
+{% endblock %}
+
+{% block main_content %}
+<h3>{% trans 'select your organization and organization user then click "Update"' %}</h3>
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <input class="loose button" type="submit" value="Update" />
+</form>
+{% endblock %}

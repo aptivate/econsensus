@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic.edit import UpdateView
 
 from guardian.shortcuts import remove_perm
 
@@ -21,8 +22,10 @@ from organizations.mixins import AdminRequiredMixin
 from custom_organizations.forms import (CustomOrganizationForm,
                                         CustomOrganizationAddForm,
                                         CustomOrganizationUserForm,
-                                        CustomOrganizationUserAddForm)
-from organizations.models import Organization
+                                        CustomOrganizationUserAddForm,
+                                        ChangeOwnerForm)
+from organizations.models import Organization, OrganizationOwner
+
 from publicweb.models import Feedback
 
 
@@ -150,3 +153,35 @@ class CustomOrganizationUserLeave(CustomOrganizationUserDelete):
 
     def get_success_url(self):
         return reverse('organization_list')
+
+
+class ChangeOwnerView(UpdateView):
+    model = OrganizationOwner
+    form_class = ChangeOwnerForm
+    template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        return reverse('organization_admin',
+                kwargs={'organization_pk': self.object.organization.pk})
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangeOwnerView, self).get_form_kwargs()
+        kwargs.update({'current_org_pk': self.object.organization.pk})
+        return kwargs
+
+    def _check_access_perms(self, user):
+        organization_pk = self.kwargs.get('pk')
+        if not Organization.objects.get(pk=organization_pk).is_owner(user):
+            return HttpResponseForbidden(_("Sorry, owners only"))
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        self.object = self.get_object()
+        response = self._check_access_perms(request.user)
+        if response is not None:
+            return response
+        return super(ChangeOwnerView, self).dispatch(
+            request, *args, **kwargs)
+

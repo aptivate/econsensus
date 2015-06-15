@@ -4,14 +4,14 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from guardian.shortcuts import assign_perm
 
-from organizations.models import OrganizationUser
+from organizations.models import OrganizationUser, Organization
 from publicweb.tests.factories import (OrganizationUserFactory,
     ObservedItemFactory, UserFactory, FeedbackFactory)
 
 from custom_organizations.views import (CustomOrganizationCreate,
     CustomOrganizationUpdate, CustomOrganizationUserUpdate,
     CustomOrganizationUserCreate, CustomOrganizationUserDelete,
-    CustomOrganizationUserLeave)
+    CustomOrganizationUserLeave, ChangeOwnerView)
 from custom_organizations.forms import (CustomOrganizationAddForm,
     CustomOrganizationForm, CustomOrganizationUserForm,
     CustomOrganizationUserAddForm)
@@ -239,3 +239,20 @@ class TestCustomOrganizationUserLeave(TestCase):
         self.assertEqual(
             0, OrganizationUser.objects.filter(user=user, organization=org).count())
         self.assertEqual(reverse('organization_list'), response['Location'])
+
+
+class TestCustomOrganizationChangeOwnerView(TestCase):
+    def test_current_org_pk_is_included_in_kwargs(self):
+        org_user = OrganizationUserFactory()
+        user = org_user.user
+        org = org_user.organization
+        assign_perm(GUARDIAN_PERMISSION, user, org)
+
+        request = RequestFactory().get("/")
+        request.user = user
+
+        changeOwnerView = ChangeOwnerView()
+        changeOwnerView.get_object = lambda: org_user
+        changeOwnerView.dispatch(request, pk=org.pk)
+
+        self.assertEqual(changeOwnerView.get_form_kwargs().pop("current_org_pk"), org.pk)

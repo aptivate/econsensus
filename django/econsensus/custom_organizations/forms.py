@@ -1,6 +1,6 @@
 from django import forms
 
-from organizations.models import Organization, get_user_model
+from organizations.models import Organization, get_user_model, OrganizationOwner, OrganizationUser
 from organizations.utils import create_organization
 from organizations.backends.forms import UserRegistrationForm
 from organizations.forms import OrganizationUserForm, OrganizationUserAddForm
@@ -112,3 +112,14 @@ class CustomOrganizationUserAddForm(OrganizationUserAddForm):
         else:
             remove_perm('edit_decisions_feedback', self.instance.user, self.instance.organization)
         return self.instance
+
+
+class ChangeOwnerForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationOwner
+        fields = ['organization_user']
+
+    def __init__(self, *args, **kwargs):
+        current_org_pk = kwargs.pop("current_org_pk")
+        super(ChangeOwnerForm, self).__init__(*args, **kwargs)
+        self.fields['organization_user'].queryset = OrganizationUser.objects.filter(organization=current_org_pk)

@@ -18,7 +18,7 @@ import unicodecsv
 
 from guardian.decorators import permission_required_or_403
 from notification import models as notification
-from organizations.models import Organization
+from organizations.models import Organization, OrganizationOwner, OrganizationUser
 from haystack.views import SearchView
 from waffle import switch_is_active
 
