@@ -13,6 +13,10 @@ class WatcherViewTests(SimpleTestCase):
 
     @patch('publicweb.views.notification')
     def test_add_watcher_view_adds_observer_to_item(self, notifications):
+        # A watcher is only added if the item isn't already being watched so we
+        # explicitly set is_observing to False
+        notifications.is_observing = lambda: False
+
         decision = N(Decision)
         user = N(User)
 
