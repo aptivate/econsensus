@@ -960,7 +960,8 @@ class AddWatcher(BaseWatcherView):
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
-        notification.observe(decision, user, DECISION_CHANGE)
+        if not notification.is_observing():
+            notification.observe(decision, user, DECISION_CHANGE)
         return HttpResponseRedirect(request.GET['next'])
 
 
@@ -968,5 +969,6 @@ class RemoveWatcher(BaseWatcherView):
     def get(self, request, *args, **kwargs):
         decision = self.get_object()
         user = self.get_user()
-        notification.stop_observing(decision, user)
+        if notification.is_observing(decision, user):
+            notification.stop_observing(decision, user)
         return HttpResponseRedirect(request.GET['next'])
