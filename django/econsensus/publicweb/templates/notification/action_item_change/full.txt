@@ -1,0 +1,21 @@
+This is to let you know that changed an action item on decision #EC{{ observed.origin.id }} ({{ observed.origin.excerpt }})
+
+"{{ observed.description|safe }}" to be done by {{ observed.responsible }}.
+{% if observed.deadline %}This action must be taken by: {{ observed.deadline }}.{% endif %}
+
+   -----------------------------------------------------------------
+
+To view this on the website: http://{{ current_site }}{{ observed.origin.get_absolute_url }}
+
+To leave a feedback comment via email just reply to this email, making sure to remove any quoted reply text.
+
+To indicate the type of feedback you're leaving put
+Question:
+Danger:
+Concerns:
+Consent:
+Comment:
+at the start of your email.
+
+You are receiving this mail because you are signed up to the {{ current_site.name }} 
+Econsensus service and you are subscribed to this item. To change your subscription, use the link above.

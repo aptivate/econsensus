@@ -5,20 +5,19 @@ import re
 
 from notification import models as notification
 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
+from django.contrib.comments.signals import comment_was_posted
+from django.contrib.contenttypes import generic
+from django.contrib.sites.models import Site
 from django.db import models
+from django.db.models import Count
+from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _, ugettext_noop
-from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.db.models import Count
 
-from tagging.fields import TagField
 from organizations.models import Organization
-from managers import DecisionManager
-
-from publicweb.utils import get_excerpt
 
 # Ideally django-tinymce should be patched
 # http://south.aeracode.org/wiki/MyFieldsDontWork
@@ -27,17 +26,22 @@ from publicweb.utils import get_excerpt
 # own class with accessor methods to return values.
 
 from south.modelsinspector import add_introspection_rules
+from tagging.fields import TagField
+
+from managers import DecisionManager
 from signals.management import (DECISION_CHANGE, MINOR_CHANGE, DECISION_NEW,
-    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE)
+    FEEDBACK_NEW, FEEDBACK_CHANGE, COMMENT_NEW, DECISION_STATUS_CHANGE,
+    ACTIONITEM_NEW, ACTIONITEM_CHANGE)
+
+
 from publicweb.observation_manager import ObservationManager
 # The NotificationSettings and OrganizationSettings models were moved to a
 # separate file to prevent circular imports. They need to be here or django
 # won't detect them.
 from publicweb.extra_models import (STANDARD_SENDING_HEADERS,
     NotificationSettings, MINOR_CHANGES_NOTIFICATIONS)  # pylint: disable=W0611
-from django.dispatch.dispatcher import receiver
-from django.contrib.comments.models import Comment
-from django.contrib.comments.signals import comment_was_posted
+from publicweb.utils import get_excerpt
+
 
 add_introspection_rules([], ["^tagging\.fields\.TagField"])
 
@@ -278,6 +282,13 @@ class Feedback(models.Model):
         return "<feedback-%s@%s>" % (self.id, Site.objects.get_current().domain)
 
 
+def get_action_item_message_id(actionitem):
+    """
+    Generates a message id that can be used in email headers
+    """
+    return "<actionitem-%s@%s>" % (actionitem.id, Site.objects.get_current().domain)
+
+
 def send_decision_notifications(decision, users):
     headers = {'Message-ID' : decision.get_message_id()}
     headers.update(STANDARD_SENDING_HEADERS)
@@ -286,6 +297,7 @@ def send_decision_notifications(decision, users):
     observation_manager.send_notifications(
                     users, decision, DECISION_NEW, extra_context, headers,
                     from_email=decision.get_email())
+
 
 # TODO: Test this
 def send_comment_notifications(comment, users):
@@ -319,6 +331,7 @@ def change_observers(watch, decision, watcher):
     else:
         if notification.is_observing(decision, watcher):
             notification.stop_observing(decision, watcher)
+
 
 @receiver(models.signals.post_save, sender=Decision, dispatch_uid="publicweb.models.decision_signal_handler")
 def decision_signal_handler(sender, **kwargs):
@@ -402,6 +415,23 @@ def actionitem_signal_handler(sender, **kwargs):
     if isinstance(instance.origin, Decision):
         instance.origin.note_external_modification()
 
+        ACTION = ACTIONITEM_NEW if kwargs['created'] else ACTIONITEM_CHANGE
+
+        org_users = list(instance.origin.organization.users.filter(is_active=True))
+
+        observation_manager = ObservationManager()
+        extra_context = dict({"observed": instance})
+
+        headers = {
+            'Message-ID': get_action_item_message_id(instance),
+            'In-Reply-To': instance.origin.get_message_id(),
+            'References': ' '.join((
+                instance.origin.get_message_id(),
+                get_action_item_message_id(instance)))
+        }
+        headers.update(STANDARD_SENDING_HEADERS)
+
+        observation_manager.send_notifications(org_users, instance.origin, ACTION, extra_context, headers, from_email=instance.origin.get_email())
 
 # We can't register our ActionItem post-save signal handler, as importing the
 # ActionItem model in this file would result in a circular dependency. So
