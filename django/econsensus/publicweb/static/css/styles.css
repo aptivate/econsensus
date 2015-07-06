@@ -1844,4 +1844,6 @@ del > .actionitem_responsible {
 	-moz-border-radius:15px;
 	-webkit-border-radius:15px;
 	padding: 20px;
+	width: 20%;
+	word-wrap: break-word;
 }
