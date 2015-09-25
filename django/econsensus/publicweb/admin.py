@@ -33,7 +33,7 @@ class DecisionAdmin(admin.ModelAdmin):
                            'budget','people', 'status',)}),
     ]
 
-    list_display = ('id', 'description', 'unresolvedfeedback', 'decided_date', 'effective_date', 'review_date', 'expiry_date', 'budget', 'people')
+    list_display = ('id', 'description', 'unresolvedfeedback', 'decided_date', 'effective_date', 'review_date', 'expiry_date', 'budget', 'people', 'organization')
     search_fields = ('description',)
     list_filter = ('status', 'decided_date', 'effective_date', 'review_date')
     inlines = (FeedbackInline,)
