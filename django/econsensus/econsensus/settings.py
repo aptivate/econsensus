@@ -189,7 +189,10 @@ ANONYMOUS_USER_ID = -1
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
-LOG_FILE = os.path.join(DJANGO_HOME, 'log', 'econsensus.log')
+LOG_DIR = os.path.join(DJANGO_HOME, 'log')
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+LOG_FILE = os.path.join(LOG_DIR, 'econsensus.log')
 if not os.path.exists(LOG_FILE):
     open(LOG_FILE, 'w').close()
 
