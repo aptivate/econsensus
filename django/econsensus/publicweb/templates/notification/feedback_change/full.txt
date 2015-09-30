@@ -1,4 +1,4 @@
-User {{ observed.editor }} changed your feedback.
+User {{ observed.editor }} has changed a feedback item.
 
 {{ observed.get_rating_display|capfirst }}
 

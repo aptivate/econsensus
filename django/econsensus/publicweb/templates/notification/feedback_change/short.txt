@@ -1,1 +1,1 @@
-[EC#{{observed.decision.id}}\{{observed.id}}] {{ observed.editor }} changed your feedback.
+[EC#{{observed.decision.id}}\{{observed.id}}] {{ observed.editor }} changed a feedback item.
