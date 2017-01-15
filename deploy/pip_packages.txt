@@ -15,7 +15,10 @@ lxml==2.2.4
 BeautifulSoup==3.2.0
 git+git://github.com/jdunck/python-unicodecsv.git
 django-tagging==0.3.1
-hg+https://bitbucket.org/bkroeze/django-livesettings
+
+# hg+https://bitbucket.org/bkroeze/django-livesettings
+django-livesettings==1.4-14
+
 django-keyedcache==1.4-6
 django-registration==1.0
 -e ../django/django-organizations
