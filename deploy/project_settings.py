@@ -63,7 +63,7 @@ django_jenkins_version = '0.14.0'
 
 # production server - if commented out then the production task will abort
 host_list = {
-    'production':   ['lin-' + project_name + '.aptivate.org:48001'],
+    'production':   ['lin-' + project_name + '-upgrade.aptivate.org:48001'],
     'staging':      ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
     'staging_test': ['fen-vz-' + project_name + '-stage.fen.aptivate.org'],
     'localhost':   ['localhost:2222'],  # vagrant
