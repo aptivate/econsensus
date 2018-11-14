@@ -21,6 +21,7 @@ django-livesettings==1.4-14
 
 django-keyedcache==1.4-6
 django-registration==1.0
+django-extensions==1.6.7  # force version for leagcy Django==1.4.19 (required by django-organizations)
 -e ../django/django-organizations
 git+git://github.com/aptivate/django-notification.git@emails-with-headers
 git+git://github.com/birdsarah/django-actionitems.git
