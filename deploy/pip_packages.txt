@@ -1,6 +1,6 @@
 # deploy stuff
 fabric==1.4
-virtualenv
+virtualenv==15.1.0  # Support dropped for Python 2.6.x in virtualenv>=16.0.0
 -e git+git://github.com/aptivate/dye.git@0ebe0738bbfda715caeeb95e7e18f7463adf714c#egg=dye
 
 # core django
